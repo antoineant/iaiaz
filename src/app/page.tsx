@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Header } from "@/components/header";
 import { MODEL_PRICING, CREDIT_PACKS } from "@/lib/pricing";
 import { FAQSection } from "@/components/seo/faq-section";
 import {
@@ -32,46 +33,7 @@ export default function HomePage() {
       <ProductSchema />
       <WebsiteSchema />
 
-      {/* Header */}
-      <header className="border-b border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex flex-col">
-            <span className="text-2xl font-bold text-primary-600">iaiaz</span>
-            <span className="text-xs text-[var(--muted-foreground)] hidden sm:block">
-              Intelligence Artificielle Intelligemment Accessible, Zéro engagement
-            </span>
-          </Link>
-          <nav className="flex items-center gap-4">
-            <Link
-              href="/tarifs"
-              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hidden sm:block"
-            >
-              Tarifs
-            </Link>
-            <Link
-              href="/comparatif"
-              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hidden sm:block"
-            >
-              Comparatif
-            </Link>
-            <Link
-              href="/etudiants"
-              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hidden sm:block"
-            >
-              Étudiants
-            </Link>
-            <Link
-              href="/auth/login"
-              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-            >
-              Connexion
-            </Link>
-            <Link href="/auth/signup">
-              <Button size="sm">Commencer</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="py-20 px-4">
