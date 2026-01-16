@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { CostEstimate } from "./cost-estimate";
 import { RateLimitIndicator } from "./rate-limit-indicator";
-import type { ModelId } from "@/lib/pricing";
+import { type ModelId, getModelCapabilities } from "@/lib/pricing";
 import type { ModelTier } from "@/lib/rate-limiter";
 import type { FileAttachment } from "@/types";
 import {
@@ -72,12 +72,21 @@ export function ChatInput({
     }
   }, [input]);
 
+  const capabilities = getModelCapabilities(model);
+
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
       return "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF";
     }
     if (file.size > MAX_FILE_SIZE) {
       return "Fichier trop volumineux. Taille maximale: 10 Mo";
+    }
+    // Check model capabilities
+    if (file.type === "application/pdf" && !capabilities.pdf) {
+      return "Ce modèle ne supporte pas les PDF. Utilisez Claude ou Gemini pour les PDF.";
+    }
+    if (file.type.startsWith("image/") && !capabilities.images) {
+      return "Ce modèle ne supporte pas les images. Choisissez un autre modèle.";
     }
     return null;
   };
@@ -327,7 +336,13 @@ export function ChatInput({
           <input
             ref={fileInputRef}
             type="file"
-            accept={ALLOWED_TYPES.join(",")}
+            accept={
+              capabilities.images && capabilities.pdf
+                ? ALLOWED_TYPES.join(",")
+                : capabilities.images
+                  ? ALLOWED_TYPES.filter((t) => t !== "application/pdf").join(",")
+                  : ""
+            }
             multiple
             onChange={(e) => handleFileSelect(e.target.files)}
             className="hidden"
@@ -340,9 +355,15 @@ export function ChatInput({
               variant="ghost"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
-              disabled={disabled || isLoading || uploading || isRateLimited}
-              className="m-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-              title="Joindre un fichier (PNG, JPG, GIF, WebP, PDF)"
+              disabled={disabled || isLoading || uploading || isRateLimited || (!capabilities.images && !capabilities.pdf)}
+              className={`m-1 ${!capabilities.images && !capabilities.pdf ? "opacity-40 cursor-not-allowed" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
+              title={
+                !capabilities.images && !capabilities.pdf
+                  ? "Ce modèle ne supporte pas les fichiers"
+                  : capabilities.pdf
+                    ? "Joindre un fichier (PNG, JPG, GIF, WebP, PDF)"
+                    : "Joindre une image (PNG, JPG, GIF, WebP)"
+              }
             >
               {uploading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -380,7 +401,11 @@ export function ChatInput({
 
         <div className="flex items-center justify-between mt-2">
           <p className="text-xs text-[var(--muted-foreground)]">
-            Images et PDF supportés (max 10 Mo). Collez ou glissez-déposez.
+            {capabilities.images && capabilities.pdf
+              ? "Images et PDF supportés (max 10 Mo). Collez ou glissez-déposez."
+              : capabilities.images
+                ? "Images supportées (max 10 Mo). PDF non supporté par ce modèle."
+                : "Ce modèle ne supporte pas les fichiers joints."}
           </p>
           {rateLimit && !hasContent && (
             <RateLimitIndicator

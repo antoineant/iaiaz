@@ -15,6 +15,7 @@ export const MODEL_PRICING = {
     description: "Le plus intelligent. Idéal pour les tâches complexes et le code.",
     recommended: false,
     category: "premium",
+    capabilities: { images: true, pdf: true },
   },
   "claude-sonnet-4-20250514": {
     name: "Claude Sonnet 4",
@@ -24,6 +25,7 @@ export const MODEL_PRICING = {
     description: "Excellent équilibre qualité/prix. Recommandé pour la plupart des usages.",
     recommended: true,
     category: "balanced",
+    capabilities: { images: true, pdf: true },
   },
   "claude-haiku-3-5-20241022": {
     name: "Claude Haiku 3.5",
@@ -33,6 +35,7 @@ export const MODEL_PRICING = {
     description: "Rapide et économique. Idéal pour les tâches simples.",
     recommended: false,
     category: "fast",
+    capabilities: { images: true, pdf: true },
   },
 
   // ===== OPENAI GPT =====
@@ -44,6 +47,7 @@ export const MODEL_PRICING = {
     description: "Le dernier modèle d'OpenAI. Très puissant et polyvalent.",
     recommended: false,
     category: "premium",
+    capabilities: { images: true, pdf: false },
   },
   "gpt-4.1": {
     name: "GPT-4.1",
@@ -53,6 +57,7 @@ export const MODEL_PRICING = {
     description: "Modèle phare d'OpenAI. Très polyvalent et fiable.",
     recommended: false,
     category: "balanced",
+    capabilities: { images: true, pdf: false },
   },
   "gpt-4o": {
     name: "GPT-4o",
@@ -62,6 +67,7 @@ export const MODEL_PRICING = {
     description: "Modèle multimodal rapide. Bon pour texte et images.",
     recommended: false,
     category: "balanced",
+    capabilities: { images: true, pdf: false },
   },
   "gpt-4o-mini": {
     name: "GPT-4o Mini",
@@ -71,6 +77,7 @@ export const MODEL_PRICING = {
     description: "Version légère et très économique de GPT-4o.",
     recommended: false,
     category: "economy",
+    capabilities: { images: true, pdf: false },
   },
 
   // ===== GOOGLE GEMINI =====
@@ -82,6 +89,7 @@ export const MODEL_PRICING = {
     description: "Le plus puissant de Google. Excellent raisonnement.",
     recommended: false,
     category: "premium",
+    capabilities: { images: true, pdf: true },
   },
   "gemini-2.0-flash": {
     name: "Gemini 2.0 Flash",
@@ -91,6 +99,7 @@ export const MODEL_PRICING = {
     description: "Ultra rapide et économique. Idéal pour les tâches courantes.",
     recommended: false,
     category: "fast",
+    capabilities: { images: true, pdf: true },
   },
   "gemini-1.5-pro": {
     name: "Gemini 1.5 Pro",
@@ -100,6 +109,7 @@ export const MODEL_PRICING = {
     description: "Grande fenêtre de contexte (1M tokens). Bon pour longs documents.",
     recommended: false,
     category: "balanced",
+    capabilities: { images: true, pdf: true },
   },
   "gemini-1.5-flash": {
     name: "Gemini 1.5 Flash",
@@ -109,6 +119,7 @@ export const MODEL_PRICING = {
     description: "Le plus économique. Parfait pour les petites tâches.",
     recommended: false,
     category: "economy",
+    capabilities: { images: true, pdf: true },
   },
 
   // ===== MISTRAL =====
@@ -120,6 +131,7 @@ export const MODEL_PRICING = {
     description: "Modèle français de haute qualité. Excellent en français.",
     recommended: false,
     category: "balanced",
+    capabilities: { images: true, pdf: false },
   },
   "mistral-medium-latest": {
     name: "Mistral Medium 3",
@@ -129,6 +141,7 @@ export const MODEL_PRICING = {
     description: "Excellent rapport qualité/prix. 8x moins cher que les concurrents.",
     recommended: false,
     category: "balanced",
+    capabilities: { images: true, pdf: false },
   },
   "mistral-small-latest": {
     name: "Mistral Small",
@@ -138,6 +151,7 @@ export const MODEL_PRICING = {
     description: "Rapide et économique. Bon pour les tâches simples.",
     recommended: false,
     category: "economy",
+    capabilities: { images: false, pdf: false },
   },
   "codestral-latest": {
     name: "Codestral",
@@ -147,6 +161,7 @@ export const MODEL_PRICING = {
     description: "Spécialisé pour le code. Excellent pour la programmation.",
     recommended: false,
     category: "code",
+    capabilities: { images: false, pdf: false },
   },
 } as const;
 
@@ -194,6 +209,10 @@ export function getModelsByCategory(category: string) {
 
 export function getModelsByProvider(provider: string) {
   return getAllModels().filter((m) => m.provider === provider);
+}
+
+export function getModelCapabilities(modelId: ModelId) {
+  return MODEL_PRICING[modelId].capabilities;
 }
 
 // Credit packs available for purchase
