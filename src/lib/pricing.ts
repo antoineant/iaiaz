@@ -35,7 +35,7 @@ export const MODEL_PRICING = {
     description: "Rapide et économique. Idéal pour les tâches simples.",
     recommended: false,
     category: "fast",
-    capabilities: { images: true, pdf: true },
+    capabilities: { images: true, pdf: false },
   },
 
   // ===== OPENAI GPT =====
