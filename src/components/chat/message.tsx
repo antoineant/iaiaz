@@ -1,12 +1,97 @@
 "use client";
 
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { cn, formatCurrency } from "@/lib/utils";
 import type { ChatMessage, FileAttachment } from "@/types";
-import { User, Bot, Loader2, FileText, ExternalLink } from "lucide-react";
+import {
+  User,
+  Bot,
+  Loader2,
+  FileText,
+  ExternalLink,
+  Copy,
+  Check,
+} from "lucide-react";
 import { formatFileSize } from "@/lib/files";
 
 interface MessageProps {
   message: ChatMessage;
+}
+
+function CopyButton({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={cn(
+        "p-1.5 rounded-md transition-colors",
+        "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
+        "hover:bg-[var(--muted)]",
+        className
+      )}
+      title={copied ? "Copié !" : "Copier"}
+    >
+      {copied ? (
+        <Check className="w-4 h-4 text-green-500" />
+      ) : (
+        <Copy className="w-4 h-4" />
+      )}
+    </button>
+  );
+}
+
+function CodeBlock({
+  language,
+  children,
+}: {
+  language: string | undefined;
+  children: string;
+}) {
+  return (
+    <div className="relative group my-4">
+      <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <CopyButton
+          text={children}
+          className="bg-[var(--background)]/80 backdrop-blur-sm"
+        />
+      </div>
+      {language ? (
+        <SyntaxHighlighter
+          style={oneDark}
+          language={language}
+          PreTag="div"
+          customStyle={{
+            margin: 0,
+            borderRadius: "0.5rem",
+            fontSize: "0.875rem",
+          }}
+        >
+          {children}
+        </SyntaxHighlighter>
+      ) : (
+        <pre className="bg-[#282c34] text-[#abb2bf] p-4 rounded-lg overflow-x-auto text-sm">
+          <code>{children}</code>
+        </pre>
+      )}
+    </div>
+  );
 }
 
 function AttachmentPreview({ attachment }: { attachment: FileAttachment }) {
@@ -56,7 +141,7 @@ export function Message({ message }: MessageProps) {
   return (
     <div
       className={cn(
-        "flex gap-4 px-4 py-6",
+        "flex gap-4 px-4 py-6 group",
         isUser ? "bg-[var(--background)]" : "bg-[var(--muted)]/50"
       )}
     >
@@ -72,10 +157,17 @@ export function Message({ message }: MessageProps) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center justify-between gap-2 mb-1">
           <span className="font-medium text-sm">
             {isUser ? "Vous" : "Assistant"}
           </span>
+          {/* Copy button for AI responses */}
+          {!isUser && message.content && !message.isStreaming && (
+            <CopyButton
+              text={message.content}
+              className="opacity-0 group-hover:opacity-100"
+            />
+          )}
         </div>
 
         {/* Attachments */}
@@ -87,17 +179,98 @@ export function Message({ message }: MessageProps) {
           </div>
         )}
 
-        <div className="prose prose-sm max-w-none">
+        <div className="prose prose-sm max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent">
           {message.isStreaming ? (
             <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>Réflexion en cours...</span>
             </div>
-          ) : (
-            message.content && (
+          ) : message.content ? (
+            isUser ? (
+              // User messages: simple whitespace-pre-wrap
               <div className="whitespace-pre-wrap">{message.content}</div>
+            ) : (
+              // AI messages: full markdown rendering
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  // Custom code block rendering
+                  code({ node, className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    const isInline = !match && !className;
+
+                    if (isInline) {
+                      return (
+                        <code
+                          className="bg-[var(--muted)] px-1.5 py-0.5 rounded text-sm font-mono"
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      );
+                    }
+
+                    return (
+                      <CodeBlock language={match?.[1]}>
+                        {String(children).replace(/\n$/, "")}
+                      </CodeBlock>
+                    );
+                  },
+                  // Custom link rendering
+                  a({ href, children }) {
+                    return (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary-600 hover:underline"
+                      >
+                        {children}
+                      </a>
+                    );
+                  },
+                  // Custom table rendering
+                  table({ children }) {
+                    return (
+                      <div className="overflow-x-auto my-4">
+                        <table className="min-w-full border-collapse border border-[var(--border)]">
+                          {children}
+                        </table>
+                      </div>
+                    );
+                  },
+                  th({ children }) {
+                    return (
+                      <th className="border border-[var(--border)] bg-[var(--muted)] px-3 py-2 text-left font-semibold">
+                        {children}
+                      </th>
+                    );
+                  },
+                  td({ children }) {
+                    return (
+                      <td className="border border-[var(--border)] px-3 py-2">
+                        {children}
+                      </td>
+                    );
+                  },
+                  // Custom blockquote
+                  blockquote({ children }) {
+                    return (
+                      <blockquote className="border-l-4 border-primary-300 pl-4 italic text-[var(--muted-foreground)] my-4">
+                        {children}
+                      </blockquote>
+                    );
+                  },
+                  // Custom horizontal rule
+                  hr() {
+                    return <hr className="my-6 border-[var(--border)]" />;
+                  },
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
             )
-          )}
+          ) : null}
         </div>
 
         {message.tokens && !message.isStreaming && (
