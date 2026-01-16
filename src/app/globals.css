@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --ring: #0ea5e9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #fafafa;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    --border: #27272a;
+    --ring: #0ea5e9;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Legal pages typography */
+.legal-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.legal-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.legal-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+}
+
+.legal-content p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: var(--foreground);
+}
+
+.legal-content ul,
+.legal-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.legal-content ul {
+  list-style-type: disc;
+}
+
+.legal-content ol {
+  list-style-type: decimal;
+}
+
+.legal-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.legal-content li ul,
+.legal-content li ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.legal-content strong {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.legal-content a {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+.legal-content a:hover {
+  text-decoration: underline;
+}
+
+.legal-content table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+}
+
+.legal-content th,
+.legal-content td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+
+.legal-content th {
+  background: var(--muted);
+  font-weight: 600;
+}
+
+.legal-content > p:first-of-type {
+  color: var(--muted-foreground);
+  margin-bottom: 1.5rem;
+}
