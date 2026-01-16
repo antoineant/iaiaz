@@ -44,43 +44,43 @@ const useCases = [
     icon: BookOpen,
     title: "Révisions & Examens",
     description:
-      "Faites-vous expliquer des concepts complexes, créez des fiches de révision, testez vos connaissances avec des quiz personnalisés.",
+      "Fais-toi expliquer des concepts complexes, crée des fiches de révision, teste tes connaissances avec des quiz personnalisés.",
     example: "Explique-moi la mitose comme si j'avais 10 ans",
   },
   {
     icon: PenTool,
     title: "Dissertations & Mémoires",
     description:
-      "Structurez vos arguments, améliorez votre style, trouvez des sources pertinentes. L'IA vous guide sans écrire à votre place.",
+      "Structure tes arguments, améliore ton style, trouve des sources pertinentes. L'IA te guide sans écrire à ta place.",
     example: "Aide-moi à structurer ma dissertation sur Rousseau",
   },
   {
     icon: Code,
     title: "Programmation",
     description:
-      "Déboguez votre code, comprenez les algorithmes, apprenez de nouveaux langages avec des explications claires.",
+      "Débogue ton code, comprends les algorithmes, apprends de nouveaux langages grâce à des explications claires.",
     example: "Pourquoi ma boucle for ne fonctionne pas ?",
   },
   {
     icon: Languages,
     title: "Langues étrangères",
     description:
-      "Pratiquez la conversation, corrigez vos textes, apprenez du vocabulaire en contexte.",
-    example: "Corrige mon email en anglais et explique mes erreurs",
+      "Pratique la conversation, fais corriger tes textes, apprends du vocabulaire en contexte.",
+    example: "Corrige mon email en anglais et explique-moi mes erreurs",
   },
   {
     icon: Calculator,
     title: "Maths & Sciences",
     description:
-      "Résolvez des problèmes étape par étape, comprenez les formules, visualisez les concepts.",
+      "Résous des problèmes étape par étape, comprends les formules, visualise les concepts.",
     example: "Explique-moi comment résoudre cette intégrale",
   },
   {
     icon: GraduationCap,
     title: "Recherche & Veille",
     description:
-      "Synthétisez des articles, comparez des théories, préparez vos présentations.",
-    example: "Résume les points clés de cet article de recherche",
+      "Synthétise des articles, compare des théories, prépare tes présentations.",
+    example: "Résume-moi les points clés de cet article de recherche",
   },
 ];
 
@@ -126,8 +126,8 @@ export default function EtudiantsPage() {
             <span className="text-primary-600">ton budget étudiant</span>
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            Accède à GPT-4, Claude, Gemini et Mistral sans abonnement mensuel.
-            Paie uniquement ce que tu utilises, à partir de 0.001€ par message.
+            GPT-4, Claude, Gemini et Mistral à portée de main, sans abonnement.
+            Tu ne paies que ce que tu consommes, dès 0.001€ par message.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Link href="/auth/signup">
@@ -163,8 +163,8 @@ export default function EtudiantsPage() {
               <h2 className="text-2xl font-bold">Adapté au budget étudiant</h2>
             </div>
             <p className="text-center text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-              Oublie les 20€/mois de ChatGPT Plus. Avec iaiaz, tu contrôles tes
-              dépenses.
+              Fini les 20€/mois de ChatGPT Plus. Avec iaiaz, tu maîtrises ton
+              budget.
             </p>
             <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
               {budgetExamples.map((example, i) => (
@@ -192,8 +192,8 @@ export default function EtudiantsPage() {
             Comment les étudiants utilisent iaiaz
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-xl mx-auto">
-            L&apos;IA est un outil d&apos;apprentissage, pas de triche. Elle
-            t&apos;aide à comprendre et progresser.
+            L&apos;IA est un outil pour apprendre, pas pour tricher. Elle
+            t&apos;aide à comprendre et à progresser.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {useCases.map((useCase, i) => (
@@ -228,8 +228,8 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>Claude</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      Parfait pour les dissertations et l&apos;analyse de textes
-                      longs. Très bon en français.
+                      Idéal pour les dissertations et l&apos;analyse de textes
+                      longs. Excellent en français.
                     </p>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>GPT-4</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      Très polyvalent, excellent pour le code et les maths.
+                      Polyvalent, particulièrement efficace pour le code et les maths.
                     </p>
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>Gemini</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      Peut analyser des documents très longs (jusqu&apos;à 1
+                      Capable d&apos;analyser des documents très longs (jusqu&apos;à 1
                       million de tokens).
                     </p>
                   </div>
@@ -265,8 +265,8 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>Mistral</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      IA française, ultra économique. Parfait pour les questions
-                      simples.
+                      IA française et ultra économique. Parfaite pour les questions
+                      du quotidien.
                     </p>
                   </div>
                 </div>
@@ -301,10 +301,10 @@ export default function EtudiantsPage() {
               Note sur l&apos;utilisation éthique
             </h3>
             <p className="text-sm text-amber-700">
-              L&apos;IA est un outil d&apos;apprentissage, pas de triche.
+              L&apos;IA est un outil pour apprendre, pas pour tricher.
               Utilise-la pour comprendre des concepts, améliorer ton travail et
-              apprendre plus efficacement. Ne soumets jamais un texte généré par
-              IA comme ton propre travail sans le modifier et le comprendre.
+              progresser plus vite. Ne rends jamais un texte généré par l&apos;IA
+              comme s&apos;il était le tien, sans l&apos;avoir retravaillé et compris.
             </p>
           </div>
         </section>
@@ -316,8 +316,8 @@ export default function EtudiantsPage() {
               Prêt à booster tes études ?
             </h2>
             <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-              Inscris-toi en 30 secondes et reçois 1€ de crédits offerts. De
-              quoi tester tous les modèles !
+              Inscris-toi en 30 secondes et profite d&apos;1€ de crédits offerts.
+              Largement de quoi tester tous les modèles !
             </p>
             <Link href="/auth/signup">
               <Button size="lg">

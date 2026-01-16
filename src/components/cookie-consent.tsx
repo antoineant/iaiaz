@@ -77,7 +77,7 @@ export function CookieConsentBanner() {
               <Cookie className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm">
-                  Nous utilisons des cookies pour assurer le bon fonctionnement du
+                  Nous utilisons des cookies pour garantir le bon fonctionnement du
                   site et améliorer votre expérience.{" "}
                   <Link
                     href="/legal/cookies"

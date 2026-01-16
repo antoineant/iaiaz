@@ -92,7 +92,7 @@ const comparisonData = [
 const useCases = [
   {
     title: "Étudiant occasionnel",
-    description: "Quelques questions par semaine pour les devoirs",
+    description: "Quelques questions par semaine pour ses devoirs",
     iaiazCost: "~2€/mois",
     chatgptCost: "20€/mois",
     savings: "90%",
@@ -105,8 +105,8 @@ const useCases = [
     savings: "60%",
   },
   {
-    title: "Power user",
-    description: "Usage intensif tous les jours",
+    title: "Utilisateur intensif",
+    description: "Usage quotidien soutenu",
     iaiazCost: "~15€/mois",
     chatgptCost: "20€/mois",
     savings: "25%",
@@ -125,8 +125,8 @@ export default function ComparatifPage() {
             iaiaz vs ChatGPT Plus
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            Pourquoi payer 20€/mois quand vous pouvez accéder aux meilleurs
-            modèles d&apos;IA et ne payer que ce que vous utilisez ?
+            Pourquoi débourser 20€/mois quand vous pouvez accéder aux meilleurs
+            modèles d&apos;IA en ne payant que ce que vous consommez ?
           </p>
           <div className="flex items-center justify-center gap-4 text-sm">
             <span className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full">
@@ -188,10 +188,10 @@ export default function ComparatifPage() {
         {/* Use Case Savings */}
         <section className="mb-20">
           <h2 className="text-2xl font-bold text-center mb-4">
-            Combien pouvez-vous économiser ?
+            Combien allez-vous économiser ?
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-8">
-            Estimations basées sur une utilisation typique
+            Estimations basées sur des usages réels
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {useCases.map((useCase, i) => (
@@ -229,35 +229,35 @@ export default function ComparatifPage() {
         {/* Why Multiple Models */}
         <section className="mb-20 bg-[var(--muted)] rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Brain className="w-6 h-6 text-primary-600" /> Pourquoi accéder à plusieurs modèles ?
+            <Brain className="w-6 h-6 text-primary-600" /> L&apos;intérêt d&apos;avoir plusieurs modèles
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>Claude</strong> excelle en rédaction et analyse de
+                  <strong>Claude</strong> excelle en rédaction et en analyse de
                   documents longs
                 </div>
               </div>
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>GPT-4</strong> est très polyvalent et créatif
+                  <strong>GPT-4</strong> est polyvalent et créatif
                 </div>
               </div>
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>Gemini</strong> a une énorme fenêtre de contexte (1M
-                  tokens)
+                  <strong>Gemini</strong> peut traiter des textes très longs (1M
+                  de tokens)
                 </div>
               </div>
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>Mistral</strong> est excellent en français et très
-                  économique
+                  <strong>Mistral</strong> maîtrise parfaitement le français et
+                  reste très économique
                 </div>
               </div>
             </div>
@@ -267,10 +267,10 @@ export default function ComparatifPage() {
                   Avec iaiaz, vous pouvez :
                 </h3>
                 <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
-                  <li>• Utiliser GPT-4 pour le brainstorming</li>
-                  <li>• Passer à Claude pour rédiger votre dissertation</li>
-                  <li>• Utiliser Mistral pour les tâches simples (économique)</li>
-                  <li>• Comparer les réponses de différents modèles</li>
+                  <li>• Lancer un brainstorming avec GPT-4</li>
+                  <li>• Rédiger votre dissertation avec Claude</li>
+                  <li>• Économiser avec Mistral pour les tâches simples</li>
+                  <li>• Comparer les réponses de plusieurs modèles</li>
                 </ul>
               </CardContent>
             </Card>
@@ -325,10 +325,10 @@ export default function ComparatifPage() {
         {/* CTA */}
         <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">
-            Prêt à économiser sur l&apos;IA ?
+            Prêt à faire des économies ?
           </h2>
           <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-            Créez votre compte gratuitement et recevez 1€ de crédits offerts.
+            Créez votre compte gratuitement et profitez d&apos;1€ de crédits offerts.
             Sans carte bancaire, sans engagement.
           </p>
           <Link href="/auth/signup">

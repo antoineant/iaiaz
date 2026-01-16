@@ -77,7 +77,7 @@ export default function HomePage() {
               1€ offert à l'inscription
             </span>
             <h2 className="text-3xl md:text-4xl font-bold">
-              Ce que <span className="text-primary-600">1€</span> vous offre
+              Que pouvez-vous faire avec <span className="text-primary-600">1€</span> ?
             </h2>
             <p className="text-[var(--muted-foreground)] mt-2">
               Choisissez le modèle adapté à vos besoins
@@ -197,7 +197,7 @@ export default function HomePage() {
           <div className="text-center mt-8">
             <Link href="/auth/signup">
               <Button size="lg">
-          Obtenir mes 1€ gratuit
+          Récupérer mon euro offert
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
@@ -215,8 +215,8 @@ export default function HomePage() {
             Comment ça marche ?
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-2xl mx-auto">
-            C'est simple : vous payez quelques centimes par conversation,
-            au lieu de 20€/mois pour un abonnement que vous n'utilisez pas entièrement.
+            Vous payez quelques centimes par conversation au lieu de 20€/mois
+            pour un abonnement que vous n'utilisez jamais entièrement.
           </p>
 
           {/* Step by step */}
@@ -227,25 +227,25 @@ export default function HomePage() {
               </div>
               <h3 className="font-semibold mb-2">Créez votre compte</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Inscription gratuite en 30 secondes. On vous offre 1€ pour tester.
+                Inscription gratuite en 30 secondes. 1€ offert pour découvrir le service.
               </p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-primary-600 text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 2
               </div>
-              <h3 className="font-semibold mb-2">Discutez avec l'IA</h3>
+              <h3 className="font-semibold mb-2">Utilisez l'IA</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Posez vos questions, demandez de l'aide pour vos devoirs, vos projets...
+                Posez vos questions, faites-vous aider pour vos devoirs, vos projets...
               </p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-primary-600 text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
-              <h3 className="font-semibold mb-2">Payez ce que vous utilisez</h3>
+              <h3 className="font-semibold mb-2">Payez selon votre usage</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Rechargez quand vous voulez. Pas d'abonnement, pas d'engagement.
+                Rechargez quand vous le souhaitez. Sans abonnement, sans engagement.
               </p>
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function HomePage() {
                 <h3 className="font-semibold text-lg">Combien ça coûte vraiment ?</h3>
               </div>
               <p className="text-[var(--muted-foreground)] mb-6">
-                Voici des exemples de coûts réels pour des tâches courantes d'étudiants :
+                Voici des exemples concrets pour des usages étudiants :
               </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
@@ -309,7 +309,7 @@ export default function HomePage() {
           <Card className="bg-gradient-to-r from-primary-50 to-accent-50 border-primary-200">
             <CardContent className="pt-6">
               <h3 className="font-semibold text-lg mb-4 text-center">
-                💡 Pourquoi payer 20€/mois quand vous pouvez payer 2€ ?
+                💡 Pourquoi débourser 20€/mois quand 2€ suffisent ?
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="text-center p-4">
@@ -348,8 +348,8 @@ export default function HomePage() {
                   Pas d'abonnement
                 </h3>
                 <p className="text-[var(--muted-foreground)]">
-                  Achetez des crédits quand vous en avez besoin. Pas
-                  d'engagement, pas de surprise.
+                  Rechargez votre compte quand vous en avez besoin. Aucun
+                  engagement, aucune mauvaise surprise.
                 </p>
               </CardContent>
             </Card>
@@ -374,8 +374,8 @@ export default function HomePage() {
                   Transparent et simple
                 </h3>
                 <p className="text-[var(--muted-foreground)]">
-                  Voyez exactement ce que coûte chaque message avant de
-                  l'envoyer.
+                  Vous savez exactement ce que coûte chaque message avant
+                  de l'envoyer.
                 </p>
               </CardContent>
             </Card>
@@ -391,7 +391,7 @@ export default function HomePage() {
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-2xl mx-auto">
             Du plus économique au plus puissant, choisissez le modèle adapté à
-            votre tâche. On vous recommande le meilleur rapport qualité/prix.
+            votre besoin. Nous vous guidons vers le meilleur rapport qualité/prix.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {models.map(([id, model]) => (
@@ -436,11 +436,11 @@ export default function HomePage() {
       <section id="pricing" className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4">
-            Rechargez quand vous voulez
+            Rechargez à votre rythme
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12">
-            Achetez des crédits et utilisez-les quand vous voulez. Pas
-            d'expiration, pas de gaspillage.
+            Ajoutez des crédits et utilisez-les quand bon vous semble. Vos
+            crédits n'expirent jamais.
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {CREDIT_PACKS.map((pack) => (
@@ -498,25 +498,25 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-gradient-to-b from-[var(--muted)] to-primary-50">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Prêt à essayer l'IA sans limites ?
+            Envie de tester l'IA sans contraintes ?
           </h2>
           <p className="text-[var(--muted-foreground)] mb-6">
-            Créez votre compte en 30 secondes et recevez 1€ de crédits gratuits.
+            Créez votre compte en 30 secondes et profitez d'1€ de crédits offerts.
           </p>
           <div className="inline-flex flex-wrap justify-center gap-3 mb-8 text-sm">
             <span className="px-3 py-1.5 bg-primary-100 text-primary-700 rounded-full font-medium">
-              ~67 questions Claude
+              ~67 questions avec Claude
             </span>
             <span className="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full font-medium">
-              ~100 questions GPT-5
+              ~100 questions avec GPT-5
             </span>
             <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full font-medium">
-              ~3000+ Gemini Flash
+              ~3000+ avec Gemini Flash
             </span>
           </div>
           <Link href="/auth/signup">
             <Button size="lg">
-          Obtenir mes 1€ gratuit
+          Récupérer mon euro offert
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>

@@ -80,8 +80,8 @@ export default function TarifsPage() {
             Tarifs transparents
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            Payez uniquement ce que vous utilisez. Pas d&apos;abonnement, pas de
-            frais cachés. Prix affichés = prix finaux TTC.
+            Payez uniquement ce que vous consommez. Sans abonnement, sans frais
+            cachés. Les prix affichés sont les prix finaux, TTC.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
             <span className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full">
@@ -104,24 +104,23 @@ export default function TarifsPage() {
           <div className="grid md:grid-cols-3 gap-6">
             <div>
               <div className="text-3xl font-bold text-primary-600 mb-2">1.</div>
-              <h3 className="font-medium mb-1">Achetez des crédits</h3>
+              <h3 className="font-medium mb-1">Rechargez votre compte</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Rechargez votre compte avec le montant de votre choix (1€ à
-                100€).
+                Ajoutez le montant de votre choix, de 1€ à 100€.
               </p>
             </div>
             <div>
               <div className="text-3xl font-bold text-primary-600 mb-2">2.</div>
-              <h3 className="font-medium mb-1">Utilisez l&apos;IA</h3>
+              <h3 className="font-medium mb-1">Discutez avec l&apos;IA</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Chaque message consomme des crédits selon le modèle utilisé.
+                Chaque message consomme des crédits en fonction du modèle choisi.
               </p>
             </div>
             <div>
               <div className="text-3xl font-bold text-primary-600 mb-2">3.</div>
-              <h3 className="font-medium mb-1">Rechargez si besoin</h3>
+              <h3 className="font-medium mb-1">Rechargez à volonté</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Vos crédits n&apos;expirent jamais. Rechargez quand vous voulez.
+                Vos crédits n&apos;expirent jamais. Rechargez quand bon vous semble.
               </p>
             </div>
           </div>
@@ -161,7 +160,7 @@ export default function TarifsPage() {
                           <th className="p-3">Modèle</th>
                           <th className="p-3 text-right">Input (€/1M)</th>
                           <th className="p-3 text-right">Output (€/1M)</th>
-                          <th className="p-3 text-right">~Prix/message</th>
+                          <th className="p-3 text-right">Coût estimé/msg</th>
                           <th className="p-3">Description</th>
                         </tr>
                       </thead>
@@ -264,47 +263,46 @@ export default function TarifsPage() {
             <Card>
               <CardContent className="pt-6">
                 <h3 className="font-medium mb-2">
-                  Qu&apos;est-ce qu&apos;un token ?
+                  C&apos;est quoi un token ?
                 </h3>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  Un token est une unité de texte (environ 4 caractères ou 0.75
-                  mot en français). Un message typique fait 200-500 tokens en
-                  entrée et 200-1000 tokens en sortie.
+                  Un token correspond à environ 4 caractères ou 0.75 mot en
+                  français. Un message classique représente 200 à 500 tokens en
+                  entrée, et la réponse de l&apos;IA entre 200 et 1000 tokens.
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <h3 className="font-medium mb-2">
-                  Les crédits expirent-ils ?
+                  Mes crédits ont-ils une date d&apos;expiration ?
                 </h3>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  Non, vos crédits n&apos;expirent jamais. Utilisez-les à votre
-                  rythme.
+                  Non, vos crédits n&apos;expirent jamais. Utilisez-les quand
+                  vous le souhaitez.
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <h3 className="font-medium mb-2">
-                  Puis-je obtenir un remboursement ?
+                  Puis-je me faire rembourser ?
                 </h3>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  Oui, vous pouvez demander un remboursement au prorata des
-                  crédits non utilisés dans les 14 jours suivant l&apos;achat.
+                  Oui, vous pouvez demander le remboursement de vos crédits non
+                  utilisés dans les 14 jours suivant l&apos;achat.
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <h3 className="font-medium mb-2">
-                  Pourquoi ces prix sont-ils plus élevés que les API directes ?
+                  Pourquoi ces prix sont-ils supérieurs aux API directes ?
                 </h3>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  Nous appliquons une marge de 50% pour couvrir nos coûts
-                  d&apos;infrastructure, l&apos;interface utilisateur, et le
-                  support. Cela reste 10x moins cher qu&apos;un abonnement
-                  ChatGPT Plus pour un usage modéré.
+                  Nous appliquons une marge de 50% pour couvrir l&apos;infrastructure,
+                  l&apos;interface et le support. Malgré cela, c&apos;est jusqu&apos;à
+                  10 fois moins cher qu&apos;un abonnement ChatGPT Plus pour un usage modéré.
                 </p>
               </CardContent>
             </Card>
@@ -315,8 +313,8 @@ export default function TarifsPage() {
         <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">Prêt à commencer ?</h2>
           <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-            Créez votre compte et recevez 1€ de crédits offerts pour tester tous
-            les modèles.
+            Créez votre compte et profitez d&apos;1€ de crédits offerts pour
+            essayer tous les modèles.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/auth/signup">

@@ -30,7 +30,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
           <Link href="/" className="flex flex-col">
             <span className="text-2xl font-bold text-primary-600">iaiaz</span>
             <span className="text-xs text-[var(--muted-foreground)] hidden sm:block">
-              IA Accessible, Zéro engagement
+              L&apos;IA accessible, sans engagement
             </span>
           </Link>
 
