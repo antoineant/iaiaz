@@ -141,7 +141,7 @@ async function callOpenAI(
 
   const response = await client.chat.completions.create({
     model,
-    max_tokens: 4096,
+    max_completion_tokens: 4096,
     messages: openaiMessages as Parameters<typeof client.chat.completions.create>[0]["messages"],
   });
 
@@ -211,7 +211,8 @@ async function callGoogle(
   };
 }
 
-// Mistral - supports images via imageUrl
+// Mistral - supports images via image_url (snake_case per docs)
+// Source: https://docs.mistral.ai/capabilities/vision
 async function callMistral(
   model: string,
   messages: UnifiedMessage[]
@@ -233,16 +234,17 @@ async function callMistral(
         return { type: "text" as const, text: part.text };
       }
       if (part.type === "image") {
+        // Mistral SDK uses imageUrl (camelCase)
         return {
           type: "image_url" as const,
           imageUrl: `data:${part.mimeType};base64,${part.base64}`,
         };
       }
-      // Mistral doesn't support PDFs natively
+      // Mistral doesn't support PDFs via chat API (needs OCR API)
       if (part.type === "document") {
         return {
           type: "text" as const,
-          text: `[Document joint: ${part.filename}]`,
+          text: `[Document joint: ${part.filename} - Ce modèle ne supporte pas les PDF]`,
         };
       }
       return { type: "text" as const, text: "" };
