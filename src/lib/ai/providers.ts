@@ -90,7 +90,7 @@ async function callAnthropic(
   };
 }
 
-// OpenAI (GPT) - supports images via data URLs
+// OpenAI (GPT) - supports images and files via data URLs
 async function callOpenAI(
   model: string,
   messages: UnifiedMessage[]
@@ -122,11 +122,14 @@ async function callOpenAI(
           },
         };
       }
-      // For PDFs, OpenAI doesn't natively support - include as text notice
-      if (part.type === "document") {
+      // GPT-5 supports PDFs via file input
+      if (part.type === "document" && part.mimeType === "application/pdf") {
         return {
-          type: "text" as const,
-          text: `[Document joint: ${part.filename}]`,
+          type: "file" as const,
+          file: {
+            filename: part.filename,
+            file_data: `data:${part.mimeType};base64,${part.base64}`,
+          },
         };
       }
       return { type: "text" as const, text: "" };

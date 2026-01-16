@@ -51,7 +51,7 @@ export const MODEL_PRICING = {
     description: "Le dernier modèle d'OpenAI. Très puissant et polyvalent.",
     recommended: false,
     category: "premium",
-    capabilities: { images: true, pdf: false },
+    capabilities: { images: true, pdf: true },
   },
   "gpt-4.1": {
     name: "GPT-4.1",
