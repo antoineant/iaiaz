@@ -29,8 +29,8 @@ export const MODEL_PRICING = {
     category: "balanced",
     capabilities: { images: true, pdf: true },
   },
-  "claude-haiku-3-5-20241022": {
-    name: "Claude Haiku 3.5",
+  "claude-3-5-haiku-20241022": {
+    name: "Claude 3.5 Haiku",
     provider: "Anthropic",
     input: 0.8,
     output: 4.0,
