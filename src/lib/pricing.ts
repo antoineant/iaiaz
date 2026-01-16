@@ -87,14 +87,25 @@ export const MODEL_PRICING = {
   // ===== GOOGLE GEMINI =====
   // All Gemini models support images and PDF natively
   // Source: https://ai.google.dev/gemini-api/docs/models
-  "gemini-2.5-pro-preview-06-05": {
+  // Note: Gemini 1.5 models are retired as of April 2025
+  "gemini-2.5-pro": {
     name: "Gemini 2.5 Pro",
     provider: "Google",
-    input: 4.0,
-    output: 20.0,
-    description: "Le plus puissant de Google. Excellent raisonnement.",
+    input: 1.25,
+    output: 10.0,
+    description: "Le plus puissant de Google. Excellent raisonnement et pensée adaptative.",
     recommended: false,
     category: "premium",
+    capabilities: { images: true, pdf: true },
+  },
+  "gemini-2.5-flash": {
+    name: "Gemini 2.5 Flash",
+    provider: "Google",
+    input: 0.15,
+    output: 0.6,
+    description: "Rapide et performant. Bon équilibre qualité/prix.",
+    recommended: false,
+    category: "balanced",
     capabilities: { images: true, pdf: true },
   },
   "gemini-2.0-flash": {
@@ -107,18 +118,8 @@ export const MODEL_PRICING = {
     category: "fast",
     capabilities: { images: true, pdf: true },
   },
-  "gemini-1.5-pro": {
-    name: "Gemini 1.5 Pro",
-    provider: "Google",
-    input: 1.25,
-    output: 5.0,
-    description: "Grande fenêtre de contexte (1M tokens). Bon pour longs documents.",
-    recommended: false,
-    category: "balanced",
-    capabilities: { images: true, pdf: true },
-  },
-  "gemini-1.5-flash": {
-    name: "Gemini 1.5 Flash",
+  "gemini-2.0-flash-lite": {
+    name: "Gemini 2.0 Flash Lite",
     provider: "Google",
     input: 0.075,
     output: 0.3,
