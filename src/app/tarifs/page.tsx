@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, ArrowRight, Info, Zap, Shield, CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { MODEL_PRICING, MARKUP } from "@/lib/pricing";
 import { PricingCalculator } from "./calculator";
 
@@ -67,78 +69,90 @@ function estimateMessageCost(input: number, output: number): string {
 
 export default function TarifsPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold">
-            iaiaz
+      <header className="border-b border-[var(--border)]">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex flex-col">
+            <span className="text-2xl font-bold text-primary-600">iaiaz</span>
+            <span className="text-xs text-[var(--muted-foreground)] hidden sm:block">
+              Intelligence Artificielle Intelligemment Accessible, Zéro engagement
+            </span>
           </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/comparatif" className="hover:text-primary">
+          <nav className="flex items-center gap-4">
+            <Link
+              href="/comparatif"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hidden sm:block"
+            >
               Comparatif
             </Link>
-            <Link href="/etudiants" className="hover:text-primary">
+            <Link
+              href="/etudiants"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hidden sm:block"
+            >
               Étudiants
             </Link>
             <Link
-              href="/auth/signup"
-              className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+              href="/auth/login"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             >
-              Essayer gratuit
+              Connexion
+            </Link>
+            <Link href="/auth/signup">
+              <Button size="sm">Commencer</Button>
             </Link>
           </nav>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="max-w-6xl mx-auto px-4 py-12">
         {/* Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Tarifs transparents
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
             Payez uniquement ce que vous utilisez. Pas d&apos;abonnement, pas de
             frais cachés. Prix affichés = prix finaux TTC.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-            <span className="flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full">
               <Check className="w-4 h-4" /> 1€ offert à l&apos;inscription
             </span>
-            <span className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full">
               <Zap className="w-4 h-4" /> Crédits sans expiration
             </span>
-            <span className="flex items-center gap-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full">
               <Shield className="w-4 h-4" /> Zéro engagement
             </span>
           </div>
         </div>
 
         {/* How it works */}
-        <section className="mb-16 bg-muted/50 rounded-2xl p-8">
+        <section className="mb-16 bg-[var(--muted)] rounded-2xl p-8">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Info className="w-5 h-5" /> Comment ça marche ?
+            <Info className="w-5 h-5 text-primary-600" /> Comment ça marche ?
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">1.</div>
+              <div className="text-3xl font-bold text-primary-600 mb-2">1.</div>
               <h3 className="font-medium mb-1">Achetez des crédits</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[var(--muted-foreground)]">
                 Rechargez votre compte avec le montant de votre choix (1€ à
                 100€).
               </p>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">2.</div>
+              <div className="text-3xl font-bold text-primary-600 mb-2">2.</div>
               <h3 className="font-medium mb-1">Utilisez l&apos;IA</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[var(--muted-foreground)]">
                 Chaque message consomme des crédits selon le modèle utilisé.
               </p>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">3.</div>
+              <div className="text-3xl font-bold text-primary-600 mb-2">3.</div>
               <h3 className="font-medium mb-1">Rechargez si besoin</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[var(--muted-foreground)]">
                 Vos crédits n&apos;expirent jamais. Rechargez quand vous voulez.
               </p>
             </div>
@@ -158,59 +172,61 @@ export default function TarifsPage() {
           <h2 className="text-2xl font-bold text-center mb-4">
             Prix par modèle
           </h2>
-          <p className="text-center text-muted-foreground mb-8">
+          <p className="text-center text-[var(--muted-foreground)] mb-8">
             Prix pour 1 million de tokens (environ 750 000 mots)
           </p>
 
           <div className="space-y-8">
             {providers.map((provider) => (
-              <div key={provider.name}>
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <span
-                    className={`w-3 h-3 rounded-full bg-${provider.color}-500`}
-                  ></span>
-                  {provider.name}
-                </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="border-b text-left">
-                        <th className="p-3">Modèle</th>
-                        <th className="p-3 text-right">Input (€/1M)</th>
-                        <th className="p-3 text-right">Output (€/1M)</th>
-                        <th className="p-3 text-right">~Prix/message</th>
-                        <th className="p-3">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {provider.models.map(([id, model]) => (
-                        <tr key={id} className="border-b hover:bg-muted/50">
-                          <td className="p-3 font-medium">
-                            {model.name}
-                            {model.recommended && (
-                              <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">
-                                Recommandé
-                              </span>
-                            )}
-                          </td>
-                          <td className="p-3 text-right font-mono">
-                            {(model.input * MARKUP).toFixed(2)}€
-                          </td>
-                          <td className="p-3 text-right font-mono">
-                            {(model.output * MARKUP).toFixed(2)}€
-                          </td>
-                          <td className="p-3 text-right font-mono text-primary">
-                            {estimateMessageCost(model.input, model.output)}
-                          </td>
-                          <td className="p-3 text-sm text-muted-foreground">
-                            {model.description}
-                          </td>
+              <Card key={provider.name}>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span
+                      className={`w-3 h-3 rounded-full bg-${provider.color}-500`}
+                    ></span>
+                    {provider.name}
+                  </h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-[var(--border)] text-left">
+                          <th className="p-3">Modèle</th>
+                          <th className="p-3 text-right">Input (€/1M)</th>
+                          <th className="p-3 text-right">Output (€/1M)</th>
+                          <th className="p-3 text-right">~Prix/message</th>
+                          <th className="p-3">Description</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                      </thead>
+                      <tbody>
+                        {provider.models.map(([id, model]) => (
+                          <tr key={id} className="border-b border-[var(--border)] hover:bg-[var(--muted)]">
+                            <td className="p-3 font-medium">
+                              {model.name}
+                              {model.recommended && (
+                                <span className="ml-2 text-xs bg-primary-100 text-primary-600 px-2 py-0.5 rounded">
+                                  Recommandé
+                                </span>
+                              )}
+                            </td>
+                            <td className="p-3 text-right font-mono">
+                              {(model.input * MARKUP).toFixed(2)}€
+                            </td>
+                            <td className="p-3 text-right font-mono">
+                              {(model.output * MARKUP).toFixed(2)}€
+                            </td>
+                            <td className="p-3 text-right font-mono text-primary-600">
+                              {estimateMessageCost(model.input, model.output)}
+                            </td>
+                            <td className="p-3 text-sm text-[var(--muted-foreground)]">
+                              {model.description}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </section>
@@ -221,45 +237,53 @@ export default function TarifsPage() {
             Packs de crédits
           </h2>
           <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="border rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold mb-1">5€</div>
-              <div className="text-sm text-muted-foreground mb-4">
-                5€ de crédits
-              </div>
-              <div className="text-xs text-muted-foreground">
-                ~250 messages Claude Sonnet
-              </div>
-            </div>
-            <div className="border-2 border-primary rounded-xl p-6 text-center relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full">
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold mb-1">5€</div>
+                <div className="text-sm text-[var(--muted-foreground)] mb-4">
+                  5€ de crédits
+                </div>
+                <div className="text-xs text-[var(--muted-foreground)]">
+                  ~250 messages Claude Sonnet
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="ring-2 ring-primary-500 text-center relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-600 text-white text-xs px-3 py-1 rounded-full">
                 Populaire
               </div>
-              <div className="text-3xl font-bold mb-1">10€</div>
-              <div className="text-sm text-muted-foreground mb-4">
-                10€ de crédits
-              </div>
-              <div className="text-xs text-muted-foreground">
-                ~500 messages Claude Sonnet
-              </div>
-            </div>
-            <div className="border rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold mb-1">20€</div>
-              <div className="text-sm text-muted-foreground mb-4">
-                20€ de crédits
-              </div>
-              <div className="text-xs text-muted-foreground">
-                ~1000 messages Claude Sonnet
-              </div>
-            </div>
-            <div className="border rounded-xl p-6 text-center bg-muted/50">
-              <div className="text-3xl font-bold mb-1">1-100€</div>
-              <div className="text-sm text-muted-foreground mb-4">
-                Montant libre
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Choisissez votre montant
-              </div>
-            </div>
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold mb-1">10€</div>
+                <div className="text-sm text-[var(--muted-foreground)] mb-4">
+                  10€ de crédits
+                </div>
+                <div className="text-xs text-[var(--muted-foreground)]">
+                  ~500 messages Claude Sonnet
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold mb-1">20€</div>
+                <div className="text-sm text-[var(--muted-foreground)] mb-4">
+                  20€ de crédits
+                </div>
+                <div className="text-xs text-[var(--muted-foreground)]">
+                  ~1000 messages Claude Sonnet
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="text-center bg-[var(--muted)]">
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold mb-1">1-100€</div>
+                <div className="text-sm text-[var(--muted-foreground)] mb-4">
+                  Montant libre
+                </div>
+                <div className="text-xs text-[var(--muted-foreground)]">
+                  Choisissez votre montant
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
@@ -269,88 +293,110 @@ export default function TarifsPage() {
             Questions fréquentes
           </h2>
           <div className="space-y-4">
-            <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-2">
-                Qu&apos;est-ce qu&apos;un token ?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Un token est une unité de texte (environ 4 caractères ou 0.75
-                mot en français). Un message typique fait 200-500 tokens en
-                entrée et 200-1000 tokens en sortie.
-              </p>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-2">
-                Les crédits expirent-ils ?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Non, vos crédits n&apos;expirent jamais. Utilisez-les à votre
-                rythme.
-              </p>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-2">
-                Puis-je obtenir un remboursement ?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Oui, vous pouvez demander un remboursement au prorata des
-                crédits non utilisés dans les 14 jours suivant l&apos;achat.
-              </p>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-2">
-                Pourquoi ces prix sont-ils plus élevés que les API directes ?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Nous appliquons une marge de 50% pour couvrir nos coûts
-                d&apos;infrastructure, l&apos;interface utilisateur, et le
-                support. Cela reste 10x moins cher qu&apos;un abonnement
-                ChatGPT Plus pour un usage modéré.
-              </p>
-            </div>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="font-medium mb-2">
+                  Qu&apos;est-ce qu&apos;un token ?
+                </h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Un token est une unité de texte (environ 4 caractères ou 0.75
+                  mot en français). Un message typique fait 200-500 tokens en
+                  entrée et 200-1000 tokens en sortie.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="font-medium mb-2">
+                  Les crédits expirent-ils ?
+                </h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Non, vos crédits n&apos;expirent jamais. Utilisez-les à votre
+                  rythme.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="font-medium mb-2">
+                  Puis-je obtenir un remboursement ?
+                </h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Oui, vous pouvez demander un remboursement au prorata des
+                  crédits non utilisés dans les 14 jours suivant l&apos;achat.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="font-medium mb-2">
+                  Pourquoi ces prix sont-ils plus élevés que les API directes ?
+                </h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Nous appliquons une marge de 50% pour couvrir nos coûts
+                  d&apos;infrastructure, l&apos;interface utilisateur, et le
+                  support. Cela reste 10x moins cher qu&apos;un abonnement
+                  ChatGPT Plus pour un usage modéré.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="text-center bg-primary/10 rounded-2xl p-8 md:p-12">
+        <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">Prêt à commencer ?</h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+          <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
             Créez votre compte et recevez 1€ de crédits offerts pour tester tous
             les modèles.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/auth/signup"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl text-lg font-medium hover:bg-primary/90 transition-colors"
-            >
-              <CreditCard className="w-5 h-5" />
-              Créer mon compte gratuit
+            <Link href="/auth/signup">
+              <Button size="lg">
+                <CreditCard className="w-5 h-5 mr-2" />
+                Créer mon compte gratuit
+              </Button>
             </Link>
-            <Link
-              href="/comparatif"
-              className="inline-flex items-center gap-2 border px-8 py-4 rounded-xl text-lg hover:bg-muted transition-colors"
-            >
-              Voir le comparatif <ArrowRight className="w-5 h-5" />
+            <Link href="/comparatif">
+              <Button variant="outline" size="lg">
+                Voir le comparatif <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
             </Link>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t mt-20 py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2025 iaiaz - BAJURIAN SAS. Tous droits réservés.</p>
-          <div className="flex justify-center gap-4 mt-2">
-            <Link href="/legal/cgu" className="hover:underline">
+      <footer className="border-t border-[var(--border)] py-8 px-4 mt-16">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="text-center md:text-left">
+            <div className="text-2xl font-bold text-primary-600">iaiaz</div>
+            <p className="text-xs text-[var(--muted-foreground)]">
+              Intelligence Artificielle Intelligemment Accessible, Zéro engagement
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-[var(--muted-foreground)]">
+              © 2025 iaiaz. Tous droits réservés.
+            </p>
+            <p className="text-xs text-[var(--muted-foreground)] mt-1">
+              Fait avec amour à Toulouse, France
+            </p>
+          </div>
+          <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
+            <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">
               CGU
             </Link>
-            <Link href="/legal/cgv" className="hover:underline">
+            <Link href="/legal/cgv" className="hover:text-[var(--foreground)]">
               CGV
             </Link>
-            <Link href="/legal/privacy" className="hover:underline">
+            <Link href="/legal/privacy" className="hover:text-[var(--foreground)]">
               Confidentialité
             </Link>
-          </div>
+            <Link href="/legal/cookies" className="hover:text-[var(--foreground)]">
+              Cookies
+            </Link>
+          </nav>
         </div>
       </footer>
     </div>
