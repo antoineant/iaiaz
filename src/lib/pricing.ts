@@ -7,6 +7,8 @@
 
 export const MODEL_PRICING = {
   // ===== ANTHROPIC CLAUDE =====
+  // All Claude models support vision and PDF natively
+  // Source: https://docs.claude.com/en/docs/about-claude/models/overview
   "claude-opus-4-5-20250514": {
     name: "Claude Opus 4.5",
     provider: "Anthropic",
@@ -35,10 +37,12 @@ export const MODEL_PRICING = {
     description: "Rapide et économique. Idéal pour les tâches simples.",
     recommended: false,
     category: "fast",
-    capabilities: { images: true, pdf: false },
+    capabilities: { images: true, pdf: true },
   },
 
   // ===== OPENAI GPT =====
+  // GPT models support images but NOT native PDF (must convert to images)
+  // Source: https://learn.microsoft.com/en-us/answers/questions/2264533/does-azure-openai-support-pdf-upload-for-gpt-4o
   "gpt-5": {
     name: "GPT-5",
     provider: "OpenAI",
@@ -81,6 +85,8 @@ export const MODEL_PRICING = {
   },
 
   // ===== GOOGLE GEMINI =====
+  // All Gemini models support images and PDF natively
+  // Source: https://ai.google.dev/gemini-api/docs/models
   "gemini-2.5-pro-preview-06-05": {
     name: "Gemini 2.5 Pro",
     provider: "Google",
@@ -123,6 +129,8 @@ export const MODEL_PRICING = {
   },
 
   // ===== MISTRAL =====
+  // Mistral Large/Medium/Small support images, but PDF requires separate OCR API
+  // Source: https://docs.mistral.ai/capabilities/vision
   "mistral-large-latest": {
     name: "Mistral Large",
     provider: "Mistral",
@@ -151,14 +159,14 @@ export const MODEL_PRICING = {
     description: "Rapide et économique. Bon pour les tâches simples.",
     recommended: false,
     category: "economy",
-    capabilities: { images: false, pdf: false },
+    capabilities: { images: true, pdf: false },
   },
   "codestral-latest": {
     name: "Codestral",
     provider: "Mistral",
     input: 0.3,
     output: 0.9,
-    description: "Spécialisé pour le code. Excellent pour la programmation.",
+    description: "Spécialisé pour le code. Texte uniquement.",
     recommended: false,
     category: "code",
     capabilities: { images: false, pdf: false },
