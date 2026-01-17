@@ -4,9 +4,9 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { CostEstimate } from "./cost-estimate";
 import { RateLimitIndicator } from "./rate-limit-indicator";
-import { type ModelId, getModelCapabilities } from "@/lib/pricing";
 import type { ModelTier } from "@/lib/rate-limiter";
 import type { FileAttachment } from "@/types";
+import type { PricingData } from "@/lib/pricing-db";
 import {
   Send,
   AlertTriangle,
@@ -27,13 +27,14 @@ export interface RateLimitInfo {
 
 interface ChatInputProps {
   onSend: (message: string, attachments?: FileAttachment[]) => void;
-  model: ModelId;
+  model: string;
   balance: number;
   disabled?: boolean;
   isLoading?: boolean;
   rateLimit?: RateLimitInfo | null;
   rateLimitError?: string | null;
   conversationId?: string;
+  pricingData: PricingData;
 }
 
 const ALLOWED_TYPES = [
@@ -54,6 +55,7 @@ export function ChatInput({
   rateLimit,
   rateLimitError,
   conversationId,
+  pricingData,
 }: ChatInputProps) {
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<FileAttachment[]>([]);
@@ -72,7 +74,9 @@ export function ChatInput({
     }
   }, [input]);
 
-  const capabilities = getModelCapabilities(model);
+  // Get capabilities from the model in pricing data
+  const modelInfo = pricingData.models.find((m) => m.id === model);
+  const capabilities = modelInfo?.capabilities || { images: false, pdf: false };
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -295,7 +299,12 @@ export function ChatInput({
         {/* Cost estimate and rate limit indicator */}
         {hasContent && (
           <div className="mb-2 flex items-center justify-between gap-4">
-            <CostEstimate model={model} inputText={input} balance={balance} />
+            <CostEstimate
+              model={model}
+              inputText={input}
+              balance={balance}
+              pricingData={pricingData}
+            />
             {rateLimit && (
               <RateLimitIndicator
                 remaining={rateLimit.remaining}

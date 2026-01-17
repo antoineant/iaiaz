@@ -1,23 +1,37 @@
 "use client";
 
-import { estimateCost, getModelInfo, type ModelId } from "@/lib/pricing";
 import { formatCurrency } from "@/lib/utils";
 import { AlertCircle, TrendingDown } from "lucide-react";
+import type { PricingData } from "@/lib/pricing-db";
 
 interface CostEstimateProps {
-  model: ModelId;
+  model: string;
   inputText: string;
   balance: number;
+  pricingData: PricingData;
 }
 
-export function CostEstimate({ model, inputText, balance }: CostEstimateProps) {
+export function CostEstimate({ model, inputText, balance, pricingData }: CostEstimateProps) {
   if (!inputText.trim()) {
     return null;
   }
 
-  const estimate = estimateCost(model, inputText);
-  const modelInfo = getModelInfo(model);
-  const balanceAfter = balance - estimate.cost;
+  const modelInfo = pricingData.models.find((m) => m.id === model);
+  if (!modelInfo) {
+    return null;
+  }
+
+  // Rough estimation: ~4 characters per token
+  const inputTokens = Math.ceil(inputText.length / 4);
+  const estimatedOutputTokens = 500;
+
+  // Calculate cost using DB pricing
+  const baseCost =
+    (inputTokens * modelInfo.input_price + estimatedOutputTokens * modelInfo.output_price) /
+    1_000_000;
+  const cost = baseCost * pricingData.settings.markupMultiplier;
+
+  const balanceAfter = balance - cost;
   const isLowBalance = balanceAfter < 0.5;
   const isInsufficientBalance = balanceAfter < 0;
 
@@ -26,7 +40,7 @@ export function CostEstimate({ model, inputText, balance }: CostEstimateProps) {
       <div className="flex items-center gap-1.5">
         <span>Estimation :</span>
         <span className="font-medium text-[var(--foreground)]">
-          ~{formatCurrency(estimate.cost)}
+          ~{formatCurrency(cost)}
         </span>
       </div>
 
@@ -60,7 +74,7 @@ export function CostEstimate({ model, inputText, balance }: CostEstimateProps) {
       )}
 
       <div className="ml-auto text-[var(--muted-foreground)]">
-        ~{estimate.inputTokens} tokens entrée, ~{estimate.outputTokens} sortie
+        ~{inputTokens} tokens entrée, ~{estimatedOutputTokens} sortie
       </div>
     </div>
   );

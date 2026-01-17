@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import { ChatClient } from "../chat-client";
+import { getPricingData } from "@/lib/pricing-db";
 import type { ChatMessage } from "@/types";
 
 interface ChatConversationPageProps {
@@ -33,30 +34,29 @@ export default async function ChatConversationPage({
     notFound();
   }
 
-  // Fetch user profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("credits_balance")
-    .eq("id", user.id)
-    .single();
-
-  // Fetch all conversations for the sidebar
-  const { data: conversations } = await supabase
-    .from("conversations")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("updated_at", { ascending: false })
-    .limit(50);
-
-  // Fetch messages for this conversation
-  const { data: messagesData } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("conversation_id", id)
-    .order("created_at", { ascending: true });
+  // Fetch all data in parallel
+  const [profileResult, conversationsResult, messagesResult, pricingData] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("credits_balance")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("conversations")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false })
+      .limit(50),
+    supabase
+      .from("messages")
+      .select("*")
+      .eq("conversation_id", id)
+      .order("created_at", { ascending: true }),
+    getPricingData(),
+  ]);
 
   // Transform messages to ChatMessage format
-  const initialMessages: ChatMessage[] = (messagesData || []).map((msg) => ({
+  const initialMessages: ChatMessage[] = (messagesResult.data || []).map((msg) => ({
     id: msg.id,
     role: msg.role as "user" | "assistant",
     content: msg.content,
@@ -72,10 +72,11 @@ export default async function ChatConversationPage({
   return (
     <ChatClient
       userId={user.id}
-      initialBalance={profile?.credits_balance || 0}
-      initialConversations={conversations || []}
+      initialBalance={profileResult.data?.credits_balance || 0}
+      initialConversations={conversationsResult.data || []}
       conversationId={id}
       initialMessages={initialMessages}
+      pricingData={pricingData}
     />
   );
 }

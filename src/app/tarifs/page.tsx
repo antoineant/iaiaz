@@ -4,33 +4,35 @@ import { Check, ArrowRight, Info, Zap, Shield, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
-import { MODEL_PRICING, MARKUP } from "@/lib/pricing";
+import { getPricingData, type DBModel } from "@/lib/pricing-db";
 import { PricingCalculator } from "./calculator";
 import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
 
-// Page-specific FAQs for structured data
-const tarifsFaqs = [
-  {
-    question: "C'est quoi un token ?",
-    answer:
-      "Un token correspond à environ 4 caractères ou 0.75 mot en français. Un message classique représente 200 à 500 tokens en entrée, et la réponse de l'IA entre 200 et 1000 tokens.",
-  },
-  {
-    question: "Mes crédits ont-ils une date d'expiration ?",
-    answer:
-      "Non, vos crédits n'expirent jamais. Utilisez-les quand vous le souhaitez.",
-  },
-  {
-    question: "Puis-je me faire rembourser ?",
-    answer:
-      "Oui, vous pouvez demander le remboursement de vos crédits non utilisés à tout moment. Le remboursement est calculé au prorata du solde restant.",
-  },
-  {
-    question: "Pourquoi ces prix sont-ils supérieurs aux API directes ?",
-    answer:
-      "Nous appliquons une marge de 50% pour couvrir l'infrastructure, l'interface et le support. Malgré cela, c'est jusqu'à 10 fois moins cher qu'un abonnement ChatGPT Plus pour un usage modéré.",
-  },
-];
+// Page-specific FAQs for structured data - markup is dynamic
+function getTarifsFaqs(markupPercentage: number) {
+  return [
+    {
+      question: "C'est quoi un token ?",
+      answer:
+        "Un token correspond à environ 4 caractères ou 0.75 mot en français. Un message classique représente 200 à 500 tokens en entrée, et la réponse de l'IA entre 200 et 1000 tokens.",
+    },
+    {
+      question: "Mes crédits ont-ils une date d'expiration ?",
+      answer:
+        "Non, vos crédits n'expirent jamais. Utilisez-les quand vous le souhaitez.",
+    },
+    {
+      question: "Puis-je me faire rembourser ?",
+      answer:
+        "Oui, vous pouvez demander le remboursement de vos crédits non utilisés à tout moment. Le remboursement est calculé au prorata du solde restant.",
+    },
+    {
+      question: "Pourquoi ces prix sont-ils supérieurs aux API directes ?",
+      answer:
+        `Nous appliquons une marge de ${markupPercentage}% pour couvrir l'infrastructure, l'interface et le support. Malgré cela, c'est jusqu'à 10 fois moins cher qu'un abonnement ChatGPT Plus pour un usage modéré.`,
+    },
+  ];
+}
 
 export const metadata: Metadata = {
   title: "Tarifs - Prix par modèle IA",
@@ -58,46 +60,49 @@ export const metadata: Metadata = {
   },
 };
 
+// Provider display names and colors
+const providerConfig: Record<string, { name: string; color: string }> = {
+  Anthropic: { name: "Anthropic (Claude)", color: "orange" },
+  OpenAI: { name: "OpenAI (GPT)", color: "green" },
+  Google: { name: "Google (Gemini)", color: "blue" },
+  Mistral: { name: "Mistral", color: "purple" },
+};
+
 // Group models by provider
-const providers = [
-  {
-    name: "Anthropic (Claude)",
-    color: "orange",
-    models: Object.entries(MODEL_PRICING).filter(([_, m]) =>
-      m.provider === "Anthropic"
-    ),
-  },
-  {
-    name: "OpenAI (GPT)",
-    color: "green",
-    models: Object.entries(MODEL_PRICING).filter(([_, m]) =>
-      m.provider === "OpenAI"
-    ),
-  },
-  {
-    name: "Google (Gemini)",
-    color: "blue",
-    models: Object.entries(MODEL_PRICING).filter(([_, m]) =>
-      m.provider === "Google"
-    ),
-  },
-  {
-    name: "Mistral",
-    color: "purple",
-    models: Object.entries(MODEL_PRICING).filter(([_, m]) =>
-      m.provider === "Mistral"
-    ),
-  },
-];
+function groupModelsByProvider(models: DBModel[]) {
+  const grouped: Record<string, DBModel[]> = {};
+
+  for (const model of models) {
+    if (!grouped[model.provider]) {
+      grouped[model.provider] = [];
+    }
+    grouped[model.provider].push(model);
+  }
+
+  // Return in preferred order
+  const orderedProviders = ["Anthropic", "OpenAI", "Google", "Mistral"];
+  return orderedProviders
+    .filter((p) => grouped[p]?.length > 0)
+    .map((provider) => ({
+      ...providerConfig[provider],
+      provider,
+      models: grouped[provider],
+    }));
+}
 
 // Calculate price per message (assuming ~500 input tokens, ~500 output tokens)
-function estimateMessageCost(input: number, output: number): string {
-  const cost = ((500 * input + 500 * output) / 1_000_000) * MARKUP;
+function estimateMessageCost(input: number, output: number, markupMultiplier: number): string {
+  const cost = ((500 * input + 500 * output) / 1_000_000) * markupMultiplier;
   if (cost < 0.001) return "<0.001€";
   return cost.toFixed(4) + "€";
 }
 
-export default function TarifsPage() {
+export default async function TarifsPage() {
+  // Fetch pricing data from database
+  const { settings, models } = await getPricingData();
+  const { markup, markupMultiplier } = settings;
+  const tarifsFaqs = getTarifsFaqs(markup);
+  const providers = groupModelsByProvider(models);
   return (
     <div className="min-h-screen">
       {/* Structured Data for SEO */}
@@ -169,7 +174,7 @@ export default function TarifsPage() {
           <h2 className="text-2xl font-bold text-center mb-8">
             Calculateur de coût
           </h2>
-          <PricingCalculator />
+          <PricingCalculator models={models} markupMultiplier={markupMultiplier} />
         </section>
 
         {/* Pricing Tables by Provider */}
@@ -203,24 +208,24 @@ export default function TarifsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {provider.models.map(([id, model]) => (
-                          <tr key={id} className="border-b border-[var(--border)] hover:bg-[var(--muted)]">
+                        {provider.models.map((model) => (
+                          <tr key={model.id} className="border-b border-[var(--border)] hover:bg-[var(--muted)]">
                             <td className="p-3 font-medium">
                               {model.name}
-                              {model.recommended && (
+                              {model.is_recommended && (
                                 <span className="ml-2 text-xs bg-primary-100 text-primary-600 px-2 py-0.5 rounded">
                                   Recommandé
                                 </span>
                               )}
                             </td>
                             <td className="p-3 text-right font-mono">
-                              {(model.input * MARKUP).toFixed(2)}€
+                              {(model.input_price * markupMultiplier).toFixed(2)}€
                             </td>
                             <td className="p-3 text-right font-mono">
-                              {(model.output * MARKUP).toFixed(2)}€
+                              {(model.output_price * markupMultiplier).toFixed(2)}€
                             </td>
                             <td className="p-3 text-right font-mono text-primary-600">
-                              {estimateMessageCost(model.input, model.output)}
+                              {estimateMessageCost(model.input_price, model.output_price, markupMultiplier)}
                             </td>
                             <td className="p-3 text-sm text-[var(--muted-foreground)]">
                               {model.description}
@@ -338,7 +343,7 @@ export default function TarifsPage() {
                   Pourquoi ces prix sont-ils supérieurs aux API directes ?
                 </h3>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  Nous appliquons une marge de 50% pour couvrir l&apos;infrastructure,
+                  Nous appliquons une marge de {markup}% pour couvrir l&apos;infrastructure,
                   l&apos;interface et le support. Malgré cela, c&apos;est jusqu&apos;à
                   10 fois moins cher qu&apos;un abonnement ChatGPT Plus pour un usage modéré.
                 </p>

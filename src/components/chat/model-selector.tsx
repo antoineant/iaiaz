@@ -1,19 +1,20 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { getAllModels, type ModelId } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Check, Sparkles } from "lucide-react";
+import type { DBModel } from "@/lib/pricing-db";
 
 interface ModelSelectorProps {
-  value: ModelId;
-  onChange: (model: ModelId) => void;
+  value: string;
+  onChange: (model: string) => void;
+  models: DBModel[];
+  markupMultiplier: number;
 }
 
-export function ModelSelector({ value, onChange }: ModelSelectorProps) {
+export function ModelSelector({ value, onChange, models, markupMultiplier }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const models = getAllModels();
   const selectedModel = models.find((m) => m.id === value);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
       acc[model.provider].push(model);
       return acc;
     },
-    {} as Record<string, typeof models>
+    {} as Record<string, DBModel[]>
   );
 
   return (
@@ -49,7 +50,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
           "text-sm font-medium"
         )}
       >
-        {selectedModel?.recommended && (
+        {selectedModel?.is_recommended && (
           <Sparkles className="w-4 h-4 text-primary-500" />
         )}
         <span>{selectedModel?.name || "Choisir un modèle"}</span>
@@ -86,7 +87,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">{model.name}</span>
-                        {model.recommended && (
+                        {model.is_recommended && (
                           <span className="text-xs px-1.5 py-0.5 rounded bg-primary-100 text-primary-700">
                             Recommandé
                           </span>
@@ -96,7 +97,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
                         {model.description}
                       </p>
                       <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                        {((model.input * 1.5) / 1000).toFixed(4)}€ / 1K tokens
+                        {((model.input_price * markupMultiplier) / 1000).toFixed(4)}€ / 1K tokens
                         entrée
                       </p>
                     </div>

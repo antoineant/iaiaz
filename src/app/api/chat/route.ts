@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { callAI } from "@/lib/ai/providers";
-import { calculateCost, getModelInfo, type ModelId } from "@/lib/pricing";
+import { type ModelId } from "@/lib/pricing";
+import {
+  calculateCostFromDBAdmin,
+  getModelFromDBAdmin,
+  getAppSettingsAdmin,
+} from "@/lib/pricing-db";
 import {
   checkRateLimit,
   getRateLimitErrorMessage,
@@ -85,14 +90,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate model
-    const modelInfo = getModelInfo(model);
+    // Validate model from database
+    const modelInfo = await getModelFromDBAdmin(model);
     if (!modelInfo) {
       return NextResponse.json(
-        { error: "Modèle invalide" },
+        { error: "Modèle invalide ou désactivé" },
         { status: 400 }
       );
     }
+
+    // Get pricing settings for cost estimation
+    const pricingSettings = await getAppSettingsAdmin();
 
     // Check rate limit
     const rateLimitResult = await checkRateLimit(adminClient, user.id, model);
@@ -169,7 +177,10 @@ export async function POST(request: NextRequest) {
       (messages.reduce((acc, m) => acc + m.content.length, 0) + message.length) / 4
     ) + attachmentTokenEstimate;
 
-    const estimatedCost = calculateCost(model, estimatedInputTokens, 500);
+    // Calculate estimated cost using database pricing
+    const estimatedBaseCost =
+      (estimatedInputTokens * modelInfo.input_price + 500 * modelInfo.output_price) / 1_000_000;
+    const estimatedCost = estimatedBaseCost * pricingSettings.markupMultiplier;
 
     if (profile.credits_balance < estimatedCost) {
       return NextResponse.json(
@@ -203,8 +214,8 @@ export async function POST(request: NextRequest) {
     // Call AI
     const aiResponse = await callAI(model, fullMessages);
 
-    // Calculate actual cost
-    const actualCost = calculateCost(
+    // Calculate actual cost using database pricing
+    const actualCost = await calculateCostFromDBAdmin(
       model,
       aiResponse.tokensInput,
       aiResponse.tokensOutput

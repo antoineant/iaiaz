@@ -8,7 +8,7 @@ import { ModelSelector } from "@/components/chat/model-selector";
 import { Message } from "@/components/chat/message";
 import { ChatInput, type RateLimitInfo } from "@/components/chat/chat-input";
 import type { Conversation, ChatMessage, FileAttachment } from "@/types";
-import type { ModelId } from "@/lib/pricing";
+import type { PricingData } from "@/lib/pricing-db";
 import { Sparkles } from "lucide-react";
 
 interface ChatClientProps {
@@ -17,6 +17,7 @@ interface ChatClientProps {
   initialConversations: Conversation[];
   conversationId?: string;
   initialMessages?: ChatMessage[];
+  pricingData: PricingData;
 }
 
 export function ChatClient({
@@ -25,15 +26,21 @@ export function ChatClient({
   initialConversations,
   conversationId,
   initialMessages = [],
+  pricingData,
 }: ChatClientProps) {
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
+  // Get default model (recommended or first)
+  const defaultModel = pricingData.models.find((m) => m.is_recommended)?.id ||
+                       pricingData.models[0]?.id ||
+                       "claude-sonnet-4-20250514";
+
   const [balance, setBalance] = useState(initialBalance);
   const [conversations, setConversations] = useState(initialConversations);
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
-  const [model, setModel] = useState<ModelId>("claude-sonnet-4-20250514");
+  const [model, setModel] = useState(defaultModel);
   const [isLoading, setIsLoading] = useState(false);
   const [currentConversationId, setCurrentConversationId] = useState<
     string | undefined
@@ -255,7 +262,12 @@ export function ChatClient({
         {/* Header */}
         <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background)]">
           <div className="lg:hidden w-10" /> {/* Spacer for mobile menu */}
-          <ModelSelector value={model} onChange={setModel} />
+          <ModelSelector
+            value={model}
+            onChange={setModel}
+            models={pricingData.models}
+            markupMultiplier={pricingData.settings.markupMultiplier}
+          />
           <div className="text-sm text-[var(--muted-foreground)]">
             Solde: <span className="font-medium">{balance.toFixed(2)}€</span>
           </div>
@@ -312,6 +324,7 @@ export function ChatClient({
           rateLimit={rateLimit}
           rateLimitError={rateLimitError}
           conversationId={currentConversationId}
+          pricingData={pricingData}
         />
       </main>
     </div>

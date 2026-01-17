@@ -1,26 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import { MODEL_PRICING, MARKUP, type ModelId } from "@/lib/pricing";
 import { Calculator } from "lucide-react";
+import type { DBModel } from "@/lib/pricing-db";
 
-const models = Object.entries(MODEL_PRICING).map(([id, info]) => ({
-  id: id as ModelId,
-  ...info,
-}));
+interface PricingCalculatorProps {
+  models: DBModel[];
+  markupMultiplier: number;
+}
 
-export function PricingCalculator() {
-  const [selectedModel, setSelectedModel] = useState<ModelId>("claude-sonnet-4-20250514");
+export function PricingCalculator({ models, markupMultiplier }: PricingCalculatorProps) {
+  // Find default model (recommended or first)
+  const defaultModel = models.find((m) => m.is_recommended)?.id || models[0]?.id || "";
+  const [selectedModel, setSelectedModel] = useState(defaultModel);
   const [messagesPerDay, setMessagesPerDay] = useState(10);
   const [daysPerMonth, setDaysPerMonth] = useState(20);
 
-  const model = MODEL_PRICING[selectedModel];
+  const model = models.find((m) => m.id === selectedModel);
+
+  if (!model) {
+    return (
+      <div className="max-w-2xl mx-auto border rounded-2xl p-6 md:p-8 bg-card text-center text-muted-foreground">
+        Aucun modèle disponible
+      </div>
+    );
+  }
 
   // Estimate: ~300 input tokens, ~500 output tokens per message
   const avgInputTokens = 300;
   const avgOutputTokens = 500;
 
-  const costPerMessage = ((avgInputTokens * model.input + avgOutputTokens * model.output) / 1_000_000) * MARKUP;
+  const costPerMessage = ((avgInputTokens * model.input_price + avgOutputTokens * model.output_price) / 1_000_000) * markupMultiplier;
   const totalMessages = messagesPerDay * daysPerMonth;
   const monthlyCost = costPerMessage * totalMessages;
 
@@ -39,7 +49,7 @@ export function PricingCalculator() {
           </label>
           <select
             value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value as ModelId)}
+            onChange={(e) => setSelectedModel(e.target.value)}
             className="w-full p-3 border rounded-lg bg-background"
           >
             {models.map((m) => (

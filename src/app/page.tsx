@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
-import { MODEL_PRICING, CREDIT_PACKS } from "@/lib/pricing";
+import { CREDIT_PACKS } from "@/lib/pricing";
+import { getPricingData } from "@/lib/pricing-db";
 import { FAQSection } from "@/components/seo/faq-section";
 import {
   OrganizationSchema,
@@ -23,8 +24,15 @@ import {
   Calculator,
 } from "lucide-react";
 
-export default function HomePage() {
-  const models = Object.entries(MODEL_PRICING).slice(0, 4);
+export default async function HomePage() {
+  // Fetch pricing data from database
+  const { settings, models: allModels } = await getPricingData();
+  const { markupMultiplier } = settings;
+
+  // Get first 4 models for display (prefer recommended ones)
+  const recommendedModels = allModels.filter((m) => m.is_recommended);
+  const otherModels = allModels.filter((m) => !m.is_recommended);
+  const displayModels = [...recommendedModels, ...otherModels].slice(0, 4);
 
   return (
     <div className="min-h-screen">
@@ -394,15 +402,15 @@ export default function HomePage() {
             votre besoin. Nous vous guidons vers le meilleur rapport qualité/prix.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {models.map(([id, model]) => (
+            {displayModels.map((model) => (
               <Card
-                key={id}
+                key={model.id}
                 className={
-                  model.recommended ? "ring-2 ring-primary-500" : ""
+                  model.is_recommended ? "ring-2 ring-primary-500" : ""
                 }
               >
                 <CardContent className="pt-6">
-                  {model.recommended && (
+                  {model.is_recommended && (
                     <span className="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-1 rounded-full">
                       Recommandé
                     </span>
@@ -419,7 +427,7 @@ export default function HomePage() {
                       Coût moyen par question
                     </p>
                     <p className="text-lg font-semibold text-primary-600">
-                      ~{((model.input * 500 + model.output * 500) * 1.5 / 1_000_000).toFixed(2)}€
+                      ~{((model.input_price * 500 + model.output_price * 500) * markupMultiplier / 1_000_000).toFixed(2)}€
                     </p>
                   </div>
                 </CardContent>

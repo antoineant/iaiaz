@@ -1,5 +1,3 @@
-import type { ModelId } from "@/lib/pricing";
-
 export interface User {
   id: string;
   email: string;
@@ -11,7 +9,7 @@ export interface Conversation {
   id: string;
   user_id: string;
   title: string | null;
-  model: ModelId;
+  model: string;
   created_at: string;
   updated_at: string;
 }
@@ -102,9 +100,9 @@ export interface ChatMessage {
   attachments?: FileAttachment[]; // File attachments
 }
 
-export interface CostEstimate {
+export interface CostEstimateResult {
   inputTokens: number;
   outputTokens: number;
   cost: number;
-  model: ModelId;
+  model: string;
 }
