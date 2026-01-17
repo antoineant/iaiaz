@@ -13,7 +13,7 @@ export default function CGUPage() {
     <>
       <h1>Conditions Générales d'Utilisation</h1>
       <p className="text-[var(--muted-foreground)]">
-        Dernière mise à jour : 16 janvier 2025
+        Dernière mise à jour : 17 janvier 2025
       </p>
 
       <h2>Article 1 - Objet et définitions</h2>
@@ -118,12 +118,18 @@ export default function CGUPage() {
         <li>Les fichiers joints (images, documents)</li>
       </ul>
 
-      <h3>5.2 Tarification transparente</h3>
+      <h3>5.2 Tarification</h3>
       <p>
         Le coût de chaque requête est affiché avant l'envoi et après réception de la
         réponse. Les tarifs par modèle sont consultables dans l'interface de la
-        Plateforme et peuvent être modifiés à tout moment, sans effet rétroactif sur
-        les crédits déjà achetés.
+        Plateforme.
+      </p>
+      <p>
+        <strong>BAJURIAN SAS se réserve le droit de fixer et de modifier librement
+        ses tarifs et marges à tout moment, à sa seule discrétion.</strong> Ces
+        modifications peuvent intervenir sans préavis et prennent effet immédiatement
+        pour toutes les nouvelles requêtes. Les crédits déjà achetés restent utilisables
+        aux tarifs en vigueur au moment de chaque utilisation.
       </p>
 
       <h3>5.3 Achat de crédits</h3>
@@ -226,19 +232,61 @@ export default function CGUPage() {
         </li>
       </ul>
 
-      <h3>8.2 Disponibilité du Service</h3>
+      <h3>8.2 Nature du Service - Intermédiaire technique</h3>
+      <p>
+        <strong>L'Utilisateur reconnaît et accepte que iaiaz agit en tant
+        qu'intermédiaire technique</strong> permettant l'accès aux services
+        d'intelligence artificielle fournis par des tiers (Anthropic, OpenAI, Google,
+        Mistral, et autres fournisseurs). BAJURIAN SAS ne développe pas et ne contrôle
+        pas les Modèles IA eux-mêmes.
+      </p>
+      <p>
+        En conséquence, la qualité, la disponibilité et les performances des Modèles IA
+        dépendent entièrement des fournisseurs tiers. BAJURIAN SAS ne peut garantir :
+      </p>
+      <ul>
+        <li>La disponibilité permanente de tout ou partie des Modèles IA</li>
+        <li>Le maintien des caractéristiques ou performances d'un Modèle IA</li>
+        <li>La continuité d'accès à un Modèle IA spécifique</li>
+        <li>Les délais de réponse des Modèles IA</li>
+      </ul>
+
+      <h3>8.3 Disponibilité du Service</h3>
       <p>
         BAJURIAN SAS s'efforce d'assurer la disponibilité du Service mais ne peut
-        garantir un fonctionnement ininterrompu. Des maintenances ou des
-        dysfonctionnements peuvent occasionnellement affecter l'accès au Service.
+        garantir un fonctionnement ininterrompu. La disponibilité du Service dépend
+        notamment de la disponibilité des services des fournisseurs tiers d'IA.
+      </p>
+      <p>
+        En cas d'interruption, de modification ou de cessation des services d'un
+        fournisseur d'IA tiers, pour quelque raison que ce soit, BAJURIAN SAS ne pourra
+        être tenue responsable de l'indisponibilité ou de la dégradation du Service
+        qui en résulterait.
       </p>
 
-      <h3>8.3 Limitation de responsabilité</h3>
+      <h3>8.4 Limitation de responsabilité</h3>
+      <p>
+        <strong>BAJURIAN SAS agissant en qualité d'intermédiaire technique,</strong> sa
+        responsabilité ne saurait être engagée en cas de :
+      </p>
+      <ul>
+        <li>
+          Indisponibilité, modification ou cessation des services des fournisseurs
+          d'IA tiers
+        </li>
+        <li>Erreurs, inexactitudes ou biais dans les réponses générées par les Modèles IA</li>
+        <li>Modifications des tarifs, conditions ou politiques des fournisseurs tiers</li>
+        <li>Tout événement échappant au contrôle de BAJURIAN SAS (force majeure)</li>
+      </ul>
       <p>
         Dans les limites autorisées par la loi, BAJURIAN SAS ne pourra être tenue
         responsable des dommages indirects, pertes de données, pertes de profits ou
         préjudices consécutifs à l'utilisation ou l'impossibilité d'utiliser le
         Service.
+      </p>
+      <p>
+        La responsabilité totale de BAJURIAN SAS, toutes causes confondues, est limitée
+        au montant des crédits achetés par l'Utilisateur au cours des 12 derniers mois.
       </p>
 
       <h2>Article 9 - Suspension et résiliation</h2>
