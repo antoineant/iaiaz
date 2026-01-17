@@ -28,7 +28,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex flex-col">
-            <span className="text-2xl font-bold text-primary-600">iaiaz</span>
+            <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</span>
             <span className="text-xs text-[var(--muted-foreground)] hidden sm:block">
               L&apos;IA accessible, sans engagement
             </span>
@@ -42,7 +42,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                 href={link.href}
                 className={`text-sm transition-colors ${
                   isActive(link.href)
-                    ? "text-primary-600 font-medium"
+                    ? "text-primary-600 dark:text-primary-400 font-medium"
                     : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 }`}
               >
@@ -95,7 +95,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
           <div className="fixed top-0 right-0 h-full w-72 bg-[var(--background)] shadow-xl z-50 md:hidden animate-in slide-in-from-right duration-300">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
-              <span className="text-lg font-bold text-primary-600">Menu</span>
+              <span className="text-lg font-bold text-primary-600 dark:text-primary-400">Menu</span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
@@ -112,7 +112,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-4 py-3 rounded-lg text-base transition-colors ${
                   pathname === "/"
-                    ? "bg-primary-50 text-primary-600 font-medium"
+                    ? "bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 font-medium"
                     : "text-[var(--foreground)] hover:bg-[var(--muted)]"
                 }`}
               >
@@ -125,7 +125,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`block px-4 py-3 rounded-lg text-base transition-colors ${
                     isActive(link.href)
-                      ? "bg-primary-50 text-primary-600 font-medium"
+                      ? "bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 font-medium"
                       : "text-[var(--foreground)] hover:bg-[var(--muted)]"
                   }`}
                 >

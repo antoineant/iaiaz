@@ -64,15 +64,15 @@ export default function AcceptTermsPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600">
+          <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
             iaiaz
           </Link>
         </div>
 
         <Card>
           <CardHeader className="text-center">
-            <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-primary-600" />
+            <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8 text-primary-600 dark:text-primary-400" />
             </div>
             <h1 className="text-xl font-semibold">Acceptation des conditions</h1>
             <p className="text-[var(--muted-foreground)] mt-2">
@@ -81,7 +81,7 @@ export default function AcceptTermsPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {error && (
-              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+              <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
                 {error}
               </div>
             )}
@@ -93,19 +93,19 @@ export default function AcceptTermsPage() {
               <ul className="list-disc list-inside space-y-1 text-[var(--muted-foreground)]">
                 <li>
                   Les{" "}
-                  <Link href="/legal/cgu" className="text-primary-600 hover:underline" target="_blank">
+                  <Link href="/legal/cgu" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">
                     Conditions Générales d'Utilisation (CGU)
                   </Link>
                 </li>
                 <li>
                   Les{" "}
-                  <Link href="/legal/cgv" className="text-primary-600 hover:underline" target="_blank">
+                  <Link href="/legal/cgv" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">
                     Conditions Générales de Vente (CGV)
                   </Link>
                 </li>
                 <li>
                   La{" "}
-                  <Link href="/legal/privacy" className="text-primary-600 hover:underline" target="_blank">
+                  <Link href="/legal/privacy" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">
                     Politique de confidentialité
                   </Link>
                 </li>

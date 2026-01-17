@@ -127,13 +127,13 @@ export default async function TarifsPage() {
             cachés. Les prix affichés sont les prix finaux, TTC.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-            <span className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-2 rounded-full">
               <Check className="w-4 h-4" /> 1€ offert à l&apos;inscription
             </span>
-            <span className="flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full">
               <Zap className="w-4 h-4" /> Crédits sans expiration
             </span>
-            <span className="flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-4 py-2 rounded-full">
               <Shield className="w-4 h-4" /> Zéro engagement
             </span>
           </div>
@@ -142,25 +142,25 @@ export default async function TarifsPage() {
         {/* How it works */}
         <section className="mb-16 bg-[var(--muted)] rounded-2xl p-8">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Info className="w-5 h-5 text-primary-600" /> Comment ça marche ?
+            <Info className="w-5 h-5 text-primary-600 dark:text-primary-400" /> Comment ça marche ?
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <div className="text-3xl font-bold text-primary-600 mb-2">1.</div>
+              <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">1.</div>
               <h3 className="font-medium mb-1">Rechargez votre compte</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
                 Ajoutez le montant de votre choix, de 1€ à 100€.
               </p>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary-600 mb-2">2.</div>
+              <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">2.</div>
               <h3 className="font-medium mb-1">Discutez avec l&apos;IA</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
                 Chaque message consomme des crédits en fonction du modèle choisi.
               </p>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary-600 mb-2">3.</div>
+              <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">3.</div>
               <h3 className="font-medium mb-1">Rechargez à volonté</h3>
               <p className="text-sm text-[var(--muted-foreground)]">
                 Vos crédits n&apos;expirent jamais. Rechargez quand bon vous semble.
@@ -213,7 +213,7 @@ export default async function TarifsPage() {
                             <td className="p-3 font-medium">
                               {model.name}
                               {model.is_recommended && (
-                                <span className="ml-2 text-xs bg-primary-100 text-primary-600 px-2 py-0.5 rounded">
+                                <span className="ml-2 text-xs bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 px-2 py-0.5 rounded">
                                   Recommandé
                                 </span>
                               )}
@@ -224,7 +224,7 @@ export default async function TarifsPage() {
                             <td className="p-3 text-right font-mono">
                               {(model.output_price * markupMultiplier).toFixed(2)}€
                             </td>
-                            <td className="p-3 text-right font-mono text-primary-600">
+                            <td className="p-3 text-right font-mono text-primary-600 dark:text-primary-400">
                               {estimateMessageCost(model.input_price, model.output_price, markupMultiplier)}
                             </td>
                             <td className="p-3 text-sm text-[var(--muted-foreground)]">
@@ -353,7 +353,7 @@ export default async function TarifsPage() {
         </section>
 
         {/* CTA */}
-        <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12">
+        <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">Prêt à commencer ?</h2>
           <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
             Créez votre compte et profitez d&apos;1€ de crédits offerts pour
@@ -379,7 +379,7 @@ export default async function TarifsPage() {
       <footer className="border-t border-[var(--border)] py-8 px-4 mt-16">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
-            <div className="text-2xl font-bold text-primary-600">iaiaz</div>
+            <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
             <p className="text-xs text-[var(--muted-foreground)]">
               Intelligence Artificielle Intelligemment Accessible, Zéro engagement
             </p>

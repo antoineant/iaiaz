@@ -277,8 +277,8 @@ export function ChatClient({
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mb-4">
-                <Sparkles className="w-8 h-8 text-primary-600" />
+              <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
               <h1 className="text-2xl font-bold mb-2">
                 Bienvenue sur iaiaz

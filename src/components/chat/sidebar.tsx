@@ -57,7 +57,7 @@ export function Sidebar({
     <>
       {/* Header */}
       <div className="p-4 border-b border-[var(--border)]">
-        <Link href="/" className="text-2xl font-bold text-primary-600">
+        <Link href="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400">
           iaiaz
         </Link>
       </div>
@@ -102,7 +102,7 @@ export function Sidebar({
                   className={cn(
                     "flex items-center gap-2 px-2 py-2 rounded-lg text-sm transition-colors group",
                     currentConversationId === conv.id
-                      ? "bg-primary-100 text-primary-700"
+                      ? "bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
                       : "hover:bg-[var(--muted)]"
                   )}
                   onClick={() => setIsOpen(false)}
@@ -114,7 +114,7 @@ export function Sidebar({
                   <button
                     onClick={(e) => handleDelete(e, conv.id)}
                     className={cn(
-                      "p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-red-100 hover:text-red-600 transition-all",
+                      "p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all",
                       deletingId === conv.id && "opacity-100"
                     )}
                     disabled={deletingId === conv.id}

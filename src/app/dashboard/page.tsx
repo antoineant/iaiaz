@@ -67,7 +67,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <header className="bg-[var(--background)] border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-primary-600">
+          <Link href="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400">
             iaiaz
           </Link>
           <nav className="flex items-center gap-4">
@@ -95,8 +95,8 @@ export default async function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center">
-                  <Wallet className="w-6 h-6 text-primary-600" />
+                <div className="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                  <Wallet className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
@@ -113,8 +113,8 @@ export default async function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-accent-100 flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-accent-600" />
+                <div className="w-12 h-12 rounded-lg bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center">
+                  <MessageSquare className="w-6 h-6 text-accent-600 dark:text-accent-400" />
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
@@ -129,8 +129,8 @@ export default async function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
@@ -231,12 +231,12 @@ export default async function DashboardPage() {
                           <span
                             className={`px-2 py-0.5 rounded text-xs ${
                               tx.type === "purchase"
-                                ? "bg-green-100 text-green-700"
+                                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
                                 : tx.type === "usage"
-                                  ? "bg-blue-100 text-blue-700"
+                                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
                                   : tx.type === "bonus"
-                                    ? "bg-purple-100 text-purple-700"
-                                    : "bg-gray-100 text-gray-700"
+                                    ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
                             }`}
                           >
                             {tx.type === "purchase"
@@ -253,7 +253,7 @@ export default async function DashboardPage() {
                         </td>
                         <td
                           className={`py-3 text-right font-medium ${
-                            tx.amount > 0 ? "text-green-600" : "text-red-600"
+                            tx.amount > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
                           }`}
                         >
                           {tx.amount > 0 ? "+" : ""}

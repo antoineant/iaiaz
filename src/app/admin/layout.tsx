@@ -103,7 +103,7 @@ export default function AdminLayout({
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
       </div>
     );
   }
@@ -117,7 +117,7 @@ export default function AdminLayout({
             <ChevronLeft className="w-4 h-4" />
             Retour au site
           </Link>
-          <h1 className="text-xl font-bold text-primary-600 mt-2">
+          <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400 mt-2">
             iaiaz Admin
           </h1>
           <p className="text-xs text-[var(--muted-foreground)]">
@@ -135,7 +135,7 @@ export default function AdminLayout({
                     href={item.href}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                       isActive
-                        ? "bg-primary-50 text-primary-600 font-medium"
+                        ? "bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 font-medium"
                         : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
                     }`}
                   >
@@ -151,7 +151,7 @@ export default function AdminLayout({
         <div className="p-4 border-t border-[var(--border)]">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-[var(--muted-foreground)] hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-[var(--muted-foreground)] hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             Déconnexion

@@ -52,14 +52,14 @@ function StatCard({ title, value, icon: Icon, description, trend }: StatCardProp
               </p>
             )}
             {trend && (
-              <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+              <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
                 {trend}
               </p>
             )}
           </div>
-          <div className="p-3 rounded-lg bg-primary-50">
-            <Icon className="w-6 h-6 text-primary-600" />
+          <div className="p-3 rounded-lg bg-primary-50 dark:bg-primary-900/30">
+            <Icon className="w-6 h-6 text-primary-600 dark:text-primary-400" />
           </div>
         </div>
       </CardContent>
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+      <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400">
         {error}
       </div>
     );

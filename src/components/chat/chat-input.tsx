@@ -320,9 +320,9 @@ export function ChatInput({
           onSubmit={handleSubmit}
           className={`relative rounded-xl border transition-colors ${
             isDragging
-              ? "border-primary-500 bg-primary-50"
+              ? "border-primary-500 bg-primary-50 dark:bg-primary-950/30"
               : isRateLimited
-                ? "border-red-300 bg-red-50"
+                ? "border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/30"
                 : "border-[var(--border)]"
           }`}
           onDragOver={handleDragOver}
@@ -331,8 +331,8 @@ export function ChatInput({
         >
           {/* Drag overlay */}
           {isDragging && (
-            <div className="absolute inset-0 flex items-center justify-center bg-primary-50/90 rounded-xl z-10">
-              <div className="flex flex-col items-center gap-2 text-primary-600">
+            <div className="absolute inset-0 flex items-center justify-center bg-primary-50/90 dark:bg-primary-950/90 rounded-xl z-10">
+              <div className="flex flex-col items-center gap-2 text-primary-600 dark:text-primary-400">
                 <ImageIcon className="w-8 h-8" />
                 <span className="text-sm font-medium">
                   Déposez vos fichiers ici

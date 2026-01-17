@@ -40,8 +40,8 @@ export default function ForgotPasswordPage() {
         <div className="w-full max-w-md">
           <Card>
             <CardContent className="pt-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-primary-600" />
+              <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
               <h1 className="text-xl font-semibold mb-2">Email envoyé</h1>
               <p className="text-[var(--muted-foreground)] mb-4">
@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600">
+          <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
             iaiaz
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
                   {error}
                 </div>
               )}
@@ -113,7 +113,7 @@ export default function ForgotPasswordPage() {
             <div className="mt-6 text-center">
               <Link
                 href="/auth/login"
-                className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center"
+                className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center"
               >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Retour à la connexion

@@ -51,7 +51,7 @@ export function ModelSelector({ value, onChange, models, markupMultiplier }: Mod
         )}
       >
         {selectedModel?.is_recommended && (
-          <Sparkles className="w-4 h-4 text-primary-500" />
+          <Sparkles className="w-4 h-4 text-primary-500 dark:text-primary-400" />
         )}
         <span>{selectedModel?.name || "Choisir un modèle"}</span>
         <ChevronDown
@@ -81,14 +81,14 @@ export function ModelSelector({ value, onChange, models, markupMultiplier }: Mod
                     className={cn(
                       "w-full px-3 py-3 text-left hover:bg-[var(--muted)] transition-colors",
                       "flex items-start gap-3",
-                      value === model.id && "bg-primary-50"
+                      value === model.id && "bg-primary-50 dark:bg-primary-950/30"
                     )}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">{model.name}</span>
                         {model.is_recommended && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-primary-100 text-primary-700">
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300">
                             Recommandé
                           </span>
                         )}
@@ -102,7 +102,7 @@ export function ModelSelector({ value, onChange, models, markupMultiplier }: Mod
                       </p>
                     </div>
                     {value === model.id && (
-                      <Check className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
                     )}
                   </button>
                 ))}

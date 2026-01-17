@@ -162,10 +162,10 @@ export default function ComparatifPage() {
             modèles d&apos;IA en ne payant que ce que vous consommez ?
           </p>
           <div className="flex items-center justify-center gap-4 text-sm">
-            <span className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-2 rounded-full">
               <Check className="w-4 h-4" /> Économisez jusqu&apos;à 90%
             </span>
-            <span className="flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full">
+            <span className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full">
               <Zap className="w-4 h-4" /> 4 fournisseurs IA
             </span>
           </div>
@@ -183,8 +183,8 @@ export default function ComparatifPage() {
                   <thead>
                     <tr className="border-b-2 border-[var(--border)]">
                       <th className="text-left p-4">Fonctionnalité</th>
-                      <th className="text-center p-4 bg-primary-50">
-                        <div className="font-bold text-primary-600">iaiaz</div>
+                      <th className="text-center p-4 bg-primary-50 dark:bg-primary-950/30">
+                        <div className="font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
                         <div className="text-sm text-[var(--muted-foreground)]">
                           Pay-as-you-go
                         </div>
@@ -201,7 +201,7 @@ export default function ComparatifPage() {
                         <td className="p-4 font-medium">{row.feature}</td>
                         <td
                           className={`p-4 text-center ${
-                            row.iaiazWins ? "bg-green-50" : ""
+                            row.iaiazWins ? "bg-green-50 dark:bg-green-950/20" : ""
                           }`}
                         >
                           {row.iaiaz}
@@ -236,7 +236,7 @@ export default function ComparatifPage() {
                   </p>
                   <div className="flex justify-center gap-8 mb-4">
                     <div>
-                      <div className="text-2xl font-bold text-primary-600">
+                      <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
                         {useCase.iaiazCost}
                       </div>
                       <div className="text-xs text-[var(--muted-foreground)]">iaiaz</div>
@@ -250,7 +250,7 @@ export default function ComparatifPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="inline-block bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-sm font-medium">
                     Économie : {useCase.savings}
                   </div>
                 </CardContent>
@@ -262,32 +262,32 @@ export default function ComparatifPage() {
         {/* Why Multiple Models */}
         <section className="mb-20 bg-[var(--muted)] rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Brain className="w-6 h-6 text-primary-600" /> L&apos;intérêt d&apos;avoir plusieurs modèles
+            <Brain className="w-6 h-6 text-primary-600 dark:text-primary-400" /> L&apos;intérêt d&apos;avoir plusieurs modèles
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex gap-3">
-                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <strong>Claude</strong> excelle en rédaction et en analyse de
                   documents longs
                 </div>
               </div>
               <div className="flex gap-3">
-                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <strong>GPT-4</strong> est polyvalent et créatif
                 </div>
               </div>
               <div className="flex gap-3">
-                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <strong>Gemini</strong> peut traiter des textes très longs (1M
                   de tokens)
                 </div>
               </div>
               <div className="flex gap-3">
-                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <strong>Mistral</strong> maîtrise parfaitement le français et
                   reste très économique
@@ -313,7 +313,7 @@ export default function ComparatifPage() {
         {/* Pricing Transparency */}
         <section className="mb-20">
           <h2 className="text-2xl font-bold text-center mb-4 flex items-center justify-center gap-2">
-            <Euro className="w-6 h-6 text-primary-600" /> Transparence totale sur les prix
+            <Euro className="w-6 h-6 text-primary-600 dark:text-primary-400" /> Transparence totale sur les prix
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-8 max-w-2xl mx-auto">
             Contrairement aux abonnements, vous voyez exactement ce que coûte
@@ -322,7 +322,7 @@ export default function ComparatifPage() {
           <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             <Card className="text-center">
               <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary-600 mb-1">~100</div>
+                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~100</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
                   messages avec GPT-4o Mini
                 </div>
@@ -330,7 +330,7 @@ export default function ComparatifPage() {
             </Card>
             <Card className="text-center">
               <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary-600 mb-1">~50</div>
+                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~50</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
                   messages avec Claude Sonnet
                 </div>
@@ -338,7 +338,7 @@ export default function ComparatifPage() {
             </Card>
             <Card className="text-center">
               <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary-600 mb-1">~30</div>
+                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~30</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
                   messages avec GPT-4
                 </div>
@@ -346,7 +346,7 @@ export default function ComparatifPage() {
             </Card>
             <Card className="text-center">
               <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary-600 mb-1">~200</div>
+                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~200</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
                   messages avec Mistral Small
                 </div>
@@ -356,7 +356,7 @@ export default function ComparatifPage() {
         </section>
 
         {/* CTA */}
-        <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12">
+        <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">
             Prêt à faire des économies ?
           </h2>
@@ -376,7 +376,7 @@ export default function ComparatifPage() {
       <footer className="border-t border-[var(--border)] py-8 px-4 mt-16">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
-            <div className="text-2xl font-bold text-primary-600">iaiaz</div>
+            <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
             <p className="text-xs text-[var(--muted-foreground)]">
               Intelligence Artificielle Intelligemment Accessible, Zéro engagement
             </p>

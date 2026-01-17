@@ -56,7 +56,7 @@ function LoginForm() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
               {error}
             </div>
           )}
@@ -86,7 +86,7 @@ function LoginForm() {
           <div className="flex items-center justify-between text-sm">
             <Link
               href="/auth/forgot-password"
-              className="text-primary-600 hover:text-primary-700"
+              className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
             >
               Mot de passe oublié ?
             </Link>
@@ -101,7 +101,7 @@ function LoginForm() {
           Pas encore de compte ?{" "}
           <Link
             href="/auth/signup"
-            className="text-primary-600 hover:text-primary-700 font-medium"
+            className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
           >
             Créer un compte
           </Link>
@@ -116,7 +116,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600">
+          <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
             iaiaz
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">

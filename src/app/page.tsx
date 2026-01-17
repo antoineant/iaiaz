@@ -46,13 +46,13 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 text-sm font-medium mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
             <Sparkles className="w-4 h-4" />
             Intelligence Artificielle Intelligemment Accessible, Zéro engagement
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
             L'IA premium, <br />
-            <span className="text-primary-600">sans l'abonnement.</span>
+            <span className="text-primary-600 dark:text-primary-400">sans l'abonnement.</span>
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] mb-8 max-w-2xl mx-auto">
             Accédez à Claude, GPT-4, Gemini et Mistral. Payez uniquement ce que
@@ -78,14 +78,14 @@ export default async function HomePage() {
       </section>
 
       {/* What 1€ gets you - PROMINENT */}
-      <section className="py-12 px-4 bg-gradient-to-b from-primary-50 to-white border-y border-primary-100">
+      <section className="py-12 px-4 bg-gradient-to-b from-primary-50 to-white dark:from-primary-950/30 dark:to-[var(--background)] border-y border-primary-100 dark:border-primary-900/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary-600 text-white text-sm font-semibold mb-4">
               1€ offert à l'inscription
             </span>
             <h2 className="text-3xl md:text-4xl font-bold">
-              Que pouvez-vous faire avec <span className="text-primary-600">1€</span> ?
+              Que pouvez-vous faire avec <span className="text-primary-600 dark:text-primary-400">1€</span> ?
             </h2>
             <p className="text-[var(--muted-foreground)] mt-2">
               Choisissez le modèle adapté à vos besoins
@@ -104,12 +104,12 @@ export default async function HomePage() {
                   Anthropic • Excellent équilibre qualité/prix
                 </p>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-primary-50 dark:bg-primary-950/30 rounded-lg">
                     <div className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-primary-600" />
+                      <MessageSquare className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                       <span className="text-sm">Questions simples</span>
                     </div>
-                    <span className="text-2xl font-bold text-primary-600">~67</span>
+                    <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">~67</span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
                     <div className="flex items-center gap-2">
@@ -140,12 +140,12 @@ export default async function HomePage() {
                   OpenAI • Le plus récent et polyvalent
                 </p>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg">
                     <div className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-emerald-600" />
+                      <MessageSquare className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       <span className="text-sm">Questions simples</span>
                     </div>
-                    <span className="text-2xl font-bold text-emerald-600">~100</span>
+                    <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">~100</span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
                     <div className="flex items-center gap-2">
@@ -176,12 +176,12 @@ export default async function HomePage() {
                   Google • Parfait pour les tâches simples
                 </p>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
                     <div className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-blue-600" />
+                      <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       <span className="text-sm">Questions simples</span>
                     </div>
-                    <span className="text-2xl font-bold text-blue-600">~3000+</span>
+                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">~3000+</span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
                     <div className="flex items-center gap-2">
@@ -262,7 +262,7 @@ export default async function HomePage() {
           <Card className="mb-8">
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
-                <Calculator className="w-5 h-5 text-primary-600" />
+                <Calculator className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                 <h3 className="font-semibold text-lg">Combien ça coûte vraiment ?</h3>
               </div>
               <p className="text-[var(--muted-foreground)] mb-6">
@@ -270,43 +270,43 @@ export default async function HomePage() {
               </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
-                  <MessageSquare className="w-5 h-5 text-primary-600 mt-0.5" />
+                  <MessageSquare className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5" />
                   <div>
                     <p className="font-medium">Poser une question simple</p>
                     <p className="text-sm text-[var(--muted-foreground)]">
                       "Explique-moi le théorème de Pythagore"
                     </p>
-                    <p className="text-lg font-bold text-primary-600 mt-1">~0.01€</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~0.01€</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
-                  <FileText className="w-5 h-5 text-primary-600 mt-0.5" />
+                  <FileText className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5" />
                   <div>
                     <p className="font-medium">Relire et corriger un texte</p>
                     <p className="text-sm text-[var(--muted-foreground)]">
                       Dissertation de 2 pages
                     </p>
-                    <p className="text-lg font-bold text-primary-600 mt-1">~0.03€</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~0.03€</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
-                  <Code className="w-5 h-5 text-primary-600 mt-0.5" />
+                  <Code className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5" />
                   <div>
                     <p className="font-medium">Débugger du code</p>
                     <p className="text-sm text-[var(--muted-foreground)]">
                       Comprendre une erreur Python
                     </p>
-                    <p className="text-lg font-bold text-primary-600 mt-1">~0.02€</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~0.02€</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
-                  <HelpCircle className="w-5 h-5 text-primary-600 mt-0.5" />
+                  <HelpCircle className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5" />
                   <div>
                     <p className="font-medium">Préparer un examen</p>
                     <p className="text-sm text-[var(--muted-foreground)]">
                       20 questions-réponses
                     </p>
-                    <p className="text-lg font-bold text-primary-600 mt-1">~0.15€</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~0.15€</p>
                   </div>
                 </div>
               </div>
@@ -314,7 +314,7 @@ export default async function HomePage() {
           </Card>
 
           {/* Comparison with subscriptions */}
-          <Card className="bg-gradient-to-r from-primary-50 to-accent-50 border-primary-200">
+          <Card className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 border-primary-200 dark:border-primary-800/50">
             <CardContent className="pt-6">
               <h3 className="font-semibold text-lg mb-4 text-center">
                 💡 Pourquoi débourser 20€/mois quand 2€ suffisent ?
@@ -329,7 +329,7 @@ export default async function HomePage() {
                 </div>
                 <div className="text-center p-4">
                   <p className="text-sm text-[var(--muted-foreground)] mb-2">Avec iaiaz (usage moyen étudiant)</p>
-                  <p className="text-3xl font-bold text-green-600">2-5€<span className="text-base font-normal">/mois</span></p>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">2-5€<span className="text-base font-normal">/mois</span></p>
                   <p className="text-sm text-[var(--muted-foreground)] mt-2">
                     Vous payez exactement ce que vous utilisez
                   </p>
@@ -349,8 +349,8 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             <Card>
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4">
-                  <CreditCard className="w-6 h-6 text-primary-600" />
+                <div className="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+                  <CreditCard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">
                   Pas d'abonnement
@@ -363,8 +363,8 @@ export default async function HomePage() {
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-accent-100 flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-accent-600" />
+                <div className="w-12 h-12 rounded-lg bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-accent-600 dark:text-accent-400" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Tous les modèles</h3>
                 <p className="text-[var(--muted-foreground)]">
@@ -375,8 +375,8 @@ export default async function HomePage() {
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+                  <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">
                   Transparent et simple
@@ -411,7 +411,7 @@ export default async function HomePage() {
               >
                 <CardContent className="pt-6">
                   {model.is_recommended && (
-                    <span className="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-1 rounded-full">
+                    <span className="text-xs font-medium text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/40 px-2 py-1 rounded-full">
                       Recommandé
                     </span>
                   )}
@@ -426,7 +426,7 @@ export default async function HomePage() {
                     <p className="text-xs text-[var(--muted-foreground)]">
                       Coût moyen par question
                     </p>
-                    <p className="text-lg font-semibold text-primary-600">
+                    <p className="text-lg font-semibold text-primary-600 dark:text-primary-400">
                       ~{((model.input_price * 500 + model.output_price * 500) * markupMultiplier / 1_000_000).toFixed(2)}€
                     </p>
                   </div>
@@ -458,7 +458,7 @@ export default async function HomePage() {
               >
                 <CardContent className="pt-6 text-center">
                   {pack.popular && (
-                    <span className="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-1 rounded-full">
+                    <span className="text-xs font-medium text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/40 px-2 py-1 rounded-full">
                       Le plus populaire
                     </span>
                   )}
@@ -472,15 +472,15 @@ export default async function HomePage() {
                   </p>
                   <ul className="text-sm text-left space-y-2 mb-6">
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-green-500" />
+                      <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
                       {pack.credits}€ de crédits
                     </li>
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-green-500" />
+                      <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
                       Tous les modèles IA
                     </li>
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-green-500" />
+                      <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
                       Jamais d'expiration
                     </li>
                   </ul>
@@ -503,7 +503,7 @@ export default async function HomePage() {
       <FAQSection />
 
       {/* CTA */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[var(--muted)] to-primary-50">
+      <section className="py-20 px-4 bg-gradient-to-b from-[var(--muted)] to-primary-50 dark:to-primary-950/20">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
             Envie de tester l'IA sans contraintes ?
@@ -512,13 +512,13 @@ export default async function HomePage() {
             Créez votre compte en 30 secondes et profitez d'1€ de crédits offerts.
           </p>
           <div className="inline-flex flex-wrap justify-center gap-3 mb-8 text-sm">
-            <span className="px-3 py-1.5 bg-primary-100 text-primary-700 rounded-full font-medium">
+            <span className="px-3 py-1.5 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-full font-medium">
               ~67 questions avec Claude
             </span>
-            <span className="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full font-medium">
+            <span className="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded-full font-medium">
               ~100 questions avec GPT-5
             </span>
-            <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full font-medium">
+            <span className="px-3 py-1.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-full font-medium">
               ~3000+ avec Gemini Flash
             </span>
           </div>
@@ -538,7 +538,7 @@ export default async function HomePage() {
       <footer className="border-t border-[var(--border)] py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
-            <div className="text-2xl font-bold text-primary-600">iaiaz</div>
+            <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
             <p className="text-xs text-[var(--muted-foreground)]">
               Intelligence Artificielle Intelligemment Accessible, Zéro engagement
             </p>

@@ -234,13 +234,13 @@ export default function SettingsPage() {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+        <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
           {success}
         </div>
       )}
@@ -333,7 +333,7 @@ export default function SettingsPage() {
               {/* Recommended model */}
               {recommendedModel && recommendedCosts && (
                 <div>
-                  <p className="text-sm font-medium text-primary-600">
+                  <p className="text-sm font-medium text-primary-600 dark:text-primary-400">
                     {recommendedModel.name} (Recommandé)
                   </p>
                   <ul className="mt-1 text-sm space-y-1 text-[var(--muted-foreground)]">
@@ -353,7 +353,7 @@ export default function SettingsPage() {
               {/* Cheapest model */}
               {cheapestModel && cheapestCosts && cheapestModel.id !== recommendedModel?.id && (
                 <div>
-                  <p className="text-sm font-medium text-green-600">
+                  <p className="text-sm font-medium text-green-600 dark:text-green-400">
                     {cheapestModel.name} (Le moins cher)
                   </p>
                   <ul className="mt-1 text-sm space-y-1 text-[var(--muted-foreground)]">
@@ -373,7 +373,7 @@ export default function SettingsPage() {
               {/* Premium model */}
               {premiumModel && premiumCosts && (
                 <div>
-                  <p className="text-sm font-medium text-purple-600">
+                  <p className="text-sm font-medium text-purple-600 dark:text-purple-400">
                     {premiumModel.name} (Premium)
                   </p>
                   <ul className="mt-1 text-sm space-y-1 text-[var(--muted-foreground)]">
@@ -425,7 +425,7 @@ export default function SettingsPage() {
                         <td className="py-2">
                           <span className="font-medium">{model.name}</span>
                           {model.is_recommended && (
-                            <span className="ml-2 text-xs bg-primary-100 text-primary-700 px-1.5 py-0.5 rounded">
+                            <span className="ml-2 text-xs bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 px-1.5 py-0.5 rounded">
                               Recommandé
                             </span>
                           )}
@@ -487,8 +487,8 @@ export default function SettingsPage() {
             </div>
 
             {recommendedCosts && (
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-700">
+              <div className="p-4 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <p className="text-sm text-yellow-700 dark:text-yellow-400">
                   Avec {minBalanceWarning.toFixed(2)} €, l'utilisateur peut encore faire
                   environ <strong>{Math.floor(minBalanceWarning / recommendedCosts.simpleQuestion)}</strong> questions
                   simples avant épuisement.
@@ -528,7 +528,7 @@ export default function SettingsPage() {
 
             <button
               onClick={fetchData}
-              className="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700"
+              className="flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
             >
               <RefreshCw className="w-4 h-4" />
               Rafraîchir

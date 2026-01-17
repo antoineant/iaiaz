@@ -49,7 +49,7 @@ function CopyButton({
       title={copied ? "Copié !" : "Copier"}
     >
       {copied ? (
-        <Check className="w-4 h-4 text-green-500" />
+        <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
       ) : (
         <Copy className="w-4 h-4" />
       )}
@@ -149,8 +149,8 @@ export function Message({ message }: MessageProps) {
         className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
           isUser
-            ? "bg-primary-100 text-primary-600"
-            : "bg-accent-100 text-accent-600"
+            ? "bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
+            : "bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400"
         )}
       >
         {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
@@ -223,7 +223,7 @@ export function Message({ message }: MessageProps) {
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary-600 hover:underline"
+                        className="text-primary-600 dark:text-primary-400 hover:underline"
                       >
                         {children}
                       </a>
@@ -256,7 +256,7 @@ export function Message({ message }: MessageProps) {
                   // Custom blockquote
                   blockquote({ children }) {
                     return (
-                      <blockquote className="border-l-4 border-primary-300 pl-4 italic text-[var(--muted-foreground)] my-4">
+                      <blockquote className="border-l-4 border-primary-300 dark:border-primary-600 pl-4 italic text-[var(--muted-foreground)] my-4">
                         {children}
                       </blockquote>
                     );
