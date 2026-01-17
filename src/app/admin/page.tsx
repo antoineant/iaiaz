@@ -24,6 +24,12 @@ interface AdminStats {
   active_models: number;
 }
 
+interface AppSettings {
+  markup: number;
+  freeCredits: number;
+  minBalanceWarning: number;
+}
+
 interface StatCardProps {
   title: string;
   value: string | number;
@@ -63,26 +69,58 @@ function StatCard({ title, value, icon: Icon, description, trend }: StatCardProp
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [settings, setSettings] = useState<AppSettings>({
+    markup: 50,
+    freeCredits: 1.0,
+    minBalanceWarning: 0.5,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       const supabase = createClient();
 
-      const { data, error } = await supabase.rpc("get_admin_stats");
+      // Fetch stats and settings in parallel
+      const [statsResult, settingsResult] = await Promise.all([
+        supabase.rpc("get_admin_stats"),
+        supabase.from("app_settings").select("key, value"),
+      ]);
 
-      if (error) {
+      if (statsResult.error) {
         setError("Erreur lors du chargement des statistiques");
-        console.error(error);
+        console.error(statsResult.error);
       } else {
-        setStats(data);
+        setStats(statsResult.data);
+      }
+
+      // Parse settings
+      if (settingsResult.data) {
+        const parsedSettings: AppSettings = {
+          markup: 50,
+          freeCredits: 1.0,
+          minBalanceWarning: 0.5,
+        };
+
+        settingsResult.data.forEach((setting: { key: string; value: { percentage?: number; amount?: number } }) => {
+          if (setting.key === "markup" && setting.value?.percentage !== undefined) {
+            parsedSettings.markup = setting.value.percentage;
+          }
+          if (setting.key === "free_credits" && setting.value?.amount !== undefined) {
+            parsedSettings.freeCredits = setting.value.amount;
+          }
+          if (setting.key === "min_balance_warning" && setting.value?.amount !== undefined) {
+            parsedSettings.minBalanceWarning = setting.value.amount;
+          }
+        });
+
+        setSettings(parsedSettings);
       }
 
       setIsLoading(false);
     };
 
-    fetchStats();
+    fetchData();
   }, []);
 
   if (isLoading) {
@@ -217,15 +255,15 @@ export default function AdminDashboard() {
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-[var(--muted-foreground)]">Markup actuel</span>
-              <span className="font-medium">50%</span>
+              <span className="font-medium">{settings.markup}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[var(--muted-foreground)]">Crédits gratuits</span>
-              <span className="font-medium">1.00 €</span>
+              <span className="font-medium">{settings.freeCredits.toFixed(2)} €</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[var(--muted-foreground)]">Seuil alerte solde</span>
-              <span className="font-medium">0.50 €</span>
+              <span className="font-medium">{settings.minBalanceWarning.toFixed(2)} €</span>
             </div>
           </CardContent>
         </Card>
