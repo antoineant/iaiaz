@@ -14,6 +14,17 @@ export default async function ChatPage() {
     redirect("/auth/login");
   }
 
+  // Check if user has accepted terms
+  const { data: termsCheck } = await supabase
+    .from("profiles")
+    .select("terms_accepted_at")
+    .eq("id", user.id)
+    .single();
+
+  if (!termsCheck?.terms_accepted_at) {
+    redirect("/auth/accept-terms");
+  }
+
   // Fetch user profile and pricing data in parallel
   const [profileResult, conversationsResult, pricingData] = await Promise.all([
     supabase

@@ -22,6 +22,17 @@ export default async function ChatConversationPage({
     redirect("/auth/login");
   }
 
+  // Check if user has accepted terms
+  const { data: termsCheck } = await supabase
+    .from("profiles")
+    .select("terms_accepted_at")
+    .eq("id", user.id)
+    .single();
+
+  if (!termsCheck?.terms_accepted_at) {
+    redirect("/auth/accept-terms");
+  }
+
   // Fetch the conversation and verify ownership
   const { data: conversation, error: convError } = await supabase
     .from("conversations")
