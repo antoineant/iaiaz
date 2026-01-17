@@ -1,16 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-
-const navLinks = [
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/comparatif", label: "Comparatif" },
-  { href: "/etudiants", label: "Étudiants" },
-];
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface HeaderProps {
   showAuthButtons?: boolean;
@@ -19,6 +14,13 @@ interface HeaderProps {
 export function Header({ showAuthButtons = true }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("common");
+
+  const navLinks = [
+    { href: "/tarifs" as const, label: t("nav.pricing") },
+    { href: "/comparatif" as const, label: t("nav.compare") },
+    { href: "/etudiants" as const, label: t("nav.students") },
+  ];
 
   const isActive = (href: string) => pathname === href;
 
@@ -30,7 +32,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
           <Link href="/" className="flex flex-col">
             <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</span>
             <span className="text-xs text-[var(--muted-foreground)] hidden sm:block">
-              L&apos;IA accessible, sans engagement
+              {t("tagline")}
             </span>
           </Link>
 
@@ -55,26 +57,27 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                   href="/auth/login"
                   className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 >
-                  Connexion
+                  {t("nav.login")}
                 </Link>
                 <Link href="/auth/signup">
-                  <Button size="sm">Commencer</Button>
+                  <Button size="sm">{t("nav.signup")}</Button>
                 </Link>
               </>
             )}
+            <LanguageSwitcher />
           </nav>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
             {showAuthButtons && (
               <Link href="/auth/signup">
-                <Button size="sm">Commencer</Button>
+                <Button size="sm">{t("nav.signup")}</Button>
               </Link>
             )}
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-              aria-label="Ouvrir le menu"
+              aria-label={t("aria.openMenu")}
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -95,11 +98,11 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
           <div className="fixed top-0 right-0 h-full w-72 bg-[var(--background)] shadow-xl z-50 md:hidden animate-in slide-in-from-right duration-300">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
-              <span className="text-lg font-bold text-primary-600 dark:text-primary-400">Menu</span>
+              <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{t("nav.menu")}</span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-                aria-label="Fermer le menu"
+                aria-label={t("aria.closeMenu")}
               >
                 <X className="w-6 h-6" />
               </button>
@@ -116,7 +119,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                     : "text-[var(--foreground)] hover:bg-[var(--muted)]"
                 }`}
               >
-                Accueil
+                {t("nav.home")}
               </Link>
               {navLinks.map((link) => (
                 <Link
@@ -144,23 +147,28 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 rounded-lg text-base text-[var(--foreground)] hover:bg-[var(--muted)]"
                   >
-                    Connexion
+                    {t("nav.login")}
                   </Link>
                   <Link
                     href="/auth/signup"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 rounded-lg text-base bg-primary-600 text-white text-center font-medium hover:bg-primary-700"
                   >
-                    Créer un compte gratuit
+                    {t("buttons.startFree")}
                   </Link>
                 </>
               )}
+
+              {/* Language Switcher in Mobile */}
+              <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                <LanguageSwitcher />
+              </div>
             </nav>
 
             {/* Footer */}
             <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[var(--border)]">
               <p className="text-xs text-[var(--muted-foreground)] text-center">
-                1€ de crédits offerts à l'inscription
+                {t("freeCredit")}
               </p>
             </div>
           </div>

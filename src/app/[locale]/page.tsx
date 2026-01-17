@@ -23,8 +23,15 @@ import {
   HelpCircle,
   Calculator,
 } from "lucide-react";
+import { setRequestLocale } from "next-intl/server";
 
-export default async function HomePage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   // Fetch pricing data from database
   const { settings, models: allModels } = await getPricingData();
   const { markupMultiplier } = settings;

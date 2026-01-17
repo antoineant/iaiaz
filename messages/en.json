@@ -1,0 +1,353 @@
+{
+  "metadata": {
+    "home": {
+      "title": "iaiaz - Affordable AI Access, No Subscription | ChatGPT Alternative",
+      "description": "Access the best AI models (Claude, GPT-4, Gemini, Mistral) without subscription. Pay only for what you use. $1 free credit on signup."
+    },
+    "tarifs": {
+      "title": "Pricing - AI Model Prices",
+      "description": "Transparent pricing for GPT-4, Claude, Gemini and Mistral. Pay-as-you-go without subscription. Compare prices and choose the best model."
+    },
+    "comparatif": {
+      "title": "Compare - iaiaz vs ChatGPT Plus vs Claude Pro",
+      "description": "Compare iaiaz with ChatGPT Plus and Claude Pro subscriptions. Save up to 90% with pay-as-you-go pricing."
+    },
+    "etudiants": {
+      "title": "AI for Students - Affordable ChatGPT Alternative",
+      "description": "Access GPT-4, Claude and Gemini without subscription. Perfect solution for students with $1 free credit on signup."
+    }
+  },
+  "common": {
+    "nav": {
+      "pricing": "Pricing",
+      "compare": "Compare",
+      "students": "Students",
+      "login": "Login",
+      "signup": "Get Started",
+      "home": "Home",
+      "menu": "Menu"
+    },
+    "buttons": {
+      "startFree": "Create free account",
+      "recharge": "Top up",
+      "learnMore": "Learn more",
+      "send": "Send",
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete",
+      "edit": "Edit",
+      "close": "Close",
+      "back": "Back"
+    },
+    "tagline": "Accessible AI, no commitment",
+    "freeCredit": "$1 free credit on signup",
+    "aria": {
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Affordable AI Access, Zero commitment",
+      "title": "Premium AI,",
+      "titleHighlight": "without the subscription.",
+      "subtitle": "Access Claude, GPT-4, Gemini and Mistral. Pay only for what you use. Perfect for students.",
+      "cta": "Create free account",
+      "ctaSecondary": "How it works"
+    },
+    "value": {
+      "title": "What can you do with $1?",
+      "badge": "$1 free on signup",
+      "recommended": "Recommended",
+      "new": "New",
+      "ultraEconomic": "Ultra affordable",
+      "simpleQuestions": "Simple questions",
+      "complexQuestions": "Complex questions",
+      "essays": "Essays"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Create an account",
+        "description": "Free signup in 30 seconds. Get $1 free credit."
+      },
+      "step2": {
+        "title": "Choose your model",
+        "description": "GPT-4, Claude, Gemini, Mistral... Switch anytime."
+      },
+      "step3": {
+        "title": "Pay for what you use",
+        "description": "No subscription, no commitment. Top up when you want."
+      }
+    },
+    "features": {
+      "noSubscription": {
+        "title": "No subscription",
+        "description": "Top up your account when you need to. Your credits never expire."
+      },
+      "allModels": {
+        "title": "All models",
+        "description": "Access GPT-4, Claude, Gemini and Mistral from a single interface."
+      },
+      "transparent": {
+        "title": "Transparent pricing",
+        "description": "See the cost of each message before you send it."
+      }
+    },
+    "models": {
+      "title": "Available models",
+      "avgCost": "Average cost per question",
+      "recommended": "Recommended",
+      "moreModels": "+{count} more models available"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Create your free account and get $1 free credit.",
+      "button": "Create free account"
+    }
+  },
+  "chat": {
+    "welcome": {
+      "title": "Welcome to iaiaz",
+      "description": "Start a conversation with the AI of your choice. You can switch models anytime."
+    },
+    "suggestions": {
+      "python": "Explain the basics of Python",
+      "email": "Help me write a professional email",
+      "summary": "Summarize this text",
+      "ideas": "Give me project ideas"
+    },
+    "sidebar": {
+      "balance": "Balance",
+      "recharge": "Top up",
+      "newConversation": "New conversation",
+      "recentConversations": "Recent conversations",
+      "noConversations": "No conversations",
+      "dashboard": "Dashboard",
+      "logout": "Log out"
+    },
+    "input": {
+      "placeholder": "Write your message or drop a file...",
+      "placeholderRateLimit": "Rate limit reached, please wait...",
+      "dropFiles": "Drop your files here",
+      "attachFile": "Attach a file (PNG, JPG, GIF, WebP, PDF)",
+      "attachImage": "Attach an image (PNG, JPG, GIF, WebP)",
+      "noFileSupport": "This model doesn't support file attachments.",
+      "imagesPdfSupported": "Images and PDF supported (max 10 MB). Paste or drag and drop.",
+      "imagesOnlySupported": "Images supported (max 10 MB). PDF not supported by this model."
+    },
+    "errors": {
+      "sendError": "Error sending message",
+      "genericError": "An error occurred",
+      "unsupportedFileType": "Unsupported file type. Accepted types: PNG, JPG, GIF, WebP, PDF",
+      "fileTooLarge": "File too large. Maximum size: 10 MB",
+      "pdfNotSupported": "This model doesn't support PDFs. Use Claude or Gemini for PDFs.",
+      "imageNotSupported": "This model doesn't support images. Choose another model.",
+      "uploadError": "Upload error",
+      "rateLimitReset": "The limit will reset automatically."
+    },
+    "costEstimate": {
+      "estimate": "Estimate:",
+      "afterSend": "After sending:",
+      "insufficientCredits": "Insufficient credits",
+      "lowBalance": "Low balance",
+      "tokens": "~{inputTokens} input tokens, ~{outputTokens} output"
+    },
+    "rateLimit": {
+      "eco": "Eco",
+      "std": "Std",
+      "pro": "Pro",
+      "retryIn": "Retry in {countdown}s",
+      "remaining": "{remaining}/{limit} req/min",
+      "tooltip": "{remaining}/{limit} requests remaining for {tier} models"
+    },
+    "message": {
+      "you": "You",
+      "assistant": "Assistant",
+      "copied": "Copied!",
+      "copy": "Copy",
+      "thinking": "Thinking..."
+    },
+    "modelSelector": {
+      "placeholder": "Choose a model",
+      "recommended": "Recommended",
+      "price": "${price} / 1K input tokens"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "nav": {
+      "chat": "Chat",
+      "recharge": "Top up"
+    },
+    "stats": {
+      "currentBalance": "Current balance",
+      "conversations": "Conversations",
+      "totalSpent": "Total spent"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "newConversation": "New conversation",
+      "buyCredits": "Buy credits"
+    },
+    "accountInfo": {
+      "title": "Account information",
+      "email": "Email",
+      "memberSince": "Member since"
+    },
+    "transactions": {
+      "title": "Recent transactions",
+      "empty": "No transactions yet",
+      "date": "Date",
+      "type": "Type",
+      "description": "Description",
+      "amount": "Amount",
+      "types": {
+        "purchase": "Purchase",
+        "usage": "Usage",
+        "bonus": "Bonus"
+      }
+    }
+  },
+  "credits": {
+    "title": "Buy credits",
+    "popular": "Popular",
+    "free": "Custom",
+    "customAmount": "Custom amount",
+    "customRange": "From ${min} to ${max}",
+    "creditAmount": "${amount} credits",
+    "allModels": "All models",
+    "noExpiration": "No expiration",
+    "summary": {
+      "title": "Summary",
+      "customAmount": "Custom amount",
+      "pack": "{name} pack"
+    },
+    "payByCard": "Pay by card",
+    "securedByStripe": "Secured payment by Stripe",
+    "legalNotice": "By making this purchase, you accept our Terms of Service and Terms of Sale.",
+    "success": {
+      "title": "Payment successful!",
+      "description": "Your credits have been added to your account. You can now use all AI models.",
+      "startChatting": "Start chatting",
+      "viewDashboard": "View my dashboard"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "loading": "Loading...",
+      "errors": {
+        "invalidCredentials": "Invalid email or password"
+      }
+    },
+    "signup": {
+      "title": "Sign up",
+      "subtitle": "Create your account and get $1 free credit",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "At least 6 characters",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Create my account",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
+      "success": {
+        "title": "Check your email",
+        "description": "We sent a confirmation link to {email}",
+        "hint": "Click the link in the email to activate your account and receive your free credits."
+      },
+      "errors": {
+        "passwordMismatch": "Passwords don't match",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "emailInUse": "This email is already in use"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "subtitle": "Reset your password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "submit": "Send link",
+      "success": {
+        "title": "Email sent",
+        "description": "If an account exists with {email}, you will receive a link to reset your password.",
+        "hint": "Also check your spam folder."
+      },
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "New password",
+      "subtitle": "Create a new password",
+      "password": "New password",
+      "confirmPassword": "Confirm password",
+      "passwordPlaceholder": "At least 6 characters",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Change password",
+      "loading": "Loading...",
+      "expired": {
+        "title": "Link expired",
+        "description": "This reset link has expired or is invalid. Please request a new link.",
+        "requestNew": "Request new link"
+      },
+      "success": {
+        "title": "Password changed",
+        "description": "Your password has been updated successfully. Redirecting..."
+      },
+      "errors": {
+        "passwordMismatch": "Passwords don't match",
+        "passwordTooShort": "Password must be at least 6 characters"
+      }
+    },
+    "acceptTerms": {
+      "title": "Accept terms",
+      "description": "To continue using iaiaz, you must accept our terms of service.",
+      "confirmSection": "By accepting, you confirm that you have read and understood:",
+      "cgu": "Terms of Service",
+      "cgv": "Terms of Sale",
+      "privacy": "Privacy Policy",
+      "checkbox": "I have read and accept the Terms of Service, Terms of Sale, and Privacy Policy.",
+      "submit": "Accept and continue",
+      "logout": "Log out",
+      "errors": {
+        "mustAccept": "You must accept the terms to continue",
+        "generic": "An error occurred. Please try again."
+      }
+    },
+    "google": {
+      "continueWith": "Continue with Google",
+      "signupWith": "Sign up with Google",
+      "connecting": "Connecting..."
+    }
+  },
+  "legal": {
+    "cgu": "Terms",
+    "cgv": "Sales",
+    "privacy": "Privacy",
+    "cookies": "Cookies"
+  },
+  "footer": {
+    "company": "BAJURIAN SAS",
+    "location": "Toulouse, France",
+    "allRightsReserved": "All rights reserved"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist.",
+      "backHome": "Back to home"
+    },
+    "generic": "An error occurred"
+  }
+}

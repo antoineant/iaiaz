@@ -1,0 +1,353 @@
+{
+  "metadata": {
+    "home": {
+      "title": "iaiaz - IA Accessible, Zéro engagement | Alternative ChatGPT pas cher",
+      "description": "Accédez aux meilleurs modèles d'IA (Claude, GPT-4, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez. 1€ offert à l'inscription."
+    },
+    "tarifs": {
+      "title": "Tarifs - Prix par modèle IA",
+      "description": "Tarifs transparents pour GPT-4, Claude, Gemini et Mistral. Payez à l'usage sans abonnement. Comparez les prix et choisissez le meilleur modèle."
+    },
+    "comparatif": {
+      "title": "Comparatif - iaiaz vs ChatGPT Plus vs Claude Pro",
+      "description": "Comparez iaiaz avec les abonnements ChatGPT Plus et Claude Pro. Économisez jusqu'à 90% avec le paiement à l'usage."
+    },
+    "etudiants": {
+      "title": "IA pour Étudiants - Alternative économique à ChatGPT",
+      "description": "Accédez à GPT-4, Claude et Gemini sans abonnement. Solution idéale pour étudiants avec 1€ offert à l'inscription."
+    }
+  },
+  "common": {
+    "nav": {
+      "pricing": "Tarifs",
+      "compare": "Comparatif",
+      "students": "Étudiants",
+      "login": "Connexion",
+      "signup": "Commencer",
+      "home": "Accueil",
+      "menu": "Menu"
+    },
+    "buttons": {
+      "startFree": "Créer un compte gratuit",
+      "recharge": "Recharger",
+      "learnMore": "En savoir plus",
+      "send": "Envoyer",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "close": "Fermer",
+      "back": "Retour"
+    },
+    "tagline": "L'IA accessible, sans engagement",
+    "freeCredit": "1€ de crédits offerts à l'inscription",
+    "aria": {
+      "openMenu": "Ouvrir le menu",
+      "closeMenu": "Fermer le menu"
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
+      "title": "L'IA premium,",
+      "titleHighlight": "sans l'abonnement.",
+      "subtitle": "Accédez à Claude, GPT-4, Gemini et Mistral. Payez uniquement ce que vous utilisez. Parfait pour les étudiants.",
+      "cta": "Créer un compte gratuit",
+      "ctaSecondary": "Comment ça marche ?"
+    },
+    "value": {
+      "title": "Que pouvez-vous faire avec 1€ ?",
+      "badge": "1€ offert à l'inscription",
+      "recommended": "Recommandé",
+      "new": "Nouveau",
+      "ultraEconomic": "Ultra économique",
+      "simpleQuestions": "Questions simples",
+      "complexQuestions": "Questions complexes",
+      "essays": "Dissertations"
+    },
+    "howItWorks": {
+      "title": "Comment ça marche ?",
+      "step1": {
+        "title": "Créez un compte",
+        "description": "Inscription gratuite en 30 secondes. Recevez 1€ de crédits offerts."
+      },
+      "step2": {
+        "title": "Choisissez votre modèle",
+        "description": "GPT-4, Claude, Gemini, Mistral... Changez à tout moment."
+      },
+      "step3": {
+        "title": "Payez ce que vous utilisez",
+        "description": "Pas d'abonnement, pas d'engagement. Rechargez quand vous voulez."
+      }
+    },
+    "features": {
+      "noSubscription": {
+        "title": "Pas d'abonnement",
+        "description": "Rechargez votre compte quand vous en avez besoin. Vos crédits n'expirent jamais."
+      },
+      "allModels": {
+        "title": "Tous les modèles",
+        "description": "Accédez à GPT-4, Claude, Gemini et Mistral depuis une seule interface."
+      },
+      "transparent": {
+        "title": "Prix transparents",
+        "description": "Vous voyez le coût de chaque message avant de l'envoyer."
+      }
+    },
+    "models": {
+      "title": "Modèles disponibles",
+      "avgCost": "Coût moyen par question",
+      "recommended": "Recommandé",
+      "moreModels": "+{count} autres modèles disponibles"
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "subtitle": "Créez votre compte gratuitement et recevez 1€ de crédits offerts.",
+      "button": "Créer un compte gratuit"
+    }
+  },
+  "chat": {
+    "welcome": {
+      "title": "Bienvenue sur iaiaz",
+      "description": "Commencez une conversation avec l'IA de votre choix. Vous pouvez changer de modèle à tout moment."
+    },
+    "suggestions": {
+      "python": "Explique-moi les bases de Python",
+      "email": "Aide-moi à rédiger un email professionnel",
+      "summary": "Résume ce texte",
+      "ideas": "Donne-moi des idées de projet"
+    },
+    "sidebar": {
+      "balance": "Solde",
+      "recharge": "Recharger",
+      "newConversation": "Nouvelle conversation",
+      "recentConversations": "Conversations récentes",
+      "noConversations": "Aucune conversation",
+      "dashboard": "Tableau de bord",
+      "logout": "Se déconnecter"
+    },
+    "input": {
+      "placeholder": "Écrivez votre message ou déposez un fichier...",
+      "placeholderRateLimit": "Limite atteinte, veuillez patienter...",
+      "dropFiles": "Déposez vos fichiers ici",
+      "attachFile": "Joindre un fichier (PNG, JPG, GIF, WebP, PDF)",
+      "attachImage": "Joindre une image (PNG, JPG, GIF, WebP)",
+      "noFileSupport": "Ce modèle ne supporte pas les fichiers joints.",
+      "imagesPdfSupported": "Images et PDF supportés (max 10 Mo). Collez ou glissez-déposez.",
+      "imagesOnlySupported": "Images supportées (max 10 Mo). PDF non supporté par ce modèle."
+    },
+    "errors": {
+      "sendError": "Erreur lors de l'envoi du message",
+      "genericError": "Une erreur est survenue",
+      "unsupportedFileType": "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF",
+      "fileTooLarge": "Fichier trop volumineux. Taille maximale: 10 Mo",
+      "pdfNotSupported": "Ce modèle ne supporte pas les PDFs. Utilisez Claude ou Gemini pour les PDFs.",
+      "imageNotSupported": "Ce modèle ne supporte pas les images. Choisissez un autre modèle.",
+      "uploadError": "Erreur lors du téléchargement",
+      "rateLimitReset": "La limite sera réinitialisée automatiquement."
+    },
+    "costEstimate": {
+      "estimate": "Estimation :",
+      "afterSend": "Après envoi :",
+      "insufficientCredits": "Crédits insuffisants",
+      "lowBalance": "Solde bas",
+      "tokens": "~{inputTokens} tokens entrée, ~{outputTokens} sortie"
+    },
+    "rateLimit": {
+      "eco": "Éco",
+      "std": "Std",
+      "pro": "Pro",
+      "retryIn": "Réessayer dans {countdown}s",
+      "remaining": "{remaining}/{limit} req/min",
+      "tooltip": "{remaining}/{limit} requêtes restantes pour les modèles {tier}"
+    },
+    "message": {
+      "you": "Vous",
+      "assistant": "Assistant",
+      "copied": "Copié !",
+      "copy": "Copier",
+      "thinking": "Réflexion en cours..."
+    },
+    "modelSelector": {
+      "placeholder": "Choisir un modèle",
+      "recommended": "Recommandé",
+      "price": "{price}€ / 1K tokens entrée"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "nav": {
+      "chat": "Chat",
+      "recharge": "Recharger"
+    },
+    "stats": {
+      "currentBalance": "Solde actuel",
+      "conversations": "Conversations",
+      "totalSpent": "Total utilisé"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "newConversation": "Nouvelle conversation",
+      "buyCredits": "Acheter des crédits"
+    },
+    "accountInfo": {
+      "title": "Informations du compte",
+      "email": "Email",
+      "memberSince": "Membre depuis"
+    },
+    "transactions": {
+      "title": "Transactions récentes",
+      "empty": "Aucune transaction pour le moment",
+      "date": "Date",
+      "type": "Type",
+      "description": "Description",
+      "amount": "Montant",
+      "types": {
+        "purchase": "Achat",
+        "usage": "Utilisation",
+        "bonus": "Bonus"
+      }
+    }
+  },
+  "credits": {
+    "title": "Acheter des crédits",
+    "popular": "Populaire",
+    "free": "Libre",
+    "customAmount": "Montant libre",
+    "customRange": "De {min}€ à {max}€",
+    "creditAmount": "{amount}€ de crédits",
+    "allModels": "Tous les modèles",
+    "noExpiration": "Pas d'expiration",
+    "summary": {
+      "title": "Récapitulatif",
+      "customAmount": "Montant personnalisé",
+      "pack": "Pack {name}"
+    },
+    "payByCard": "Payer par carte",
+    "securedByStripe": "Paiement sécurisé par Stripe",
+    "legalNotice": "En effectuant cet achat, vous acceptez nos CGU et CGV.",
+    "success": {
+      "title": "Paiement réussi !",
+      "description": "Vos crédits ont été ajoutés à votre compte. Vous pouvez maintenant utiliser tous les modèles d'IA.",
+      "startChatting": "Commencer à discuter",
+      "viewDashboard": "Voir mon tableau de bord"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Connectez-vous à votre compte",
+      "email": "Email",
+      "password": "Mot de passe",
+      "emailPlaceholder": "votre@email.com",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte",
+      "loading": "Chargement...",
+      "errors": {
+        "invalidCredentials": "Email ou mot de passe incorrect"
+      }
+    },
+    "signup": {
+      "title": "Inscription",
+      "subtitle": "Créez votre compte et recevez 1€ de crédits gratuits",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "emailPlaceholder": "votre@email.com",
+      "passwordPlaceholder": "Au moins 6 caractères",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Créer mon compte",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "success": {
+        "title": "Vérifiez votre email",
+        "description": "Nous avons envoyé un lien de confirmation à {email}",
+        "hint": "Cliquez sur le lien dans l'email pour activer votre compte et recevoir vos crédits gratuits."
+      },
+      "errors": {
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+        "emailInUse": "Cet email est déjà utilisé"
+      }
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Réinitialiser votre mot de passe",
+      "description": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "submit": "Envoyer le lien",
+      "success": {
+        "title": "Email envoyé",
+        "description": "Si un compte existe avec l'adresse {email}, vous recevrez un lien pour réinitialiser votre mot de passe.",
+        "hint": "Vérifiez également votre dossier spam."
+      },
+      "backToLogin": "Retour à la connexion"
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Créer un nouveau mot de passe",
+      "password": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordPlaceholder": "Au moins 6 caractères",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Modifier le mot de passe",
+      "loading": "Chargement...",
+      "expired": {
+        "title": "Lien expiré",
+        "description": "Ce lien de réinitialisation a expiré ou est invalide. Veuillez demander un nouveau lien.",
+        "requestNew": "Demander un nouveau lien"
+      },
+      "success": {
+        "title": "Mot de passe modifié",
+        "description": "Votre mot de passe a été mis à jour avec succès. Redirection en cours..."
+      },
+      "errors": {
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères"
+      }
+    },
+    "acceptTerms": {
+      "title": "Acceptation des conditions",
+      "description": "Pour continuer à utiliser iaiaz, vous devez accepter nos conditions d'utilisation.",
+      "confirmSection": "En acceptant, vous confirmez avoir lu et compris :",
+      "cgu": "Conditions Générales d'Utilisation (CGU)",
+      "cgv": "Conditions Générales de Vente (CGV)",
+      "privacy": "Politique de confidentialité",
+      "checkbox": "J'ai lu et j'accepte les CGU, les CGV et la politique de confidentialité.",
+      "submit": "Accepter et continuer",
+      "logout": "Me déconnecter",
+      "errors": {
+        "mustAccept": "Vous devez accepter les conditions pour continuer",
+        "generic": "Une erreur est survenue. Veuillez réessayer."
+      }
+    },
+    "google": {
+      "continueWith": "Continuer avec Google",
+      "signupWith": "S'inscrire avec Google",
+      "connecting": "Connexion..."
+    }
+  },
+  "legal": {
+    "cgu": "CGU",
+    "cgv": "CGV",
+    "privacy": "Confidentialité",
+    "cookies": "Cookies"
+  },
+  "footer": {
+    "company": "BAJURIAN SAS",
+    "location": "Toulouse, France",
+    "allRightsReserved": "Tous droits réservés"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page non trouvée",
+      "description": "La page que vous recherchez n'existe pas.",
+      "backHome": "Retour à l'accueil"
+    },
+    "generic": "Une erreur est survenue"
+  }
+}
