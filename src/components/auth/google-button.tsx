@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 
 interface GoogleButtonProps {
@@ -9,6 +10,7 @@ interface GoogleButtonProps {
 
 export function GoogleButton({ mode }: GoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("auth.google");
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -49,16 +51,18 @@ export function GoogleButton({ mode }: GoogleButtonProps) {
       </svg>
       <span className="text-sm font-medium">
         {isLoading
-          ? "Connexion..."
+          ? t("connecting")
           : mode === "login"
-            ? "Continuer avec Google"
-            : "S'inscrire avec Google"}
+            ? t("continueWith")
+            : t("signupWith")}
       </span>
     </button>
   );
 }
 
 export function Divider() {
+  const t = useTranslations("auth");
+
   return (
     <div className="relative my-6">
       <div className="absolute inset-0 flex items-center">
@@ -66,7 +70,7 @@ export function Divider() {
       </div>
       <div className="relative flex justify-center text-xs uppercase">
         <span className="bg-[var(--background)] px-2 text-[var(--muted-foreground)]">
-          ou
+          {t("or")}
         </span>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import {
   GraduationCap,
   BookOpen,
@@ -17,137 +18,92 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
 import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
 
-// Page-specific FAQs for structured data
-const etudiantsFaqs = [
-  {
-    question: "iaiaz est-il adapté aux étudiants ?",
-    answer:
-      "Absolument ! iaiaz est parfait pour les étudiants grâce à son modèle sans abonnement. Tu paies uniquement ce que tu utilises, ce qui est idéal pour un budget étudiant variable.",
-  },
-  {
-    question: "Combien coûte une utilisation typique pour un étudiant ?",
-    answer:
-      "Avec 1€ de crédits offerts à l'inscription, tu peux poser environ 50 questions à Claude Sonnet ou 100+ questions à Mistral. Pour un mois d'utilisation modérée (révisions, aide aux devoirs), compte 2-5€.",
-  },
-  {
-    question: "Puis-je utiliser l'IA pour mes dissertations ?",
-    answer:
-      "L'IA est un outil pour t'aider à comprendre, structurer et améliorer ton travail - pas pour tricher. Utilise-la pour comprendre des concepts, brainstormer des idées et améliorer ton style, mais retravaille toujours le contenu avec tes propres mots.",
-  },
-  {
-    question: "Quelle IA est la meilleure pour les études ?",
-    answer:
-      "Ça dépend ! Claude excelle en français et analyse de textes. GPT-4 est top en maths et code. Gemini gère les très longs documents. Mistral est économique pour les questions simples. Avec iaiaz, tu as accès à toutes ces IA.",
-  },
-];
-
-export const metadata: Metadata = {
-  title: "IA pour Étudiants - ChatGPT & Claude sans abonnement",
-  description:
-    "Accédez à GPT-4, Claude et Gemini sans abonnement. Parfait pour les étudiants : payez uniquement ce que vous utilisez. 1€ offert à l'inscription.",
-  keywords: [
-    "ia pour étudiants",
-    "chatgpt étudiant",
-    "chatgpt étudiant gratuit",
-    "ia gratuit étudiant",
-    "aide devoirs ia",
-    "dissertation ia",
-    "révision ia",
-    "chatgpt université",
-    "claude étudiant",
-    "gpt-4 étudiant",
-  ],
-  alternates: {
-    canonical: "https://www.iaiaz.com/etudiants",
-  },
-  openGraph: {
-    title: "iaiaz pour Étudiants - L'IA accessible à tous",
-    description:
-      "GPT-4, Claude, Gemini sans abonnement. Parfait pour le budget étudiant.",
-    url: "https://www.iaiaz.com/etudiants",
-  },
+type Props = {
+  params: Promise<{ locale: string }>;
 };
 
-const useCases = [
-  {
-    icon: BookOpen,
-    title: "Révisions & Examens",
-    description:
-      "Fais-toi expliquer des concepts complexes, crée des fiches de révision, teste tes connaissances avec des quiz personnalisés.",
-    example: "Explique-moi la mitose comme si j'avais 10 ans",
-  },
-  {
-    icon: PenTool,
-    title: "Dissertations & Mémoires",
-    description:
-      "Structure tes arguments, améliore ton style, trouve des sources pertinentes. L'IA te guide sans écrire à ta place.",
-    example: "Aide-moi à structurer ma dissertation sur Rousseau",
-  },
-  {
-    icon: Code,
-    title: "Programmation",
-    description:
-      "Débogue ton code, comprends les algorithmes, apprends de nouveaux langages grâce à des explications claires.",
-    example: "Pourquoi ma boucle for ne fonctionne pas ?",
-  },
-  {
-    icon: Languages,
-    title: "Langues étrangères",
-    description:
-      "Pratique la conversation, fais corriger tes textes, apprends du vocabulaire en contexte.",
-    example: "Corrige mon email en anglais et explique-moi mes erreurs",
-  },
-  {
-    icon: Calculator,
-    title: "Maths & Sciences",
-    description:
-      "Résous des problèmes étape par étape, comprends les formules, visualise les concepts.",
-    example: "Explique-moi comment résoudre cette intégrale",
-  },
-  {
-    icon: GraduationCap,
-    title: "Recherche & Veille",
-    description:
-      "Synthétise des articles, compare des théories, prépare tes présentations.",
-    example: "Résume-moi les points clés de cet article de recherche",
-  },
-];
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata.etudiants" });
 
-const testimonials = [
-  {
-    quote:
-      "Avec 5€, j'ai tenu tout le semestre. Parfait pour les partiels !",
-    author: "Léa, L3 Droit",
-  },
-  {
-    quote:
-      "Je peux enfin utiliser Claude ET GPT-4 selon mes besoins, sans me ruiner.",
-    author: "Thomas, M1 Informatique",
-  },
-  {
-    quote:
-      "Le modèle Mistral est incroyable pour le français, et il coûte presque rien.",
-    author: "Camille, Prépa Lettres",
-  },
-];
+  const baseUrl = "https://www.iaiaz.com";
+  const frPath = "/etudiants";
+  const enPath = "/en/students";
 
-const budgetExamples = [
-  { amount: "1€", usage: "~50 questions avec Claude Sonnet" },
-  { amount: "5€", usage: "Un mois d'utilisation modérée" },
-  { amount: "10€", usage: "Préparation complète des partiels" },
-];
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    alternates: {
+      canonical: locale === "fr" ? `${baseUrl}${frPath}` : `${baseUrl}${enPath}`,
+      languages: {
+        "fr-FR": `${baseUrl}${frPath}`,
+        en: `${baseUrl}${enPath}`,
+      },
+    },
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: locale === "fr" ? `${baseUrl}${frPath}` : `${baseUrl}${enPath}`,
+    },
+  };
+}
 
-export default function EtudiantsPage() {
+export default async function EtudiantsPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("etudiants");
+  const tHome = await getTranslations("home");
+
+  // Build FAQs from translations
+  const faqs = [
+    { question: t("faq.adapted.question"), answer: t("faq.adapted.answer") },
+    { question: t("faq.cost.question"), answer: t("faq.cost.answer") },
+    { question: t("faq.dissertation.question"), answer: t("faq.dissertation.answer") },
+    { question: t("faq.bestAI.question"), answer: t("faq.bestAI.answer") },
+  ];
+
+  // Build breadcrumb items from translations
+  const baseUrl = "https://www.iaiaz.com";
+  const breadcrumbItems = [
+    {
+      name: t("breadcrumb.home"),
+      url: locale === "fr" ? baseUrl : `${baseUrl}/en`,
+    },
+    {
+      name: t("breadcrumb.students"),
+      url: locale === "fr" ? `${baseUrl}/etudiants` : `${baseUrl}/en/students`,
+    },
+  ];
+
+  // Use case icons mapping
+  const useCaseIcons = {
+    revision: BookOpen,
+    dissertation: PenTool,
+    programming: Code,
+    languages: Languages,
+    mathScience: Calculator,
+    research: GraduationCap,
+  };
+
+  const useCaseKeys = [
+    "revision",
+    "dissertation",
+    "programming",
+    "languages",
+    "mathScience",
+    "research",
+  ] as const;
+
+  // Currency symbol based on locale
+  const currencySymbol = locale === "fr" ? "€" : "$";
+
   return (
     <div className="min-h-screen">
       {/* Structured Data for SEO */}
-      <FAQSchema faqs={etudiantsFaqs} />
-      <BreadcrumbSchema
-        items={[
-          { name: "Accueil", url: "https://www.iaiaz.com" },
-          { name: "Étudiants", url: "https://www.iaiaz.com/etudiants" },
-        ]}
-      />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema items={breadcrumbItems} />
 
       <Header />
 
@@ -156,39 +112,38 @@ export default function EtudiantsPage() {
         <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 text-sm font-medium mb-6 shadow-sm">
             <GraduationCap className="w-4 h-4" />
-            Spécial Étudiants
+            {t("hero.badge")}
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            L&apos;IA qui respecte
+            {t("hero.title")}
             <br />
-            <span className="text-primary-600">ton budget étudiant</span>
+            <span className="text-primary-600">{t("hero.titleHighlight")}</span>
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            GPT-4, Claude, Gemini et Mistral à portée de main, sans abonnement.
-            Tu ne paies que ce que tu consommes, dès 0.001€ par message.
+            {t("hero.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Link href="/auth/signup">
               <Button size="lg">
                 <Sparkles className="w-5 h-5 mr-2" />
-                1€ offert à l&apos;inscription
+                {t("hero.cta")}
               </Button>
             </Link>
             <Link href="/comparatif">
               <Button variant="outline" size="lg">
-                Voir le comparatif
+                {t("hero.ctaSecondary")}
               </Button>
             </Link>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[var(--muted-foreground)]">
             <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> Sans carte bancaire
+              <Check className="w-4 h-4 text-green-500" /> {t("hero.noCreditCard")}
             </span>
             <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> Zéro engagement
+              <Check className="w-4 h-4 text-green-500" /> {t("hero.noCommitment")}
             </span>
             <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> Crédits sans expiration
+              <Check className="w-4 h-4 text-green-500" /> {t("hero.noExpiration")}
             </span>
           </div>
         </section>
@@ -198,28 +153,45 @@ export default function EtudiantsPage() {
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center justify-center gap-2 mb-4">
               <PiggyBank className="w-6 h-6 text-primary-600" />
-              <h2 className="text-2xl font-bold">Adapté au budget étudiant</h2>
+              <h2 className="text-2xl font-bold">{t("budget.title")}</h2>
             </div>
             <p className="text-center text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-              Fini les 20€/mois de ChatGPT Plus. Avec iaiaz, tu maîtrises ton
-              budget.
+              {t("budget.subtitle")}
             </p>
             <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              {budgetExamples.map((example, i) => (
-                <Card key={i} className="text-center">
-                  <CardContent className="pt-6">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">
-                      {example.amount}
-                    </div>
-                    <div className="text-sm text-[var(--muted-foreground)]">
-                      {example.usage}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <Card className="text-center">
+                <CardContent className="pt-6">
+                  <div className="text-4xl font-bold text-primary-600 mb-2">
+                    1{currencySymbol}
+                  </div>
+                  <div className="text-sm text-[var(--muted-foreground)]">
+                    {t("budget.example1.usage")}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="pt-6">
+                  <div className="text-4xl font-bold text-primary-600 mb-2">
+                    5{currencySymbol}
+                  </div>
+                  <div className="text-sm text-[var(--muted-foreground)]">
+                    {t("budget.example2.usage")}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="pt-6">
+                  <div className="text-4xl font-bold text-primary-600 mb-2">
+                    10{currencySymbol}
+                  </div>
+                  <div className="text-sm text-[var(--muted-foreground)]">
+                    {t("budget.example3.usage")}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
             <p className="text-center text-sm text-[var(--muted-foreground)] mt-6">
-              Les crédits n&apos;expirent jamais. Recharge quand tu veux.
+              {t("budget.note")}
             </p>
           </div>
         </section>
@@ -227,27 +199,31 @@ export default function EtudiantsPage() {
         {/* Use Cases */}
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2 className="text-2xl font-bold text-center mb-4">
-            Comment les étudiants utilisent iaiaz
+            {t("useCases.title")}
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-xl mx-auto">
-            L&apos;IA est un outil pour apprendre, pas pour tricher. Elle
-            t&apos;aide à comprendre et à progresser.
+            {t("useCases.subtitle")}
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {useCases.map((useCase, i) => (
-              <Card key={i}>
-                <CardContent className="pt-6">
-                  <useCase.icon className="w-8 h-8 text-primary-600 mb-4" />
-                  <h3 className="font-bold text-lg mb-2">{useCase.title}</h3>
-                  <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                    {useCase.description}
-                  </p>
-                  <div className="bg-[var(--muted)] rounded-lg p-3 text-sm italic">
-                    &quot;{useCase.example}&quot;
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {useCaseKeys.map((key) => {
+              const Icon = useCaseIcons[key];
+              return (
+                <Card key={key}>
+                  <CardContent className="pt-6">
+                    <Icon className="w-8 h-8 text-primary-600 mb-4" />
+                    <h3 className="font-bold text-lg mb-2">
+                      {t(`useCases.${key}.title`)}
+                    </h3>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                      {t(`useCases.${key}.description`)}
+                    </p>
+                    <div className="bg-[var(--muted)] rounded-lg p-3 text-sm italic">
+                      &quot;{t(`useCases.${key}.example`)}&quot;
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
@@ -255,7 +231,7 @@ export default function EtudiantsPage() {
         <section className="bg-gradient-to-b from-primary-50 to-white py-16">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-8">
-              Pourquoi avoir accès à plusieurs IA ?
+              {t("multipleModels.title")}
             </h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <div className="space-y-4">
@@ -266,8 +242,7 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>Claude</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      Idéal pour les dissertations et l&apos;analyse de textes
-                      longs. Excellent en français.
+                      {t("multipleModels.claudeDesc")}
                     </p>
                   </div>
                 </div>
@@ -278,7 +253,7 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>GPT-4</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      Polyvalent, particulièrement efficace pour le code et les maths.
+                      {t("multipleModels.gptDesc")}
                     </p>
                   </div>
                 </div>
@@ -291,8 +266,7 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>Gemini</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      Capable d&apos;analyser des documents très longs (jusqu&apos;à 1
-                      million de tokens).
+                      {t("multipleModels.geminiDesc")}
                     </p>
                   </div>
                 </div>
@@ -303,8 +277,7 @@ export default function EtudiantsPage() {
                   <div>
                     <strong>Mistral</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      IA française et ultra économique. Parfaite pour les questions
-                      du quotidien.
+                      {t("multipleModels.mistralDesc")}
                     </p>
                   </div>
                 </div>
@@ -316,19 +289,33 @@ export default function EtudiantsPage() {
         {/* Testimonials */}
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2 className="text-2xl font-bold text-center mb-8">
-            Ce qu&apos;en disent les étudiants
+            {t("testimonials.title")}
           </h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {testimonials.map((testimonial, i) => (
-              <Card key={i}>
-                <CardContent className="pt-6">
-                  <p className="italic mb-4">&quot;{testimonial.quote}&quot;</p>
-                  <p className="text-sm text-[var(--muted-foreground)] font-medium">
-                    — {testimonial.author}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+            <Card>
+              <CardContent className="pt-6">
+                <p className="italic mb-4">&quot;{t("testimonials.t1.quote")}&quot;</p>
+                <p className="text-sm text-[var(--muted-foreground)] font-medium">
+                  — {t("testimonials.t1.author")}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <p className="italic mb-4">&quot;{t("testimonials.t2.quote")}&quot;</p>
+                <p className="text-sm text-[var(--muted-foreground)] font-medium">
+                  — {t("testimonials.t2.author")}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <p className="italic mb-4">&quot;{t("testimonials.t3.quote")}&quot;</p>
+                <p className="text-sm text-[var(--muted-foreground)] font-medium">
+                  — {t("testimonials.t3.author")}
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
@@ -336,13 +323,10 @@ export default function EtudiantsPage() {
         <section className="max-w-6xl mx-auto px-4 py-8">
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 max-w-3xl mx-auto">
             <h3 className="font-bold mb-2 text-amber-800">
-              Note sur l&apos;utilisation éthique
+              {t("ethics.title")}
             </h3>
             <p className="text-sm text-amber-700">
-              L&apos;IA est un outil pour apprendre, pas pour tricher.
-              Utilise-la pour comprendre des concepts, améliorer ton travail et
-              progresser plus vite. Ne rends jamais un texte généré par l&apos;IA
-              comme s&apos;il était le tien, sans l&apos;avoir retravaillé et compris.
+              {t("ethics.content")}
             </p>
           </div>
         </section>
@@ -351,19 +335,18 @@ export default function EtudiantsPage() {
         <section className="max-w-6xl mx-auto px-4 py-16">
           <div className="bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">
-              Prêt à booster tes études ?
+              {t("cta.title")}
             </h2>
             <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-              Inscris-toi en 30 secondes et profite d&apos;1€ de crédits offerts.
-              Largement de quoi tester tous les modèles !
+              {t("cta.subtitle")}
             </p>
             <Link href="/auth/signup">
               <Button size="lg">
-                Créer mon compte gratuit <ArrowRight className="w-5 h-5 ml-2" />
+                {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
             <p className="text-sm text-[var(--muted-foreground)] mt-4">
-              Sans carte bancaire • Sans engagement • Crédits sans expiration
+              {t("cta.note")}
             </p>
           </div>
         </section>
@@ -375,29 +358,29 @@ export default function EtudiantsPage() {
           <div className="text-center md:text-left">
             <div className="text-2xl font-bold text-primary-600">iaiaz</div>
             <p className="text-xs text-[var(--muted-foreground)]">
-              Intelligence Artificielle Intelligemment Accessible, Zéro engagement
+              {tHome("footer.tagline")}
             </p>
           </div>
           <div className="text-center">
             <p className="text-sm text-[var(--muted-foreground)]">
-              © 2025 iaiaz. Tous droits réservés.
+              {tHome("footer.copyright")}
             </p>
             <p className="text-xs text-[var(--muted-foreground)] mt-1">
-              Fait avec amour à Toulouse, France
+              {tHome("footer.madeIn")}
             </p>
           </div>
           <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
             <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">
-              CGU
+              {tHome("footer.cgu")}
             </Link>
             <Link href="/legal/cgv" className="hover:text-[var(--foreground)]">
-              CGV
+              {tHome("footer.cgv")}
             </Link>
             <Link href="/legal/privacy" className="hover:text-[var(--foreground)]">
-              Confidentialité
+              {tHome("footer.privacy")}
             </Link>
             <Link href="/legal/cookies" className="hover:text-[var(--foreground)]">
-              Cookies
+              {tHome("footer.cookies")}
             </Link>
           </nav>
         </div>

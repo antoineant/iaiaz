@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -25,9 +26,13 @@ interface MessageProps {
 function CopyButton({
   text,
   className,
+  copiedLabel,
+  copyLabel,
 }: {
   text: string;
   className?: string;
+  copiedLabel: string;
+  copyLabel: string;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -46,7 +51,7 @@ function CopyButton({
         "hover:bg-[var(--muted)]",
         className
       )}
-      title={copied ? "Copié !" : "Copier"}
+      title={copied ? copiedLabel : copyLabel}
     >
       {copied ? (
         <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
@@ -60,9 +65,13 @@ function CopyButton({
 function CodeBlock({
   language,
   children,
+  copiedLabel,
+  copyLabel,
 }: {
   language: string | undefined;
   children: string;
+  copiedLabel: string;
+  copyLabel: string;
 }) {
   return (
     <div className="relative group my-4">
@@ -70,6 +79,8 @@ function CodeBlock({
         <CopyButton
           text={children}
           className="bg-[var(--background)]/80 backdrop-blur-sm"
+          copiedLabel={copiedLabel}
+          copyLabel={copyLabel}
         />
       </div>
       {language ? (
@@ -136,6 +147,7 @@ function AttachmentPreview({ attachment }: { attachment: FileAttachment }) {
 }
 
 export function Message({ message }: MessageProps) {
+  const t = useTranslations("chat.message");
   const isUser = message.role === "user";
 
   return (
@@ -159,13 +171,15 @@ export function Message({ message }: MessageProps) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 mb-1">
           <span className="font-medium text-sm">
-            {isUser ? "Vous" : "Assistant"}
+            {isUser ? t("you") : t("assistant")}
           </span>
           {/* Copy button for AI responses */}
           {!isUser && message.content && !message.isStreaming && (
             <CopyButton
               text={message.content}
               className="opacity-0 group-hover:opacity-100"
+              copiedLabel={t("copied")}
+              copyLabel={t("copy")}
             />
           )}
         </div>
@@ -183,7 +197,7 @@ export function Message({ message }: MessageProps) {
           {message.isStreaming ? (
             <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Réflexion en cours...</span>
+              <span>{t("thinking")}</span>
             </div>
           ) : message.content ? (
             isUser ? (
@@ -211,7 +225,11 @@ export function Message({ message }: MessageProps) {
                     }
 
                     return (
-                      <CodeBlock language={match?.[1]}>
+                      <CodeBlock
+                        language={match?.[1]}
+                        copiedLabel={t("copied")}
+                        copyLabel={t("copy")}
+                      >
                         {String(children).replace(/\n$/, "")}
                       </CodeBlock>
                     );
@@ -277,8 +295,8 @@ export function Message({ message }: MessageProps) {
           <div className="mt-2 text-xs text-[var(--muted-foreground)]">
             {message.tokens.input > 0 && (
               <span>
-                {message.tokens.input.toLocaleString("fr-FR")} tokens entrée •{" "}
-                {message.tokens.output.toLocaleString("fr-FR")} tokens sortie
+                {message.tokens.input.toLocaleString()} tokens •{" "}
+                {message.tokens.output.toLocaleString()} tokens
                 {message.cost !== undefined && message.cost > 0 && (
                   <span className="font-medium text-[var(--foreground)]">
                     {" "}

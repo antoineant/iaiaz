@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { X, Cookie } from "lucide-react";
 
@@ -23,6 +24,7 @@ export function CookieConsentBanner() {
     analytics: false,
     timestamp: "",
   });
+  const t = useTranslations("cookies");
 
   useEffect(() => {
     // Check if consent has been given
@@ -77,13 +79,12 @@ export function CookieConsentBanner() {
               <Cookie className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm">
-                  Nous utilisons des cookies pour garantir le bon fonctionnement du
-                  site et améliorer votre expérience.{" "}
+                  {t("banner.message")}{" "}
                   <Link
                     href="/legal/cookies"
                     className="text-primary-600 hover:underline"
                   >
-                    En savoir plus
+                    {t("banner.learnMore")}
                   </Link>
                 </p>
               </div>
@@ -94,17 +95,17 @@ export function CookieConsentBanner() {
                 size="sm"
                 onClick={() => setShowDetails(true)}
               >
-                Personnaliser
+                {t("banner.customize")}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={acceptNecessaryOnly}
               >
-                Refuser
+                {t("banner.reject")}
               </Button>
               <Button size="sm" onClick={acceptAll}>
-                Accepter tout
+                {t("banner.acceptAll")}
               </Button>
             </div>
           </div>
@@ -112,7 +113,7 @@ export function CookieConsentBanner() {
           // Detailed settings view
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">Paramètres des cookies</h3>
+              <h3 className="font-semibold">{t("settings.title")}</h3>
               <button
                 onClick={() => setShowDetails(false)}
                 className="text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
@@ -126,11 +127,10 @@ export function CookieConsentBanner() {
               <div className="flex items-start justify-between gap-4 p-3 rounded-lg bg-[var(--muted)]">
                 <div>
                   <p className="font-medium text-sm">
-                    Cookies strictement nécessaires
+                    {t("settings.necessary.title")}
                   </p>
                   <p className="text-xs text-[var(--muted-foreground)]">
-                    Indispensables au fonctionnement du site (authentification,
-                    sécurité). Ne peuvent pas être désactivés.
+                    {t("settings.necessary.description")}
                   </p>
                 </div>
                 <input
@@ -144,10 +144,9 @@ export function CookieConsentBanner() {
               {/* Functional cookies */}
               <div className="flex items-start justify-between gap-4 p-3 rounded-lg border border-[var(--border)]">
                 <div>
-                  <p className="font-medium text-sm">Cookies fonctionnels</p>
+                  <p className="font-medium text-sm">{t("settings.functional.title")}</p>
                   <p className="text-xs text-[var(--muted-foreground)]">
-                    Améliorent votre expérience en mémorisant vos préférences
-                    (thème, choix de cookies).
+                    {t("settings.functional.description")}
                   </p>
                 </div>
                 <input
@@ -163,10 +162,9 @@ export function CookieConsentBanner() {
               {/* Analytics cookies */}
               <div className="flex items-start justify-between gap-4 p-3 rounded-lg border border-[var(--border)]">
                 <div>
-                  <p className="font-medium text-sm">Cookies analytiques</p>
+                  <p className="font-medium text-sm">{t("settings.analytics.title")}</p>
                   <p className="text-xs text-[var(--muted-foreground)]">
-                    Nous aident à comprendre comment le site est utilisé pour
-                    l'améliorer. Actuellement non utilisés.
+                    {t("settings.analytics.description")}
                   </p>
                 </div>
                 <input
@@ -185,14 +183,14 @@ export function CookieConsentBanner() {
                 href="/legal/cookies"
                 className="text-sm text-primary-600 hover:underline"
               >
-                Politique de cookies
+                {t("settings.policyLink")}
               </Link>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={acceptNecessaryOnly}>
-                  Tout refuser
+                  {t("settings.rejectAll")}
                 </Button>
                 <Button size="sm" onClick={saveCustom}>
-                  Enregistrer mes choix
+                  {t("settings.save")}
                 </Button>
               </div>
             </div>
@@ -205,6 +203,8 @@ export function CookieConsentBanner() {
 
 // Component to re-open cookie settings (for footer link)
 export function CookieSettingsButton() {
+  const t = useTranslations("cookies");
+
   const openSettings = () => {
     localStorage.removeItem(CONSENT_KEY);
     window.location.reload();
@@ -215,7 +215,7 @@ export function CookieSettingsButton() {
       onClick={openSettings}
       className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-sm"
     >
-      Gérer les cookies
+      {t("manage")}
     </button>
   );
 }

@@ -1,7 +1,51 @@
 import Script from "next/script";
 
+interface LocaleProps {
+  locale?: string;
+}
+
+// Locale-specific content
+const localizedContent = {
+  fr: {
+    orgDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement. Accédez aux meilleurs modèles d'IA sans abonnement.",
+    productDescription: "Plateforme d'accès aux modèles d'IA (Claude, GPT-4, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez.",
+    websiteDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
+    freeCredits: "1€ de crédits offerts à l'inscription",
+    starterPack: "5€ de crédits",
+    regularPack: "10€ de crédits - Le plus populaire",
+    powerPack: "20€ de crédits",
+    features: [
+      "Accès à Claude, GPT-4, Gemini, Mistral",
+      "Pas d'abonnement",
+      "Paiement à l'usage",
+      "Crédits sans expiration",
+      "Interface en français",
+      "Données hébergées en Europe",
+    ],
+  },
+  en: {
+    orgDescription: "Affordable AI Access, Zero commitment. Access the best AI models without subscription.",
+    productDescription: "Platform for accessing AI models (Claude, GPT-4, Gemini, Mistral) without subscription. Pay only for what you use.",
+    websiteDescription: "Affordable AI Access, Zero commitment",
+    freeCredits: "$1 free credit on signup",
+    starterPack: "$5 in credits",
+    regularPack: "$10 in credits - Most popular",
+    powerPack: "$20 in credits",
+    features: [
+      "Access to Claude, GPT-4, Gemini, Mistral",
+      "No subscription",
+      "Pay as you go",
+      "Credits never expire",
+      "Simple interface",
+      "Data hosted in Europe",
+    ],
+  },
+};
+
 // Organization structured data
-export function OrganizationSchema() {
+export function OrganizationSchema({ locale = "fr" }: LocaleProps) {
+  const content = localizedContent[locale as keyof typeof localizedContent] || localizedContent.fr;
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -9,8 +53,7 @@ export function OrganizationSchema() {
     alternateName: "BAJURIAN SAS",
     url: "https://www.iaiaz.com",
     logo: "https://www.iaiaz.com/logo.png",
-    description:
-      "Intelligence Artificielle Intelligemment Accessible, Zéro engagement. Accédez aux meilleurs modèles d'IA sans abonnement.",
+    description: content.orgDescription,
     address: {
       "@type": "PostalAddress",
       streetAddress: "135 Avenue des Pyrénées",
@@ -22,7 +65,7 @@ export function OrganizationSchema() {
       "@type": "ContactPoint",
       email: "admin@iaiaz.com",
       contactType: "customer service",
-      availableLanguage: ["French"],
+      availableLanguage: ["French", "English"],
     },
     sameAs: [],
   };
@@ -37,49 +80,51 @@ export function OrganizationSchema() {
 }
 
 // Product/Service structured data
-export function ProductSchema() {
+export function ProductSchema({ locale = "fr" }: LocaleProps) {
+  const content = localizedContent[locale as keyof typeof localizedContent] || localizedContent.fr;
+  const currency = locale === "en" ? "USD" : "EUR";
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "iaiaz",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
-    description:
-      "Plateforme d'accès aux modèles d'IA (Claude, GPT-4, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez.",
+    description: content.productDescription,
     offers: {
       "@type": "AggregateOffer",
-      priceCurrency: "EUR",
+      priceCurrency: currency,
       lowPrice: "1",
       highPrice: "100",
       offerCount: "4",
       offers: [
         {
           "@type": "Offer",
-          name: "Crédits gratuits",
+          name: locale === "en" ? "Free credits" : "Crédits gratuits",
           price: "0",
-          priceCurrency: "EUR",
-          description: "1€ de crédits offerts à l'inscription",
+          priceCurrency: currency,
+          description: content.freeCredits,
         },
         {
           "@type": "Offer",
           name: "Pack Starter",
           price: "5",
-          priceCurrency: "EUR",
-          description: "5€ de crédits",
+          priceCurrency: currency,
+          description: content.starterPack,
         },
         {
           "@type": "Offer",
           name: "Pack Regular",
           price: "10",
-          priceCurrency: "EUR",
-          description: "10€ de crédits - Le plus populaire",
+          priceCurrency: currency,
+          description: content.regularPack,
         },
         {
           "@type": "Offer",
           name: "Pack Power",
           price: "20",
-          priceCurrency: "EUR",
-          description: "20€ de crédits",
+          priceCurrency: currency,
+          description: content.powerPack,
         },
       ],
     },
@@ -90,14 +135,7 @@ export function ProductSchema() {
       bestRating: "5",
       worstRating: "1",
     },
-    featureList: [
-      "Accès à Claude, GPT-4, Gemini, Mistral",
-      "Pas d'abonnement",
-      "Paiement à l'usage",
-      "Crédits sans expiration",
-      "Interface en français",
-      "Données hébergées en Europe",
-    ],
+    featureList: content.features,
   };
 
   return (
@@ -139,16 +177,18 @@ export function FAQSchema({ faqs }: { faqs: FAQItem[] }) {
 }
 
 // WebSite structured data with search
-export function WebsiteSchema() {
+export function WebsiteSchema({ locale = "fr" }: LocaleProps) {
+  const content = localizedContent[locale as keyof typeof localizedContent] || localizedContent.fr;
+  const baseUrl = "https://www.iaiaz.com";
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "iaiaz",
-    alternateName: "iaiaz - IA Accessible",
-    url: "https://www.iaiaz.com",
-    description:
-      "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
-    inLanguage: "fr-FR",
+    alternateName: locale === "en" ? "iaiaz - Affordable AI" : "iaiaz - IA Accessible",
+    url: locale === "en" ? `${baseUrl}/en` : baseUrl,
+    description: content.websiteDescription,
+    inLanguage: locale === "en" ? "en" : "fr-FR",
     publisher: {
       "@type": "Organization",
       name: "BAJURIAN SAS",

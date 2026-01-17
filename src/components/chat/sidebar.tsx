@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ export function Sidebar({
   onDeleteConversation,
 }: SidebarProps) {
   const router = useRouter();
+  const t = useTranslations("chat.sidebar");
   const [isOpen, setIsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -65,13 +67,13 @@ export function Sidebar({
       {/* Balance */}
       <div className="p-4 border-b border-[var(--border)]">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-[var(--muted-foreground)]">Solde</span>
+          <span className="text-sm text-[var(--muted-foreground)]">{t("balance")}</span>
           <span className="font-semibold">{formatCurrency(balance)}</span>
         </div>
         <Link href="/dashboard/credits">
           <Button variant="outline" size="sm" className="w-full mt-2">
             <CreditCard className="w-4 h-4 mr-2" />
-            Recharger
+            {t("recharge")}
           </Button>
         </Link>
       </div>
@@ -80,25 +82,25 @@ export function Sidebar({
       <div className="p-4">
         <Button className="w-full" onClick={onNewConversation}>
           <Plus className="w-4 h-4 mr-2" />
-          Nouvelle conversation
+          {t("newConversation")}
         </Button>
       </div>
 
       {/* Conversations list */}
       <div className="flex-1 overflow-y-auto px-2">
         <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
-          Conversations récentes
+          {t("recentConversations")}
         </div>
         {conversations.length === 0 ? (
           <p className="text-sm text-[var(--muted-foreground)] px-2 py-4 text-center">
-            Aucune conversation
+            {t("noConversations")}
           </p>
         ) : (
           <ul className="space-y-1">
             {conversations.map((conv) => (
               <li key={conv.id}>
                 <Link
-                  href={`/chat/${conv.id}`}
+                  href={{ pathname: "/chat/[id]", params: { id: conv.id } }}
                   className={cn(
                     "flex items-center gap-2 px-2 py-2 rounded-lg text-sm transition-colors group",
                     currentConversationId === conv.id
@@ -109,7 +111,7 @@ export function Sidebar({
                 >
                   <MessageSquare className="w-4 h-4 flex-shrink-0" />
                   <span className="flex-1 truncate">
-                    {conv.title || "Nouvelle conversation"}
+                    {conv.title || t("newConversation")}
                   </span>
                   <button
                     onClick={(e) => handleDelete(e, conv.id)}
@@ -136,14 +138,14 @@ export function Sidebar({
           onClick={() => setIsOpen(false)}
         >
           <Settings className="w-4 h-4" />
-          Tableau de bord
+          {t("dashboard")}
         </Link>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors text-left"
         >
           <LogOut className="w-4 h-4" />
-          Se déconnecter
+          {t("logout")}
         </button>
       </div>
     </>

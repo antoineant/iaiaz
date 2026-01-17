@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Check, Sparkles } from "lucide-react";
 import type { DBModel } from "@/lib/pricing-db";
@@ -13,6 +14,7 @@ interface ModelSelectorProps {
 }
 
 export function ModelSelector({ value, onChange, models, markupMultiplier }: ModelSelectorProps) {
+  const t = useTranslations("chat.modelSelector");
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const selectedModel = models.find((m) => m.id === value);
@@ -53,7 +55,7 @@ export function ModelSelector({ value, onChange, models, markupMultiplier }: Mod
         {selectedModel?.is_recommended && (
           <Sparkles className="w-4 h-4 text-primary-500 dark:text-primary-400" />
         )}
-        <span>{selectedModel?.name || "Choisir un modèle"}</span>
+        <span>{selectedModel?.name || t("placeholder")}</span>
         <ChevronDown
           className={cn(
             "w-4 h-4 text-[var(--muted-foreground)] transition-transform",
@@ -89,7 +91,7 @@ export function ModelSelector({ value, onChange, models, markupMultiplier }: Mod
                         <span className="font-medium text-sm">{model.name}</span>
                         {model.is_recommended && (
                           <span className="text-xs px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300">
-                            Recommandé
+                            {t("recommended")}
                           </span>
                         )}
                       </div>
@@ -97,8 +99,7 @@ export function ModelSelector({ value, onChange, models, markupMultiplier }: Mod
                         {model.description}
                       </p>
                       <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                        {((model.input_price * markupMultiplier) / 1000).toFixed(4)}€ / 1K tokens
-                        entrée
+                        {t("price", { price: ((model.input_price * markupMultiplier) / 1000).toFixed(4) })}
                       </p>
                     </div>
                     {value === model.id && (

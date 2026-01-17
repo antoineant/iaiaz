@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
 import { AlertCircle, TrendingDown } from "lucide-react";
 import type { PricingData } from "@/lib/pricing-db";
@@ -12,6 +13,8 @@ interface CostEstimateProps {
 }
 
 export function CostEstimate({ model, inputText, balance, pricingData }: CostEstimateProps) {
+  const t = useTranslations("chat.costEstimate");
+
   if (!inputText.trim()) {
     return null;
   }
@@ -38,14 +41,14 @@ export function CostEstimate({ model, inputText, balance, pricingData }: CostEst
   return (
     <div className="flex items-center gap-4 text-xs text-[var(--muted-foreground)] px-1">
       <div className="flex items-center gap-1.5">
-        <span>Estimation :</span>
+        <span>{t("estimate")}</span>
         <span className="font-medium text-[var(--foreground)]">
           ~{formatCurrency(cost)}
         </span>
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span>Après envoi :</span>
+        <span>{t("afterSend")}</span>
         <span
           className={
             isInsufficientBalance
@@ -62,19 +65,19 @@ export function CostEstimate({ model, inputText, balance, pricingData }: CostEst
       {isInsufficientBalance && (
         <div className="flex items-center gap-1 text-red-500">
           <AlertCircle className="w-3.5 h-3.5" />
-          <span>Crédits insuffisants</span>
+          <span>{t("insufficientCredits")}</span>
         </div>
       )}
 
       {!isInsufficientBalance && isLowBalance && (
         <div className="flex items-center gap-1 text-orange-500">
           <TrendingDown className="w-3.5 h-3.5" />
-          <span>Solde bas</span>
+          <span>{t("lowBalance")}</span>
         </div>
       )}
 
       <div className="ml-auto text-[var(--muted-foreground)]">
-        ~{inputTokens} tokens entrée, ~{estimatedOutputTokens} sortie
+        {t("tokens", { inputTokens, outputTokens: estimatedOutputTokens })}
       </div>
     </div>
   );

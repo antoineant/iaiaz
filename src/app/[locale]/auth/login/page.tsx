@@ -1,8 +1,9 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/chat";
+  const t = useTranslations("auth.login");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +35,7 @@ function LoginForm() {
     if (error) {
       setError(
         error.message === "Invalid login credentials"
-          ? "Email ou mot de passe incorrect"
+          ? t("errors.invalidCredentials")
           : error.message
       );
       setIsLoading(false);
@@ -47,7 +49,7 @@ function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <h1 className="text-xl font-semibold">Connexion</h1>
+        <h1 className="text-xl font-semibold">{t("title")}</h1>
       </CardHeader>
       <CardContent>
         <GoogleButton mode="login" />
@@ -64,8 +66,8 @@ function LoginForm() {
           <Input
             id="email"
             type="email"
-            label="Email"
-            placeholder="votre@email.com"
+            label={t("email")}
+            placeholder={t("emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -75,8 +77,8 @@ function LoginForm() {
           <Input
             id="password"
             type="password"
-            label="Mot de passe"
-            placeholder="••••••••"
+            label={t("password")}
+            placeholder={t("passwordPlaceholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -88,22 +90,22 @@ function LoginForm() {
               href="/auth/forgot-password"
               className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
             >
-              Mot de passe oublié ?
+              {t("forgotPassword")}
             </Link>
           </div>
 
           <Button type="submit" className="w-full" isLoading={isLoading}>
-            Se connecter
+            {t("submit")}
           </Button>
         </form>
 
         <div className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
-          Pas encore de compte ?{" "}
+          {t("noAccount")}{" "}
           <Link
             href="/auth/signup"
             className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
           >
-            Créer un compte
+            {t("createAccount")}
           </Link>
         </div>
       </CardContent>
@@ -112,6 +114,8 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
+  const t = useTranslations("auth.login");
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
@@ -120,7 +124,7 @@ export default function LoginPage() {
             iaiaz
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">
-            Connectez-vous à votre compte
+            {t("subtitle")}
           </p>
         </div>
 
@@ -128,7 +132,7 @@ export default function LoginPage() {
           fallback={
             <Card>
               <CardContent className="py-8 text-center">
-                Chargement...
+                {t("loading")}
               </CardContent>
             </Card>
           }

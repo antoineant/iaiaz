@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,8 @@ import { Check, AlertCircle } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const t = useTranslations("auth.resetPassword");
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,12 +36,12 @@ export default function ResetPasswordPage() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError(t("errors.passwordMismatch"));
       return;
     }
 
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
+      setError(t("errors.passwordTooShort"));
       return;
     }
 
@@ -71,7 +74,7 @@ export default function ResetPasswordPage() {
         <div className="w-full max-w-md">
           <Card>
             <CardContent className="py-8 text-center">
-              Chargement...
+              {t("loading")}
             </CardContent>
           </Card>
         </div>
@@ -89,14 +92,13 @@ export default function ResetPasswordPage() {
               <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
-              <h1 className="text-xl font-semibold mb-2">Lien expiré</h1>
+              <h1 className="text-xl font-semibold mb-2">{t("expired.title")}</h1>
               <p className="text-[var(--muted-foreground)] mb-6">
-                Ce lien de réinitialisation a expiré ou est invalide.
-                Veuillez demander un nouveau lien.
+                {t("expired.description")}
               </p>
               <Link href="/auth/forgot-password">
                 <Button className="w-full">
-                  Demander un nouveau lien
+                  {t("expired.requestNew")}
                 </Button>
               </Link>
             </CardContent>
@@ -115,10 +117,9 @@ export default function ResetPasswordPage() {
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
                 <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
-              <h1 className="text-xl font-semibold mb-2">Mot de passe modifié</h1>
+              <h1 className="text-xl font-semibold mb-2">{t("success.title")}</h1>
               <p className="text-[var(--muted-foreground)]">
-                Votre mot de passe a été mis à jour avec succès.
-                Redirection en cours...
+                {t("success.description")}
               </p>
             </CardContent>
           </Card>
@@ -135,13 +136,13 @@ export default function ResetPasswordPage() {
             iaiaz
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">
-            Créer un nouveau mot de passe
+            {t("subtitle")}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <h1 className="text-xl font-semibold">Nouveau mot de passe</h1>
+            <h1 className="text-xl font-semibold">{t("title")}</h1>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -154,8 +155,8 @@ export default function ResetPasswordPage() {
               <Input
                 id="password"
                 type="password"
-                label="Nouveau mot de passe"
-                placeholder="Au moins 6 caractères"
+                label={t("password")}
+                placeholder={t("passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -165,8 +166,8 @@ export default function ResetPasswordPage() {
               <Input
                 id="confirmPassword"
                 type="password"
-                label="Confirmer le mot de passe"
-                placeholder="••••••••"
+                label={t("confirmPassword")}
+                placeholder={t("confirmPasswordPlaceholder")}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -174,7 +175,7 @@ export default function ResetPasswordPage() {
               />
 
               <Button type="submit" className="w-full" isLoading={isLoading}>
-                Modifier le mot de passe
+                {t("submit")}
               </Button>
             </form>
           </CardContent>

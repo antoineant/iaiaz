@@ -1,11 +1,17 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export default function LegalLayout({
-  children,
-}: {
+type Props = {
   children: React.ReactNode;
-}) {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function LegalLayout({ children, params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("legal");
+
   return (
     <div className="min-h-screen bg-[var(--background)]">
       {/* Header */}
@@ -16,7 +22,7 @@ export default function LegalLayout({
             className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Retour à l'accueil
+            {t("backToHome")}
           </Link>
           <div className="flex-1" />
           <Link href="/" className="text-xl font-bold text-primary-600">
@@ -35,19 +41,19 @@ export default function LegalLayout({
       {/* Footer */}
       <footer className="border-t border-[var(--border)] py-6 px-4">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[var(--muted-foreground)]">
-          <p>© 2025 BAJURIAN SAS. Tous droits réservés.</p>
+          <p>{t("copyright")}</p>
           <nav className="flex gap-4">
             <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">
-              CGU
+              {t("terms")}
             </Link>
             <Link href="/legal/cgv" className="hover:text-[var(--foreground)]">
-              CGV
+              {t("sales")}
             </Link>
             <Link href="/legal/privacy" className="hover:text-[var(--foreground)]">
-              Confidentialité
+              {t("privacy")}
             </Link>
             <Link href="/legal/cookies" className="hover:text-[var(--foreground)]">
-              Cookies
+              {t("cookies")}
             </Link>
           </nav>
         </div>

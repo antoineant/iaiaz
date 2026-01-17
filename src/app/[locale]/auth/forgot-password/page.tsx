@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArrowLeft, Mail } from "lucide-react";
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("auth.forgotPassword");
+
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -43,19 +46,17 @@ export default function ForgotPasswordPage() {
               <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-4">
                 <Mail className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
-              <h1 className="text-xl font-semibold mb-2">Email envoyé</h1>
+              <h1 className="text-xl font-semibold mb-2">{t("success.title")}</h1>
               <p className="text-[var(--muted-foreground)] mb-4">
-                Si un compte existe avec l'adresse{" "}
-                <span className="font-medium text-[var(--foreground)]">{email}</span>,
-                vous recevrez un lien pour réinitialiser votre mot de passe.
+                {t("success.description", { email })}
               </p>
               <p className="text-sm text-[var(--muted-foreground)] mb-6">
-                Vérifiez également votre dossier spam.
+                {t("success.hint")}
               </p>
               <Link href="/auth/login">
                 <Button variant="outline" className="w-full">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Retour à la connexion
+                  {t("backToLogin")}
                 </Button>
               </Link>
             </CardContent>
@@ -73,18 +74,17 @@ export default function ForgotPasswordPage() {
             iaiaz
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">
-            Réinitialiser votre mot de passe
+            {t("subtitle")}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <h1 className="text-xl font-semibold">Mot de passe oublié</h1>
+            <h1 className="text-xl font-semibold">{t("title")}</h1>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-[var(--muted-foreground)] mb-4">
-              Entrez votre adresse email et nous vous enverrons un lien pour
-              réinitialiser votre mot de passe.
+              {t("description")}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -97,8 +97,8 @@ export default function ForgotPasswordPage() {
               <Input
                 id="email"
                 type="email"
-                label="Email"
-                placeholder="votre@email.com"
+                label={t("email")}
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -106,7 +106,7 @@ export default function ForgotPasswordPage() {
               />
 
               <Button type="submit" className="w-full" isLoading={isLoading}>
-                Envoyer le lien
+                {t("submit")}
               </Button>
             </form>
 
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
                 className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium inline-flex items-center"
               >
                 <ArrowLeft className="w-4 h-4 mr-1" />
-                Retour à la connexion
+                {t("backToLogin")}
               </Link>
             </div>
           </CardContent>

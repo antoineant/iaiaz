@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Clock, AlertTriangle, Check } from "lucide-react";
 import type { ModelTier } from "@/lib/rate-limiter";
 
@@ -17,6 +18,7 @@ export function RateLimitIndicator({
   tier,
   resetAt,
 }: RateLimitIndicatorProps) {
+  const t = useTranslations("chat.rateLimit");
   const [countdown, setCountdown] = useState<number | null>(null);
 
   useEffect(() => {
@@ -43,16 +45,16 @@ export function RateLimitIndicator({
   const isExhausted = remaining === 0;
 
   const tierLabels: Record<ModelTier, string> = {
-    economy: "Éco",
-    standard: "Std",
-    premium: "Pro",
+    economy: t("eco"),
+    standard: t("std"),
+    premium: t("pro"),
   };
 
   if (isExhausted && countdown !== null) {
     return (
       <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs">
         <Clock className="w-3 h-3" />
-        <span>Réessayer dans {countdown}s</span>
+        <span>{t("retryIn", { countdown })}</span>
       </div>
     );
   }
@@ -64,7 +66,7 @@ export function RateLimitIndicator({
           ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
           : "bg-[var(--muted)] text-[var(--muted-foreground)]"
       }`}
-      title={`${remaining}/${limit} requêtes restantes pour les modèles ${tierLabels[tier]}`}
+      title={t("tooltip", { remaining, limit, tier: tierLabels[tier] })}
     >
       {isLow ? (
         <AlertTriangle className="w-3 h-3" />
@@ -72,7 +74,7 @@ export function RateLimitIndicator({
         <Check className="w-3 h-3" />
       )}
       <span>
-        {remaining}/{limit} req/min
+        {t("remaining", { remaining, limit })}
       </span>
       <span className="opacity-70">• {tierLabels[tier]}</span>
     </div>

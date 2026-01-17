@@ -1,21 +1,56 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { AlertTriangle } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Politique de Confidentialité",
-  description:
-    "Politique de confidentialité et protection des données personnelles de la plateforme iaiaz",
-  alternates: {
-    canonical: "https://www.iaiaz.com/legal/privacy",
-  },
+type Props = {
+  params: Promise<{ locale: string }>;
 };
 
-export default function PrivacyPage() {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal.privacyPage" });
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.iaiaz.com";
+
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates: {
+      canonical: `${baseUrl}${locale === "fr" ? "" : "/en"}/legal/privacy`,
+      languages: {
+        "fr-FR": `${baseUrl}/legal/privacy`,
+        en: `${baseUrl}/en/legal/privacy`,
+      },
+    },
+  };
+}
+
+export default async function PrivacyPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("legal.privacyPage");
+
   return (
     <>
-      <h1>Politique de Confidentialité</h1>
+      <h1>{t("title")}</h1>
       <p className="text-[var(--muted-foreground)]">
-        Dernière mise à jour : 16 janvier 2025
+        {t("lastUpdated")}
       </p>
+
+      {locale === "en" && (
+        <div className="my-6 p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+                Legal Notice
+              </p>
+              <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                This Privacy Policy complies with GDPR. The French version below is the authoritative legal document. This English summary is provided for convenience only.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <p>
         La présente Politique de Confidentialité décrit comment BAJURIAN SAS

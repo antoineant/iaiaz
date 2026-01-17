@@ -1,151 +1,150 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Check, X, Zap, Euro, Brain, ArrowRight } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { Check, X, Zap, DollarSign, Brain, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
 import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 
-// Page-specific FAQs for structured data
-const comparatifFaqs = [
-  {
-    question: "Quelle est la différence principale entre iaiaz et ChatGPT Plus ?",
-    answer:
-      "ChatGPT Plus coûte 20€/mois fixe, que vous l'utilisiez ou non. Avec iaiaz, vous payez uniquement ce que vous utilisez (à partir de quelques centimes). De plus, iaiaz donne accès à plusieurs modèles (Claude, GPT-4, Gemini, Mistral) au lieu d'un seul.",
-  },
-  {
-    question: "iaiaz est-il moins cher que ChatGPT Plus ?",
-    answer:
-      "Pour un usage modéré (quelques dizaines de questions par mois), iaiaz revient à 2-5€/mois contre 20€ pour ChatGPT Plus. Vous économisez jusqu'à 80% tout en ayant accès à plus de modèles.",
-  },
-  {
-    question: "Pourquoi choisir iaiaz plutôt qu'un abonnement IA ?",
-    answer:
-      "Trois raisons : 1) Économies réelles sur un usage modéré, 2) Accès à plusieurs IA (Claude, GPT-4, Gemini, Mistral) au lieu d'une seule, 3) Aucun engagement - vos crédits n'expirent jamais.",
-  },
-];
-
-export const metadata: Metadata = {
-  title: "iaiaz vs ChatGPT Plus - Comparatif 2025",
-  description:
-    "Comparez iaiaz et ChatGPT Plus : prix, fonctionnalités, modèles disponibles. Découvrez pourquoi iaiaz est l'alternative ChatGPT la moins chère pour les étudiants.",
-  keywords: [
-    "alternative chatgpt",
-    "alternative chatgpt moins cher",
-    "chatgpt gratuit",
-    "chatgpt pas cher",
-    "comparatif ia",
-    "chatgpt vs claude",
-    "gpt-4 gratuit",
-    "ia sans abonnement",
-  ],
-  alternates: {
-    canonical: "https://www.iaiaz.com/comparatif",
-  },
-  openGraph: {
-    title: "iaiaz vs ChatGPT Plus - Le comparatif complet",
-    description:
-      "Pourquoi payer 20€/mois quand vous pouvez payer uniquement ce que vous utilisez ?",
-    url: "https://www.iaiaz.com/comparatif",
-  },
+type Props = {
+  params: Promise<{ locale: string }>;
 };
 
-const comparisonData = [
-  {
-    feature: "Prix mensuel minimum",
-    iaiaz: "0€ (payez à l'usage)",
-    chatgpt: "20€/mois",
-    iaiazWins: true,
-  },
-  {
-    feature: "Accès GPT-4",
-    iaiaz: "✓ Inclus",
-    chatgpt: "✓ Inclus",
-    iaiazWins: null,
-  },
-  {
-    feature: "Accès Claude (Anthropic)",
-    iaiaz: "✓ Tous les modèles",
-    chatgpt: "✗ Non disponible",
-    iaiazWins: true,
-  },
-  {
-    feature: "Accès Gemini (Google)",
-    iaiaz: "✓ Tous les modèles",
-    chatgpt: "✗ Non disponible",
-    iaiazWins: true,
-  },
-  {
-    feature: "Accès Mistral",
-    iaiaz: "✓ Tous les modèles",
-    chatgpt: "✗ Non disponible",
-    iaiazWins: true,
-  },
-  {
-    feature: "Engagement",
-    iaiaz: "Zéro engagement",
-    chatgpt: "Abonnement mensuel",
-    iaiazWins: true,
-  },
-  {
-    feature: "Crédits offerts",
-    iaiaz: "1€ à l'inscription",
-    chatgpt: "Aucun",
-    iaiazWins: true,
-  },
-  {
-    feature: "Upload de fichiers",
-    iaiaz: "✓ Images & PDF",
-    chatgpt: "✓ Images & PDF",
-    iaiazWins: null,
-  },
-  {
-    feature: "Historique conversations",
-    iaiaz: "✓ Illimité",
-    chatgpt: "✓ Illimité",
-    iaiazWins: null,
-  },
-  {
-    feature: "Limite de messages",
-    iaiaz: "Aucune (selon crédits)",
-    chatgpt: "80 messages/3h (GPT-4)",
-    iaiazWins: true,
-  },
-];
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata.comparatif" });
 
-const useCases = [
-  {
-    title: "Étudiant occasionnel",
-    description: "Quelques questions par semaine pour ses devoirs",
-    iaiazCost: "~2€/mois",
-    chatgptCost: "20€/mois",
-    savings: "90%",
-  },
-  {
-    title: "Utilisateur régulier",
-    description: "Usage quotidien modéré",
-    iaiazCost: "~8€/mois",
-    chatgptCost: "20€/mois",
-    savings: "60%",
-  },
-  {
-    title: "Utilisateur intensif",
-    description: "Usage quotidien soutenu",
-    iaiazCost: "~15€/mois",
-    chatgptCost: "20€/mois",
-    savings: "25%",
-  },
-];
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: locale === "fr"
+      ? ["alternative chatgpt", "alternative chatgpt moins cher", "chatgpt gratuit", "chatgpt pas cher", "comparatif ia", "chatgpt vs claude", "gpt-4 gratuit", "ia sans abonnement"]
+      : ["chatgpt alternative", "cheap chatgpt alternative", "free chatgpt", "cheap ai", "ai comparison", "chatgpt vs claude", "free gpt-4", "ai without subscription"],
+    alternates: {
+      canonical: locale === "fr" ? "https://www.iaiaz.com/comparatif" : "https://www.iaiaz.com/en/compare",
+      languages: {
+        "fr-FR": "https://www.iaiaz.com/comparatif",
+        "en": "https://www.iaiaz.com/en/compare",
+      },
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url: locale === "fr" ? "https://www.iaiaz.com/comparatif" : "https://www.iaiaz.com/en/compare",
+    },
+  };
+}
 
-export default function ComparatifPage() {
+export default async function ComparatifPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("comparatif");
+  const tHome = await getTranslations("home");
+
+  // Dynamic FAQs for structured data
+  const comparatifFaqs = [
+    { question: t("faq.mainDifference.question"), answer: t("faq.mainDifference.answer") },
+    { question: t("faq.cheaper.question"), answer: t("faq.cheaper.answer") },
+    { question: t("faq.whyChoose.question"), answer: t("faq.whyChoose.answer") },
+  ];
+
+  // Comparison data with translations
+  const comparisonData = [
+    {
+      feature: t("features.minPrice"),
+      iaiaz: t("features.minPriceIaiaz"),
+      chatgpt: t("features.minPriceChatgpt"),
+      iaiazWins: true,
+    },
+    {
+      feature: t("features.gpt4Access"),
+      iaiaz: t("features.included"),
+      chatgpt: t("features.included"),
+      iaiazWins: null,
+    },
+    {
+      feature: t("features.claudeAccess"),
+      iaiaz: t("features.allModels"),
+      chatgpt: t("features.notAvailable"),
+      iaiazWins: true,
+    },
+    {
+      feature: t("features.geminiAccess"),
+      iaiaz: t("features.allModels"),
+      chatgpt: t("features.notAvailable"),
+      iaiazWins: true,
+    },
+    {
+      feature: t("features.mistralAccess"),
+      iaiaz: t("features.allModels"),
+      chatgpt: t("features.notAvailable"),
+      iaiazWins: true,
+    },
+    {
+      feature: t("features.commitment"),
+      iaiaz: t("features.noCommitment"),
+      chatgpt: t("features.monthlySubscription"),
+      iaiazWins: true,
+    },
+    {
+      feature: t("features.freeCredits"),
+      iaiaz: t("features.freeCreditsIaiaz"),
+      chatgpt: t("features.none"),
+      iaiazWins: true,
+    },
+    {
+      feature: t("features.fileUpload"),
+      iaiaz: t("features.imagesPdf"),
+      chatgpt: t("features.imagesPdf"),
+      iaiazWins: null,
+    },
+    {
+      feature: t("features.conversationHistory"),
+      iaiaz: t("features.unlimited"),
+      chatgpt: t("features.unlimited"),
+      iaiazWins: null,
+    },
+    {
+      feature: t("features.messageLimit"),
+      iaiaz: t("features.noLimit"),
+      chatgpt: t("features.gpt4Limit"),
+      iaiazWins: true,
+    },
+  ];
+
+  const useCases = [
+    {
+      title: t("useCases.occasional.title"),
+      description: t("useCases.occasional.description"),
+      iaiazCost: t("useCases.occasional.iaiazCost"),
+      chatgptCost: t("useCases.occasional.chatgptCost"),
+      savings: t("useCases.occasional.savings"),
+    },
+    {
+      title: t("useCases.regular.title"),
+      description: t("useCases.regular.description"),
+      iaiazCost: t("useCases.regular.iaiazCost"),
+      chatgptCost: t("useCases.regular.chatgptCost"),
+      savings: t("useCases.regular.savings"),
+    },
+    {
+      title: t("useCases.intensive.title"),
+      description: t("useCases.intensive.description"),
+      iaiazCost: t("useCases.intensive.iaiazCost"),
+      chatgptCost: t("useCases.intensive.chatgptCost"),
+      savings: t("useCases.intensive.savings"),
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Structured Data for SEO */}
       <FAQSchema faqs={comparatifFaqs} />
       <BreadcrumbSchema
         items={[
-          { name: "Accueil", url: "https://www.iaiaz.com" },
-          { name: "Comparatif", url: "https://www.iaiaz.com/comparatif" },
+          { name: t("breadcrumb.home"), url: "https://www.iaiaz.com" + (locale === "en" ? "/en" : "") },
+          { name: t("breadcrumb.compare"), url: locale === "fr" ? "https://www.iaiaz.com/comparatif" : "https://www.iaiaz.com/en/compare" },
         ]}
       />
 
@@ -155,18 +154,17 @@ export default function ComparatifPage() {
         {/* Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            iaiaz vs ChatGPT Plus
+            {t("hero.title")}
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            Pourquoi débourser 20€/mois quand vous pouvez accéder aux meilleurs
-            modèles d&apos;IA en ne payant que ce que vous consommez ?
+            {t("hero.subtitle")}
           </p>
           <div className="flex items-center justify-center gap-4 text-sm">
             <span className="flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-2 rounded-full">
-              <Check className="w-4 h-4" /> Économisez jusqu&apos;à 90%
+              <Check className="w-4 h-4" /> {t("hero.saveUp")}
             </span>
             <span className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full">
-              <Zap className="w-4 h-4" /> 4 fournisseurs IA
+              <Zap className="w-4 h-4" /> {t("hero.providers")}
             </span>
           </div>
         </div>
@@ -174,7 +172,7 @@ export default function ComparatifPage() {
         {/* Comparison Table */}
         <section className="mb-20">
           <h2 className="text-2xl font-bold text-center mb-8">
-            Comparatif détaillé
+            {t("comparison.title")}
           </h2>
           <Card>
             <CardContent className="pt-6">
@@ -182,16 +180,16 @@ export default function ComparatifPage() {
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="border-b-2 border-[var(--border)]">
-                      <th className="text-left p-4">Fonctionnalité</th>
+                      <th className="text-left p-4">{t("comparison.feature")}</th>
                       <th className="text-center p-4 bg-primary-50 dark:bg-primary-950/30">
                         <div className="font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
                         <div className="text-sm text-[var(--muted-foreground)]">
-                          Pay-as-you-go
+                          {t("comparison.payAsYouGo")}
                         </div>
                       </th>
                       <th className="text-center p-4">
                         <div className="font-bold">ChatGPT Plus</div>
-                        <div className="text-sm text-[var(--muted-foreground)]">20€/mois</div>
+                        <div className="text-sm text-[var(--muted-foreground)]">$20{t("comparison.perMonth")}</div>
                       </th>
                     </tr>
                   </thead>
@@ -221,10 +219,10 @@ export default function ComparatifPage() {
         {/* Use Case Savings */}
         <section className="mb-20">
           <h2 className="text-2xl font-bold text-center mb-4">
-            Combien allez-vous économiser ?
+            {t("savings.title")}
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-8">
-            Estimations basées sur des usages réels
+            {t("savings.subtitle")}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {useCases.map((useCase, i) => (
@@ -251,7 +249,7 @@ export default function ComparatifPage() {
                     </div>
                   </div>
                   <div className="inline-block bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-sm font-medium">
-                    Économie : {useCase.savings}
+                    {t("savings.saving")} {useCase.savings}
                   </div>
                 </CardContent>
               </Card>
@@ -262,48 +260,45 @@ export default function ComparatifPage() {
         {/* Why Multiple Models */}
         <section className="mb-20 bg-[var(--muted)] rounded-2xl p-8 md:p-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Brain className="w-6 h-6 text-primary-600 dark:text-primary-400" /> L&apos;intérêt d&apos;avoir plusieurs modèles
+            <Brain className="w-6 h-6 text-primary-600 dark:text-primary-400" /> {t("multipleModels.title")}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>Claude</strong> excelle en rédaction et en analyse de
-                  documents longs
+                  <strong>Claude</strong> {t("multipleModels.claudeBenefit")}
                 </div>
               </div>
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>GPT-4</strong> est polyvalent et créatif
+                  <strong>GPT-4</strong> {t("multipleModels.gpt4Benefit")}
                 </div>
               </div>
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>Gemini</strong> peut traiter des textes très longs (1M
-                  de tokens)
+                  <strong>Gemini</strong> {t("multipleModels.geminiBenefit")}
                 </div>
               </div>
               <div className="flex gap-3">
                 <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0 mt-1" />
                 <div>
-                  <strong>Mistral</strong> maîtrise parfaitement le français et
-                  reste très économique
+                  <strong>Mistral</strong> {t("multipleModels.mistralBenefit")}
                 </div>
               </div>
             </div>
             <Card>
               <CardContent className="pt-6">
                 <h3 className="font-bold mb-3">
-                  Avec iaiaz, vous pouvez :
+                  {t("multipleModels.withIaiaz")}
                 </h3>
                 <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
-                  <li>• Lancer un brainstorming avec GPT-4</li>
-                  <li>• Rédiger votre dissertation avec Claude</li>
-                  <li>• Économiser avec Mistral pour les tâches simples</li>
-                  <li>• Comparer les réponses de plusieurs modèles</li>
+                  <li>• {t("multipleModels.brainstorm")}</li>
+                  <li>• {t("multipleModels.writeEssay")}</li>
+                  <li>• {t("multipleModels.saveWithMistral")}</li>
+                  <li>• {t("multipleModels.compareResponses")}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -313,18 +308,17 @@ export default function ComparatifPage() {
         {/* Pricing Transparency */}
         <section className="mb-20">
           <h2 className="text-2xl font-bold text-center mb-4 flex items-center justify-center gap-2">
-            <Euro className="w-6 h-6 text-primary-600 dark:text-primary-400" /> Transparence totale sur les prix
+            <DollarSign className="w-6 h-6 text-primary-600 dark:text-primary-400" /> {t("transparency.title")}
           </h2>
           <p className="text-center text-[var(--muted-foreground)] mb-8 max-w-2xl mx-auto">
-            Contrairement aux abonnements, vous voyez exactement ce que coûte
-            chaque message. Exemple avec 1€ de crédits :
+            {t("transparency.subtitle")}
           </p>
           <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             <Card className="text-center">
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~100</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
-                  messages avec GPT-4o Mini
+                  {t("transparency.gptMini")}
                 </div>
               </CardContent>
             </Card>
@@ -332,7 +326,7 @@ export default function ComparatifPage() {
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~50</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
-                  messages avec Claude Sonnet
+                  {t("transparency.claudeSonnet")}
                 </div>
               </CardContent>
             </Card>
@@ -340,7 +334,7 @@ export default function ComparatifPage() {
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~30</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
-                  messages avec GPT-4
+                  {t("transparency.gpt4")}
                 </div>
               </CardContent>
             </Card>
@@ -348,7 +342,7 @@ export default function ComparatifPage() {
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">~200</div>
                 <div className="text-sm text-[var(--muted-foreground)]">
-                  messages avec Mistral Small
+                  {t("transparency.mistralSmall")}
                 </div>
               </CardContent>
             </Card>
@@ -358,15 +352,14 @@ export default function ComparatifPage() {
         {/* CTA */}
         <section className="text-center bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/30 dark:to-accent-950/30 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">
-            Prêt à faire des économies ?
+            {t("cta.title")}
           </h2>
           <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-            Créez votre compte gratuitement et profitez d&apos;1€ de crédits offerts.
-            Sans carte bancaire, sans engagement.
+            {t("cta.subtitle")}
           </p>
           <Link href="/auth/signup">
             <Button size="lg">
-              Commencer gratuitement <ArrowRight className="w-5 h-5 ml-2" />
+              {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>
         </section>
@@ -378,29 +371,29 @@ export default function ComparatifPage() {
           <div className="text-center md:text-left">
             <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
             <p className="text-xs text-[var(--muted-foreground)]">
-              Intelligence Artificielle Intelligemment Accessible, Zéro engagement
+              {tHome("footer.tagline")}
             </p>
           </div>
           <div className="text-center">
             <p className="text-sm text-[var(--muted-foreground)]">
-              © 2025 iaiaz. Tous droits réservés.
+              {tHome("footer.copyright")}
             </p>
             <p className="text-xs text-[var(--muted-foreground)] mt-1">
-              Fait avec amour à Toulouse, France
+              {tHome("footer.madeIn")}
             </p>
           </div>
           <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
             <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">
-              CGU
+              {tHome("footer.cgu")}
             </Link>
             <Link href="/legal/cgv" className="hover:text-[var(--foreground)]">
-              CGV
+              {tHome("footer.cgv")}
             </Link>
             <Link href="/legal/privacy" className="hover:text-[var(--foreground)]">
-              Confidentialité
+              {tHome("footer.privacy")}
             </Link>
             <Link href="/legal/cookies" className="hover:text-[var(--foreground)]">
-              Cookies
+              {tHome("footer.cookies")}
             </Link>
           </nav>
         </div>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
@@ -12,7 +13,16 @@ import {
   Wallet,
 } from "lucide-react";
 
-export default async function DashboardPage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function DashboardPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("dashboard");
+
   const supabase = await createClient();
 
   const {
@@ -62,6 +72,9 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(10);
 
+  // Date formatting based on locale
+  const dateLocale = locale === "fr" ? "fr-FR" : "en-US";
+
   return (
     <div className="min-h-screen bg-[var(--muted)]">
       {/* Header */}
@@ -75,12 +88,12 @@ export default async function DashboardPage() {
               href="/chat"
               className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             >
-              Chat
+              {t("nav.chat")}
             </Link>
             <Link href="/dashboard/credits">
               <Button size="sm">
                 <CreditCard className="w-4 h-4 mr-2" />
-                Recharger
+                {t("nav.recharge")}
               </Button>
             </Link>
           </nav>
@@ -88,7 +101,7 @@ export default async function DashboardPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-8">Tableau de bord</h1>
+        <h1 className="text-2xl font-bold mb-8">{t("title")}</h1>
 
         {/* Stats */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -100,7 +113,7 @@ export default async function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
-                    Solde actuel
+                    {t("stats.currentBalance")}
                   </p>
                   <p className="text-2xl font-bold">
                     {formatCurrency(profile?.credits_balance || 0)}
@@ -118,7 +131,7 @@ export default async function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
-                    Conversations
+                    {t("stats.conversations")}
                   </p>
                   <p className="text-2xl font-bold">{conversationCount || 0}</p>
                 </div>
@@ -134,7 +147,7 @@ export default async function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
-                    Total utilisé
+                    {t("stats.totalSpent")}
                   </p>
                   <p className="text-2xl font-bold">
                     {formatCurrency(totalSpent)}
@@ -149,18 +162,18 @@ export default async function DashboardPage() {
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <Card>
             <CardHeader>
-              <h2 className="font-semibold">Actions rapides</h2>
+              <h2 className="font-semibold">{t("quickActions.title")}</h2>
             </CardHeader>
             <CardContent className="space-y-2">
               <Link href="/chat">
                 <Button variant="outline" className="w-full justify-between">
-                  Nouvelle conversation
+                  {t("quickActions.newConversation")}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/dashboard/credits">
                 <Button variant="outline" className="w-full justify-between">
-                  Acheter des crédits
+                  {t("quickActions.buyCredits")}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
@@ -169,21 +182,21 @@ export default async function DashboardPage() {
 
           <Card>
             <CardHeader>
-              <h2 className="font-semibold">Informations du compte</h2>
+              <h2 className="font-semibold">{t("accountInfo.title")}</h2>
             </CardHeader>
             <CardContent>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-[var(--muted-foreground)]">Email</dt>
+                  <dt className="text-[var(--muted-foreground)]">{t("accountInfo.email")}</dt>
                   <dd className="font-medium">{user.email}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-[var(--muted-foreground)]">
-                    Membre depuis
+                    {t("accountInfo.memberSince")}
                   </dt>
                   <dd className="font-medium">
                     {new Date(profile?.created_at || "").toLocaleDateString(
-                      "fr-FR",
+                      dateLocale,
                       {
                         year: "numeric",
                         month: "long",
@@ -200,22 +213,22 @@ export default async function DashboardPage() {
         {/* Recent transactions */}
         <Card>
           <CardHeader>
-            <h2 className="font-semibold">Transactions récentes</h2>
+            <h2 className="font-semibold">{t("transactions.title")}</h2>
           </CardHeader>
           <CardContent>
             {!transactions || transactions.length === 0 ? (
               <p className="text-sm text-[var(--muted-foreground)] text-center py-8">
-                Aucune transaction pour le moment
+                {t("transactions.empty")}
               </p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-[var(--border)]">
-                      <th className="text-left py-2 font-medium">Date</th>
-                      <th className="text-left py-2 font-medium">Type</th>
-                      <th className="text-left py-2 font-medium">Description</th>
-                      <th className="text-right py-2 font-medium">Montant</th>
+                      <th className="text-left py-2 font-medium">{t("transactions.date")}</th>
+                      <th className="text-left py-2 font-medium">{t("transactions.type")}</th>
+                      <th className="text-left py-2 font-medium">{t("transactions.description")}</th>
+                      <th className="text-right py-2 font-medium">{t("transactions.amount")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -225,7 +238,7 @@ export default async function DashboardPage() {
                         className="border-b border-[var(--border)] last:border-0"
                       >
                         <td className="py-3 text-[var(--muted-foreground)]">
-                          {new Date(tx.created_at).toLocaleDateString("fr-FR")}
+                          {new Date(tx.created_at).toLocaleDateString(dateLocale)}
                         </td>
                         <td className="py-3">
                           <span
@@ -240,11 +253,11 @@ export default async function DashboardPage() {
                             }`}
                           >
                             {tx.type === "purchase"
-                              ? "Achat"
+                              ? t("transactions.types.purchase")
                               : tx.type === "usage"
-                                ? "Utilisation"
+                                ? t("transactions.types.usage")
                                 : tx.type === "bonus"
-                                  ? "Bonus"
+                                  ? t("transactions.types.bonus")
                                   : tx.type}
                           </span>
                         </td>

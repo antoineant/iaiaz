@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,8 @@ const MIN_CUSTOM_AMOUNT = 1;
 const MAX_CUSTOM_AMOUNT = 100;
 
 export default function CreditsPage() {
+  const t = useTranslations("credits");
+
   const [selectedPack, setSelectedPack] = useState<string>("regular");
   const [customAmount, setCustomAmount] = useState<number>(15);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +84,7 @@ export default function CreditsPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-semibold">Acheter des crédits</h1>
+          <h1 className="text-xl font-semibold">{t("title")}</h1>
         </div>
       </header>
 
@@ -107,7 +110,7 @@ export default function CreditsPage() {
               <CardContent className="pt-6 text-center relative">
                 {pack.popular && (
                   <span className="absolute top-2 right-2 text-xs font-medium text-primary-600 bg-primary-100 px-2 py-0.5 rounded-full">
-                    Populaire
+                    {t("popular")}
                   </span>
                 )}
                 {selectedPack === pack.id && (
@@ -123,15 +126,15 @@ export default function CreditsPage() {
                 <ul className="text-xs text-left space-y-1.5">
                   <li className="flex items-center gap-2">
                     <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    {pack.credits}€ de crédits
+                    {t("creditAmount", { amount: pack.credits })}
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    Tous les modèles
+                    {t("allModels")}
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    Pas d'expiration
+                    {t("noExpiration")}
                   </li>
                 </ul>
               </CardContent>
@@ -150,7 +153,7 @@ export default function CreditsPage() {
           >
             <CardContent className="pt-6 text-center relative">
               <span className="absolute top-2 right-2 text-xs font-medium text-accent-600 bg-accent-100 px-2 py-0.5 rounded-full">
-                Libre
+                {t("free")}
               </span>
               {isCustom && (
                 <div className="absolute top-2 left-2 w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
@@ -159,7 +162,7 @@ export default function CreditsPage() {
               )}
               <div className="flex items-center justify-center gap-1 mt-1">
                 <Pencil className="w-4 h-4 text-[var(--muted-foreground)]" />
-                <h3 className="text-lg font-semibold">Montant libre</h3>
+                <h3 className="text-lg font-semibold">{t("customAmount")}</h3>
               </div>
               <div className="my-3">
                 <div className="flex items-center justify-center gap-1">
@@ -179,20 +182,20 @@ export default function CreditsPage() {
                 </div>
               </div>
               <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                De {MIN_CUSTOM_AMOUNT}€ à {MAX_CUSTOM_AMOUNT}€
+                {t("customRange", { min: MIN_CUSTOM_AMOUNT, max: MAX_CUSTOM_AMOUNT })}
               </p>
               <ul className="text-xs text-left space-y-1.5">
                 <li className="flex items-center gap-2">
                   <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                  {customAmount}€ de crédits
+                  {t("creditAmount", { amount: customAmount })}
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                  Tous les modèles
+                  {t("allModels")}
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                  Pas d'expiration
+                  {t("noExpiration")}
                 </li>
               </ul>
             </CardContent>
@@ -201,18 +204,18 @@ export default function CreditsPage() {
 
         <Card>
           <CardHeader>
-            <h2 className="font-semibold">Récapitulatif</h2>
+            <h2 className="font-semibold">{t("summary.title")}</h2>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="font-medium">
                   {isCustom
-                    ? "Montant personnalisé"
-                    : `Pack ${CREDIT_PACKS.find((p) => p.id === selectedPack)?.name}`}
+                    ? t("summary.customAmount")
+                    : t("summary.pack", { name: CREDIT_PACKS.find((p) => p.id === selectedPack)?.name || "" })}
                 </p>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  {getSelectedCredits()}€ de crédits
+                  {t("creditAmount", { amount: getSelectedCredits() })}
                 </p>
               </div>
               <p className="text-2xl font-bold">{getSelectedPrice()}€</p>
@@ -225,27 +228,41 @@ export default function CreditsPage() {
               isLoading={isLoading}
             >
               <CreditCard className="w-4 h-4 mr-2" />
-              Payer par carte
+              {t("payByCard")}
             </Button>
 
             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-[var(--muted-foreground)]">
               <Shield className="w-4 h-4" />
-              Paiement sécurisé par Stripe
+              {t("securedByStripe")}
             </div>
           </CardContent>
         </Card>
 
         <div className="mt-8 text-center text-sm text-[var(--muted-foreground)]">
           <p>
-            En effectuant cet achat, vous acceptez nos{" "}
-            <Link href="/legal/cgu" className="text-primary-600 hover:underline">
-              CGU
-            </Link>
-            {" "}et{" "}
-            <Link href="/legal/cgv" className="text-primary-600 hover:underline">
-              CGV
-            </Link>
-            .
+            {t("legalNotice").split("CGU").map((part, i) => (
+              i === 0 ? (
+                <span key={i}>
+                  {part}
+                  <Link href="/legal/cgu" className="text-primary-600 hover:underline">
+                    CGU
+                  </Link>
+                </span>
+              ) : (
+                <span key={i}>
+                  {part.split("CGV").map((p, j) => (
+                    j === 0 ? (
+                      <span key={j}>
+                        {p}
+                        <Link href="/legal/cgv" className="text-primary-600 hover:underline">
+                          CGV
+                        </Link>
+                      </span>
+                    ) : p
+                  ))}
+                </span>
+              )
+            ))}
           </p>
         </div>
       </main>

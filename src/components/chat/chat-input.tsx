@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { CostEstimate } from "./cost-estimate";
 import { RateLimitIndicator } from "./rate-limit-indicator";
@@ -57,6 +58,7 @@ export function ChatInput({
   conversationId,
   pricingData,
 }: ChatInputProps) {
+  const t = useTranslations("chat");
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<FileAttachment[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -80,17 +82,17 @@ export function ChatInput({
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF";
+      return t("errors.unsupportedFileType");
     }
     if (file.size > MAX_FILE_SIZE) {
-      return "Fichier trop volumineux. Taille maximale: 10 Mo";
+      return t("errors.fileTooLarge");
     }
     // Check model capabilities
     if (file.type === "application/pdf" && !capabilities.pdf) {
-      return "Ce modèle ne supporte pas les PDF. Utilisez Claude ou Gemini pour les PDF.";
+      return t("errors.pdfNotSupported");
     }
     if (file.type.startsWith("image/") && !capabilities.images) {
-      return "Ce modèle ne supporte pas les images. Choisissez un autre modèle.";
+      return t("errors.imageNotSupported");
     }
     return null;
   };
@@ -110,7 +112,7 @@ export function ChatInput({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Erreur lors du téléchargement");
+        throw new Error(data.error || t("errors.uploadError"));
       }
 
       return await response.json();
@@ -146,7 +148,7 @@ export function ChatInput({
           }
         } catch (error) {
           errors.push(
-            `${file.name}: ${error instanceof Error ? error.message : "Erreur"}`
+            `${file.name}: ${error instanceof Error ? error.message : t("errors.genericError")}`
           );
         }
       }
@@ -232,7 +234,7 @@ export function ChatInput({
               <p className="text-sm text-red-700">{rateLimitError}</p>
               {rateLimit?.resetAt && (
                 <p className="text-xs text-red-600 mt-1">
-                  La limite sera réinitialisée automatiquement.
+                  {t("errors.rateLimitReset")}
                 </p>
               )}
             </div>
@@ -335,7 +337,7 @@ export function ChatInput({
               <div className="flex flex-col items-center gap-2 text-primary-600 dark:text-primary-400">
                 <ImageIcon className="w-8 h-8" />
                 <span className="text-sm font-medium">
-                  Déposez vos fichiers ici
+                  {t("input.dropFiles")}
                 </span>
               </div>
             </div>
@@ -368,10 +370,10 @@ export function ChatInput({
               className={`m-1 ${!capabilities.images && !capabilities.pdf ? "opacity-40 cursor-not-allowed" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
               title={
                 !capabilities.images && !capabilities.pdf
-                  ? "Ce modèle ne supporte pas les fichiers"
+                  ? t("input.noFileSupport")
                   : capabilities.pdf
-                    ? "Joindre un fichier (PNG, JPG, GIF, WebP, PDF)"
-                    : "Joindre une image (PNG, JPG, GIF, WebP)"
+                    ? t("input.attachFile")
+                    : t("input.attachImage")
               }
             >
               {uploading ? (
@@ -389,8 +391,8 @@ export function ChatInput({
               onPaste={handlePaste}
               placeholder={
                 isRateLimited
-                  ? "Limite atteinte, veuillez patienter..."
-                  : "Écrivez votre message ou déposez un fichier..."
+                  ? t("input.placeholderRateLimit")
+                  : t("input.placeholder")
               }
               rows={1}
               disabled={disabled || isLoading || isRateLimited}
@@ -411,10 +413,10 @@ export function ChatInput({
         <div className="flex items-center justify-between mt-2">
           <p className="text-xs text-[var(--muted-foreground)]">
             {capabilities.images && capabilities.pdf
-              ? "Images et PDF supportés (max 10 Mo). Collez ou glissez-déposez."
+              ? t("input.imagesPdfSupported")
               : capabilities.images
-                ? "Images supportées (max 10 Mo). PDF non supporté par ce modèle."
-                : "Ce modèle ne supporte pas les fichiers joints."}
+                ? t("input.imagesOnlySupported")
+                : t("input.noFileSupport")}
           </p>
           {rateLimit && !hasContent && (
             <RateLimitIndicator

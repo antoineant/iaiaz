@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,8 @@ import { GoogleButton, Divider } from "@/components/auth/google-button";
 import { Check } from "lucide-react";
 
 export default function SignupPage() {
+  const t = useTranslations("auth.signup");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,12 +25,12 @@ export default function SignupPage() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError(t("errors.passwordMismatch"));
       return;
     }
 
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
+      setError(t("errors.passwordTooShort"));
       return;
     }
 
@@ -44,7 +47,7 @@ export default function SignupPage() {
 
     if (error) {
       if (error.message.includes("already registered")) {
-        setError("Cet email est déjà utilisé");
+        setError(t("errors.emailInUse"));
       } else {
         setError(error.message);
       }
@@ -65,14 +68,12 @@ export default function SignupPage() {
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
                 <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
-              <h1 className="text-xl font-semibold mb-2">Vérifiez votre email</h1>
+              <h1 className="text-xl font-semibold mb-2">{t("success.title")}</h1>
               <p className="text-[var(--muted-foreground)] mb-4">
-                Nous avons envoyé un lien de confirmation à{" "}
-                <span className="font-medium text-[var(--foreground)]">{email}</span>
+                {t("success.description", { email })}
               </p>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Cliquez sur le lien dans l'email pour activer votre compte et
-                recevoir vos crédits gratuits.
+                {t("success.hint")}
               </p>
             </CardContent>
           </Card>
@@ -89,13 +90,13 @@ export default function SignupPage() {
             iaiaz
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">
-            Créez votre compte et recevez 1€ de crédits gratuits
+            {t("subtitle")}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <h1 className="text-xl font-semibold">Inscription</h1>
+            <h1 className="text-xl font-semibold">{t("title")}</h1>
           </CardHeader>
           <CardContent>
             <GoogleButton mode="signup" />
@@ -112,8 +113,8 @@ export default function SignupPage() {
               <Input
                 id="email"
                 type="email"
-                label="Email"
-                placeholder="votre@email.com"
+                label={t("email")}
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -123,8 +124,8 @@ export default function SignupPage() {
               <Input
                 id="password"
                 type="password"
-                label="Mot de passe"
-                placeholder="Au moins 6 caractères"
+                label={t("password")}
+                placeholder={t("passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -134,8 +135,8 @@ export default function SignupPage() {
               <Input
                 id="confirmPassword"
                 type="password"
-                label="Confirmer le mot de passe"
-                placeholder="••••••••"
+                label={t("confirmPassword")}
+                placeholder={t("confirmPasswordPlaceholder")}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -147,17 +148,17 @@ export default function SignupPage() {
                 className="w-full"
                 isLoading={isLoading}
               >
-                Créer mon compte
+                {t("submit")}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
-              Déjà un compte ?{" "}
+              {t("hasAccount")}{" "}
               <Link
                 href="/auth/login"
                 className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
               >
-                Se connecter
+                {t("login")}
               </Link>
             </div>
           </CardContent>

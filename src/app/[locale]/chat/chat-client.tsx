@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Sidebar } from "@/components/chat/sidebar";
 import { ModelSelector } from "@/components/chat/model-selector";
@@ -29,6 +30,8 @@ export function ChatClient({
   pricingData,
 }: ChatClientProps) {
   const router = useRouter();
+  const t = useTranslations("chat");
+  const tErrors = useTranslations("chat.errors");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
@@ -178,7 +181,7 @@ export function ChatClient({
       }
 
       if (!response.ok) {
-        throw new Error(data.error || "Erreur lors de l'envoi du message");
+        throw new Error(data.error || tErrors("sendError"));
       }
 
       // Update rate limit from response
@@ -237,7 +240,7 @@ export function ChatClient({
                 content:
                   error instanceof Error
                     ? error.message
-                    : "Une erreur est survenue",
+                    : tErrors("genericError"),
                 isStreaming: false,
               }
             : m
@@ -269,7 +272,7 @@ export function ChatClient({
             markupMultiplier={pricingData.settings.markupMultiplier}
           />
           <div className="text-sm text-[var(--muted-foreground)]">
-            Solde: <span className="font-medium">{balance.toFixed(2)}€</span>
+            {t("sidebar.balance")}: <span className="font-medium">{balance.toFixed(2)}€</span>
           </div>
         </header>
 
@@ -281,25 +284,24 @@ export function ChatClient({
                 <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
               <h1 className="text-2xl font-bold mb-2">
-                Bienvenue sur iaiaz
+                {t("welcome.title")}
               </h1>
               <p className="text-[var(--muted-foreground)] max-w-md mb-6">
-                Commencez une conversation avec l'IA de votre choix. Vous pouvez
-                changer de modèle à tout moment.
+                {t("welcome.description")}
               </p>
               <div className="flex flex-wrap gap-2 justify-center max-w-lg">
                 {[
-                  "Explique-moi les bases de Python",
-                  "Aide-moi à rédiger un email professionnel",
-                  "Résume ce texte",
-                  "Donne-moi des idées de projet",
+                  { key: "python", text: t("suggestions.python") },
+                  { key: "email", text: t("suggestions.email") },
+                  { key: "summary", text: t("suggestions.summary") },
+                  { key: "ideas", text: t("suggestions.ideas") },
                 ].map((suggestion) => (
                   <button
-                    key={suggestion}
-                    onClick={() => handleSendMessage(suggestion)}
+                    key={suggestion.key}
+                    onClick={() => handleSendMessage(suggestion.text)}
                     className="px-3 py-2 rounded-lg border border-[var(--border)] text-sm hover:bg-[var(--muted)] transition-colors"
                   >
-                    {suggestion}
+                    {suggestion.text}
                   </button>
                 ))}
               </div>

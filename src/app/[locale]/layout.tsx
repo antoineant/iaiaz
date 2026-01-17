@@ -130,8 +130,8 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className={`${inter.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <CookieConsentBanner />
         </NextIntlClientProvider>
-        <CookieConsentBanner />
       </body>
     </html>
   );

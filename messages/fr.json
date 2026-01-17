@@ -14,7 +14,10 @@
     },
     "etudiants": {
       "title": "IA pour Étudiants - Alternative économique à ChatGPT",
-      "description": "Accédez à GPT-4, Claude et Gemini sans abonnement. Solution idéale pour étudiants avec 1€ offert à l'inscription."
+      "description": "Accédez à GPT-4, Claude et Gemini sans abonnement. Solution idéale pour étudiants avec 1€ offert à l'inscription.",
+      "keywords": "ia pour étudiants, chatgpt étudiant, chatgpt étudiant gratuit, ia gratuit étudiant, aide devoirs ia, dissertation ia, révision ia, chatgpt université, claude étudiant, gpt-4 étudiant",
+      "ogTitle": "iaiaz pour Étudiants - L'IA accessible à tous",
+      "ogDescription": "GPT-4, Claude, Gemini sans abonnement. Parfait pour le budget étudiant."
     }
   },
   "common": {
@@ -53,57 +56,108 @@
       "titleHighlight": "sans l'abonnement.",
       "subtitle": "Accédez à Claude, GPT-4, Gemini et Mistral. Payez uniquement ce que vous utilisez. Parfait pour les étudiants.",
       "cta": "Créer un compte gratuit",
-      "ctaSecondary": "Comment ça marche ?"
+      "ctaSecondary": "Comment ça marche ?",
+      "freeCredit": "1€ de crédits offerts à l'inscription"
     },
     "value": {
       "title": "Que pouvez-vous faire avec 1€ ?",
+      "subtitle": "Choisissez le modèle adapté à vos besoins",
       "badge": "1€ offert à l'inscription",
       "recommended": "Recommandé",
       "new": "Nouveau",
       "ultraEconomic": "Ultra économique",
       "simpleQuestions": "Questions simples",
       "complexQuestions": "Questions complexes",
-      "essays": "Dissertations"
+      "essays": "Dissertations",
+      "claimOffer": "Récupérer mon euro offert",
+      "moreModels": "+ 12 autres modèles disponibles (Claude Opus, GPT-4o, Mistral, etc.)",
+      "claudeDesc": "Anthropic • Excellent équilibre qualité/prix",
+      "gptDesc": "OpenAI • Le plus récent et polyvalent",
+      "geminiDesc": "Google • Parfait pour les tâches simples"
     },
     "howItWorks": {
       "title": "Comment ça marche ?",
+      "subtitle": "Vous payez quelques centimes par conversation au lieu de 20€/mois pour un abonnement que vous n'utilisez jamais entièrement.",
       "step1": {
-        "title": "Créez un compte",
-        "description": "Inscription gratuite en 30 secondes. Recevez 1€ de crédits offerts."
+        "title": "Créez votre compte",
+        "description": "Inscription gratuite en 30 secondes. 1€ offert pour découvrir le service."
       },
       "step2": {
-        "title": "Choisissez votre modèle",
-        "description": "GPT-4, Claude, Gemini, Mistral... Changez à tout moment."
+        "title": "Utilisez l'IA",
+        "description": "Posez vos questions, faites-vous aider pour vos devoirs, vos projets..."
       },
       "step3": {
-        "title": "Payez ce que vous utilisez",
-        "description": "Pas d'abonnement, pas d'engagement. Rechargez quand vous voulez."
+        "title": "Payez selon votre usage",
+        "description": "Rechargez quand vous le souhaitez. Sans abonnement, sans engagement."
+      },
+      "realCosts": {
+        "title": "Combien ça coûte vraiment ?",
+        "subtitle": "Voici des exemples concrets pour des usages étudiants :",
+        "simpleQuestion": "Poser une question simple",
+        "simpleQuestionExample": "\"Explique-moi le théorème de Pythagore\"",
+        "reviewText": "Relire et corriger un texte",
+        "reviewTextExample": "Dissertation de 2 pages",
+        "debugCode": "Débugger du code",
+        "debugCodeExample": "Comprendre une erreur Python",
+        "prepareExam": "Préparer un examen",
+        "prepareExamExample": "20 questions-réponses"
+      },
+      "comparison": {
+        "title": "💡 Pourquoi débourser 20€/mois quand 2€ suffisent ?",
+        "chatgptPlus": "Abonnement ChatGPT Plus",
+        "chatgptPlusNote": "Même si vous ne l'utilisez que 5 fois",
+        "iaiazAvg": "Avec iaiaz (usage moyen étudiant)",
+        "iaiazAvgNote": "Vous payez exactement ce que vous utilisez"
       }
     },
     "features": {
+      "title": "Pourquoi choisir iaiaz ?",
       "noSubscription": {
         "title": "Pas d'abonnement",
-        "description": "Rechargez votre compte quand vous en avez besoin. Vos crédits n'expirent jamais."
+        "description": "Rechargez votre compte quand vous en avez besoin. Aucun engagement, aucune mauvaise surprise."
       },
       "allModels": {
         "title": "Tous les modèles",
-        "description": "Accédez à GPT-4, Claude, Gemini et Mistral depuis une seule interface."
+        "description": "Claude, GPT-4, Gemini, Mistral... Choisissez le meilleur modèle pour chaque tâche."
       },
       "transparent": {
-        "title": "Prix transparents",
-        "description": "Vous voyez le coût de chaque message avant de l'envoyer."
+        "title": "Transparent et simple",
+        "description": "Vous savez exactement ce que coûte chaque message avant de l'envoyer."
       }
     },
     "models": {
-      "title": "Modèles disponibles",
+      "title": "Des modèles pour chaque besoin",
+      "subtitle": "Du plus économique au plus puissant, choisissez le modèle adapté à votre besoin. Nous vous guidons vers le meilleur rapport qualité/prix.",
       "avgCost": "Coût moyen par question",
       "recommended": "Recommandé",
-      "moreModels": "+{count} autres modèles disponibles"
+      "moreModels": "+ 10 autres modèles disponibles dans l'application"
+    },
+    "pricing": {
+      "title": "Rechargez à votre rythme",
+      "subtitle": "Ajoutez des crédits et utilisez-les quand bon vous semble. Vos crédits n'expirent jamais.",
+      "popular": "Le plus populaire",
+      "simpleQuestions": "≈ {count} questions simples",
+      "credits": "{amount}€ de crédits",
+      "allModels": "Tous les modèles IA",
+      "noExpiration": "Jamais d'expiration"
     },
     "cta": {
-      "title": "Prêt à commencer ?",
-      "subtitle": "Créez votre compte gratuitement et recevez 1€ de crédits offerts.",
-      "button": "Créer un compte gratuit"
+      "title": "Envie de tester l'IA sans contraintes ?",
+      "subtitle": "Créez votre compte en 30 secondes et profitez d'1€ de crédits offerts.",
+      "button": "Récupérer mon euro offert",
+      "questionsWithClaude": "~67 questions avec Claude",
+      "questionsWithGpt": "~100 questions avec GPT-5",
+      "questionsWithGemini": "~3000+ avec Gemini Flash",
+      "noCommitment": "Sans engagement • Sans carte bancaire"
+    },
+    "footer": {
+      "tagline": "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
+      "copyright": "© 2025 iaiaz. Tous droits réservés.",
+      "madeIn": "Fait avec ❤️ à Toulouse, France",
+      "cgu": "CGU",
+      "cgv": "CGV",
+      "privacy": "Confidentialité",
+      "cookies": "Cookies"
     }
   },
   "chat": {
@@ -234,6 +288,7 @@
     }
   },
   "auth": {
+    "or": "ou",
     "login": {
       "title": "Connexion",
       "subtitle": "Connectez-vous à votre compte",
@@ -331,16 +386,397 @@
       "connecting": "Connexion..."
     }
   },
+  "tarifs": {
+    "hero": {
+      "title": "Tarifs transparents",
+      "subtitle": "Payez uniquement ce que vous consommez. Sans abonnement, sans frais cachés. Les prix affichés sont les prix finaux, TTC.",
+      "freeCredit": "1€ offert à l'inscription",
+      "noExpiration": "Crédits sans expiration",
+      "noCommitment": "Zéro engagement"
+    },
+    "howItWorks": {
+      "title": "Comment ça marche ?",
+      "step1": {
+        "title": "Rechargez votre compte",
+        "description": "Ajoutez le montant de votre choix, de 1€ à 100€."
+      },
+      "step2": {
+        "title": "Discutez avec l'IA",
+        "description": "Chaque message consomme des crédits en fonction du modèle choisi."
+      },
+      "step3": {
+        "title": "Rechargez à volonté",
+        "description": "Vos crédits n'expirent jamais. Rechargez quand bon vous semble."
+      }
+    },
+    "calculator": {
+      "title": "Calculateur de coût"
+    },
+    "pricePerModel": {
+      "title": "Prix par modèle",
+      "subtitle": "Prix pour 1 million de tokens (environ 750 000 mots)",
+      "model": "Modèle",
+      "inputPrice": "Input (€/1M)",
+      "outputPrice": "Output (€/1M)",
+      "estimatedCost": "Coût estimé/msg",
+      "description": "Description",
+      "recommended": "Recommandé"
+    },
+    "creditPacks": {
+      "title": "Packs de crédits",
+      "popular": "Populaire",
+      "credits": "{amount}€ de crédits",
+      "messages": "~{count} messages Claude Sonnet",
+      "customAmount": "1-100€",
+      "customLabel": "Montant libre",
+      "customDescription": "Choisissez votre montant"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "token": {
+        "question": "C'est quoi un token ?",
+        "answer": "Un token correspond à environ 4 caractères ou 0.75 mot en français. Un message classique représente 200 à 500 tokens en entrée, et la réponse de l'IA entre 200 et 1000 tokens."
+      },
+      "expiration": {
+        "question": "Mes crédits ont-ils une date d'expiration ?",
+        "answer": "Non, vos crédits n'expirent jamais. Utilisez-les quand vous le souhaitez."
+      },
+      "refund": {
+        "question": "Puis-je me faire rembourser ?",
+        "answer": "Oui, vous pouvez demander le remboursement de vos crédits non utilisés dans les 14 jours suivant l'achat."
+      },
+      "markup": {
+        "question": "Pourquoi ces prix sont-ils supérieurs aux API directes ?",
+        "answer": "Nous appliquons une marge de {markup}% pour couvrir l'infrastructure, l'interface et le support. Malgré cela, c'est jusqu'à 10 fois moins cher qu'un abonnement ChatGPT Plus pour un usage modéré."
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "subtitle": "Créez votre compte et profitez d'1€ de crédits offerts pour essayer tous les modèles.",
+      "button": "Créer mon compte gratuit",
+      "compare": "Voir le comparatif"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "pricing": "Tarifs"
+    }
+  },
+  "comparatif": {
+    "hero": {
+      "title": "iaiaz vs ChatGPT Plus",
+      "subtitle": "Pourquoi débourser 20€/mois quand vous pouvez accéder aux meilleurs modèles d'IA en ne payant que ce que vous consommez ?",
+      "saveUp": "Économisez jusqu'à 90%",
+      "providers": "4 fournisseurs IA"
+    },
+    "comparison": {
+      "title": "Comparatif détaillé",
+      "feature": "Fonctionnalité",
+      "payAsYouGo": "Pay-as-you-go",
+      "perMonth": "/mois"
+    },
+    "features": {
+      "minPrice": "Prix mensuel minimum",
+      "minPriceIaiaz": "0€ (payez à l'usage)",
+      "minPriceChatgpt": "20€/mois",
+      "gpt4Access": "Accès GPT-4",
+      "included": "✓ Inclus",
+      "claudeAccess": "Accès Claude (Anthropic)",
+      "allModels": "✓ Tous les modèles",
+      "notAvailable": "✗ Non disponible",
+      "geminiAccess": "Accès Gemini (Google)",
+      "mistralAccess": "Accès Mistral",
+      "commitment": "Engagement",
+      "noCommitment": "Zéro engagement",
+      "monthlySubscription": "Abonnement mensuel",
+      "freeCredits": "Crédits offerts",
+      "freeCreditsIaiaz": "1€ à l'inscription",
+      "none": "Aucun",
+      "fileUpload": "Upload de fichiers",
+      "imagesPdf": "✓ Images & PDF",
+      "conversationHistory": "Historique conversations",
+      "unlimited": "✓ Illimité",
+      "messageLimit": "Limite de messages",
+      "noLimit": "Aucune (selon crédits)",
+      "gpt4Limit": "80 messages/3h (GPT-4)"
+    },
+    "savings": {
+      "title": "Combien allez-vous économiser ?",
+      "subtitle": "Estimations basées sur des usages réels",
+      "saving": "Économie :"
+    },
+    "useCases": {
+      "occasional": {
+        "title": "Étudiant occasionnel",
+        "description": "Quelques questions par semaine pour ses devoirs",
+        "iaiazCost": "~2€/mois",
+        "chatgptCost": "20€/mois",
+        "savings": "90%"
+      },
+      "regular": {
+        "title": "Utilisateur régulier",
+        "description": "Usage quotidien modéré",
+        "iaiazCost": "~8€/mois",
+        "chatgptCost": "20€/mois",
+        "savings": "60%"
+      },
+      "intensive": {
+        "title": "Utilisateur intensif",
+        "description": "Usage quotidien soutenu",
+        "iaiazCost": "~15€/mois",
+        "chatgptCost": "20€/mois",
+        "savings": "25%"
+      }
+    },
+    "multipleModels": {
+      "title": "L'intérêt d'avoir plusieurs modèles",
+      "claudeBenefit": "excelle en rédaction et en analyse de documents longs",
+      "gpt4Benefit": "est polyvalent et créatif",
+      "geminiBenefit": "peut traiter des textes très longs (1M de tokens)",
+      "mistralBenefit": "maîtrise parfaitement le français et reste très économique",
+      "withIaiaz": "Avec iaiaz, vous pouvez :",
+      "brainstorm": "Lancer un brainstorming avec GPT-4",
+      "writeEssay": "Rédiger votre dissertation avec Claude",
+      "saveWithMistral": "Économiser avec Mistral pour les tâches simples",
+      "compareResponses": "Comparer les réponses de plusieurs modèles"
+    },
+    "transparency": {
+      "title": "Transparence totale sur les prix",
+      "subtitle": "Contrairement aux abonnements, vous voyez exactement ce que coûte chaque message. Exemple avec 1€ de crédits :",
+      "gptMini": "messages avec GPT-4o Mini",
+      "claudeSonnet": "messages avec Claude Sonnet",
+      "gpt4": "messages avec GPT-4",
+      "mistralSmall": "messages avec Mistral Small"
+    },
+    "cta": {
+      "title": "Prêt à faire des économies ?",
+      "subtitle": "Créez votre compte gratuitement et profitez d'1€ de crédits offerts. Sans carte bancaire, sans engagement.",
+      "button": "Commencer gratuitement"
+    },
+    "faq": {
+      "mainDifference": {
+        "question": "Quelle est la différence principale entre iaiaz et ChatGPT Plus ?",
+        "answer": "ChatGPT Plus coûte 20€/mois fixe, que vous l'utilisiez ou non. Avec iaiaz, vous payez uniquement ce que vous utilisez (à partir de quelques centimes). De plus, iaiaz donne accès à plusieurs modèles (Claude, GPT-4, Gemini, Mistral) au lieu d'un seul."
+      },
+      "cheaper": {
+        "question": "iaiaz est-il moins cher que ChatGPT Plus ?",
+        "answer": "Pour un usage modéré (quelques dizaines de questions par mois), iaiaz revient à 2-5€/mois contre 20€ pour ChatGPT Plus. Vous économisez jusqu'à 80% tout en ayant accès à plus de modèles."
+      },
+      "whyChoose": {
+        "question": "Pourquoi choisir iaiaz plutôt qu'un abonnement IA ?",
+        "answer": "Trois raisons : 1) Économies réelles sur un usage modéré, 2) Accès à plusieurs IA (Claude, GPT-4, Gemini, Mistral) au lieu d'une seule, 3) Aucun engagement - vos crédits n'expirent jamais."
+      }
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "compare": "Comparatif"
+    }
+  },
+  "etudiants": {
+    "hero": {
+      "badge": "Spécial Étudiants",
+      "title": "L'IA qui respecte",
+      "titleHighlight": "ton budget étudiant",
+      "subtitle": "GPT-4, Claude, Gemini et Mistral à portée de main, sans abonnement. Tu ne paies que ce que tu consommes, dès 0.001€ par message.",
+      "cta": "1€ offert à l'inscription",
+      "ctaSecondary": "Voir le comparatif",
+      "noCreditCard": "Sans carte bancaire",
+      "noCommitment": "Zéro engagement",
+      "noExpiration": "Crédits sans expiration"
+    },
+    "budget": {
+      "title": "Adapté au budget étudiant",
+      "subtitle": "Fini les 20€/mois de ChatGPT Plus. Avec iaiaz, tu maîtrises ton budget.",
+      "note": "Les crédits n'expirent jamais. Recharge quand tu veux.",
+      "example1": { "amount": "1€", "usage": "~50 questions avec Claude Sonnet" },
+      "example2": { "amount": "5€", "usage": "Un mois d'utilisation modérée" },
+      "example3": { "amount": "10€", "usage": "Préparation complète des partiels" }
+    },
+    "useCases": {
+      "title": "Comment les étudiants utilisent iaiaz",
+      "subtitle": "L'IA est un outil pour apprendre, pas pour tricher. Elle t'aide à comprendre et à progresser.",
+      "revision": {
+        "title": "Révisions & Examens",
+        "description": "Fais-toi expliquer des concepts complexes, crée des fiches de révision, teste tes connaissances avec des quiz personnalisés.",
+        "example": "Explique-moi la mitose comme si j'avais 10 ans"
+      },
+      "dissertation": {
+        "title": "Dissertations & Mémoires",
+        "description": "Structure tes arguments, améliore ton style, trouve des sources pertinentes. L'IA te guide sans écrire à ta place.",
+        "example": "Aide-moi à structurer ma dissertation sur Rousseau"
+      },
+      "programming": {
+        "title": "Programmation",
+        "description": "Débogue ton code, comprends les algorithmes, apprends de nouveaux langages grâce à des explications claires.",
+        "example": "Pourquoi ma boucle for ne fonctionne pas ?"
+      },
+      "languages": {
+        "title": "Langues étrangères",
+        "description": "Pratique la conversation, fais corriger tes textes, apprends du vocabulaire en contexte.",
+        "example": "Corrige mon email en anglais et explique-moi mes erreurs"
+      },
+      "mathScience": {
+        "title": "Maths & Sciences",
+        "description": "Résous des problèmes étape par étape, comprends les formules, visualise les concepts.",
+        "example": "Explique-moi comment résoudre cette intégrale"
+      },
+      "research": {
+        "title": "Recherche & Veille",
+        "description": "Synthétise des articles, compare des théories, prépare tes présentations.",
+        "example": "Résume-moi les points clés de cet article de recherche"
+      }
+    },
+    "multipleModels": {
+      "title": "Pourquoi avoir accès à plusieurs IA ?",
+      "claudeDesc": "Idéal pour les dissertations et l'analyse de textes longs. Excellent en français.",
+      "gptDesc": "Polyvalent, particulièrement efficace pour le code et les maths.",
+      "geminiDesc": "Capable d'analyser des documents très longs (jusqu'à 1 million de tokens).",
+      "mistralDesc": "IA française et ultra économique. Parfaite pour les questions du quotidien."
+    },
+    "testimonials": {
+      "title": "Ce qu'en disent les étudiants",
+      "t1": { "quote": "Avec 5€, j'ai tenu tout le semestre. Parfait pour les partiels !", "author": "Léa, L3 Droit" },
+      "t2": { "quote": "Je peux enfin utiliser Claude ET GPT-4 selon mes besoins, sans me ruiner.", "author": "Thomas, M1 Informatique" },
+      "t3": { "quote": "Le modèle Mistral est incroyable pour le français, et il coûte presque rien.", "author": "Camille, Prépa Lettres" }
+    },
+    "ethics": {
+      "title": "Note sur l'utilisation éthique",
+      "content": "L'IA est un outil pour apprendre, pas pour tricher. Utilise-la pour comprendre des concepts, améliorer ton travail et progresser plus vite. Ne rends jamais un texte généré par l'IA comme s'il était le tien, sans l'avoir retravaillé et compris."
+    },
+    "cta": {
+      "title": "Prêt à booster tes études ?",
+      "subtitle": "Inscris-toi en 30 secondes et profite d'1€ de crédits offerts. Largement de quoi tester tous les modèles !",
+      "button": "Créer mon compte gratuit",
+      "note": "Sans carte bancaire • Sans engagement • Crédits sans expiration"
+    },
+    "faq": {
+      "adapted": {
+        "question": "iaiaz est-il adapté aux étudiants ?",
+        "answer": "Absolument ! iaiaz est parfait pour les étudiants grâce à son modèle sans abonnement. Tu paies uniquement ce que tu utilises, ce qui est idéal pour un budget étudiant variable."
+      },
+      "cost": {
+        "question": "Combien coûte une utilisation typique pour un étudiant ?",
+        "answer": "Avec 1€ de crédits offerts à l'inscription, tu peux poser environ 50 questions à Claude Sonnet ou 100+ questions à Mistral. Pour un mois d'utilisation modérée (révisions, aide aux devoirs), compte 2-5€."
+      },
+      "dissertation": {
+        "question": "Puis-je utiliser l'IA pour mes dissertations ?",
+        "answer": "L'IA est un outil pour t'aider à comprendre, structurer et améliorer ton travail - pas pour tricher. Utilise-la pour comprendre des concepts, brainstormer des idées et améliorer ton style, mais retravaille toujours le contenu avec tes propres mots."
+      },
+      "bestAI": {
+        "question": "Quelle IA est la meilleure pour les études ?",
+        "answer": "Ça dépend ! Claude excelle en français et analyse de textes. GPT-4 est top en maths et code. Gemini gère les très longs documents. Mistral est économique pour les questions simples. Avec iaiaz, tu as accès à toutes ces IA."
+      }
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "students": "Étudiants"
+    }
+  },
   "legal": {
-    "cgu": "CGU",
-    "cgv": "CGV",
+    "backToHome": "Retour à l'accueil",
+    "copyright": "© 2025 BAJURIAN SAS. Tous droits réservés.",
+    "terms": "CGU",
+    "sales": "CGV",
     "privacy": "Confidentialité",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "cgu": {
+      "title": "Conditions Générales d'Utilisation",
+      "description": "Conditions générales d'utilisation de la plateforme iaiaz",
+      "lastUpdated": "Dernière mise à jour : 17 janvier 2025"
+    },
+    "cgv": {
+      "title": "Conditions Générales de Vente",
+      "description": "Conditions générales de vente de la plateforme iaiaz",
+      "lastUpdated": "Dernière mise à jour : 16 janvier 2025"
+    },
+    "privacyPage": {
+      "title": "Politique de Confidentialité",
+      "description": "Politique de confidentialité de la plateforme iaiaz",
+      "lastUpdated": "Dernière mise à jour : 17 janvier 2025"
+    },
+    "cookiesPage": {
+      "title": "Politique de Cookies",
+      "description": "Politique de cookies de la plateforme iaiaz",
+      "lastUpdated": "Dernière mise à jour : 17 janvier 2025"
+    }
   },
   "footer": {
     "company": "BAJURIAN SAS",
     "location": "Toulouse, France",
     "allRightsReserved": "Tous droits réservés"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Tout ce que vous devez savoir sur iaiaz",
+    "items": {
+      "cost": {
+        "question": "Combien coûte iaiaz ?",
+        "answer": "iaiaz fonctionne sans abonnement. Vous achetez des crédits (à partir de 1€) et payez uniquement ce que vous utilisez. Une question simple coûte environ 0.01€ à 0.02€ selon le modèle. Nous offrons 1€ de crédits gratuits à l'inscription pour tester."
+      },
+      "vsChatgpt": {
+        "question": "Quelle est la différence entre iaiaz et ChatGPT Plus ?",
+        "answer": "ChatGPT Plus coûte 20€/mois que vous l'utilisiez ou non. Avec iaiaz, vous payez à l'usage : si vous utilisez l'IA 10 fois dans le mois, vous payez quelques centimes, pas 20€. De plus, iaiaz vous donne accès à plusieurs modèles (Claude, GPT-4, Gemini, Mistral) au lieu d'un seul."
+      },
+      "subscription": {
+        "question": "Faut-il un abonnement pour utiliser iaiaz ?",
+        "answer": "Non, jamais. C'est notre principe fondamental : zéro engagement, zéro abonnement. Vous achetez des crédits quand vous en avez besoin, et ils n'expirent jamais. Pas de renouvellement automatique, pas de frais cachés."
+      },
+      "models": {
+        "question": "Quels modèles d'IA sont disponibles ?",
+        "answer": "iaiaz propose plus de 15 modèles : Claude Opus, Claude Sonnet et Claude Haiku (Anthropic), GPT-5, GPT-4o et GPT-4o Mini (OpenAI), Gemini 2.5 Pro et Gemini Flash (Google), Mistral Large, Medium et Small, et Codestral pour le code."
+      },
+      "credits": {
+        "question": "Comment fonctionne le système de crédits ?",
+        "answer": "Chaque message consomme des crédits selon le modèle utilisé et la longueur de la conversation. Le coût est affiché en temps réel avant d'envoyer votre message. Par exemple, une question simple avec Claude Sonnet coûte environ 0.015€."
+      },
+      "privacy": {
+        "question": "Mes données sont-elles protégées ?",
+        "answer": "Oui. iaiaz est une entreprise française (BAJURIAN SAS) soumise au RGPD. Vos conversations sont stockées de manière sécurisée et ne sont jamais utilisées pour entraîner les modèles IA. Vous pouvez supprimer vos données à tout moment."
+      },
+      "students": {
+        "question": "Puis-je utiliser iaiaz pour mes études ?",
+        "answer": "Absolument ! iaiaz est parfait pour les étudiants : aide à la rédaction, explication de concepts complexes, correction de textes, aide au code, préparation d'examens... Et le modèle économique sans abonnement est idéal pour un budget étudiant."
+      },
+      "freeCredits": {
+        "question": "Comment obtenir mes crédits gratuits ?",
+        "answer": "Créez simplement un compte sur iaiaz. Dès la validation de votre email, 1€ de crédits sont automatiquement ajoutés à votre compte. Aucune carte bancaire n'est requise pour l'inscription."
+      },
+      "expiration": {
+        "question": "Les crédits expirent-ils ?",
+        "answer": "Non, jamais. Vos crédits restent sur votre compte indéfiniment. Vous pouvez acheter des crédits aujourd'hui et les utiliser dans 6 mois sans aucun problème."
+      },
+      "refund": {
+        "question": "Puis-je me faire rembourser ?",
+        "answer": "Oui. Vous pouvez demander le remboursement de vos crédits non utilisés à tout moment. Le remboursement est calculé au prorata du solde restant. Contactez-nous simplement par email à admin@iaiaz.com."
+      }
+    }
+  },
+  "cookies": {
+    "banner": {
+      "message": "Nous utilisons des cookies pour garantir le bon fonctionnement du site et améliorer votre expérience.",
+      "learnMore": "En savoir plus",
+      "customize": "Personnaliser",
+      "reject": "Refuser",
+      "acceptAll": "Accepter tout"
+    },
+    "settings": {
+      "title": "Paramètres des cookies",
+      "necessary": {
+        "title": "Cookies strictement nécessaires",
+        "description": "Indispensables au fonctionnement du site (authentification, sécurité). Ne peuvent pas être désactivés."
+      },
+      "functional": {
+        "title": "Cookies fonctionnels",
+        "description": "Améliorent votre expérience en mémorisant vos préférences (thème, choix de cookies)."
+      },
+      "analytics": {
+        "title": "Cookies analytiques",
+        "description": "Nous aident à comprendre comment le site est utilisé pour l'améliorer. Actuellement non utilisés."
+      },
+      "policyLink": "Politique de cookies",
+      "rejectAll": "Tout refuser",
+      "save": "Enregistrer mes choix"
+    },
+    "manage": "Gérer les cookies"
   },
   "errors": {
     "notFound": {
