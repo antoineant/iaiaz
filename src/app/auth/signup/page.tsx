@@ -13,7 +13,6 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -21,11 +20,6 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (!termsAccepted) {
-      setError("Vous devez accepter les conditions d'utilisation");
-      return;
-    }
 
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
@@ -40,11 +34,11 @@ export default function SignupPage() {
     setIsLoading(true);
 
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?terms_accepted=true`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -56,11 +50,6 @@ export default function SignupPage() {
       }
       setIsLoading(false);
       return;
-    }
-
-    // If user was created (no email confirmation needed), update terms acceptance
-    if (data.user && data.session) {
-      await supabase.rpc("accept_terms", { p_user_id: data.user.id });
     }
 
     setIsSuccess(true);
@@ -109,34 +98,7 @@ export default function SignupPage() {
             <h1 className="text-xl font-semibold">Inscription</h1>
           </CardHeader>
           <CardContent>
-            {/* Terms acceptance checkbox - required for both Google and email signup */}
-            <div className="mb-4">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={termsAccepted}
-                  onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                />
-                <span className="text-sm text-[var(--muted-foreground)]">
-                  J'ai lu et j'accepte les{" "}
-                  <Link href="/legal/cgu" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">
-                    CGU
-                  </Link>
-                  , les{" "}
-                  <Link href="/legal/cgv" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">
-                    CGV
-                  </Link>{" "}
-                  et la{" "}
-                  <Link href="/legal/privacy" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">
-                    politique de confidentialité
-                  </Link>
-                  . <span className="text-red-500">*</span>
-                </span>
-              </label>
-            </div>
-
-            <GoogleButton mode="signup" disabled={!termsAccepted} />
+            <GoogleButton mode="signup" />
 
             <Divider />
 
@@ -184,7 +146,6 @@ export default function SignupPage() {
                 type="submit"
                 className="w-full"
                 isLoading={isLoading}
-                disabled={!termsAccepted}
               >
                 Créer mon compte
               </Button>

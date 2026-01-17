@@ -5,28 +5,19 @@ import { createClient } from "@/lib/supabase/client";
 
 interface GoogleButtonProps {
   mode: "login" | "signup";
-  disabled?: boolean;
 }
 
-export function GoogleButton({ mode, disabled }: GoogleButtonProps) {
+export function GoogleButton({ mode }: GoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
-    if (disabled) return;
-
     setIsLoading(true);
     const supabase = createClient();
-
-    // For signup, we pass terms_accepted=true in the redirect URL
-    // This will be used in the callback to set terms_accepted_at
-    const redirectUrl = mode === "signup"
-      ? `${window.location.origin}/auth/callback?terms_accepted=true`
-      : `${window.location.origin}/auth/callback`;
 
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: redirectUrl,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
   };
@@ -35,7 +26,7 @@ export function GoogleButton({ mode, disabled }: GoogleButtonProps) {
     <button
       type="button"
       onClick={handleGoogleSignIn}
-      disabled={isLoading || disabled}
+      disabled={isLoading}
       className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--background)] hover:bg-[var(--muted)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24">
