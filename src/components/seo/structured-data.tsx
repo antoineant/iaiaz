@@ -7,8 +7,8 @@ export function OrganizationSchema() {
     "@type": "Organization",
     name: "iaiaz",
     alternateName: "BAJURIAN SAS",
-    url: "https://iaiaz.fr",
-    logo: "https://iaiaz.fr/logo.png",
+    url: "https://www.iaiaz.com",
+    logo: "https://www.iaiaz.com/logo.png",
     description:
       "Intelligence Artificielle Intelligemment Accessible, Zéro engagement. Accédez aux meilleurs modèles d'IA sans abonnement.",
     address: {
@@ -20,7 +20,7 @@ export function OrganizationSchema() {
     },
     contactPoint: {
       "@type": "ContactPoint",
-      email: "secretariat@girafestudio.fr",
+      email: "admin@iaiaz.com",
       contactType: "customer service",
       availableLanguage: ["French"],
     },
@@ -145,7 +145,7 @@ export function WebsiteSchema() {
     "@type": "WebSite",
     name: "iaiaz",
     alternateName: "iaiaz - IA Accessible",
-    url: "https://iaiaz.fr",
+    url: "https://www.iaiaz.com",
     description:
       "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
     inLanguage: "fr-FR",

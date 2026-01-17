@@ -54,7 +54,7 @@ export const faqs = [
   {
     question: "Puis-je me faire rembourser ?",
     answer:
-      "Oui. Vous pouvez demander le remboursement de vos crédits non utilisés à tout moment. Le remboursement est calculé au prorata du solde restant. Contactez-nous simplement par email à secretariat@girafestudio.fr.",
+      "Oui. Vous pouvez demander le remboursement de vos crédits non utilisés à tout moment. Le remboursement est calculé au prorata du solde restant. Contactez-nous simplement par email à admin@iaiaz.com.",
   },
 ];
 

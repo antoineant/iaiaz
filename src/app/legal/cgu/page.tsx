@@ -18,7 +18,7 @@ export default function CGUPage() {
         Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») ont pour
         objet de définir les modalités et conditions d'utilisation de la plateforme
         iaiaz (ci-après « le Service » ou « la Plateforme »), accessible à l'adresse
-        iaiaz.fr, éditée par la société BAJURIAN SAS.
+        iaiaz.com, éditée par la société BAJURIAN SAS.
       </p>
       <p>
         <strong>Définitions :</strong>
@@ -288,7 +288,7 @@ export default function CGUPage() {
         Pour toute question relative aux présentes CGU, vous pouvez nous contacter :
       </p>
       <ul>
-        <li>Par email : secretariat@girafestudio.fr</li>
+        <li>Par email : admin@iaiaz.com</li>
         <li>
           Par courrier : BAJURIAN SAS, 135 Avenue des Pyrénées, 31830 Plaisance du
           Touch, France

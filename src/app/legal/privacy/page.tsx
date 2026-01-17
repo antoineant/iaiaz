@@ -37,7 +37,7 @@ export default function PrivacyPage() {
         <br />
         SIRET : 828 446 435
         <br />
-        Email : secretariat@girafestudio.fr
+        Email : admin@iaiaz.com
       </p>
 
       <h2>2. Données collectées</h2>
@@ -296,10 +296,10 @@ export default function PrivacyPage() {
         <li>
           Nous contacter par email à :{" "}
           <a
-            href="mailto:secretariat@girafestudio.fr"
+            href="mailto:admin@iaiaz.com"
             className="text-primary-600 hover:underline"
           >
-            secretariat@girafestudio.fr
+            admin@iaiaz.com
           </a>
         </li>
         <li>
@@ -375,10 +375,10 @@ export default function PrivacyPage() {
         <li>
           Email :{" "}
           <a
-            href="mailto:secretariat@girafestudio.fr"
+            href="mailto:admin@iaiaz.com"
             className="text-primary-600 hover:underline"
           >
-            secretariat@girafestudio.fr
+            admin@iaiaz.com
           </a>
         </li>
         <li>

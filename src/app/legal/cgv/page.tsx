@@ -111,7 +111,7 @@ export default function CGVPage() {
       <h3>4.3 Exercice du droit de rétractation</h3>
       <p>
         Pour exercer ce droit, le Client doit notifier sa décision par email à
-        secretariat@girafestudio.fr en indiquant clairement sa volonté de se
+        admin@iaiaz.com en indiquant clairement sa volonté de se
         rétracter, accompagnée de ses coordonnées et du numéro de commande.
       </p>
 
@@ -130,7 +130,7 @@ export default function CGVPage() {
       <p>Pour demander un remboursement :</p>
       <ol>
         <li>
-          Envoyer une demande par email à secretariat@girafestudio.fr avec l'objet
+          Envoyer une demande par email à admin@iaiaz.com avec l'objet
           « Demande de remboursement »
         </li>
         <li>Indiquer l'adresse email associée au Compte</li>
@@ -163,7 +163,7 @@ export default function CGVPage() {
       </p>
       <p>
         En cas de problème technique empêchant le crédit des fonds, le Client est
-        invité à contacter le support à secretariat@girafestudio.fr.
+        invité à contacter le support à admin@iaiaz.com.
       </p>
 
       <h2>Article 7 - Garanties</h2>
@@ -220,7 +220,7 @@ export default function CGVPage() {
       <p>
         Avant de saisir le médiateur, le Client doit d'abord tenter de résoudre le
         litige directement auprès du Vendeur en adressant une réclamation écrite à
-        secretariat@girafestudio.fr.
+        admin@iaiaz.com.
       </p>
       <p>
         Le Client peut également utiliser la plateforme européenne de règlement des
@@ -252,7 +252,7 @@ export default function CGVPage() {
         Pour toute question concernant les présentes CGV ou vos achats :
       </p>
       <ul>
-        <li>Email : secretariat@girafestudio.fr</li>
+        <li>Email : admin@iaiaz.com</li>
         <li>
           Adresse : BAJURIAN SAS, 135 Avenue des Pyrénées, 31830 Plaisance du Touch,
           France

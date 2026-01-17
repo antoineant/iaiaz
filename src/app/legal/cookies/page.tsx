@@ -249,10 +249,10 @@ export default function CookiesPage() {
         <li>
           Email :{" "}
           <a
-            href="mailto:secretariat@girafestudio.fr"
+            href="mailto:admin@iaiaz.com"
             className="text-primary-600 hover:underline"
           >
-            secretariat@girafestudio.fr
+            admin@iaiaz.com
           </a>
         </li>
         <li>
