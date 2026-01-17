@@ -26,7 +26,9 @@ export async function GET(request: Request) {
       }
 
       // Check if user has already accepted terms
-      const { data: profile } = await supabase
+      // Use admin client to bypass RLS (session cookies may not be set yet)
+      const adminClient = createAdminClient();
+      const { data: profile } = await adminClient
         .from("profiles")
         .select("terms_accepted_at")
         .eq("id", data.user.id)
