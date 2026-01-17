@@ -6,9 +6,34 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
 import { MODEL_PRICING, MARKUP } from "@/lib/pricing";
 import { PricingCalculator } from "./calculator";
+import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
+
+// Page-specific FAQs for structured data
+const tarifsFaqs = [
+  {
+    question: "C'est quoi un token ?",
+    answer:
+      "Un token correspond à environ 4 caractères ou 0.75 mot en français. Un message classique représente 200 à 500 tokens en entrée, et la réponse de l'IA entre 200 et 1000 tokens.",
+  },
+  {
+    question: "Mes crédits ont-ils une date d'expiration ?",
+    answer:
+      "Non, vos crédits n'expirent jamais. Utilisez-les quand vous le souhaitez.",
+  },
+  {
+    question: "Puis-je me faire rembourser ?",
+    answer:
+      "Oui, vous pouvez demander le remboursement de vos crédits non utilisés à tout moment. Le remboursement est calculé au prorata du solde restant.",
+  },
+  {
+    question: "Pourquoi ces prix sont-ils supérieurs aux API directes ?",
+    answer:
+      "Nous appliquons une marge de 50% pour couvrir l'infrastructure, l'interface et le support. Malgré cela, c'est jusqu'à 10 fois moins cher qu'un abonnement ChatGPT Plus pour un usage modéré.",
+  },
+];
 
 export const metadata: Metadata = {
-  title: "Tarifs - Prix par modèle IA | iaiaz",
+  title: "Tarifs - Prix par modèle IA",
   description:
     "Tarifs transparents pour GPT-4, Claude, Gemini et Mistral. Payez à l'usage, sans abonnement. À partir de 0.001€ par message. 1€ offert à l'inscription.",
   keywords: [
@@ -22,10 +47,14 @@ export const metadata: Metadata = {
     "prix gemini",
     "tarif mistral",
   ],
+  alternates: {
+    canonical: "https://www.iaiaz.com/tarifs",
+  },
   openGraph: {
     title: "Tarifs iaiaz - Transparence totale",
     description:
       "Découvrez nos prix par modèle. Payez uniquement ce que vous utilisez.",
+    url: "https://www.iaiaz.com/tarifs",
   },
 };
 
@@ -71,6 +100,15 @@ function estimateMessageCost(input: number, output: number): string {
 export default function TarifsPage() {
   return (
     <div className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <FAQSchema faqs={tarifsFaqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", url: "https://www.iaiaz.com" },
+          { name: "Tarifs", url: "https://www.iaiaz.com/tarifs" },
+        ]}
+      />
+
       <Header />
 
       <main className="max-w-6xl mx-auto px-4 py-12">

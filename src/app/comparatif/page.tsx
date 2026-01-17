@@ -4,6 +4,26 @@ import { Check, X, Zap, Euro, Brain, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
+import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
+
+// Page-specific FAQs for structured data
+const comparatifFaqs = [
+  {
+    question: "Quelle est la différence principale entre iaiaz et ChatGPT Plus ?",
+    answer:
+      "ChatGPT Plus coûte 20€/mois fixe, que vous l'utilisiez ou non. Avec iaiaz, vous payez uniquement ce que vous utilisez (à partir de quelques centimes). De plus, iaiaz donne accès à plusieurs modèles (Claude, GPT-4, Gemini, Mistral) au lieu d'un seul.",
+  },
+  {
+    question: "iaiaz est-il moins cher que ChatGPT Plus ?",
+    answer:
+      "Pour un usage modéré (quelques dizaines de questions par mois), iaiaz revient à 2-5€/mois contre 20€ pour ChatGPT Plus. Vous économisez jusqu'à 80% tout en ayant accès à plus de modèles.",
+  },
+  {
+    question: "Pourquoi choisir iaiaz plutôt qu'un abonnement IA ?",
+    answer:
+      "Trois raisons : 1) Économies réelles sur un usage modéré, 2) Accès à plusieurs IA (Claude, GPT-4, Gemini, Mistral) au lieu d'une seule, 3) Aucun engagement - vos crédits n'expirent jamais.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "iaiaz vs ChatGPT Plus - Comparatif 2025",
@@ -19,10 +39,14 @@ export const metadata: Metadata = {
     "gpt-4 gratuit",
     "ia sans abonnement",
   ],
+  alternates: {
+    canonical: "https://www.iaiaz.com/comparatif",
+  },
   openGraph: {
     title: "iaiaz vs ChatGPT Plus - Le comparatif complet",
     description:
       "Pourquoi payer 20€/mois quand vous pouvez payer uniquement ce que vous utilisez ?",
+    url: "https://www.iaiaz.com/comparatif",
   },
 };
 
@@ -116,6 +140,15 @@ const useCases = [
 export default function ComparatifPage() {
   return (
     <div className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <FAQSchema faqs={comparatifFaqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", url: "https://www.iaiaz.com" },
+          { name: "Comparatif", url: "https://www.iaiaz.com/comparatif" },
+        ]}
+      />
+
       <Header />
 
       <main className="max-w-6xl mx-auto px-4 py-12">

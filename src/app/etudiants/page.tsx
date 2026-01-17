@@ -15,6 +15,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
+import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
+
+// Page-specific FAQs for structured data
+const etudiantsFaqs = [
+  {
+    question: "iaiaz est-il adapté aux étudiants ?",
+    answer:
+      "Absolument ! iaiaz est parfait pour les étudiants grâce à son modèle sans abonnement. Tu paies uniquement ce que tu utilises, ce qui est idéal pour un budget étudiant variable.",
+  },
+  {
+    question: "Combien coûte une utilisation typique pour un étudiant ?",
+    answer:
+      "Avec 1€ de crédits offerts à l'inscription, tu peux poser environ 50 questions à Claude Sonnet ou 100+ questions à Mistral. Pour un mois d'utilisation modérée (révisions, aide aux devoirs), compte 2-5€.",
+  },
+  {
+    question: "Puis-je utiliser l'IA pour mes dissertations ?",
+    answer:
+      "L'IA est un outil pour t'aider à comprendre, structurer et améliorer ton travail - pas pour tricher. Utilise-la pour comprendre des concepts, brainstormer des idées et améliorer ton style, mais retravaille toujours le contenu avec tes propres mots.",
+  },
+  {
+    question: "Quelle IA est la meilleure pour les études ?",
+    answer:
+      "Ça dépend ! Claude excelle en français et analyse de textes. GPT-4 est top en maths et code. Gemini gère les très longs documents. Mistral est économique pour les questions simples. Avec iaiaz, tu as accès à toutes ces IA.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "IA pour Étudiants - ChatGPT & Claude sans abonnement",
@@ -32,10 +57,14 @@ export const metadata: Metadata = {
     "claude étudiant",
     "gpt-4 étudiant",
   ],
+  alternates: {
+    canonical: "https://www.iaiaz.com/etudiants",
+  },
   openGraph: {
     title: "iaiaz pour Étudiants - L'IA accessible à tous",
     description:
       "GPT-4, Claude, Gemini sans abonnement. Parfait pour le budget étudiant.",
+    url: "https://www.iaiaz.com/etudiants",
   },
 };
 
@@ -111,6 +140,15 @@ const budgetExamples = [
 export default function EtudiantsPage() {
   return (
     <div className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <FAQSchema faqs={etudiantsFaqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", url: "https://www.iaiaz.com" },
+          { name: "Étudiants", url: "https://www.iaiaz.com/etudiants" },
+        ]}
+      />
+
       <Header />
 
       <main>

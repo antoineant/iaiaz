@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Politique de Cookies - iaiaz",
+  title: "Politique de Cookies",
   description: "Politique de cookies de la plateforme iaiaz",
+  alternates: {
+    canonical: "https://www.iaiaz.com/legal/cookies",
+  },
 };
 
 export default function CookiesPage() {

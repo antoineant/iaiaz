@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Conditions Générales de Vente - iaiaz",
+  title: "Conditions Générales de Vente",
   description: "Conditions générales de vente de la plateforme iaiaz",
+  alternates: {
+    canonical: "https://www.iaiaz.com/legal/cgv",
+  },
 };
 
 export default function CGVPage() {
