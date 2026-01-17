@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendCreditsPurchaseEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -62,6 +63,31 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`Successfully added ${credits}€ credits to user ${userId}`);
+
+    // Send purchase confirmation email
+    const customerEmail = session.customer_details?.email;
+    if (customerEmail) {
+      // Get new balance
+      const { data: userData } = await adminClient
+        .from("users")
+        .select("credits")
+        .eq("id", userId)
+        .single();
+
+      const newBalance = userData?.credits || parseFloat(credits);
+
+      const emailResult = await sendCreditsPurchaseEmail(
+        customerEmail,
+        parseFloat(credits),
+        newBalance
+      );
+
+      if (emailResult.success) {
+        console.log(`Purchase confirmation email sent to ${customerEmail}`);
+      } else {
+        console.error(`Failed to send email: ${emailResult.error}`);
+      }
+    }
   }
 
   return NextResponse.json({ received: true });
