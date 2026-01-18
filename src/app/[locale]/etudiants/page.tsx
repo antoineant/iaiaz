@@ -110,7 +110,7 @@ export default async function EtudiantsPage({ params }: Props) {
       <main>
         {/* Hero */}
         <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 text-sm font-medium mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
             <GraduationCap className="w-4 h-4" />
             {t("hero.badge")}
           </div>
@@ -228,7 +228,7 @@ export default async function EtudiantsPage({ params }: Props) {
         </section>
 
         {/* Why Multiple Models */}
-        <section className="bg-gradient-to-b from-primary-50 to-white py-16">
+        <section className="bg-gradient-to-b from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)] py-16">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-8">
               {t("multipleModels.title")}
@@ -236,8 +236,8 @@ export default async function EtudiantsPage({ params }: Props) {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-orange-600">C</span>
+                  <div className="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center flex-shrink-0">
+                    <span className="font-bold text-orange-600 dark:text-orange-400">C</span>
                   </div>
                   <div>
                     <strong>Claude</strong>
@@ -247,8 +247,8 @@ export default async function EtudiantsPage({ params }: Props) {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-green-600">G</span>
+                  <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/40 flex items-center justify-center flex-shrink-0">
+                    <span className="font-bold text-green-600 dark:text-green-400">G</span>
                   </div>
                   <div>
                     <strong>GPT-4</strong>
@@ -260,8 +260,8 @@ export default async function EtudiantsPage({ params }: Props) {
               </div>
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-blue-600">G</span>
+                  <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0">
+                    <span className="font-bold text-blue-600 dark:text-blue-400">G</span>
                   </div>
                   <div>
                     <strong>Gemini</strong>
@@ -271,8 +271,8 @@ export default async function EtudiantsPage({ params }: Props) {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-purple-600">M</span>
+                  <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center flex-shrink-0">
+                    <span className="font-bold text-purple-600 dark:text-purple-400">M</span>
                   </div>
                   <div>
                     <strong>Mistral</strong>
@@ -321,11 +321,11 @@ export default async function EtudiantsPage({ params }: Props) {
 
         {/* Ethics Note */}
         <section className="max-w-6xl mx-auto px-4 py-8">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 max-w-3xl mx-auto">
-            <h3 className="font-bold mb-2 text-amber-800">
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-6 max-w-3xl mx-auto">
+            <h3 className="font-bold mb-2 text-amber-800 dark:text-amber-200">
               {t("ethics.title")}
             </h3>
-            <p className="text-sm text-amber-700">
+            <p className="text-sm text-amber-700 dark:text-amber-300">
               {t("ethics.content")}
             </p>
           </div>
@@ -333,7 +333,7 @@ export default async function EtudiantsPage({ params }: Props) {
 
         {/* CTA */}
         <section className="max-w-6xl mx-auto px-4 py-16">
-          <div className="bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-8 md:p-12 text-center">
+          <div className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950 dark:to-accent-950 rounded-2xl p-8 md:p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">
               {t("cta.title")}
             </h2>
