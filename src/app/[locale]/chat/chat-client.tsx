@@ -12,22 +12,44 @@ import type { Conversation, ChatMessage, FileAttachment } from "@/types";
 import type { PricingData } from "@/lib/pricing-db";
 import { Sparkles } from "lucide-react";
 
+interface OrgContext {
+  orgName: string;
+  role: string;
+  limits?: {
+    daily?: { used: number; limit: number; remaining: number };
+    weekly?: { used: number; limit: number; remaining: number };
+    monthly?: { used: number; limit: number; remaining: number };
+  };
+}
+
+interface UserInfo {
+  displayName?: string | null;
+  email: string;
+  avatarUrl?: string | null;
+}
+
 interface ChatClientProps {
   userId: string;
   initialBalance: number;
+  personalBalance?: number;
   initialConversations: Conversation[];
   conversationId?: string;
   initialMessages?: ChatMessage[];
   pricingData: PricingData;
+  orgContext?: OrgContext;
+  userInfo?: UserInfo;
 }
 
 export function ChatClient({
   userId,
   initialBalance,
+  personalBalance,
   initialConversations,
   conversationId,
   initialMessages = [],
   pricingData,
+  orgContext,
+  userInfo,
 }: ChatClientProps) {
   const router = useRouter();
   const t = useTranslations("chat");
@@ -257,8 +279,19 @@ export function ChatClient({
         conversations={conversations}
         currentConversationId={currentConversationId}
         balance={balance}
+        personalBalance={personalBalance}
         onNewConversation={handleNewConversation}
         onDeleteConversation={handleDeleteConversation}
+        orgContext={orgContext ? {
+          orgName: orgContext.orgName,
+          role: orgContext.role,
+          limits: orgContext.limits ? {
+            daily: orgContext.limits.daily ? { remaining: orgContext.limits.daily.remaining, limit: orgContext.limits.daily.limit } : undefined,
+            weekly: orgContext.limits.weekly ? { remaining: orgContext.limits.weekly.remaining, limit: orgContext.limits.weekly.limit } : undefined,
+            monthly: orgContext.limits.monthly ? { remaining: orgContext.limits.monthly.remaining, limit: orgContext.limits.monthly.limit } : undefined,
+          } : undefined,
+        } : undefined}
+        userInfo={userInfo}
       />
 
       <main className="flex-1 flex flex-col min-w-0">

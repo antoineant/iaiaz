@@ -32,22 +32,32 @@ interface OrgContext {
   };
 }
 
+interface UserInfo {
+  displayName?: string | null;
+  email: string;
+  avatarUrl?: string | null;
+}
+
 interface SidebarProps {
   conversations: Conversation[];
   currentConversationId?: string;
   balance: number;
+  personalBalance?: number;
   onNewConversation: () => void;
   onDeleteConversation: (id: string) => void;
   orgContext?: OrgContext;
+  userInfo?: UserInfo;
 }
 
 export function Sidebar({
   conversations,
   currentConversationId,
   balance,
+  personalBalance,
   onNewConversation,
   onDeleteConversation,
   orgContext,
+  userInfo,
 }: SidebarProps) {
   const router = useRouter();
   const t = useTranslations("chat.sidebar");
@@ -87,13 +97,22 @@ export function Sidebar({
         {isOrgMember ? (
           <>
             {/* Organization context */}
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <Building2 className="w-4 h-4 text-primary-600 dark:text-primary-400" />
               <span className="text-sm font-medium truncate">{orgContext?.orgName}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[var(--muted-foreground)]">{t("remaining")}</span>
-              <span className="font-semibold">{formatCurrency(balance)}</span>
+            {/* Both balances */}
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-[var(--muted-foreground)]">{t("orgCredits")}</span>
+                <span className="font-semibold">{formatCurrency(balance)}</span>
+              </div>
+              {personalBalance !== undefined && (
+                <div className="flex items-center justify-between">
+                  <span className="text-[var(--muted-foreground)]">{t("personalCredits")}</span>
+                  <span className="font-medium text-[var(--muted-foreground)]">{formatCurrency(personalBalance)}</span>
+                </div>
+              )}
             </div>
             {/* Show limits if any */}
             {orgContext?.limits?.daily && (
@@ -106,7 +125,7 @@ export function Sidebar({
             )}
             {canManageOrg && (
               <NextLink href="/org">
-                <Button variant="outline" size="sm" className="w-full mt-2">
+                <Button variant="outline" size="sm" className="w-full mt-3">
                   <Settings className="w-4 h-4 mr-2" />
                   {t("manageOrg")}
                 </Button>

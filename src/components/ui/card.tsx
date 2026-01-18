@@ -43,3 +43,19 @@ export function CardFooter({ className, children, ...props }: CardProps) {
     </div>
   );
 }
+
+export function CardTitle({ className, children, ...props }: CardProps) {
+  return (
+    <h3 className={cn("text-lg font-semibold", className)} {...props}>
+      {children}
+    </h3>
+  );
+}
+
+export function CardDescription({ className, children, ...props }: CardProps) {
+  return (
+    <p className={cn("text-sm text-[var(--muted-foreground)]", className)} {...props}>
+      {children}
+    </p>
+  );
+}

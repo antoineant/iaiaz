@@ -1,5 +1,13 @@
 // Dual credit system - Organization credits with personal fallback
+// Supports user preference for credit source selection
 import { createAdminClient } from "@/lib/supabase/admin";
+
+export type CreditPreference =
+  | "auto"           // Org first, personal fallback (default)
+  | "org_first"      // Same as auto
+  | "personal_first" // Personal first, org fallback
+  | "org_only"       // Only use org credits
+  | "personal_only"; // Only use personal credits
 
 export interface CreditSource {
   source: "organization" | "personal";
@@ -8,6 +16,9 @@ export interface CreditSource {
   orgName?: string;
   memberId?: string;
   role?: string;
+  preference?: CreditPreference;
+  personalBalance?: number;  // Always included for org members (to show both)
+  orgBalance?: number;       // Org balance when available
   limits?: {
     daily?: { used: number; limit: number; remaining: number };
     weekly?: { used: number; limit: number; remaining: number };
@@ -30,121 +41,174 @@ export interface DeductResult {
 }
 
 /**
- * Get user's credit source - organization first, then personal
+ * Get user's credit source - respects user preference
  */
 export async function getUserCredits(userId: string): Promise<CreditSource> {
   const adminClient = createAdminClient();
 
-  // First check if user is in an active organization
+  // Get user profile with preference
+  const { data: profile } = await adminClient
+    .from("profiles")
+    .select("credits_balance, credit_preference")
+    .eq("id", userId)
+    .single();
+
+  const personalBalance = profile?.credits_balance || 0;
+  const preference = (profile?.credit_preference as CreditPreference) || "auto";
+
+  // If preference is personal_only, skip org check
+  if (preference === "personal_only") {
+    return {
+      source: "personal",
+      balance: personalBalance,
+      preference,
+      personalBalance,
+    };
+  }
+
+  // Check if user is in an active organization
   const { data: orgMember } = await adminClient.rpc("get_user_organization", {
     p_user_id: userId,
   });
 
-  if (orgMember && orgMember.length > 0) {
-    const member = orgMember[0];
-
-    // Get organization settings for limits
-    const { data: org } = await adminClient
-      .from("organizations")
-      .select("settings")
-      .eq("id", member.organization_id)
-      .single();
-
-    const settings = org?.settings || {};
-    const limits: CreditSource["limits"] = {};
-
-    // Calculate limit usage if limits are set
-    if (settings.daily_limit_per_student) {
-      const { data: dailyUsage } = await adminClient
-        .from("organization_transactions")
-        .select("amount")
-        .eq("member_id", member.id)
-        .eq("type", "usage")
-        .gte("created_at", new Date().toISOString().split("T")[0]);
-
-      const dailyUsed = dailyUsage?.reduce(
-        (sum, t) => sum + Math.abs(t.amount),
-        0
-      ) || 0;
-
-      limits.daily = {
-        used: dailyUsed,
-        limit: settings.daily_limit_per_student,
-        remaining: Math.max(0, settings.daily_limit_per_student - dailyUsed),
-      };
-    }
-
-    if (settings.weekly_limit_per_student) {
-      const weekStart = getWeekStart();
-      const { data: weeklyUsage } = await adminClient
-        .from("organization_transactions")
-        .select("amount")
-        .eq("member_id", member.id)
-        .eq("type", "usage")
-        .gte("created_at", weekStart.toISOString());
-
-      const weeklyUsed = weeklyUsage?.reduce(
-        (sum, t) => sum + Math.abs(t.amount),
-        0
-      ) || 0;
-
-      limits.weekly = {
-        used: weeklyUsed,
-        limit: settings.weekly_limit_per_student,
-        remaining: Math.max(0, settings.weekly_limit_per_student - weeklyUsed),
-      };
-    }
-
-    if (settings.monthly_limit_per_student) {
-      const monthStart = new Date();
-      monthStart.setDate(1);
-      monthStart.setHours(0, 0, 0, 0);
-
-      const { data: monthlyUsage } = await adminClient
-        .from("organization_transactions")
-        .select("amount")
-        .eq("member_id", member.id)
-        .eq("type", "usage")
-        .gte("created_at", monthStart.toISOString());
-
-      const monthlyUsed = monthlyUsage?.reduce(
-        (sum, t) => sum + Math.abs(t.amount),
-        0
-      ) || 0;
-
-      limits.monthly = {
-        used: monthlyUsed,
-        limit: settings.monthly_limit_per_student,
-        remaining: Math.max(0, settings.monthly_limit_per_student - monthlyUsed),
-      };
-    }
-
+  // No org membership - use personal
+  if (!orgMember || orgMember.length === 0) {
     return {
-      source: "organization",
-      balance: member.credit_remaining,
-      orgId: member.organization_id,
-      orgName: member.organization_name,
-      memberId: member.id,
-      role: member.role,
-      limits: Object.keys(limits).length > 0 ? limits : undefined,
+      source: "personal",
+      balance: personalBalance,
+      preference,
+      personalBalance,
     };
   }
 
-  // Fallback to personal credits
-  const { data: profile } = await adminClient
-    .from("profiles")
-    .select("credits_balance")
-    .eq("id", userId)
+  const member = orgMember[0];
+
+  // Get organization settings for limits
+  const { data: org } = await adminClient
+    .from("organizations")
+    .select("settings")
+    .eq("id", member.organization_id)
     .single();
 
+  const settings = org?.settings || {};
+  const limits: CreditSource["limits"] = {};
+
+  // Calculate limit usage if limits are set
+  if (settings.daily_limit_per_student) {
+    const { data: dailyUsage } = await adminClient
+      .from("organization_transactions")
+      .select("amount")
+      .eq("member_id", member.id)
+      .eq("type", "usage")
+      .gte("created_at", new Date().toISOString().split("T")[0]);
+
+    const dailyUsed = dailyUsage?.reduce(
+      (sum, t) => sum + Math.abs(t.amount),
+      0
+    ) || 0;
+
+    limits.daily = {
+      used: dailyUsed,
+      limit: settings.daily_limit_per_student,
+      remaining: Math.max(0, settings.daily_limit_per_student - dailyUsed),
+    };
+  }
+
+  if (settings.weekly_limit_per_student) {
+    const weekStart = getWeekStart();
+    const { data: weeklyUsage } = await adminClient
+      .from("organization_transactions")
+      .select("amount")
+      .eq("member_id", member.id)
+      .eq("type", "usage")
+      .gte("created_at", weekStart.toISOString());
+
+    const weeklyUsed = weeklyUsage?.reduce(
+      (sum, t) => sum + Math.abs(t.amount),
+      0
+    ) || 0;
+
+    limits.weekly = {
+      used: weeklyUsed,
+      limit: settings.weekly_limit_per_student,
+      remaining: Math.max(0, settings.weekly_limit_per_student - weeklyUsed),
+    };
+  }
+
+  if (settings.monthly_limit_per_student) {
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+
+    const { data: monthlyUsage } = await adminClient
+      .from("organization_transactions")
+      .select("amount")
+      .eq("member_id", member.id)
+      .eq("type", "usage")
+      .gte("created_at", monthStart.toISOString());
+
+    const monthlyUsed = monthlyUsage?.reduce(
+      (sum, t) => sum + Math.abs(t.amount),
+      0
+    ) || 0;
+
+    limits.monthly = {
+      used: monthlyUsed,
+      limit: settings.monthly_limit_per_student,
+      remaining: Math.max(0, settings.monthly_limit_per_student - monthlyUsed),
+    };
+  }
+
+  const orgBalance = member.credit_remaining;
+
+  // Determine active source based on preference
+  const useOrgFirst = preference === "auto" || preference === "org_first";
+  const usePersonalFirst = preference === "personal_first";
+  const orgOnly = preference === "org_only";
+
+  // Determine which source to use
+  let activeSource: "organization" | "personal";
+  let activeBalance: number;
+
+  if (orgOnly) {
+    activeSource = "organization";
+    activeBalance = orgBalance;
+  } else if (usePersonalFirst) {
+    // Personal first, org fallback
+    if (personalBalance > 0) {
+      activeSource = "personal";
+      activeBalance = personalBalance;
+    } else {
+      activeSource = "organization";
+      activeBalance = orgBalance;
+    }
+  } else {
+    // Org first (auto, org_first)
+    if (orgBalance > 0) {
+      activeSource = "organization";
+      activeBalance = orgBalance;
+    } else {
+      activeSource = "personal";
+      activeBalance = personalBalance;
+    }
+  }
+
   return {
-    source: "personal",
-    balance: profile?.credits_balance || 0,
+    source: activeSource,
+    balance: activeBalance,
+    orgId: member.organization_id,
+    orgName: member.organization_name,
+    memberId: member.id,
+    role: member.role,
+    preference,
+    personalBalance,
+    orgBalance,
+    limits: Object.keys(limits).length > 0 ? limits : undefined,
   };
 }
 
 /**
- * Check if user can spend a specific amount
+ * Check if user can spend a specific amount - respects preference
  */
 export async function checkCanSpend(
   userId: string,
@@ -152,7 +216,29 @@ export async function checkCanSpend(
 ): Promise<SpendCheckResult> {
   const adminClient = createAdminClient();
 
-  // Check organization limits first
+  // Get user's preference
+  const { data: profile } = await adminClient
+    .from("profiles")
+    .select("credits_balance, credit_preference")
+    .eq("id", userId)
+    .single();
+
+  const personalBalance = profile?.credits_balance || 0;
+  const preference = (profile?.credit_preference as CreditPreference) || "auto";
+
+  // Personal only - skip org check
+  if (preference === "personal_only") {
+    if (personalBalance >= amount) {
+      return { allowed: true, source: "personal" };
+    }
+    return {
+      allowed: false,
+      reason: "insufficient_credits",
+      source: "personal",
+    };
+  }
+
+  // Check organization limits
   const { data: limitCheck } = await adminClient.rpc(
     "check_org_member_limits",
     {
@@ -161,32 +247,21 @@ export async function checkCanSpend(
     }
   );
 
-  if (limitCheck) {
-    if (limitCheck.allowed) {
-      return { allowed: true, source: "organization" };
-    }
+  const isOrgMember = limitCheck && limitCheck.reason !== "not_member";
+  const orgAllowed = limitCheck?.allowed === true;
 
-    // Check specific reason
-    if (limitCheck.reason === "not_member") {
-      // Not an org member, check personal credits
-      const { data: profile } = await adminClient
-        .from("profiles")
-        .select("credits_balance")
-        .eq("id", userId)
-        .single();
-
-      if ((profile?.credits_balance || 0) >= amount) {
-        return { allowed: true, source: "personal" };
-      }
-
+  // Org only - must use org
+  if (preference === "org_only") {
+    if (!isOrgMember) {
       return {
         allowed: false,
-        reason: "insufficient_credits",
-        source: "personal",
+        reason: "not_org_member",
+        source: "organization",
       };
     }
-
-    // Org limit exceeded
+    if (orgAllowed) {
+      return { allowed: true, source: "organization" };
+    }
     return {
       allowed: false,
       reason: limitCheck.reason,
@@ -195,14 +270,50 @@ export async function checkCanSpend(
     };
   }
 
-  // Fallback - check personal
-  const { data: profile } = await adminClient
-    .from("profiles")
-    .select("credits_balance")
-    .eq("id", userId)
-    .single();
+  // Personal first
+  if (preference === "personal_first") {
+    if (personalBalance >= amount) {
+      return { allowed: true, source: "personal" };
+    }
+    // Fallback to org
+    if (isOrgMember && orgAllowed) {
+      return { allowed: true, source: "organization" };
+    }
+    if (isOrgMember && !orgAllowed) {
+      return {
+        allowed: false,
+        reason: limitCheck.reason,
+        resetAt: limitCheck.resets_at,
+        source: "organization",
+      };
+    }
+    return {
+      allowed: false,
+      reason: "insufficient_credits",
+      source: "personal",
+    };
+  }
 
-  if ((profile?.credits_balance || 0) >= amount) {
+  // Auto / org_first (default)
+  if (isOrgMember) {
+    if (orgAllowed) {
+      return { allowed: true, source: "organization" };
+    }
+    // Org limit exceeded - try personal fallback
+    if (personalBalance >= amount) {
+      return { allowed: true, source: "personal" };
+    }
+    // Neither works
+    return {
+      allowed: false,
+      reason: limitCheck.reason,
+      resetAt: limitCheck.resets_at,
+      source: "organization",
+    };
+  }
+
+  // Not org member - use personal
+  if (personalBalance >= amount) {
     return { allowed: true, source: "personal" };
   }
 
@@ -214,7 +325,7 @@ export async function checkCanSpend(
 }
 
 /**
- * Deduct credits from appropriate source
+ * Deduct credits from appropriate source - respects preference
  */
 export async function deductCredits(
   userId: string,
@@ -223,22 +334,17 @@ export async function deductCredits(
 ): Promise<DeductResult> {
   const adminClient = createAdminClient();
 
-  // Try organization deduction first
-  const { data: orgResult } = await adminClient.rpc("record_org_member_usage", {
-    p_user_id: userId,
-    p_amount: amount,
-  });
+  // Get user's preference
+  const { data: profile } = await adminClient
+    .from("profiles")
+    .select("credits_balance, credit_preference")
+    .eq("id", userId)
+    .single();
 
-  if (orgResult?.success) {
-    return {
-      success: true,
-      remaining: orgResult.remaining,
-      source: "organization",
-    };
-  }
+  const preference = (profile?.credit_preference as CreditPreference) || "auto";
 
-  // If not org member or org failed, try personal deduction
-  if (!orgResult || orgResult.reason === "not_member") {
+  // Helper to deduct from personal
+  const deductPersonal = async (): Promise<DeductResult> => {
     const { data: deductResult, error } = await adminClient.rpc(
       "deduct_credits",
       {
@@ -256,8 +362,7 @@ export async function deductCredits(
       return { success: false, error: "Insufficient credits" };
     }
 
-    // Get remaining balance
-    const { data: profile } = await adminClient
+    const { data: updatedProfile } = await adminClient
       .from("profiles")
       .select("credits_balance")
       .eq("id", userId)
@@ -265,12 +370,78 @@ export async function deductCredits(
 
     return {
       success: true,
-      remaining: profile?.credits_balance || 0,
+      remaining: updatedProfile?.credits_balance || 0,
       source: "personal",
+    };
+  };
+
+  // Helper to deduct from org
+  const deductOrg = async (): Promise<DeductResult> => {
+    const { data: orgResult } = await adminClient.rpc("record_org_member_usage", {
+      p_user_id: userId,
+      p_amount: amount,
+    });
+
+    if (orgResult?.success) {
+      return {
+        success: true,
+        remaining: orgResult.remaining,
+        source: "organization",
+      };
+    }
+
+    return {
+      success: false,
+      error: orgResult?.reason || "Organization deduction failed",
+    };
+  };
+
+  // Personal only
+  if (preference === "personal_only") {
+    return deductPersonal();
+  }
+
+  // Org only
+  if (preference === "org_only") {
+    return deductOrg();
+  }
+
+  // Personal first
+  if (preference === "personal_first") {
+    const personalResult = await deductPersonal();
+    if (personalResult.success) {
+      return personalResult;
+    }
+    // Fallback to org
+    return deductOrg();
+  }
+
+  // Auto / org_first (default) - try org first
+  const { data: orgResult } = await adminClient.rpc("record_org_member_usage", {
+    p_user_id: userId,
+    p_amount: amount,
+  });
+
+  if (orgResult?.success) {
+    return {
+      success: true,
+      remaining: orgResult.remaining,
+      source: "organization",
     };
   }
 
+  // If not org member or org failed, try personal fallback
+  if (!orgResult || orgResult.reason === "not_member") {
+    return deductPersonal();
+  }
+
   // Org deduction failed for another reason (limit exceeded, etc.)
+  // Try personal as fallback
+  const personalFallback = await deductPersonal();
+  if (personalFallback.success) {
+    return personalFallback;
+  }
+
   return {
     success: false,
     error: orgResult.reason || "Credit deduction failed",

@@ -58,25 +58,13 @@ function JoinPageContent() {
       } = await supabase.auth.getUser();
       setUser(currentUser);
 
-      // Fetch invite details
-      const { data: invite, error: inviteError } = await supabase
-        .from("organization_invites")
-        .select(
-          `
-          id,
-          organization_id,
-          role,
-          class_name,
-          credit_amount,
-          expires_at,
-          status,
-          organizations!inner(name)
-        `
-        )
-        .eq("token", token)
-        .single();
+      // Fetch invite details using RPC function (bypasses RLS)
+      const { data: invite, error: inviteError } = await supabase.rpc(
+        "get_invite_by_token",
+        { p_token: token }
+      );
 
-      if (inviteError || !invite) {
+      if (inviteError || !invite || invite.error === "not_found") {
         setError(t("errors.invalidToken"));
         setIsLoading(false);
         return;
@@ -99,12 +87,10 @@ function JoinPageContent() {
         return;
       }
 
-      // organizations is returned as a single object due to !inner join
-      const org = invite.organizations as unknown as { name: string };
       setInviteInfo({
         id: invite.id,
         organization_id: invite.organization_id,
-        organization_name: org.name,
+        organization_name: invite.organization_name,
         role: invite.role,
         class_name: invite.class_name,
         credit_amount: invite.credit_amount,

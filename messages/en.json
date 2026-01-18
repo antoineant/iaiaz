@@ -188,7 +188,9 @@
       "recentConversations": "Recent conversations",
       "noConversations": "No conversations",
       "dashboard": "Dashboard",
-      "logout": "Log out"
+      "logout": "Log out",
+      "orgCredits": "Organization",
+      "personalCredits": "Personal"
     },
     "input": {
       "placeholder": "Write your message or drop a file...",
@@ -271,6 +273,74 @@
         "usage": "Usage",
         "bonus": "Bonus"
       }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "title": "Profile",
+      "avatar": "Profile picture",
+      "uploadAvatar": "Upload a picture",
+      "removeAvatar": "Remove",
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Your name",
+      "email": "Email",
+      "changeEmail": "Change email",
+      "saveProfile": "Save"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "passwordRequirements": "At least 6 characters",
+      "updatePassword": "Update password"
+    },
+    "creditPreference": {
+      "title": "Credit preferences",
+      "description": "Choose how to use your credits when you are a member of an organization.",
+      "orgBalance": "Organization credits",
+      "personalBalance": "Personal credits",
+      "options": {
+        "auto": "Automatic (recommended)",
+        "autoDescription": "Use organization credits first, then personal credits if necessary.",
+        "orgFirst": "Organization first",
+        "orgFirstDescription": "Use organization credits first, then personal credits.",
+        "personalFirst": "Personal first",
+        "personalFirstDescription": "Use personal credits first, then organization credits.",
+        "orgOnly": "Organization only",
+        "orgOnlyDescription": "Only use organization credits. Will be blocked if exhausted.",
+        "personalOnly": "Personal only",
+        "personalOnlyDescription": "Only use personal credits. Ignore organization credits."
+      },
+      "savePreference": "Save"
+    },
+    "emailChange": {
+      "title": "Change email",
+      "newEmail": "New email",
+      "newEmailPlaceholder": "new@email.com",
+      "notice": "A verification link will be sent to the new address.",
+      "submit": "Send verification",
+      "success": "Verification email sent! Check your inbox."
+    },
+    "messages": {
+      "profileSaved": "Profile saved successfully.",
+      "passwordChanged": "Password changed successfully.",
+      "preferenceSaved": "Preferences saved successfully.",
+      "avatarUploaded": "Picture uploaded successfully.",
+      "avatarRemoved": "Picture removed."
+    },
+    "errors": {
+      "loadFailed": "Failed to load settings.",
+      "saveFailed": "Failed to save.",
+      "passwordMismatch": "Passwords do not match.",
+      "currentPasswordRequired": "Current password is required.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "invalidEmail": "Invalid email address.",
+      "uploadFailed": "Failed to upload picture.",
+      "fileTooLarge": "File too large (max 2 MB).",
+      "invalidFileType": "Invalid file type. Use PNG, JPG or WebP."
     }
   },
   "credits": {

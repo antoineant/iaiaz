@@ -188,7 +188,9 @@
       "recentConversations": "Conversations récentes",
       "noConversations": "Aucune conversation",
       "dashboard": "Tableau de bord",
-      "logout": "Se déconnecter"
+      "logout": "Se déconnecter",
+      "orgCredits": "Établissement",
+      "personalCredits": "Personnel"
     },
     "input": {
       "placeholder": "Écrivez votre message ou déposez un fichier...",
@@ -1032,6 +1034,68 @@
       "status": "Statut",
       "sentAt": "Envoyée le",
       "success": "Invitation envoyée avec succès"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "backToDashboard": "Retour au tableau de bord",
+    "profile": {
+      "title": "Profil",
+      "avatar": "Photo de profil",
+      "uploadPhoto": "Télécharger",
+      "removePhoto": "Supprimer",
+      "avatarHint": "PNG, JPG, GIF ou WebP. Max 5 Mo.",
+      "displayName": "Nom d'affichage",
+      "displayNamePlaceholder": "Votre nom",
+      "email": "Email",
+      "save": "Enregistrer"
+    },
+    "security": {
+      "title": "Sécurité",
+      "password": "Mot de passe",
+      "changePassword": "Modifier le mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "currentPasswordPlaceholder": "Entrez votre mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordPlaceholder": "Minimum 6 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Confirmez votre nouveau mot de passe",
+      "savePassword": "Enregistrer",
+      "cancel": "Annuler",
+      "passwordChanged": "Mot de passe modifié avec succès",
+      "currentPasswordRequired": "Le mot de passe actuel est requis",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+      "changeFailed": "La modification a échoué",
+      "email": "Email",
+      "changeEmail": "Modifier l'email",
+      "newEmail": "Nouvel email",
+      "newEmailPlaceholder": "votre@email.com",
+      "emailChangeNote": "Un email de vérification sera envoyé à la nouvelle adresse",
+      "sendVerification": "Envoyer la vérification",
+      "emailRequired": "L'email est requis",
+      "invalidEmail": "Format d'email invalide",
+      "sameEmail": "Le nouvel email doit être différent",
+      "verificationSent": "Email de vérification envoyé",
+      "verificationSentDescription": "Vérifiez votre boîte de réception à {email}",
+      "done": "Terminé"
+    },
+    "credits": {
+      "title": "Préférences de crédits",
+      "orgCredits": "Crédits établissement",
+      "personalCredits": "Crédits personnels",
+      "personal": "Personnel",
+      "preferenceLabel": "Utiliser les crédits de :",
+      "auto": "Automatique (établissement d'abord)",
+      "autoDescription": "Utilise d'abord les crédits de l'établissement, puis les crédits personnels si épuisés",
+      "orgOnly": "Établissement uniquement",
+      "orgOnlyDescription": "Utilise uniquement les crédits de l'établissement",
+      "personalOnly": "Personnel uniquement",
+      "personalOnlyDescription": "Utilise uniquement vos crédits personnels",
+      "personalFirst": "Personnel d'abord",
+      "personalFirstDescription": "Utilise d'abord vos crédits personnels, puis ceux de l'établissement",
+      "recommended": "Recommandé",
+      "savePreference": "Enregistrer"
     }
   }
 }
