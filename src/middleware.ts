@@ -92,7 +92,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes (locale-agnostic matching)
-  const protectedPaths = ["/chat", "/dashboard"];
+  const protectedPaths = ["/chat", "/dashboard", "/org"];
   const isProtectedPath = protectedPaths.some((path) =>
     pathnameWithoutLocale.startsWith(path)
   );

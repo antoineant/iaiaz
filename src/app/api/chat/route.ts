@@ -16,6 +16,12 @@ import {
 } from "@/lib/rate-limiter";
 import { getFileBase64, isImageMimeType, isPdfMimeType } from "@/lib/files";
 import type { ContentPart, FileUploadRecord } from "@/types";
+import {
+  getUserCredits,
+  checkCanSpend,
+  deductCredits,
+  getEffectiveBalance,
+} from "@/lib/credits";
 
 interface ChatRequest {
   message: string;
@@ -135,19 +141,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get user profile
-    const { data: profile, error: profileError } = await adminClient
-      .from("profiles")
-      .select("credits_balance")
-      .eq("id", user.id)
-      .single();
-
-    if (profileError || !profile) {
-      return NextResponse.json(
-        { error: "Profil non trouvé" },
-        { status: 404 }
-      );
-    }
+    // Get user credits (org first, personal fallback)
+    const userCredits = await getUserCredits(user.id);
+    const effectiveBalance = getEffectiveBalance(userCredits);
 
     // Fetch attachment records if any
     let attachmentRecords: FileUploadRecord[] = [];
@@ -182,9 +178,27 @@ export async function POST(request: NextRequest) {
       (estimatedInputTokens * modelInfo.input_price + 500 * modelInfo.output_price) / 1_000_000;
     const estimatedCost = estimatedBaseCost * pricingSettings.markupMultiplier;
 
-    if (profile.credits_balance < estimatedCost) {
+    // Check if user can spend estimated cost
+    const canSpendCheck = await checkCanSpend(user.id, estimatedCost);
+    if (!canSpendCheck.allowed) {
+      const errorMessage = canSpendCheck.reason === "daily_limit_exceeded"
+        ? "Limite journalière atteinte. Réessayez demain."
+        : canSpendCheck.reason === "weekly_limit_exceeded"
+        ? "Limite hebdomadaire atteinte."
+        : canSpendCheck.reason === "monthly_limit_exceeded"
+        ? "Limite mensuelle atteinte."
+        : canSpendCheck.reason === "allocation_exceeded"
+        ? "Allocation épuisée. Contactez votre établissement."
+        : canSpendCheck.source === "organization"
+        ? "Crédits établissement insuffisants."
+        : "Crédits insuffisants. Veuillez recharger votre compte.";
+
       return NextResponse.json(
-        { error: "Crédits insuffisants. Veuillez recharger votre compte." },
+        {
+          error: errorMessage,
+          code: canSpendCheck.reason?.toUpperCase() || "INSUFFICIENT_CREDITS",
+          resetAt: canSpendCheck.resetAt,
+        },
         { status: 402 }
       );
     }
@@ -302,18 +316,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Deduct credits
-    const { error: deductError } = await adminClient.rpc(
-      "deduct_credits",
-      {
-        p_user_id: user.id,
-        p_amount: actualCost,
-        p_description: `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`,
-      }
+    // Deduct credits from appropriate source (org or personal)
+    const deductResult = await deductCredits(
+      user.id,
+      actualCost,
+      `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`
     );
 
-    if (deductError) {
-      console.error("Error deducting credits:", deductError);
+    if (!deductResult.success) {
+      console.error("Error deducting credits:", deductResult.error);
     }
 
     // Get updated rate limit info for response
@@ -331,6 +342,12 @@ export async function POST(request: NextRequest) {
           remaining: rateLimitResult.remaining,
           limit: limits.limit,
           tier,
+        },
+        credits: {
+          source: deductResult.source || userCredits.source,
+          remaining: deductResult.remaining ?? effectiveBalance - actualCost,
+          orgName: userCredits.orgName,
+          limits: userCredits.limits,
         },
       },
       {

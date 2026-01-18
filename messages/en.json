@@ -18,6 +18,13 @@
       "keywords": "ai for students, chatgpt student, free ai student, homework ai help, essay ai, study ai, chatgpt university, claude student, gpt-4 student, affordable ai",
       "ogTitle": "iaiaz for Students - AI Accessible to All",
       "ogDescription": "GPT-4, Claude, Gemini without subscription. Perfect for student budgets."
+    },
+    "etablissements": {
+      "title": "iaiaz for Schools - AI for Education",
+      "description": "Provide GPT-4, Claude and Gemini access to your students without individual subscriptions. Control your budget, track usage.",
+      "keywords": "ai for schools, chatgpt university, ai education, gpt-4 education, claude education, ai training, chatgpt school, group ai license",
+      "ogTitle": "iaiaz for Schools - AI Made Accessible for Education",
+      "ogDescription": "Equip your students with the best AI models. No per-student subscription."
     }
   },
   "common": {
@@ -174,6 +181,9 @@
     "sidebar": {
       "balance": "Balance",
       "recharge": "Top up",
+      "remaining": "Remaining",
+      "dailyLimit": "Daily limit",
+      "manageOrg": "Manage",
       "newConversation": "New conversation",
       "recentConversations": "Recent conversations",
       "noConversations": "No conversations",
@@ -387,6 +397,37 @@
       "continueWith": "Continue with Google",
       "signupWith": "Sign up with Google",
       "connecting": "Connecting..."
+    }
+  },
+  "join": {
+    "title": "You're invited to join",
+    "loading": "Loading invitation...",
+    "loginRequired": "Sign in or create an account to accept this invitation.",
+    "login": "Sign in",
+    "signup": "Create account",
+    "creditsAllocated": "Credits allocated",
+    "accept": "Accept invitation",
+    "disclaimer": "By accepting, you'll use your institution's credits instead of personal credits.",
+    "backHome": "Back to home",
+    "roles": {
+      "student": "Student",
+      "teacher": "Teacher",
+      "admin": "Administrator",
+      "owner": "Owner"
+    },
+    "success": {
+      "title": "Welcome!",
+      "description": "You have successfully joined {org}.",
+      "redirect": "Redirecting to chat..."
+    },
+    "errors": {
+      "title": "Invalid invitation",
+      "noToken": "No invitation token provided.",
+      "invalidToken": "This invitation does not exist or is no longer valid.",
+      "expired": "This invitation has expired.",
+      "alreadyUsed": "This invitation has already been used.",
+      "alreadyMember": "You are already a member of this institution.",
+      "acceptFailed": "Unable to accept invitation. Please try again."
     }
   },
   "tarifs": {
@@ -674,6 +715,138 @@
       "students": "Students"
     }
   },
+  "etablissements": {
+    "hero": {
+      "badge": "For Schools & Universities",
+      "title": "AI for all your students,",
+      "titleHighlight": "not just those who can afford it.",
+      "subtitle": "$20/month for ChatGPT is unaffordable for many students. With iaiaz, your institution provides equitable access to Claude, GPT-5, Gemini and Mistral for all students.",
+      "cta": "Request a demo",
+      "ctaSecondary": "View pricing",
+      "noSubscription": "No per-student subscription",
+      "budgetControl": "Equal access",
+      "allModels": "All AI models"
+    },
+    "benefits": {
+      "title": "Why choose iaiaz for your institution?",
+      "subtitle": "Give every student the same chance to succeed.",
+      "equity": {
+        "title": "Equal opportunity",
+        "description": "Students who can't afford an AI subscription are at a disadvantage. Your institution can correct this inequality by providing access to all."
+      },
+      "cost": {
+        "title": "Budget control",
+        "description": "Up to 80% cheaper than ChatGPT Team per student. Pay only for actual usage."
+      },
+      "understanding": {
+        "title": "Understand usage",
+        "description": "Access usage statistics by class and student. Understand how your students use AI to adapt your teaching."
+      },
+      "visibility": {
+        "title": "Conversation visibility",
+        "description": "Option to access conversations (with consent). Ideal for guiding students and ensuring ethical use."
+      },
+      "multiModel": {
+        "title": "Multi-model access",
+        "description": "Students learn to use different AIs (Claude, GPT-5, Gemini, Mistral) instead of just one."
+      },
+      "privacy": {
+        "title": "Data protection",
+        "description": "European hosting, GDPR compliance, data never used for AI training."
+      }
+    },
+    "pricing": {
+      "title": "Plans for institutions",
+      "subtitle": "Choose the plan that fits your needs. All plans include access to all AI models.",
+      "popular": "Recommended",
+      "pilot": {
+        "title": "Pilot",
+        "description": "Test with one class",
+        "feature1": "Up to 30 students",
+        "feature2": "Credits valid for 6 months",
+        "feature3": "Email support"
+      },
+      "class": {
+        "title": "Classroom",
+        "description": "For one or multiple classes",
+        "feature1": "Up to 100 students",
+        "feature2": "Teacher dashboard",
+        "feature3": "Usage reports",
+        "feature4": "Priority support"
+      },
+      "institution": {
+        "title": "Institution",
+        "price": "Custom quote",
+        "description": "For the entire school",
+        "feature1": "Unlimited students",
+        "feature2": "SSO (Google/Microsoft)",
+        "feature3": "LMS integration",
+        "feature4": "Dedicated account manager"
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Contact us",
+        "description": "Let's discuss your needs and the number of students involved."
+      },
+      "step2": {
+        "title": "Setup",
+        "description": "We create student accounts and configure your settings."
+      },
+      "step3": {
+        "title": "Distribution",
+        "description": "Students receive their access and can start using AI immediately."
+      },
+      "step4": {
+        "title": "Monitoring",
+        "description": "Track usage and top up credits as needed."
+      }
+    },
+    "audience": {
+      "title": "For all educational institutions",
+      "universities": "Universities",
+      "businessSchools": "Business Schools",
+      "highSchools": "High Schools",
+      "training": "Training Centers"
+    },
+    "integrity": {
+      "title": "Academic Integrity",
+      "content": "iaiaz can be configured to encourage ethical AI use. We offer tracking features that help teachers understand how students use the tool, promoting responsible and educational usage."
+    },
+    "cta": {
+      "title": "Ready to equip your institution?",
+      "subtitle": "Contact us for a personalized demo and a quote tailored to your needs.",
+      "button": "Request a demo",
+      "note": "Response within 24h • No commitment"
+    },
+    "faq": {
+      "pricing": {
+        "question": "How does pricing work for institutions?",
+        "answer": "You purchase a credit pool for your institution. These credits are shared among all your students. You only pay for what's actually consumed, with no per-student subscription."
+      },
+      "equity": {
+        "question": "Why provide AI to our students?",
+        "answer": "A ChatGPT subscription costs $20/month - unaffordable for many students. Those who can pay have an advantage over others. By providing equitable access, you correct this inequality and give everyone the same tools to succeed."
+      },
+      "visibility": {
+        "question": "Can I see my students' conversations?",
+        "answer": "Two options: 1) Statistics only (default) - you see who uses what, when, how much. 2) Conversation access (optional) - can be enabled per class, with students informed upfront. This transparency helps you understand real usage patterns and adapt your teaching."
+      },
+      "setup": {
+        "question": "How does the setup process work?",
+        "answer": "We handle everything: account creation, configuration, teacher training. Setup typically takes 1-2 weeks."
+      },
+      "models": {
+        "question": "Which models are available?",
+        "answer": "All iaiaz models: Claude (Anthropic), GPT-5 (OpenAI), Gemini (Google), Mistral. You can restrict access to certain models if desired."
+      }
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "schools": "Schools"
+    }
+  },
   "legal": {
     "backToHome": "Back to home",
     "copyright": "© 2025 BAJURIAN SAS. All rights reserved.",
@@ -788,5 +961,77 @@
       "backHome": "Back to home"
     },
     "generic": "An error occurred"
+  },
+  "org": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "members": "Members",
+      "invites": "Invitations",
+      "backToChat": "Back to chat",
+      "logout": "Log out"
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Administrator",
+      "teacher": "Teacher",
+      "student": "Student"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "creditPool": "Credit Pool",
+      "available": "Available",
+      "members": "Members",
+      "students": "students",
+      "teachers": "teachers",
+      "usageThisMonth": "Usage this month",
+      "pendingInvites": "Pending invitations",
+      "creditDistribution": "Credit Distribution",
+      "allocated": "Allocated",
+      "recentActivity": "Recent Activity",
+      "noActivity": "No recent activity",
+      "unknownMember": "Unknown member"
+    },
+    "members": {
+      "title": "Members",
+      "search": "Search for a member...",
+      "addMember": "Invite a member",
+      "email": "Email",
+      "role": "Role",
+      "class": "Class",
+      "allocated": "Allocated",
+      "used": "Used",
+      "remaining": "Remaining",
+      "actions": "Actions",
+      "noMembers": "No members yet",
+      "allocate": "Allocate credits",
+      "suspend": "Suspend",
+      "remove": "Remove",
+      "allocateCredits": {
+        "title": "Allocate Credits",
+        "amount": "Amount",
+        "submit": "Allocate"
+      }
+    },
+    "invites": {
+      "title": "Invitations",
+      "create": "Create invitation",
+      "email": "Email",
+      "role": "Role",
+      "class": "Class (optional)",
+      "credits": "Credits to allocate",
+      "expiresIn": "Expires in",
+      "days": "days",
+      "send": "Send invitation",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied!",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "revoke": "Revoke",
+      "noInvites": "No invitations",
+      "status": "Status",
+      "sentAt": "Sent on",
+      "success": "Invitation sent successfully"
+    }
   }
 }

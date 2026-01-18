@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,19 @@ import {
   Menu,
   X,
   Trash2,
+  Building2,
+  ChevronRight,
 } from "lucide-react";
+
+interface OrgContext {
+  orgName: string;
+  role: string;
+  limits?: {
+    daily?: { remaining: number; limit: number };
+    weekly?: { remaining: number; limit: number };
+    monthly?: { remaining: number; limit: number };
+  };
+}
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -25,6 +38,7 @@ interface SidebarProps {
   balance: number;
   onNewConversation: () => void;
   onDeleteConversation: (id: string) => void;
+  orgContext?: OrgContext;
 }
 
 export function Sidebar({
@@ -33,11 +47,15 @@ export function Sidebar({
   balance,
   onNewConversation,
   onDeleteConversation,
+  orgContext,
 }: SidebarProps) {
   const router = useRouter();
   const t = useTranslations("chat.sidebar");
   const [isOpen, setIsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const isOrgMember = !!orgContext;
+  const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -66,16 +84,49 @@ export function Sidebar({
 
       {/* Balance */}
       <div className="p-4 border-b border-[var(--border)]">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-[var(--muted-foreground)]">{t("balance")}</span>
-          <span className="font-semibold">{formatCurrency(balance)}</span>
-        </div>
-        <Link href="/dashboard/credits">
-          <Button variant="outline" size="sm" className="w-full mt-2">
-            <CreditCard className="w-4 h-4 mr-2" />
-            {t("recharge")}
-          </Button>
-        </Link>
+        {isOrgMember ? (
+          <>
+            {/* Organization context */}
+            <div className="flex items-center gap-2 mb-2">
+              <Building2 className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+              <span className="text-sm font-medium truncate">{orgContext?.orgName}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[var(--muted-foreground)]">{t("remaining")}</span>
+              <span className="font-semibold">{formatCurrency(balance)}</span>
+            </div>
+            {/* Show limits if any */}
+            {orgContext?.limits?.daily && (
+              <div className="mt-2 text-xs text-[var(--muted-foreground)]">
+                <div className="flex justify-between">
+                  <span>{t("dailyLimit")}</span>
+                  <span>{formatCurrency(orgContext.limits.daily.remaining)} / {formatCurrency(orgContext.limits.daily.limit)}</span>
+                </div>
+              </div>
+            )}
+            {canManageOrg && (
+              <NextLink href="/org">
+                <Button variant="outline" size="sm" className="w-full mt-2">
+                  <Settings className="w-4 h-4 mr-2" />
+                  {t("manageOrg")}
+                </Button>
+              </NextLink>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[var(--muted-foreground)]">{t("balance")}</span>
+              <span className="font-semibold">{formatCurrency(balance)}</span>
+            </div>
+            <Link href="/dashboard/credits">
+              <Button variant="outline" size="sm" className="w-full mt-2">
+                <CreditCard className="w-4 h-4 mr-2" />
+                {t("recharge")}
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
 
       {/* New conversation */}
