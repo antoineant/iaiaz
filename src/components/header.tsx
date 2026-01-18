@@ -20,6 +20,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
     { href: "/tarifs" as const, label: t("nav.pricing") },
     { href: "/comparatif" as const, label: t("nav.compare") },
     { href: "/etudiants" as const, label: t("nav.students") },
+    { href: "/etablissements" as const, label: t("nav.schools") },
   ];
 
   const isActive = (href: string) => pathname === href;
