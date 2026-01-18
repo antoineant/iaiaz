@@ -255,7 +255,8 @@
     "quickActions": {
       "title": "Actions rapides",
       "newConversation": "Nouvelle conversation",
-      "buyCredits": "Acheter des crédits"
+      "buyCredits": "Acheter des crédits",
+      "settings": "Paramètres"
     },
     "accountInfo": {
       "title": "Informations du compte",
@@ -1081,21 +1082,23 @@
       "verificationSentDescription": "Vérifiez votre boîte de réception à {email}",
       "done": "Terminé"
     },
-    "credits": {
+    "creditPreference": {
       "title": "Préférences de crédits",
-      "orgCredits": "Crédits établissement",
-      "personalCredits": "Crédits personnels",
-      "personal": "Personnel",
-      "preferenceLabel": "Utiliser les crédits de :",
-      "auto": "Automatique (établissement d'abord)",
-      "autoDescription": "Utilise d'abord les crédits de l'établissement, puis les crédits personnels si épuisés",
-      "orgOnly": "Établissement uniquement",
-      "orgOnlyDescription": "Utilise uniquement les crédits de l'établissement",
-      "personalOnly": "Personnel uniquement",
-      "personalOnlyDescription": "Utilise uniquement vos crédits personnels",
-      "personalFirst": "Personnel d'abord",
-      "personalFirstDescription": "Utilise d'abord vos crédits personnels, puis ceux de l'établissement",
-      "recommended": "Recommandé",
+      "description": "Choisissez comment utiliser vos crédits lorsque vous êtes membre d'une organisation.",
+      "orgBalance": "Crédits organisation",
+      "personalBalance": "Crédits personnels",
+      "options": {
+        "auto": "Automatique (recommandé)",
+        "autoDescription": "Utilise d'abord les crédits de l'organisation, puis les personnels si nécessaire.",
+        "orgFirst": "Organisation d'abord",
+        "orgFirstDescription": "Utilise d'abord les crédits de l'organisation, puis les personnels.",
+        "personalFirst": "Personnel d'abord",
+        "personalFirstDescription": "Utilise d'abord les crédits personnels, puis ceux de l'organisation.",
+        "orgOnly": "Organisation uniquement",
+        "orgOnlyDescription": "Utilise uniquement les crédits de l'organisation. Bloqué si épuisés.",
+        "personalOnly": "Personnel uniquement",
+        "personalOnlyDescription": "Utilise uniquement les crédits personnels. Ignore l'organisation."
+      },
       "savePreference": "Enregistrer"
     }
   }

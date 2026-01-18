@@ -213,7 +213,7 @@ export default function SettingsPage() {
           {isOrgMember && (
             <Card>
               <CardHeader>
-                <CardTitle>{t("credits.title")}</CardTitle>
+                <CardTitle>{t("creditPreference.title")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CreditPreferenceSelector

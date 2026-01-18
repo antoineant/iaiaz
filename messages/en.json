@@ -255,7 +255,8 @@
     "quickActions": {
       "title": "Quick actions",
       "newConversation": "New conversation",
-      "buyCredits": "Buy credits"
+      "buyCredits": "Buy credits",
+      "settings": "Settings"
     },
     "accountInfo": {
       "title": "Account information",
