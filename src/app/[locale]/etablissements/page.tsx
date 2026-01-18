@@ -99,9 +99,26 @@ export default async function EtablissementsPage({ params }: Props) {
             <br />
             <span className="text-primary-600 dark:text-primary-400">{t("hero.titleHighlight")}</span>
           </h1>
-          <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-6">
             {t("hero.subtitle")}
           </p>
+
+          {/* Pricing highlight */}
+          <div className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-4 rounded-2xl mb-6">
+            <div className="text-2xl md:text-3xl font-bold">
+              {t("pricing.title")}
+            </div>
+            <div className="text-primary-100 text-lg font-medium">
+              {t("pricing.titleHighlight")}
+            </div>
+          </div>
+          <p className="text-[var(--muted-foreground)] max-w-xl mx-auto mb-2 text-sm">
+            {t("pricing.subtitle")}
+          </p>
+          <p className="text-sm text-primary-600 dark:text-primary-400 font-medium mb-8">
+            {t("pricing.creditsNote")}
+          </p>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <a href="mailto:secretariat@girafestudio.fr?subject=Demande%20d%27information%20-%20Établissement">
               <Button size="lg">
