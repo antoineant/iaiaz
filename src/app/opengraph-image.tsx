@@ -71,7 +71,7 @@ export default async function Image() {
               textAlign: "center",
             }}
           >
-            Claude • GPT-4 • Gemini • Mistral
+            Claude • GPT-5 • Gemini • Mistral
           </span>
         </div>
 

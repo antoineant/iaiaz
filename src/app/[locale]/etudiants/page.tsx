@@ -251,7 +251,7 @@ export default async function EtudiantsPage({ params }: Props) {
                     <span className="font-bold text-green-600 dark:text-green-400">G</span>
                   </div>
                   <div>
-                    <strong>GPT-4</strong>
+                    <strong>GPT-5</strong>
                     <p className="text-sm text-[var(--muted-foreground)]">
                       {t("multipleModels.gptDesc")}
                     </p>

@@ -99,7 +99,7 @@ export async function sendWelcomeEmail(
 
   <ul style="margin-bottom: 24px; padding-left: 20px;">
     <li style="margin-bottom: 8px;"><strong>Claude</strong> (Anthropic) - Excellent pour la rédaction et l'analyse</li>
-    <li style="margin-bottom: 8px;"><strong>GPT-4</strong> (OpenAI) - Le modèle polyvalent par excellence</li>
+    <li style="margin-bottom: 8px;"><strong>GPT-5</strong> (OpenAI) - Le modèle polyvalent par excellence</li>
     <li style="margin-bottom: 8px;"><strong>Gemini</strong> (Google) - Puissant pour le raisonnement</li>
     <li style="margin-bottom: 8px;"><strong>Mistral</strong> - Le champion français, rapide et efficace</li>
   </ul>
@@ -135,7 +135,7 @@ Votre compte est maintenant activé et vous disposez de 1€ de crédits offerts
 
 Avec iaiaz, vous avez accès à :
 - Claude (Anthropic) - Excellent pour la rédaction et l'analyse
-- GPT-4 (OpenAI) - Le modèle polyvalent par excellence
+- GPT-5 (OpenAI) - Le modèle polyvalent par excellence
 - Gemini (Google) - Puissant pour le raisonnement
 - Mistral - Le champion français, rapide et efficace
 

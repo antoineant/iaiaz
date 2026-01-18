@@ -2,11 +2,11 @@
   "metadata": {
     "home": {
       "title": "iaiaz - Affordable AI Access, No Subscription | ChatGPT Alternative",
-      "description": "Access the best AI models (Claude, GPT-4, Gemini, Mistral) without subscription. Pay only for what you use. $1 free credit on signup."
+      "description": "Access the best AI models (Claude, GPT-5, Gemini, Mistral) without subscription. Pay only for what you use. $1 free credit on signup."
     },
     "tarifs": {
       "title": "Pricing - AI Model Prices",
-      "description": "Transparent pricing for GPT-4, Claude, Gemini and Mistral. Pay-as-you-go without subscription. Compare prices and choose the best model."
+      "description": "Transparent pricing for GPT-5, Claude, Gemini and Mistral. Pay-as-you-go without subscription. Compare prices and choose the best model."
     },
     "comparatif": {
       "title": "Compare - iaiaz vs ChatGPT Plus vs Claude Pro",
@@ -14,14 +14,14 @@
     },
     "etudiants": {
       "title": "AI for Students - Affordable ChatGPT Alternative",
-      "description": "Access GPT-4, Claude and Gemini without subscription. Perfect solution for students with $1 free credit on signup.",
+      "description": "Access GPT-5, Claude and Gemini without subscription. Perfect solution for students with $1 free credit on signup.",
       "keywords": "ai for students, chatgpt student, free ai student, homework ai help, essay ai, study ai, chatgpt university, claude student, gpt-4 student, affordable ai",
       "ogTitle": "iaiaz for Students - AI Accessible to All",
-      "ogDescription": "GPT-4, Claude, Gemini without subscription. Perfect for student budgets."
+      "ogDescription": "GPT-5, Claude, Gemini without subscription. Perfect for student budgets."
     },
     "etablissements": {
       "title": "iaiaz for Schools - AI for Education",
-      "description": "Provide GPT-4, Claude and Gemini access to your students without individual subscriptions. Control your budget, track usage.",
+      "description": "Provide GPT-5, Claude and Gemini access to your students without individual subscriptions. Control your budget, track usage.",
       "keywords": "ai for schools, chatgpt university, ai education, gpt-4 education, claude education, ai training, chatgpt school, group ai license",
       "ogTitle": "iaiaz for Schools - AI Made Accessible for Education",
       "ogDescription": "Equip your students with the best AI models. No per-student subscription."
@@ -32,12 +32,59 @@
       "keywords": "pedagogical analytics, student ai tracking, trainer dashboard, ai usage analysis, prompt quality, ai training",
       "ogTitle": "iaiaz Analytics - Pedagogical Insights for Trainers",
       "ogDescription": "Understand how your students use AI. Identify difficulties, measure progress."
+    },
+    "tarifsEtudiants": {
+      "title": "Student Pricing - AI from $0.01 per question",
+      "description": "AI pricing for student budgets. Pay-as-you-go without subscription. GPT-5, Claude, Gemini from just cents per question.",
+      "keywords": "ai student pricing, chatgpt student price, cheap ai student, gpt-4 price, claude pricing, ai cost per question",
+      "ogTitle": "iaiaz Student Pricing - Affordable AI",
+      "ogDescription": "Access GPT-5, Claude and Gemini from $0.01 per question. Perfect for student budgets."
+    },
+    "tarifsEtablissements": {
+      "title": "School Pricing - $1/student/month | iaiaz",
+      "description": "AI pricing for schools and universities. $1 per student per month, 23x cheaper than ChatGPT Team. Budget control, all models.",
+      "keywords": "ai school pricing, chatgpt university price, group ai license, institutional ai cost, chatgpt team price, ai education pricing",
+      "ogTitle": "iaiaz School Pricing - $1/student/month",
+      "ogDescription": "Equip all your students with AI for $1/month per student. 23x cheaper than ChatGPT Team."
+    },
+    "tarifsFormateurs": {
+      "title": "Trainer Pricing - AI Analytics at $4.90/month | iaiaz",
+      "description": "Transparent pricing for trainers: student usage $0.02-0.05/question, teacher analytics $4.90/month per class.",
+      "keywords": "trainer ai pricing, pedagogical analytics price, class ai cost, teacher dashboard pricing",
+      "ogTitle": "iaiaz Trainer Pricing - Analytics at $4.90/month",
+      "ogDescription": "Track your students' AI usage for $4.90/month per class. Student usage ~$50/semester."
+    },
+    "comparatifEtudiants": {
+      "title": "iaiaz vs ChatGPT Plus Comparison for Students",
+      "description": "Compare iaiaz and ChatGPT Plus for students. Save up to 90% with pay-as-you-go pricing. 4 AI models included.",
+      "keywords": "chatgpt student comparison, cheap chatgpt alternative, iaiaz vs chatgpt plus, cheaper ai student",
+      "ogTitle": "iaiaz vs ChatGPT Plus - Student Comparison",
+      "ogDescription": "Why pay $20/month when $2 is enough? Complete comparison for students."
+    },
+    "comparatifEtablissements": {
+      "title": "iaiaz vs ChatGPT Team Comparison for Schools",
+      "description": "Compare iaiaz and ChatGPT Team for schools. $1/student vs $23/student. All AI models, budget control.",
+      "keywords": "chatgpt team school comparison, chatgpt university alternative, iaiaz vs chatgpt team, school ai",
+      "ogTitle": "iaiaz vs ChatGPT Team - School Comparison",
+      "ogDescription": "23x cheaper than ChatGPT Team. Equip all your students without breaking the budget."
+    },
+    "comparatifFormateurs": {
+      "title": "Visible vs Invisible AI Comparison for Trainers",
+      "description": "Why make AI visible in class? Comparison between secret ChatGPT use and pedagogical tool with analytics.",
+      "keywords": "visible ai class, pedagogical analytics, chatgpt teacher, student ai tracking, trainer ai tool",
+      "ogTitle": "Visible vs Invisible AI - Trainer Comparison",
+      "ogDescription": "Transform hidden AI use into a pedagogical advantage with iaiaz."
+    },
+    "comparatif": {
+      "title": "Compare - Choose Your Profile | iaiaz",
+      "description": "Compare iaiaz with alternatives based on your profile: student, school, or trainer. Find the right solution."
     }
   },
   "common": {
     "nav": {
       "pricing": "Pricing",
       "compare": "Compare",
+      "forWhom": "For whom?",
       "students": "Students",
       "schools": "Schools",
       "trainers": "Trainers",
@@ -70,7 +117,7 @@
       "badge": "Affordable AI Access, Zero commitment",
       "title": "Premium AI,",
       "titleHighlight": "without the subscription.",
-      "subtitle": "Access Claude, GPT-4, Gemini and Mistral. Pay only for what you use. Perfect for students.",
+      "subtitle": "Access Claude, GPT-5, Gemini and Mistral. Pay only for what you use. Perfect for students.",
       "cta": "Create free account",
       "ctaSecondary": "How it works",
       "freeCredit": "$1 free credit on signup"
@@ -134,7 +181,7 @@
       },
       "allModels": {
         "title": "All models",
-        "description": "Claude, GPT-4, Gemini, Mistral... Choose the best model for each task."
+        "description": "Claude, GPT-5, Gemini, Mistral... Choose the best model for each task."
       },
       "transparent": {
         "title": "Transparent and simple",
@@ -603,7 +650,7 @@
       "minPrice": "Minimum monthly price",
       "minPriceIaiaz": "$0 (pay-as-you-go)",
       "minPriceChatgpt": "$20/month",
-      "gpt4Access": "GPT-4 Access",
+      "gpt4Access": "GPT-5 Access",
       "included": "Included",
       "claudeAccess": "Claude Access (Anthropic)",
       "allModels": "All models",
@@ -622,7 +669,7 @@
       "unlimited": "Unlimited",
       "messageLimit": "Message limit",
       "noLimit": "None (based on credits)",
-      "gpt4Limit": "80 messages/3h (GPT-4)"
+      "gpt4Limit": "80 messages/3h (GPT-5)"
     },
     "savings": {
       "title": "How much will you save?",
@@ -659,7 +706,7 @@
       "geminiBenefit": "can process very long texts (1M tokens)",
       "mistralBenefit": "masters multiple languages and is very economical",
       "withIaiaz": "With iaiaz, you can:",
-      "brainstorm": "Brainstorm with GPT-4",
+      "brainstorm": "Brainstorm with GPT-5",
       "writeEssay": "Write your essay with Claude",
       "saveWithMistral": "Save with Mistral for simple tasks",
       "compareResponses": "Compare responses from multiple models"
@@ -669,7 +716,7 @@
       "subtitle": "Unlike subscriptions, you see exactly what each message costs. Example with $1 in credits:",
       "gptMini": "messages with GPT-4o Mini",
       "claudeSonnet": "messages with Claude Sonnet",
-      "gpt4": "messages with GPT-4",
+      "gpt4": "messages with GPT-5",
       "mistralSmall": "messages with Mistral Small"
     },
     "cta": {
@@ -680,7 +727,7 @@
     "faq": {
       "mainDifference": {
         "question": "What's the main difference between iaiaz and ChatGPT Plus?",
-        "answer": "ChatGPT Plus costs a fixed $20/month whether you use it or not. With iaiaz, you only pay for what you use (starting from a few cents). Plus, iaiaz gives you access to multiple models (Claude, GPT-4, Gemini, Mistral) instead of just one."
+        "answer": "ChatGPT Plus costs a fixed $20/month whether you use it or not. With iaiaz, you only pay for what you use (starting from a few cents). Plus, iaiaz gives you access to multiple models (Claude, GPT-5, Gemini, Mistral) instead of just one."
       },
       "cheaper": {
         "question": "Is iaiaz cheaper than ChatGPT Plus?",
@@ -688,7 +735,7 @@
       },
       "whyChoose": {
         "question": "Why choose iaiaz over an AI subscription?",
-        "answer": "Three reasons: 1) Real savings for moderate use, 2) Access to multiple AIs (Claude, GPT-4, Gemini, Mistral) instead of just one, 3) No commitment - your credits never expire."
+        "answer": "Three reasons: 1) Real savings for moderate use, 2) Access to multiple AIs (Claude, GPT-5, Gemini, Mistral) instead of just one, 3) No commitment - your credits never expire."
       }
     },
     "breadcrumb": {
@@ -701,7 +748,7 @@
       "badge": "For Students",
       "title": "AI that respects",
       "titleHighlight": "your student budget",
-      "subtitle": "GPT-4, Claude, Gemini and Mistral at your fingertips, without subscription. Pay only for what you use, from $0.001 per message.",
+      "subtitle": "GPT-5, Claude, Gemini and Mistral at your fingertips, without subscription. Pay only for what you use, from $0.001 per message.",
       "cta": "$1 free on signup",
       "ctaSecondary": "View comparison",
       "noCreditCard": "No credit card",
@@ -760,7 +807,7 @@
     "testimonials": {
       "title": "What students say",
       "t1": { "quote": "With $5, I lasted the whole semester. Perfect for finals!", "author": "Lea, Law Student" },
-      "t2": { "quote": "I can finally use Claude AND GPT-4 as needed, without breaking the bank.", "author": "Thomas, CS Graduate" },
+      "t2": { "quote": "I can finally use Claude AND GPT-5 as needed, without breaking the bank.", "author": "Thomas, CS Graduate" },
       "t3": { "quote": "Mistral is incredible for language work, and it costs almost nothing.", "author": "Camille, Literature Major" }
     },
     "ethics": {
@@ -788,7 +835,7 @@
       },
       "bestAI": {
         "question": "Which AI is best for studying?",
-        "answer": "It depends! Claude excels at writing and text analysis. GPT-4 is great for math and code. Gemini handles very long documents. Mistral is economical for simple questions. With iaiaz, you have access to all of them."
+        "answer": "It depends! Claude excels at writing and text analysis. GPT-5 is great for math and code. Gemini handles very long documents. Mistral is economical for simple questions. With iaiaz, you have access to all of them."
       }
     },
     "breadcrumb": {
@@ -961,113 +1008,617 @@
   },
   "formateurs": {
     "hero": {
-      "badge": "Pedagogical Analytics",
-      "title": "Understand how your students",
-      "titleHighlight": "use AI.",
-      "subtitle": "The only tool that gives you visibility into how your students use AI. Identify difficulties, measure progress, adapt your teaching.",
-      "uniqueValue": "Exclusive iaiaz feature",
-      "uniqueValueSub": "No competitor offers these analytics",
-      "cta": "Request a demo",
-      "ctaSecondary": "See school offers",
-      "feature1": "Privacy-first",
-      "feature2": "Aggregated data",
-      "feature3": "Actionable insights"
+      "badge": "AI becomes visible",
+      "title": "Your students already use AI.",
+      "titleHighlight": "Turn it into a teaching advantage.",
+      "subtitle": "You can't ban it. You can't ignore it. But you can make it a learning tool — with full visibility.",
+      "cta": "Create my classroom",
+      "ctaSecondary": "See pricing",
+      "stat": "of your students use ChatGPT. You don't know because they hide it."
     },
     "problem": {
-      "title": "The problem with AI in education",
-      "subtitle": "Today, trainers are blind to how their students actually use AI.",
-      "item1": {
-        "title": "No visibility",
-        "description": "Your students use ChatGPT, Claude, Gemini... but you don't know how or for what."
+      "title": "The real problem isn't AI",
+      "subtitle": "It's invisible AI. When a student uses ChatGPT secretly, you lose everything.",
+      "fear": "The fear",
+      "reality": "The reality",
+      "fear1": {
+        "title": "\"Students will cheat\"",
+        "flip": "They're already using AI — you just can't see it. With iaiaz, you know who uses it, for what, and how."
       },
-      "item2": {
-        "title": "Impossible to assess",
-        "description": "How do you know if a student masters AI or just copy-pastes without thinking?"
+      "fear2": {
+        "title": "\"AI does the work for them\"",
+        "flip": "AI reveals what students don't understand. The questions they ask are a pedagogical goldmine."
       },
-      "item3": {
-        "title": "Teaching blind",
-        "description": "You can't adapt your teaching without understanding real usage patterns."
+      "fear3": {
+        "title": "\"I'm losing control\"",
+        "flip": "You gain visibility you never had before. You see knowledge gaps in real-time."
+      },
+      "invisible": {
+        "title": "The invisible AI problem",
+        "description": "When a student asks ChatGPT a question, you don't know:",
+        "point1": "What they didn't understand from your class",
+        "point2": "Whether they rephrased the answer or copy-pasted",
+        "point3": "Whether they learned something or just got an answer"
       }
     },
-    "tier1": {
-      "badge": "Included in all plans",
-      "title": "Usage Statistics",
-      "subtitle": "See your students' engagement in real-time.",
-      "dashboard": {
-        "title": "Marketing M1 - Group A",
-        "period": "January 1-15, 2026",
-        "activeStudents": "Active students",
-        "conversations": "Conversations",
-        "avgMessages": "Msgs/conv.",
-        "peakTime": "Peak activity",
-        "activityByDay": "Activity by day",
-        "alertTitle": "3 inactive students",
-        "alertDesc": "Martin D., Sophie L., Lucas R. haven't used the platform this week."
+    "solution": {
+      "title": "The solution: make AI visible",
+      "subtitle": "iaiaz gives your students access to the best models — Claude, GPT, Gemini — and gives you a pedagogical dashboard.",
+      "feature1": {
+        "title": "The official tool",
+        "description": "No more hiding. You provide the approved AI, with the best models on the market."
+      },
+      "feature2": {
+        "title": "Teacher dashboard",
+        "description": "See topics discussed, frequent questions, common gaps. In 5 minutes per week."
+      },
+      "feature3": {
+        "title": "Controlled budget",
+        "description": "No subscription. Students pay what they use, or you allocate a budget per class."
+      },
+      "gains": {
+        "title": "What you gain",
+        "point1": "Visibility on questions asked by topic",
+        "point2": "Identification of common knowledge gaps",
+        "point3": "Spotting struggling students",
+        "point4": "Adapting your course in real-time"
       }
     },
-    "tier2": {
-      "badge": "+€2/student/month",
-      "title": "Learning Analysis",
-      "subtitle": "Understand what topics your students work on and how they use AI.",
-      "topics": {
-        "title": "Topics discussed",
-        "topic1": "SWOT Analysis",
-        "topic2": "Customer Persona",
-        "topic3": "Pricing Strategy",
-        "topic4": "Market Research"
+    "dashboard": {
+      "title": "What you see",
+      "subtitle": "A dashboard that shows you patterns, not private conversations.",
+      "mock": {
+        "class": "Marketing M1 - Group A",
+        "period": "Week of January 13",
+        "activeStudents": "active students",
+        "topicsTitle": "Most asked topics",
+        "topic1": "Integrals",
+        "topic2": "Derivatives",
+        "topic3": "Limits",
+        "topicInsight": "Chapter 3 needs more explanation",
+        "alertsTitle": "Automatic insights",
+        "alert1": "4 students haven't used AI this week",
+        "alert2": "80% of questions are about integrals",
+        "alert3": "Usage spike before Tuesday's exam",
+        "avgQuestions": "Questions/student",
+        "peakTime": "Peak",
+        "timeSpent": "5 min reading = 1 week of insights"
       },
-      "usage": {
-        "title": "Usage types",
-        "type1": "Research / Brainstorming",
-        "type2": "Concept explanation",
-        "type3": "Writing assistance",
-        "type4": "Correction / Improvement"
-      }
+      "example": "\"A teacher who sees that 80% of questions are about integrals knows what to review on Monday.\""
     },
-    "tier3": {
-      "badge": "+€5/student/month",
-      "title": "Quality Analysis",
-      "subtitle": "Evaluate interaction quality and identify students who need help.",
-      "quality": {
-        "title": "Prompt Quality",
-        "average": "Group average",
-        "criteria1": "Request clarity",
-        "criteria2": "Context provided",
-        "criteria3": "Specificity",
-        "criteria4": "Critical thinking"
+    "pricing": {
+      "title": "Transparent pricing",
+      "subtitle": "Simple access to AI power + valuable pedagogical insights.",
+      "studentUsage": {
+        "title": "Student usage",
+        "price": "€0.02-0.05",
+        "unit": "per question",
+        "description": "Students pay what they use. ~€50 per class/semester."
       },
-      "distribution": {
-        "title": "Student distribution",
-        "expert": "Experts",
-        "competent": "Competent",
-        "progressing": "Progressing",
-        "needsHelp": "Needs help"
-      }
+      "analytics": {
+        "title": "Teacher analytics",
+        "price": "€4.90",
+        "unit": "/ month / class",
+        "description": "Dashboard, automatic insights, pedagogical alerts.",
+        "badge": "Added value"
+      },
+      "setup": {
+        "title": "Setup",
+        "price": "Free",
+        "description": "Classroom setup and onboarding included."
+      },
+      "feature1": "All AI models included",
+      "feature2": "Weekly automatic insights",
+      "feature3": "No commitment, cancel anytime"
     },
-    "privacy": {
-      "title": "Privacy First",
-      "subtitle": "Students stay in control. Trainers see insights, not conversations.",
-      "item1": {
-        "title": "Aggregated Data",
-        "description": "Trainers see group statistics, not conversation content."
-      },
-      "item2": {
-        "title": "Student Consent",
-        "description": "Students choose their sharing level and can mark conversations as private."
-      },
-      "item3": {
-        "title": "GDPR Compliant",
-        "description": "Hosted in France, encrypted data, guaranteed right to deletion."
-      }
+    "objections": {
+      "title": "Frequently asked questions",
+      "q1": "\"This encourages cheating\"",
+      "a1": "They're already using AI. iaiaz makes it educational: you see what they ask, you can adapt your teaching.",
+      "q2": "\"I want to ban AI\"",
+      "a2": "You can't enforce it. But you can channel it: an official tool, transparent, with clear rules.",
+      "q3": "\"It's too expensive\"",
+      "a3": "€0.02-0.05 per question. A class of 30 students costs about €50 per semester. Less than a textbook.",
+      "q4": "\"I don't have time to monitor\"",
+      "a4": "The dashboard shows patterns automatically. 5 minutes per week is enough to identify gaps."
     },
     "cta": {
-      "title": "Ready to understand your students?",
-      "subtitle": "Request a personalized demo and discover how iaiaz can transform your teaching.",
-      "button": "Request a demo",
-      "buttonSecondary": "See school pricing"
+      "title": "Try it with your class",
+      "subtitle": "Create your space in 5 minutes. No subscription, no commitment.",
+      "button": "Create my classroom",
+      "bonus": "€1 free credits per student to get started"
     },
     "breadcrumb": {
       "home": "Home",
+      "trainers": "Trainers"
+    }
+  },
+  "tarifsSelector": {
+    "hero": {
+      "title": "Pricing for your profile",
+      "subtitle": "Choose your category to discover the pricing that fits you"
+    },
+    "students": {
+      "title": "Students",
+      "description": "Pay only for what you use, from $0.01 per question",
+      "price": "From $0.01",
+      "priceNote": "per question",
+      "cta": "View student pricing"
+    },
+    "schools": {
+      "title": "Schools",
+      "description": "Equip all your students with controlled budget",
+      "price": "$1/student/month",
+      "priceNote": "23x cheaper than ChatGPT Team",
+      "cta": "View school pricing"
+    },
+    "trainers": {
+      "title": "Trainers",
+      "description": "Access pedagogical analytics to track your classes",
+      "price": "$4.90/month",
+      "priceNote": "per class",
+      "cta": "View trainer pricing"
+    },
+    "note": "All our pricing is transparent with no commitment. Your credits never expire.",
+    "breadcrumb": {
+      "home": "Home",
+      "pricing": "Pricing"
+    }
+  },
+  "comparatifSelector": {
+    "hero": {
+      "title": "Compare by your profile",
+      "subtitle": "Discover why iaiaz is the best alternative for your needs"
+    },
+    "students": {
+      "title": "Students",
+      "description": "Compare iaiaz with ChatGPT Plus for your student budget",
+      "versus": "iaiaz vs ChatGPT Plus",
+      "cta": "View comparison"
+    },
+    "schools": {
+      "title": "Schools",
+      "description": "Compare per-student costs with enterprise solutions",
+      "versus": "iaiaz vs ChatGPT Team",
+      "cta": "View comparison"
+    },
+    "trainers": {
+      "title": "Trainers",
+      "description": "Compare visible AI with invisible AI in class",
+      "versus": "Visible vs Invisible AI",
+      "cta": "View comparison"
+    },
+    "note": "All comparisons are based on public pricing as of January 2025.",
+    "breadcrumb": {
+      "home": "Home",
+      "compare": "Compare"
+    }
+  },
+  "tarifsEtudiants": {
+    "hero": {
+      "badge": "Student Pricing",
+      "title": "Premium AI at student prices",
+      "subtitle": "Access GPT-5, Claude, Gemini and Mistral without subscription. Pay just cents per question.",
+      "freeCredit": "$1 free on signup",
+      "noExpiration": "Credits never expire",
+      "noCommitment": "No commitment"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Create an account",
+        "description": "Free signup, $1 free credits to test."
+      },
+      "step2": {
+        "title": "Buy credits",
+        "description": "Top up whenever you want, starting at $5. No subscription."
+      },
+      "step3": {
+        "title": "Use AI",
+        "description": "Choose your model and only pay for what you use."
+      }
+    },
+    "calculator": {
+      "title": "Estimate your monthly cost"
+    },
+    "pricePerModel": {
+      "title": "Price per model",
+      "subtitle": "Transparent pricing, updated in real-time from our database.",
+      "model": "Model",
+      "inputPrice": "Price / 1M input tokens",
+      "outputPrice": "Price / 1M output tokens",
+      "estimatedCost": "Est. cost / message",
+      "description": "Description",
+      "recommended": "Recommended"
+    },
+    "creditPacks": {
+      "title": "Credit packs",
+      "credits": "${amount} credits",
+      "messages": "~{count} Claude Sonnet messages",
+      "popular": "Popular",
+      "customAmount": "Custom",
+      "customLabel": "Custom amount",
+      "customDescription": "From $1 to $100"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "How much does a question cost on average?",
+      "a1": "Between $0.01 and $0.05 depending on the model. Claude Sonnet costs about $0.02 per message, GPT-4o Mini about $0.003.",
+      "q2": "Do my credits expire?",
+      "a2": "No, your credits never expire. Buy them today, use them in 6 months.",
+      "q3": "Can I get a refund?",
+      "a3": "Yes, you can request a refund for unused credits at any time.",
+      "q4": "How are prices calculated?",
+      "a4": "We apply a {markup}% margin on API costs from providers. Prices are displayed in real-time."
+    },
+    "cta": {
+      "title": "Ready to save?",
+      "subtitle": "Create your account and get $1 free credit to test.",
+      "button": "Create free account",
+      "compare": "View comparison"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "pricing": "Pricing",
+      "students": "Students"
+    }
+  },
+  "tarifsEtablissements": {
+    "hero": {
+      "badge": "School Pricing",
+      "title": "Equip your school with AI",
+      "titleHighlight": "from $1/student",
+      "subtitle": "23x cheaper than ChatGPT Team. Budget control, all models included.",
+      "stat": "$1/student/month",
+      "statNote": "for moderate use",
+      "benefit1": "Budget control",
+      "benefit2": "Secure data",
+      "benefit3": "All students equipped"
+    },
+    "tiers": {
+      "title": "Plans",
+      "subtitle": "Choose the plan that fits your school",
+      "popular": "Popular",
+      "cta": "Contact us",
+      "custom": "Need a custom plan? Contact us at contact@iaiaz.com",
+      "pilot": {
+        "name": "Pilot",
+        "students": "1-30 students",
+        "price": "$29/month",
+        "priceNote": "Ideal for testing",
+        "setup": "+ $49 setup",
+        "feature1": "Up to 30 students",
+        "feature2": "Basic dashboard",
+        "feature3": "Email support"
+      },
+      "class": {
+        "name": "Classroom",
+        "students": "31-100 students",
+        "price": "$99/month",
+        "priceNote": "Our best offer",
+        "setup": "+ $149 setup",
+        "feature1": "Up to 100 students",
+        "feature2": "Teacher dashboard",
+        "feature3": "Usage reports",
+        "feature4": "Priority support"
+      },
+      "school": {
+        "name": "School",
+        "students": "101-500 students",
+        "price": "$499/month",
+        "priceNote": "For large institutions",
+        "setup": "+ $499 setup",
+        "feature1": "Up to 500 students",
+        "feature2": "Multiple admins",
+        "feature3": "Per-class limits",
+        "feature4": "Dedicated onboarding",
+        "feature5": "Account manager"
+      }
+    },
+    "features": {
+      "title": "What's included",
+      "budget": {
+        "title": "Budget control",
+        "description": "Set limits per student or class. No surprises."
+      },
+      "management": {
+        "title": "Centralized management",
+        "description": "One dashboard to manage all students and track usage."
+      },
+      "models": {
+        "title": "All models",
+        "description": "GPT-5, Claude, Gemini, Mistral - students have access to the best models."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "How does billing work?",
+      "a1": "Fixed monthly subscription + AI credits consumed. You control your budget with per-student limits.",
+      "q2": "Can we start with just one class?",
+      "a2": "Yes, the Pilot plan is perfect for testing with one class before scaling up.",
+      "q3": "Are credits pooled?",
+      "a3": "Yes, you buy a pool of credits shared among all students, with optional individual limits.",
+      "q4": "How much does usage cost per student?",
+      "a4": "On average, a student uses ~$2 of credits per semester with moderate use, about $1/month total."
+    },
+    "cta": {
+      "title": "Ready to equip your school?",
+      "subtitle": "Contact us for a personalized demo.",
+      "button": "Request a demo",
+      "compare": "View comparison"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "pricing": "Pricing",
+      "schools": "Schools"
+    }
+  },
+  "tarifsFormateurs": {
+    "hero": {
+      "badge": "Trainer Pricing",
+      "title": "Pedagogical analytics included",
+      "subtitle": "Give your students AI access and get insights on their usage."
+    },
+    "pricing": {
+      "usage": {
+        "title": "Student usage",
+        "price": "$0.02-0.05",
+        "unit": "per question",
+        "description": "Students pay what they use. ~$50 per class/semester."
+      },
+      "analytics": {
+        "title": "Teacher analytics",
+        "price": "$4.90",
+        "unit": "/ month / class",
+        "description": "Dashboard, automatic insights, pedagogical alerts.",
+        "badge": "Added value"
+      },
+      "setup": {
+        "title": "Setup",
+        "price": "Free",
+        "description": "Classroom setup and onboarding included."
+      },
+      "feature1": "All AI models included",
+      "feature2": "Weekly automatic insights",
+      "feature3": "No commitment, cancel anytime"
+    },
+    "example": {
+      "title": "Cost example",
+      "class": "Class of",
+      "students": "students",
+      "questions": "Questions per student",
+      "perStudent": "per student",
+      "usageCost": "Usage cost",
+      "analyticsCost": "Analytics cost (5 months)",
+      "total": "Total semester",
+      "semester": "semester",
+      "note": "Estimate based on ~50 questions per student per semester"
+    },
+    "value": {
+      "title": "What you get",
+      "insight1": {
+        "title": "Visibility on questions",
+        "description": "See which topics are most asked by your students"
+      },
+      "insight2": {
+        "title": "Gap identification",
+        "description": "Spot concepts that are problematic before exams"
+      },
+      "insight3": {
+        "title": "Individual tracking",
+        "description": "Identify students not using the tool or struggling"
+      },
+      "insight4": {
+        "title": "Course adaptation",
+        "description": "Adjust your teaching in real-time based on observed needs"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "Who pays for student usage?",
+      "a1": "Students can pay themselves, or you can allocate a budget per class from your account.",
+      "q2": "Can I see my students' conversations?",
+      "a2": "By default, you see aggregate statistics (topics, frequency). Access to individual conversations is optional and requires student consent.",
+      "q3": "How does analytics billing work?",
+      "a3": "$4.90/month per active class. A class is considered active once a student uses the tool.",
+      "q4": "Can I try before committing?",
+      "a4": "Yes, setup is free and you can cancel anytime. Start with one class to test."
+    },
+    "cta": {
+      "title": "Try with your class",
+      "subtitle": "Create your space in 5 minutes. Free setup, no commitment.",
+      "button": "Create my classroom",
+      "compare": "View comparison"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "pricing": "Pricing",
+      "trainers": "Trainers"
+    }
+  },
+  "comparatifEtudiants": {
+    "hero": {
+      "badge": "Student Comparison",
+      "title": "iaiaz vs ChatGPT Plus",
+      "subtitle": "Why pay $20/month when a few dollars is enough?",
+      "save": "Up to 90% savings",
+      "models": "4 AI models included"
+    },
+    "table": {
+      "title": "Detailed comparison",
+      "feature": "Criteria",
+      "payAsYouGo": "Pay-as-you-go",
+      "price": "Monthly price",
+      "priceIaiaz": "~$2-5 (moderate use)",
+      "priceChatgpt": "$20/month fixed",
+      "models": "Available models",
+      "modelsIaiaz": "Claude, GPT-5, Gemini, Mistral",
+      "modelsChatgpt": "GPT-5 only",
+      "commitment": "Commitment",
+      "commitmentIaiaz": "Zero commitment",
+      "commitmentChatgpt": "Monthly subscription",
+      "freeCredits": "Free credits",
+      "freeCreditsIaiaz": "$1 on signup",
+      "freeCreditsChatgpt": "None",
+      "limit": "Message limit",
+      "limitIaiaz": "None (based on credits)",
+      "limitChatgpt": "80 messages/3h (GPT-5)"
+    },
+    "savings": {
+      "title": "Savings examples",
+      "light": {
+        "title": "Light usage",
+        "description": "A few questions per week",
+        "cost": "~$1-2/month",
+        "save": "Savings: 90%"
+      },
+      "regular": {
+        "title": "Regular usage",
+        "description": "Daily questions",
+        "cost": "~$5-8/month",
+        "save": "Savings: 60-75%"
+      },
+      "intensive": {
+        "title": "Intensive usage",
+        "description": "Studying, projects",
+        "cost": "~$12-15/month",
+        "save": "Savings: 25-40%"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "Is ChatGPT Plus really more expensive?",
+      "a1": "Yes, ChatGPT Plus costs a fixed $20/month whether you use it 5 times or 500 times. With iaiaz, you only pay for what you use.",
+      "q2": "Are the models as good?",
+      "a2": "iaiaz uses the same models as ChatGPT Plus (GPT-5), plus others like Claude which excels at writing and Gemini for long documents.",
+      "q3": "What if I use AI a lot?",
+      "a3": "Even with intensive use (~300 questions/month), you stay around $15, that's 25% savings. And you have access to more models."
+    },
+    "cta": {
+      "title": "Ready to save?",
+      "subtitle": "Create your account and get $1 free credit.",
+      "button": "Start for free",
+      "pricing": "View pricing"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "compare": "Compare",
+      "students": "Students"
+    }
+  },
+  "comparatifEtablissements": {
+    "hero": {
+      "badge": "School Comparison",
+      "title": "iaiaz vs ChatGPT Team",
+      "subtitle": "Equip all your students without breaking the budget"
+    },
+    "table": {
+      "title": "Offer comparison",
+      "feature": "Criteria",
+      "pricePerStudent": "Price per student/month",
+      "priceIaiaz": "~$1",
+      "priceChatgpt": "$23",
+      "minSeats": "Minimum licenses",
+      "minIaiaz": "1 student",
+      "minChatgpt": "2 users",
+      "budgetControl": "Budget control",
+      "budgetIaiaz": "Per-student limits",
+      "budgetChatgpt": "Fixed plan",
+      "multiModel": "Multi-model",
+      "multiIaiaz": "Claude, GPT, Gemini, Mistral",
+      "multiChatgpt": "GPT-5 only"
+    },
+    "benefits": {
+      "title": "Why choose iaiaz?",
+      "cost": {
+        "title": "23x cheaper",
+        "description": "$1/student/month vs $23/student/month with ChatGPT Team"
+      },
+      "flex": {
+        "title": "Total flexibility",
+        "description": "No minimum licenses, add students on demand"
+      },
+      "control": {
+        "title": "Budget control",
+        "description": "Set limits by class or student"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "Is ChatGPT Team really 23x more expensive?",
+      "a1": "Yes, ChatGPT Team costs $25/user/month (~$23). With iaiaz, subscription + credits comes to about $1/student/month for moderate use.",
+      "q2": "Are features comparable?",
+      "a2": "iaiaz offers more models (Claude, GPT-5, Gemini, Mistral), a pedagogical dashboard, and fine budget control. ChatGPT Team only offers GPT-5.",
+      "q3": "How does migration work?",
+      "a3": "We handle everything: account creation, configuration, teacher training. Setup takes 1-2 weeks."
+    },
+    "cta": {
+      "title": "Ready to equip your school?",
+      "subtitle": "Request a personalized demo.",
+      "button": "Request a demo",
+      "pricing": "View pricing"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "compare": "Compare",
+      "schools": "Schools"
+    }
+  },
+  "comparatifFormateurs": {
+    "hero": {
+      "badge": "Trainer Comparison",
+      "title": "Visible AI vs Invisible AI",
+      "subtitle": "Your students already use AI. The question is: do you know?"
+    },
+    "comparison": {
+      "without": {
+        "title": "Without iaiaz (Invisible AI)",
+        "point1": "Students use ChatGPT secretly",
+        "point2": "You don't know what they don't understand",
+        "point3": "Impossible to distinguish their work",
+        "point4": "No data to adapt your course"
+      },
+      "with": {
+        "title": "With iaiaz (Visible AI)",
+        "point1": "Official, transparent, approved tool",
+        "point2": "Dashboard of questions by topic",
+        "point3": "Identification of common gaps",
+        "point4": "Real-time course adaptation"
+      }
+    },
+    "value": {
+      "title": "What you gain",
+      "insight": {
+        "title": "Pedagogical insights",
+        "description": "See which topics are problematic before exams"
+      },
+      "gaps": {
+        "title": "Gap identification",
+        "description": "Spot concepts misunderstood by most"
+      },
+      "adapt": {
+        "title": "Course adaptation",
+        "description": "Adjust your teaching based on real needs"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "Doesn't visible AI encourage cheating?",
+      "a1": "On the contrary! By making AI visible, you can supervise its use and see how students use it. Invisible AI (hidden ChatGPT) encourages cheating because it's uncontrollable.",
+      "q2": "What exactly can I see?",
+      "a2": "By default: topics discussed, usage frequency, activity peaks. Optional (with consent): individual conversations.",
+      "q3": "How long does analysis take?",
+      "a3": "5 minutes per week is enough. The dashboard generates automatic insights and alerts you to important points."
+    },
+    "cta": {
+      "title": "Turn AI into a pedagogical advantage",
+      "subtitle": "Create your classroom space in 5 minutes.",
+      "button": "Create my classroom",
+      "pricing": "View pricing"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "compare": "Compare",
       "trainers": "Trainers"
     }
   },
@@ -1114,7 +1665,7 @@
       },
       "vsChatgpt": {
         "question": "What's the difference between iaiaz and ChatGPT Plus?",
-        "answer": "ChatGPT Plus costs €20/month whether you use it or not. With iaiaz, you pay per use: if you use AI 10 times a month, you pay a few cents, not €20. Plus, iaiaz gives you access to multiple models (Claude, GPT-4, Gemini, Mistral) instead of just one."
+        "answer": "ChatGPT Plus costs €20/month whether you use it or not. With iaiaz, you pay per use: if you use AI 10 times a month, you pay a few cents, not €20. Plus, iaiaz gives you access to multiple models (Claude, GPT-5, Gemini, Mistral) instead of just one."
       },
       "subscription": {
         "question": "Do I need a subscription to use iaiaz?",

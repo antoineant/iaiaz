@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Inscription gratuite - 1€ de crédits offerts",
   description:
-    "Créez votre compte iaiaz gratuitement et recevez 1€ de crédits pour tester. Accédez à Claude, GPT-4, Gemini et Mistral sans abonnement.",
+    "Créez votre compte iaiaz gratuitement et recevez 1€ de crédits pour tester. Accédez à Claude, GPT-5, Gemini et Mistral sans abonnement.",
   alternates: {
     canonical: "https://www.iaiaz.com/auth/signup",
   },

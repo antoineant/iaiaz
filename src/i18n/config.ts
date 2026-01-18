@@ -19,9 +19,33 @@ export const pathnames = {
     fr: '/tarifs',
     en: '/pricing',
   },
+  '/tarifs/etudiants': {
+    fr: '/tarifs/etudiants',
+    en: '/pricing/students',
+  },
+  '/tarifs/etablissements': {
+    fr: '/tarifs/etablissements',
+    en: '/pricing/schools',
+  },
+  '/tarifs/formateurs': {
+    fr: '/tarifs/formateurs',
+    en: '/pricing/trainers',
+  },
   '/comparatif': {
     fr: '/comparatif',
     en: '/compare',
+  },
+  '/comparatif/etudiants': {
+    fr: '/comparatif/etudiants',
+    en: '/compare/students',
+  },
+  '/comparatif/etablissements': {
+    fr: '/comparatif/etablissements',
+    en: '/compare/schools',
+  },
+  '/comparatif/formateurs': {
+    fr: '/comparatif/formateurs',
+    en: '/compare/trainers',
   },
   '/etudiants': {
     fr: '/etudiants',

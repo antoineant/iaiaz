@@ -8,14 +8,14 @@ interface LocaleProps {
 const localizedContent = {
   fr: {
     orgDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement. Accédez aux meilleurs modèles d'IA sans abonnement.",
-    productDescription: "Plateforme d'accès aux modèles d'IA (Claude, GPT-4, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez.",
+    productDescription: "Plateforme d'accès aux modèles d'IA (Claude, GPT-5, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez.",
     websiteDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
     freeCredits: "1€ de crédits offerts à l'inscription",
     starterPack: "5€ de crédits",
     regularPack: "10€ de crédits - Le plus populaire",
     powerPack: "20€ de crédits",
     features: [
-      "Accès à Claude, GPT-4, Gemini, Mistral",
+      "Accès à Claude, GPT-5, Gemini, Mistral",
       "Pas d'abonnement",
       "Paiement à l'usage",
       "Crédits sans expiration",
@@ -25,14 +25,14 @@ const localizedContent = {
   },
   en: {
     orgDescription: "Affordable AI Access, Zero commitment. Access the best AI models without subscription.",
-    productDescription: "Platform for accessing AI models (Claude, GPT-4, Gemini, Mistral) without subscription. Pay only for what you use.",
+    productDescription: "Platform for accessing AI models (Claude, GPT-5, Gemini, Mistral) without subscription. Pay only for what you use.",
     websiteDescription: "Affordable AI Access, Zero commitment",
     freeCredits: "$1 free credit on signup",
     starterPack: "$5 in credits",
     regularPack: "$10 in credits - Most popular",
     powerPack: "$20 in credits",
     features: [
-      "Access to Claude, GPT-4, Gemini, Mistral",
+      "Access to Claude, GPT-5, Gemini, Mistral",
       "No subscription",
       "Pay as you go",
       "Credits never expire",

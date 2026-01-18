@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown, GraduationCap, Building2, Users } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface HeaderProps {
@@ -13,18 +13,35 @@ interface HeaderProps {
 
 export function Header({ showAuthButtons = true }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [audienceDropdownOpen, setAudienceDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const t = useTranslations("common");
 
-  const navLinks = [
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setAudienceDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const mainNavLinks = [
     { href: "/tarifs" as const, label: t("nav.pricing") },
     { href: "/comparatif" as const, label: t("nav.compare") },
-    { href: "/etudiants" as const, label: t("nav.students") },
-    { href: "/etablissements" as const, label: t("nav.schools") },
-    { href: "/formateurs" as const, label: t("nav.trainers") },
+  ];
+
+  const audienceLinks = [
+    { href: "/etudiants" as const, label: t("nav.students"), icon: GraduationCap },
+    { href: "/etablissements" as const, label: t("nav.schools"), icon: Building2 },
+    { href: "/formateurs" as const, label: t("nav.trainers"), icon: Users },
   ];
 
   const isActive = (href: string) => pathname === href;
+  const isAudienceActive = audienceLinks.some(link => isActive(link.href));
 
   return (
     <>
@@ -40,7 +57,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
+            {mainNavLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -53,6 +70,45 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                 {link.label}
               </Link>
             ))}
+
+            {/* Audience Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setAudienceDropdownOpen(!audienceDropdownOpen)}
+                className={`flex items-center gap-1 text-sm transition-colors ${
+                  isAudienceActive
+                    ? "text-primary-600 dark:text-primary-400 font-medium"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                }`}
+              >
+                {t("nav.forWhom")}
+                <ChevronDown className={`w-4 h-4 transition-transform ${audienceDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {audienceDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 bg-[var(--background)] border border-[var(--border)] rounded-lg shadow-lg py-2 z-50">
+                  {audienceLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setAudienceDropdownOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                          isActive(link.href)
+                            ? "bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 font-medium"
+                            : "text-[var(--foreground)] hover:bg-[var(--muted)]"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 text-[var(--muted-foreground)]" />
+                        {link.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             {showAuthButtons && (
               <>
                 <Link
@@ -123,7 +179,8 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
               >
                 {t("nav.home")}
               </Link>
-              {navLinks.map((link) => (
+
+              {mainNavLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -137,6 +194,31 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
                   {link.label}
                 </Link>
               ))}
+
+              {/* Audience Section */}
+              <div className="pt-2">
+                <p className="px-4 py-2 text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider">
+                  {t("nav.forWhom")}
+                </p>
+                {audienceLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition-colors ${
+                        isActive(link.href)
+                          ? "bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 font-medium"
+                          : "text-[var(--foreground)] hover:bg-[var(--muted)]"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5 text-[var(--muted-foreground)]" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
 
               {/* Divider */}
               <div className="my-4 border-t border-[var(--border)]" />
