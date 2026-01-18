@@ -1085,8 +1085,12 @@
     "creditPreference": {
       "title": "Préférences de crédits",
       "description": "Choisissez comment utiliser vos crédits lorsque vous êtes membre d'une organisation.",
-      "orgBalance": "Crédits organisation",
-      "personalBalance": "Crédits personnels",
+      "orgCredits": "Crédits organisation",
+      "personal": "Personnel",
+      "personalCredits": "Crédits personnels",
+      "preferenceLabel": "Utiliser les crédits de :",
+      "recommended": "Recommandé",
+      "savePreference": "Enregistrer",
       "options": {
         "auto": "Automatique (recommandé)",
         "autoDescription": "Utilise d'abord les crédits de l'organisation, puis les personnels si nécessaire.",
@@ -1098,8 +1102,7 @@
         "orgOnlyDescription": "Utilise uniquement les crédits de l'organisation. Bloqué si épuisés.",
         "personalOnly": "Personnel uniquement",
         "personalOnlyDescription": "Utilise uniquement les crédits personnels. Ignore l'organisation."
-      },
-      "savePreference": "Enregistrer"
+      }
     }
   }
 }

@@ -279,31 +279,57 @@
   },
   "settings": {
     "title": "Settings",
+    "backToDashboard": "Back to dashboard",
     "profile": {
       "title": "Profile",
       "avatar": "Profile picture",
-      "uploadAvatar": "Upload a picture",
-      "removeAvatar": "Remove",
+      "uploadPhoto": "Upload",
+      "removePhoto": "Remove",
+      "avatarHint": "PNG, JPG, GIF or WebP. Max 5 MB.",
       "displayName": "Display name",
       "displayNamePlaceholder": "Your name",
       "email": "Email",
-      "changeEmail": "Change email",
-      "saveProfile": "Save"
+      "save": "Save"
     },
     "security": {
       "title": "Security",
+      "password": "Password",
       "changePassword": "Change password",
       "currentPassword": "Current password",
+      "currentPasswordPlaceholder": "Enter your current password",
       "newPassword": "New password",
+      "newPasswordPlaceholder": "Minimum 6 characters",
       "confirmPassword": "Confirm password",
-      "passwordRequirements": "At least 6 characters",
-      "updatePassword": "Update password"
+      "confirmPasswordPlaceholder": "Confirm your new password",
+      "savePassword": "Save",
+      "cancel": "Cancel",
+      "passwordChanged": "Password changed successfully",
+      "currentPasswordRequired": "Current password is required",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "changeFailed": "Change failed",
+      "email": "Email",
+      "changeEmail": "Change email",
+      "newEmail": "New email",
+      "newEmailPlaceholder": "your@email.com",
+      "emailChangeNote": "A verification email will be sent to the new address",
+      "sendVerification": "Send verification",
+      "emailRequired": "Email is required",
+      "invalidEmail": "Invalid email format",
+      "sameEmail": "New email must be different",
+      "verificationSent": "Verification email sent",
+      "verificationSentDescription": "Check your inbox at {email}",
+      "done": "Done"
     },
     "creditPreference": {
       "title": "Credit preferences",
       "description": "Choose how to use your credits when you are a member of an organization.",
-      "orgBalance": "Organization credits",
-      "personalBalance": "Personal credits",
+      "orgCredits": "Organization credits",
+      "personal": "Personal",
+      "personalCredits": "Personal credits",
+      "preferenceLabel": "Use credits from:",
+      "recommended": "Recommended",
+      "savePreference": "Save",
       "options": {
         "auto": "Automatic (recommended)",
         "autoDescription": "Use organization credits first, then personal credits if necessary.",
@@ -315,34 +341,7 @@
         "orgOnlyDescription": "Only use organization credits. Will be blocked if exhausted.",
         "personalOnly": "Personal only",
         "personalOnlyDescription": "Only use personal credits. Ignore organization credits."
-      },
-      "savePreference": "Save"
-    },
-    "emailChange": {
-      "title": "Change email",
-      "newEmail": "New email",
-      "newEmailPlaceholder": "new@email.com",
-      "notice": "A verification link will be sent to the new address.",
-      "submit": "Send verification",
-      "success": "Verification email sent! Check your inbox."
-    },
-    "messages": {
-      "profileSaved": "Profile saved successfully.",
-      "passwordChanged": "Password changed successfully.",
-      "preferenceSaved": "Preferences saved successfully.",
-      "avatarUploaded": "Picture uploaded successfully.",
-      "avatarRemoved": "Picture removed."
-    },
-    "errors": {
-      "loadFailed": "Failed to load settings.",
-      "saveFailed": "Failed to save.",
-      "passwordMismatch": "Passwords do not match.",
-      "currentPasswordRequired": "Current password is required.",
-      "passwordTooShort": "Password must be at least 6 characters.",
-      "invalidEmail": "Invalid email address.",
-      "uploadFailed": "Failed to upload picture.",
-      "fileTooLarge": "File too large (max 2 MB).",
-      "invalidFileType": "Invalid file type. Use PNG, JPG or WebP."
+      }
     }
   },
   "credits": {

@@ -23,24 +23,24 @@ const PREFERENCE_OPTIONS: {
 }[] = [
   {
     value: "auto",
-    labelKey: "auto",
-    descriptionKey: "autoDescription",
+    labelKey: "options.auto",
+    descriptionKey: "options.autoDescription",
     recommended: true,
   },
   {
     value: "org_only",
-    labelKey: "orgOnly",
-    descriptionKey: "orgOnlyDescription",
+    labelKey: "options.orgOnly",
+    descriptionKey: "options.orgOnlyDescription",
   },
   {
     value: "personal_only",
-    labelKey: "personalOnly",
-    descriptionKey: "personalOnlyDescription",
+    labelKey: "options.personalOnly",
+    descriptionKey: "options.personalOnlyDescription",
   },
   {
     value: "personal_first",
-    labelKey: "personalFirst",
-    descriptionKey: "personalFirstDescription",
+    labelKey: "options.personalFirst",
+    descriptionKey: "options.personalFirstDescription",
   },
 ];
 
@@ -51,7 +51,7 @@ export function CreditPreferenceSelector({
   personalBalance,
   onPreferenceChange,
 }: CreditPreferenceSelectorProps) {
-  const t = useTranslations("settings.credits");
+  const t = useTranslations("settings.creditPreference");
   const [selected, setSelected] = useState<CreditPreference>(currentPreference);
   const [isSaving, setIsSaving] = useState(false);
   const [success, setSuccess] = useState(false);
