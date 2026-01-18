@@ -198,15 +198,26 @@ export default async function EtablissementsPage({ params }: Props) {
 
         {/* Pricing Models */}
         <section className="max-w-6xl mx-auto px-4 py-16">
-          <h2 className="text-2xl font-bold text-center mb-4">
-            {t("pricing.title")}
-          </h2>
-          <p className="text-center text-[var(--muted-foreground)] mb-4 max-w-xl mx-auto">
-            {t("pricing.subtitle")}
-          </p>
-          <p className="text-center text-sm text-primary-600 dark:text-primary-400 font-medium mb-12">
-            {t("pricing.creditsNote")}
-          </p>
+          {/* Big highlight */}
+          <div className="text-center mb-8">
+            <div className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-3 rounded-2xl mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold">
+                {t("pricing.title")}
+              </h2>
+              <p className="text-primary-100 text-lg font-medium">
+                {t("pricing.titleHighlight")}
+              </p>
+            </div>
+            <p className="text-[var(--muted-foreground)] max-w-xl mx-auto mb-2">
+              {t("pricing.subtitle")}
+            </p>
+            <p className="text-sm text-primary-600 dark:text-primary-400 font-medium mb-2">
+              {t("pricing.creditsNote")}
+            </p>
+            <p className="text-xs text-[var(--muted-foreground)]">
+              {t("pricing.comparisonNote")}
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Pilot */}
@@ -225,9 +236,12 @@ export default async function EtablissementsPage({ params }: Props) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.annualFee")}</div>
-                    <div className="text-lg font-semibold text-green-600 dark:text-green-400">
-                      {t("pricing.pilot.annualNote")}
+                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
+                    <div className="text-lg font-semibold">
+                      {t("pricing.pilot.monthlyPrice")}€{t("pricing.perMonth")}
+                    </div>
+                    <div className="text-xs text-[var(--muted-foreground)]">
+                      {t("pricing.perStudent")}
                     </div>
                   </div>
                 </div>
@@ -275,9 +289,12 @@ export default async function EtablissementsPage({ params }: Props) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.annualFee")}</div>
+                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
                     <div className="text-lg font-semibold">
-                      {t("pricing.class.annualPrice")}€{t("pricing.perYear")}
+                      {t("pricing.class.monthlyPrice")}€{t("pricing.perMonth")}
+                    </div>
+                    <div className="text-xs text-[var(--muted-foreground)]">
+                      {t("pricing.perStudent")}
                     </div>
                   </div>
                 </div>
@@ -326,9 +343,12 @@ export default async function EtablissementsPage({ params }: Props) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.annualFee")}</div>
+                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
                     <div className="text-lg font-semibold">
-                      {t("pricing.school.annualPrice")}€{t("pricing.perYear")}
+                      {t("pricing.school.monthlyPrice")}€{t("pricing.perMonth")}
+                    </div>
+                    <div className="text-xs text-[var(--muted-foreground)]">
+                      {t("pricing.perStudent")}
                     </div>
                   </div>
                 </div>
@@ -373,13 +393,16 @@ export default async function EtablissementsPage({ params }: Props) {
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
                     <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {t("pricing.institution.price")}
+                      {t("pricing.institution.setupPrice")}€
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.annualFee")}</div>
+                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
                     <div className="text-lg font-semibold">
                       {t("pricing.institution.price")}
+                    </div>
+                    <div className="text-xs text-[var(--muted-foreground)]">
+                      {t("pricing.perStudent")}
                     </div>
                   </div>
                 </div>
