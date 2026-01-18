@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { GraduationCap, Building2, Users, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { BreadcrumbSchema } from "@/components/seo/structured-data";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
@@ -39,7 +40,6 @@ export default async function TarifsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("tarifsSelector");
-  const tHome = await getTranslations("home");
 
   const baseUrl = "https://www.iaiaz.com";
 
@@ -146,36 +146,7 @@ export default async function TarifsPage({ params }: Props) {
         </p>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--border)] py-8 px-4 mt-16">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-center md:text-left">
-            <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
-            <p className="text-xs text-[var(--muted-foreground)]">
-              {tHome("footer.tagline")}
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-sm text-[var(--muted-foreground)]">
-              {tHome("footer.copyright")}
-            </p>
-          </div>
-          <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
-            <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">
-              {tHome("footer.cgu")}
-            </Link>
-            <Link href="/legal/cgv" className="hover:text-[var(--foreground)]">
-              {tHome("footer.cgv")}
-            </Link>
-            <Link href="/legal/privacy" className="hover:text-[var(--foreground)]">
-              {tHome("footer.privacy")}
-            </Link>
-            <Link href="/legal/cookies" className="hover:text-[var(--foreground)]">
-              {tHome("footer.cookies")}
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

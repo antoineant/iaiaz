@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
 
 type Props = {
@@ -56,7 +57,6 @@ export default async function EtablissementsPage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations("etablissements");
-  const tHome = await getTranslations("home");
 
   // Build FAQs from translations
   const faqs = [
@@ -567,50 +567,7 @@ export default async function EtablissementsPage({ params }: Props) {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--border)] py-8 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-center md:text-left">
-            <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
-            <p className="text-xs text-[var(--muted-foreground)]">
-              {tHome("footer.tagline")}
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-sm text-[var(--muted-foreground)]">
-              {tHome("footer.copyright")}
-            </p>
-            <p className="text-xs text-[var(--muted-foreground)] mt-1">
-              {tHome("footer.madeIn")}
-            </p>
-            <p className="text-xs text-[var(--muted-foreground)] mt-1">
-              {tHome("footer.madeBy")}{" "}
-              <a
-                href="https://www.girafestudio.fr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-600 dark:text-primary-400 hover:underline"
-              >
-                {tHome("footer.madeByStudio")}
-              </a>
-            </p>
-          </div>
-          <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
-            <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">
-              {tHome("footer.cgu")}
-            </Link>
-            <Link href="/legal/cgv" className="hover:text-[var(--foreground)]">
-              {tHome("footer.cgv")}
-            </Link>
-            <Link href="/legal/privacy" className="hover:text-[var(--foreground)]">
-              {tHome("footer.privacy")}
-            </Link>
-            <Link href="/legal/cookies" className="hover:text-[var(--foreground)]">
-              {tHome("footer.cookies")}
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
