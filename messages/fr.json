@@ -325,7 +325,10 @@
       "errors": {
         "passwordMismatch": "Les mots de passe ne correspondent pas",
         "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
-        "emailInUse": "Cet email est déjà utilisé"
+        "emailInUse": "Cet email est déjà utilisé",
+        "disposableEmail": "Veuillez utiliser une adresse email valide (les emails temporaires ne sont pas acceptés)",
+        "tooManyAttempts": "Trop de tentatives d'inscription. Veuillez réessayer plus tard.",
+        "generic": "Une erreur est survenue. Veuillez réessayer."
       }
     },
     "forgotPassword": {

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -36,27 +35,36 @@ export default function SignupPage() {
 
     setIsLoading(true);
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (error) {
-      if (error.message.includes("already registered")) {
-        setError(t("errors.emailInUse"));
-      } else {
-        setError(error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle specific error codes with translations
+        if (data.code === "DISPOSABLE_EMAIL") {
+          setError(t("errors.disposableEmail"));
+        } else if (data.code === "RATE_LIMITED") {
+          setError(t("errors.tooManyAttempts"));
+        } else if (data.code === "EMAIL_EXISTS") {
+          setError(t("errors.emailInUse"));
+        } else {
+          setError(data.error || t("errors.generic"));
+        }
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
-      return;
-    }
 
-    setIsSuccess(true);
-    setIsLoading(false);
+      setIsSuccess(true);
+    } catch {
+      setError(t("errors.generic"));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {
