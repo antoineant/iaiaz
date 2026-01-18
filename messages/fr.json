@@ -170,7 +170,8 @@
         "chatgptPlus": "Abonnement ChatGPT Plus",
         "chatgptPlusNote": "Même si vous ne l'utilisez que 5 fois",
         "iaiazAvg": "Avec iaiaz (usage moyen étudiant)",
-        "iaiazAvgNote": "Vous payez exactement ce que vous utilisez"
+        "iaiazAvgNote": "Vous payez exactement ce que vous utilisez",
+        "perMonth": "/mois"
       }
     },
     "features": {
@@ -1485,7 +1486,7 @@
     "faq": {
       "title": "Questions fréquentes",
       "q1": "ChatGPT Team est-il vraiment 23x plus cher ?",
-      "a1": "Oui, ChatGPT Team coûte $25/utilisateur/mois (soit ~23€). Avec iaiaz, l'abonnement + crédits revient à environ 1€/élève/mois pour un usage modéré.",
+      "a1": "Oui, ChatGPT Team coûte ~23€/utilisateur/mois. Avec iaiaz, l'abonnement + crédits revient à environ 1€/élève/mois pour un usage modéré.",
       "q2": "Les fonctionnalités sont-elles comparables ?",
       "a2": "iaiaz offre plus de modèles (Claude, GPT-5, Gemini, Mistral), un tableau de bord pédagogique, et un contrôle fin du budget. ChatGPT Team n'offre que GPT-5.",
       "q3": "Comment se passe la migration ?",

@@ -43,6 +43,9 @@ export default async function HomePage({ params }: Props) {
   const otherModels = allModels.filter((m) => !m.is_recommended);
   const displayModels = [...recommendedModels, ...otherModels].slice(0, 4);
 
+  // Currency symbol based on locale
+  const currencySymbol = locale === "fr" ? "€" : "$";
+
   return (
     <div className="min-h-screen">
       {/* Structured Data for SEO */}
@@ -283,7 +286,7 @@ export default async function HomePage({ params }: Props) {
                     <p className="text-sm text-[var(--muted-foreground)]">
                       {t("howItWorks.realCosts.simpleQuestionExample")}
                     </p>
-                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~$0.01</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~{currencySymbol}0.01</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
@@ -293,7 +296,7 @@ export default async function HomePage({ params }: Props) {
                     <p className="text-sm text-[var(--muted-foreground)]">
                       {t("howItWorks.realCosts.reviewTextExample")}
                     </p>
-                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~$0.03</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~{currencySymbol}0.03</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
@@ -303,7 +306,7 @@ export default async function HomePage({ params }: Props) {
                     <p className="text-sm text-[var(--muted-foreground)]">
                       {t("howItWorks.realCosts.debugCodeExample")}
                     </p>
-                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~$0.02</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~{currencySymbol}0.02</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--muted)]">
@@ -313,7 +316,7 @@ export default async function HomePage({ params }: Props) {
                     <p className="text-sm text-[var(--muted-foreground)]">
                       {t("howItWorks.realCosts.prepareExamExample")}
                     </p>
-                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~$0.15</p>
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">~{currencySymbol}0.15</p>
                   </div>
                 </div>
               </div>
@@ -329,14 +332,14 @@ export default async function HomePage({ params }: Props) {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="text-center p-4">
                   <p className="text-sm text-[var(--muted-foreground)] mb-2">{t("howItWorks.comparison.chatgptPlus")}</p>
-                  <p className="text-3xl font-bold text-red-500">$20<span className="text-base font-normal">/mo</span></p>
+                  <p className="text-3xl font-bold text-red-500">{currencySymbol}20<span className="text-base font-normal">{t("howItWorks.comparison.perMonth")}</span></p>
                   <p className="text-sm text-[var(--muted-foreground)] mt-2">
                     {t("howItWorks.comparison.chatgptPlusNote")}
                   </p>
                 </div>
                 <div className="text-center p-4">
                   <p className="text-sm text-[var(--muted-foreground)] mb-2">{t("howItWorks.comparison.iaiazAvg")}</p>
-                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">$2-5<span className="text-base font-normal">/mo</span></p>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">{currencySymbol}2-5<span className="text-base font-normal">{t("howItWorks.comparison.perMonth")}</span></p>
                   <p className="text-sm text-[var(--muted-foreground)] mt-2">
                     {t("howItWorks.comparison.iaiazAvgNote")}
                   </p>

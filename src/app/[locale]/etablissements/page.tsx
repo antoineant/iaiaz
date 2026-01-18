@@ -57,6 +57,7 @@ export default async function EtablissementsPage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations("etablissements");
+  const currencySymbol = locale === "fr" ? "€" : "$";
 
   // Build FAQs from translations
   const faqs = [
@@ -249,13 +250,13 @@ export default async function EtablissementsPage({ params }: Props) {
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
                     <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {t("pricing.pilot.setupPrice")}€
+                      {currencySymbol}{t("pricing.pilot.setupPrice")}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
                     <div className="text-lg font-semibold">
-                      {t("pricing.pilot.monthlyPrice")}€{t("pricing.perMonth")}
+                      {currencySymbol}{t("pricing.pilot.monthlyPrice")}{t("pricing.perMonth")}
                     </div>
                     <div className="text-xs text-[var(--muted-foreground)]">
                       {t("pricing.perStudent")}
@@ -308,7 +309,7 @@ export default async function EtablissementsPage({ params }: Props) {
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
                     <div className="text-lg font-semibold">
-                      {t("pricing.class.monthlyPrice")}€{t("pricing.perMonth")}
+                      {currencySymbol}{t("pricing.class.monthlyPrice")}{t("pricing.perMonth")}
                     </div>
                     <div className="text-xs text-[var(--muted-foreground)]">
                       {t("pricing.perStudent")}
@@ -362,7 +363,7 @@ export default async function EtablissementsPage({ params }: Props) {
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
                     <div className="text-lg font-semibold">
-                      {t("pricing.school.monthlyPrice")}€{t("pricing.perMonth")}
+                      {currencySymbol}{t("pricing.school.monthlyPrice")}{t("pricing.perMonth")}
                     </div>
                     <div className="text-xs text-[var(--muted-foreground)]">
                       {t("pricing.perStudent")}

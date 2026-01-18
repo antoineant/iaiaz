@@ -45,6 +45,9 @@ export default async function TarifsFormateursPage({ params }: Props) {
   const t = await getTranslations("tarifsFormateurs");
 
   const baseUrl = "https://www.iaiaz.com";
+  const currencySymbol = locale === "fr" ? "€" : "$";
+  const analyticsPrice = locale === "fr" ? "4,90" : "4.90";
+  const analyticsTotalPrice = locale === "fr" ? "24,50" : "24.50";
 
   const faqs = [
     { question: t("faq.q1"), answer: t("faq.a1") },
@@ -172,15 +175,15 @@ export default async function TarifsFormateursPage({ params }: Props) {
               </div>
               <div className="flex justify-between items-center py-2 border-b border-[var(--border)]">
                 <span>{t("example.usageCost")}</span>
-                <span className="font-medium">~50€ / {t("example.semester")}</span>
+                <span className="font-medium">~{currencySymbol}50 / {t("example.semester")}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-[var(--border)]">
                 <span>{t("example.analyticsCost")}</span>
-                <span className="font-medium">4,90€ x 5 = 24,50€</span>
+                <span className="font-medium">{currencySymbol}{analyticsPrice} x 5 = {currencySymbol}{analyticsTotalPrice}</span>
               </div>
               <div className="flex justify-between items-center py-4 bg-primary-50 dark:bg-primary-950/30 rounded-lg px-4 -mx-4">
                 <span className="font-bold">{t("example.total")}</span>
-                <span className="font-bold text-xl text-primary-600 dark:text-primary-400">~75€ / {t("example.semester")}</span>
+                <span className="font-bold text-xl text-primary-600 dark:text-primary-400">~{currencySymbol}75 / {t("example.semester")}</span>
               </div>
             </div>
             <p className="text-center text-sm text-[var(--muted-foreground)] mt-4">

@@ -170,7 +170,8 @@
         "chatgptPlus": "ChatGPT Plus subscription",
         "chatgptPlusNote": "Even if you only use it 5 times",
         "iaiazAvg": "With iaiaz (average student use)",
-        "iaiazAvgNote": "You pay exactly what you use"
+        "iaiazAvgNote": "You pay exactly what you use",
+        "perMonth": "/mo"
       }
     },
     "features": {
@@ -890,7 +891,7 @@
       }
     },
     "pricing": {
-      "title": "€1 per student per month",
+      "title": "$1 per student per month",
       "titleHighlight": "23x cheaper than ChatGPT",
       "subtitle": "Free setup + monthly subscription. AI credits are purchased separately based on your needs.",
       "popular": "Recommended",
@@ -898,9 +899,9 @@
       "setupFree": "Free",
       "monthlyFee": "Monthly subscription",
       "perMonth": "/month",
-      "perStudent": "~€1/student",
+      "perStudent": "~$1/student",
       "creditsNote": "+ AI credits based on actual usage",
-      "comparisonNote": "ChatGPT Team = €23/student/month",
+      "comparisonNote": "ChatGPT Team = $25/student/month",
       "pilot": {
         "title": "Pilot",
         "students": "1-30 students",
@@ -1097,13 +1098,13 @@
       "subtitle": "Simple access to AI power + valuable pedagogical insights.",
       "studentUsage": {
         "title": "Student usage",
-        "price": "€0.02-0.05",
+        "price": "$0.02-0.05",
         "unit": "per question",
-        "description": "Students pay what they use. ~€50 per class/semester."
+        "description": "Students pay what they use. ~$50 per class/semester."
       },
       "analytics": {
         "title": "Teacher analytics",
-        "price": "€4.90",
+        "price": "$4.90",
         "unit": "/ month / class",
         "description": "Dashboard, automatic insights, pedagogical alerts.",
         "badge": "Added value"
@@ -1124,7 +1125,7 @@
       "q2": "\"I want to ban AI\"",
       "a2": "You can't enforce it. But you can channel it: an official tool, transparent, with clear rules.",
       "q3": "\"It's too expensive\"",
-      "a3": "€0.02-0.05 per question. A class of 30 students costs about €50 per semester. Less than a textbook.",
+      "a3": "$0.02-0.05 per question. A class of 30 students costs about $50 per semester. Less than a textbook.",
       "q4": "\"I don't have time to monitor\"",
       "a4": "The dashboard shows patterns automatically. 5 minutes per week is enough to identify gaps."
     },
@@ -1132,7 +1133,7 @@
       "title": "Try it with your class",
       "subtitle": "Create your space in 5 minutes. No subscription, no commitment.",
       "button": "Create my classroom",
-      "bonus": "€1 free credits per student to get started"
+      "bonus": "$1 free credits per student to get started"
     },
     "breadcrumb": {
       "home": "Home",
@@ -1667,11 +1668,11 @@
     "items": {
       "cost": {
         "question": "How much does iaiaz cost?",
-        "answer": "iaiaz works without a subscription. You buy credits (starting from €1) and pay only for what you use. A simple question costs about €0.01 to €0.02 depending on the model. We offer €1 free credits on signup to try it out."
+        "answer": "iaiaz works without a subscription. You buy credits (starting from $1) and pay only for what you use. A simple question costs about $0.01 to $0.02 depending on the model. We offer $1 free credits on signup to try it out."
       },
       "vsChatgpt": {
         "question": "What's the difference between iaiaz and ChatGPT Plus?",
-        "answer": "ChatGPT Plus costs €20/month whether you use it or not. With iaiaz, you pay per use: if you use AI 10 times a month, you pay a few cents, not €20. Plus, iaiaz gives you access to multiple models (Claude, GPT-5, Gemini, Mistral) instead of just one."
+        "answer": "ChatGPT Plus costs $20/month whether you use it or not. With iaiaz, you pay per use: if you use AI 10 times a month, you pay a few cents, not $20. Plus, iaiaz gives you access to multiple models (Claude, GPT-5, Gemini, Mistral) instead of just one."
       },
       "subscription": {
         "question": "Do I need a subscription to use iaiaz?",
@@ -1683,7 +1684,7 @@
       },
       "credits": {
         "question": "How does the credit system work?",
-        "answer": "Each message uses credits based on the model used and conversation length. The cost is shown in real-time before sending your message. For example, a simple question with Claude Sonnet costs about €0.015."
+        "answer": "Each message uses credits based on the model used and conversation length. The cost is shown in real-time before sending your message. For example, a simple question with Claude Sonnet costs about $0.015."
       },
       "privacy": {
         "question": "Is my data protected?",
@@ -1695,7 +1696,7 @@
       },
       "freeCredits": {
         "question": "How do I get my free credits?",
-        "answer": "Simply create an account on iaiaz. Once your email is verified, €1 in credits is automatically added to your account. No credit card required for signup."
+        "answer": "Simply create an account on iaiaz. Once your email is verified, $1 in credits is automatically added to your account. No credit card required for signup."
       },
       "expiration": {
         "question": "Do credits expire?",

@@ -174,7 +174,7 @@ export default async function TarifsEtudiantsPage({ params }: Props) {
           <h2 className="text-2xl font-bold text-center mb-8">
             {t("calculator.title")}
           </h2>
-          <PricingCalculator models={models} markupMultiplier={markupMultiplier} />
+          <PricingCalculator models={models} markupMultiplier={markupMultiplier} locale={locale} />
         </section>
 
         {/* Pricing Tables by Provider */}

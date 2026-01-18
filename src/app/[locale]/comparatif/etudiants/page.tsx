@@ -45,6 +45,8 @@ export default async function ComparatifEtudiantsPage({ params }: Props) {
   const t = await getTranslations("comparatifEtudiants");
 
   const baseUrl = "https://www.iaiaz.com";
+  const currencySymbol = locale === "fr" ? "€" : "$";
+  const perMonth = locale === "fr" ? "/mois" : "/mo";
 
   const faqs = [
     { question: t("faq.q1"), answer: t("faq.a1") },
@@ -112,7 +114,7 @@ export default async function ComparatifEtudiantsPage({ params }: Props) {
                       </th>
                       <th className="text-center p-4">
                         <div className="font-bold">ChatGPT Plus</div>
-                        <div className="text-sm text-[var(--muted-foreground)]">$20/mois</div>
+                        <div className="text-sm text-[var(--muted-foreground)]">{currencySymbol}20{perMonth}</div>
                       </th>
                     </tr>
                   </thead>
