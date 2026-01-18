@@ -25,6 +25,13 @@
       "keywords": "ai for schools, chatgpt university, ai education, gpt-4 education, claude education, ai training, chatgpt school, group ai license",
       "ogTitle": "iaiaz for Schools - AI Made Accessible for Education",
       "ogDescription": "Equip your students with the best AI models. No per-student subscription."
+    },
+    "formateurs": {
+      "title": "Pedagogical Analytics - Understand How Your Students Use AI",
+      "description": "Dashboard for trainers: track your students' AI usage, analyze topics discussed, evaluate prompt quality.",
+      "keywords": "pedagogical analytics, student ai tracking, trainer dashboard, ai usage analysis, prompt quality, ai training",
+      "ogTitle": "iaiaz Analytics - Pedagogical Insights for Trainers",
+      "ogDescription": "Understand how your students use AI. Identify difficulties, measure progress."
     }
   },
   "common": {
@@ -33,6 +40,7 @@
       "compare": "Compare",
       "students": "Students",
       "schools": "Schools",
+      "trainers": "Trainers",
       "login": "Login",
       "signup": "Get Started",
       "home": "Home",
@@ -949,6 +957,118 @@
     "breadcrumb": {
       "home": "Home",
       "schools": "Schools"
+    }
+  },
+  "formateurs": {
+    "hero": {
+      "badge": "Pedagogical Analytics",
+      "title": "Understand how your students",
+      "titleHighlight": "use AI.",
+      "subtitle": "The only tool that gives you visibility into how your students use AI. Identify difficulties, measure progress, adapt your teaching.",
+      "uniqueValue": "Exclusive iaiaz feature",
+      "uniqueValueSub": "No competitor offers these analytics",
+      "cta": "Request a demo",
+      "ctaSecondary": "See school offers",
+      "feature1": "Privacy-first",
+      "feature2": "Aggregated data",
+      "feature3": "Actionable insights"
+    },
+    "problem": {
+      "title": "The problem with AI in education",
+      "subtitle": "Today, trainers are blind to how their students actually use AI.",
+      "item1": {
+        "title": "No visibility",
+        "description": "Your students use ChatGPT, Claude, Gemini... but you don't know how or for what."
+      },
+      "item2": {
+        "title": "Impossible to assess",
+        "description": "How do you know if a student masters AI or just copy-pastes without thinking?"
+      },
+      "item3": {
+        "title": "Teaching blind",
+        "description": "You can't adapt your teaching without understanding real usage patterns."
+      }
+    },
+    "tier1": {
+      "badge": "Included in all plans",
+      "title": "Usage Statistics",
+      "subtitle": "See your students' engagement in real-time.",
+      "dashboard": {
+        "title": "Marketing M1 - Group A",
+        "period": "January 1-15, 2026",
+        "activeStudents": "Active students",
+        "conversations": "Conversations",
+        "avgMessages": "Msgs/conv.",
+        "peakTime": "Peak activity",
+        "activityByDay": "Activity by day",
+        "alertTitle": "3 inactive students",
+        "alertDesc": "Martin D., Sophie L., Lucas R. haven't used the platform this week."
+      }
+    },
+    "tier2": {
+      "badge": "+€2/student/month",
+      "title": "Learning Analysis",
+      "subtitle": "Understand what topics your students work on and how they use AI.",
+      "topics": {
+        "title": "Topics discussed",
+        "topic1": "SWOT Analysis",
+        "topic2": "Customer Persona",
+        "topic3": "Pricing Strategy",
+        "topic4": "Market Research"
+      },
+      "usage": {
+        "title": "Usage types",
+        "type1": "Research / Brainstorming",
+        "type2": "Concept explanation",
+        "type3": "Writing assistance",
+        "type4": "Correction / Improvement"
+      }
+    },
+    "tier3": {
+      "badge": "+€5/student/month",
+      "title": "Quality Analysis",
+      "subtitle": "Evaluate interaction quality and identify students who need help.",
+      "quality": {
+        "title": "Prompt Quality",
+        "average": "Group average",
+        "criteria1": "Request clarity",
+        "criteria2": "Context provided",
+        "criteria3": "Specificity",
+        "criteria4": "Critical thinking"
+      },
+      "distribution": {
+        "title": "Student distribution",
+        "expert": "Experts",
+        "competent": "Competent",
+        "progressing": "Progressing",
+        "needsHelp": "Needs help"
+      }
+    },
+    "privacy": {
+      "title": "Privacy First",
+      "subtitle": "Students stay in control. Trainers see insights, not conversations.",
+      "item1": {
+        "title": "Aggregated Data",
+        "description": "Trainers see group statistics, not conversation content."
+      },
+      "item2": {
+        "title": "Student Consent",
+        "description": "Students choose their sharing level and can mark conversations as private."
+      },
+      "item3": {
+        "title": "GDPR Compliant",
+        "description": "Hosted in France, encrypted data, guaranteed right to deletion."
+      }
+    },
+    "cta": {
+      "title": "Ready to understand your students?",
+      "subtitle": "Request a personalized demo and discover how iaiaz can transform your teaching.",
+      "button": "Request a demo",
+      "buttonSecondary": "See school pricing"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "trainers": "Trainers"
     }
   },
   "legal": {

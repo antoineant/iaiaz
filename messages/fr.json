@@ -25,6 +25,13 @@
       "keywords": "ia pour écoles, chatgpt université, ia établissement scolaire, gpt-4 éducation, claude éducation, ia formation, chatgpt école, licence groupe ia",
       "ogTitle": "iaiaz pour Établissements - L'IA accessible pour l'éducation",
       "ogDescription": "Équipez vos étudiants avec les meilleurs modèles d'IA. Sans abonnement par élève."
+    },
+    "formateurs": {
+      "title": "Analytics Pédagogique - Comprenez comment vos étudiants utilisent l'IA",
+      "description": "Tableau de bord pour formateurs: suivez l'utilisation IA de vos étudiants, analysez les thèmes abordés, évaluez la qualité des prompts.",
+      "keywords": "analytics pédagogique, suivi étudiants ia, tableau de bord formateur, analyse utilisation ia, qualité prompts, formation ia",
+      "ogTitle": "iaiaz Analytics - Insights pédagogiques pour formateurs",
+      "ogDescription": "Comprenez comment vos étudiants utilisent l'IA. Identifiez les difficultés, mesurez les progrès."
     }
   },
   "common": {
@@ -33,6 +40,7 @@
       "compare": "Comparatif",
       "students": "Étudiants",
       "schools": "Établissements",
+      "trainers": "Formateurs",
       "login": "Connexion",
       "signup": "Commencer",
       "home": "Accueil",
@@ -882,6 +890,118 @@
     "breadcrumb": {
       "home": "Accueil",
       "schools": "Établissements"
+    }
+  },
+  "formateurs": {
+    "hero": {
+      "badge": "Analytics Pédagogique",
+      "title": "Comprenez comment vos étudiants",
+      "titleHighlight": "utilisent l'IA.",
+      "subtitle": "Le seul outil qui vous donne une visibilité sur l'utilisation de l'IA par vos étudiants. Identifiez les difficultés, mesurez les progrès, adaptez votre pédagogie.",
+      "uniqueValue": "Fonctionnalité exclusive iaiaz",
+      "uniqueValueSub": "Aucun concurrent ne propose ces analytics",
+      "cta": "Demander une démo",
+      "ctaSecondary": "Voir les offres établissements",
+      "feature1": "Respect de la vie privée",
+      "feature2": "Données agrégées",
+      "feature3": "Insights actionnables"
+    },
+    "problem": {
+      "title": "Le problème avec l'IA en formation",
+      "subtitle": "Aujourd'hui, les formateurs sont aveugles sur l'utilisation réelle de l'IA par leurs étudiants.",
+      "item1": {
+        "title": "Aucune visibilité",
+        "description": "Vos étudiants utilisent ChatGPT, Claude, Gemini... mais vous ne savez pas comment, ni pour quoi."
+      },
+      "item2": {
+        "title": "Impossible d'évaluer",
+        "description": "Comment savoir si un étudiant maîtrise l'IA ou s'il copie-colle sans réfléchir ?"
+      },
+      "item3": {
+        "title": "Pédagogie à l'aveugle",
+        "description": "Vous ne pouvez pas adapter votre enseignement sans comprendre les usages réels."
+      }
+    },
+    "tier1": {
+      "badge": "Inclus dans toutes les offres",
+      "title": "Statistiques d'utilisation",
+      "subtitle": "Voyez l'engagement de vos étudiants en temps réel.",
+      "dashboard": {
+        "title": "Marketing M1 - Groupe A",
+        "period": "1-15 janvier 2026",
+        "activeStudents": "Étudiants actifs",
+        "conversations": "Conversations",
+        "avgMessages": "Messages/conv.",
+        "peakTime": "Pic d'activité",
+        "activityByDay": "Activité par jour",
+        "alertTitle": "3 étudiants inactifs",
+        "alertDesc": "Martin D., Sophie L., Lucas R. n'ont pas utilisé la plateforme cette semaine."
+      }
+    },
+    "tier2": {
+      "badge": "+2€/élève/mois",
+      "title": "Analyse des apprentissages",
+      "subtitle": "Comprenez sur quels sujets vos étudiants travaillent et comment ils utilisent l'IA.",
+      "topics": {
+        "title": "Thèmes abordés",
+        "topic1": "Analyse SWOT",
+        "topic2": "Persona client",
+        "topic3": "Stratégie prix",
+        "topic4": "Étude de marché"
+      },
+      "usage": {
+        "title": "Types d'utilisation",
+        "type1": "Recherche / Brainstorming",
+        "type2": "Explication de concepts",
+        "type3": "Aide à la rédaction",
+        "type4": "Correction / Amélioration"
+      }
+    },
+    "tier3": {
+      "badge": "+5€/élève/mois",
+      "title": "Analyse qualitative",
+      "subtitle": "Évaluez la qualité des interactions et identifiez les étudiants qui ont besoin d'aide.",
+      "quality": {
+        "title": "Qualité des prompts",
+        "average": "Moyenne du groupe",
+        "criteria1": "Clarté de la demande",
+        "criteria2": "Contexte fourni",
+        "criteria3": "Spécificité",
+        "criteria4": "Esprit critique"
+      },
+      "distribution": {
+        "title": "Répartition des étudiants",
+        "expert": "Experts",
+        "competent": "Compétents",
+        "progressing": "En progression",
+        "needsHelp": "À accompagner"
+      }
+    },
+    "privacy": {
+      "title": "Respect de la vie privée",
+      "subtitle": "Les étudiants gardent le contrôle. Les formateurs voient des insights, pas des conversations.",
+      "item1": {
+        "title": "Données agrégées",
+        "description": "Les formateurs voient des statistiques de groupe, pas le contenu des conversations."
+      },
+      "item2": {
+        "title": "Consentement étudiant",
+        "description": "Les étudiants choisissent leur niveau de partage et peuvent marquer des conversations comme privées."
+      },
+      "item3": {
+        "title": "Conforme RGPD",
+        "description": "Hébergement en France, données chiffrées, droit à l'effacement garanti."
+      }
+    },
+    "cta": {
+      "title": "Prêt à comprendre vos étudiants ?",
+      "subtitle": "Demandez une démo personnalisée et découvrez comment iaiaz peut transformer votre pédagogie.",
+      "button": "Demander une démo",
+      "buttonSecondary": "Voir les tarifs établissements"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "trainers": "Formateurs"
     }
   },
   "legal": {
