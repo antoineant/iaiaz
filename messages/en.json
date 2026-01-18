@@ -831,9 +831,10 @@
     "pricing": {
       "title": "€1 per student per month",
       "titleHighlight": "23x cheaper than ChatGPT",
-      "subtitle": "Setup fee + monthly subscription. AI credits are purchased separately based on your needs.",
+      "subtitle": "Free setup + monthly subscription. AI credits are purchased separately based on your needs.",
       "popular": "Recommended",
-      "setupFee": "Setup fee",
+      "setupFee": "Setup",
+      "setupFree": "Free",
       "monthlyFee": "Monthly subscription",
       "perMonth": "/month",
       "perStudent": "~€1/student",

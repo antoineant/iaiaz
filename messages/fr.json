@@ -764,9 +764,10 @@
     "pricing": {
       "title": "1€ par élève par mois",
       "titleHighlight": "23x moins cher que ChatGPT",
-      "subtitle": "Frais de mise en service + abonnement mensuel. Les crédits IA sont achetés séparément selon vos besoins.",
+      "subtitle": "Mise en service offerte + abonnement mensuel. Les crédits IA sont achetés séparément selon vos besoins.",
       "popular": "Recommandé",
       "setupFee": "Mise en service",
+      "setupFree": "Offert",
       "monthlyFee": "Abonnement mensuel",
       "perMonth": "/mois",
       "perStudent": "soit ~1€/élève",

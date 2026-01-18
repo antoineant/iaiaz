@@ -231,8 +231,8 @@ export default async function EtablissementsPage({ params }: Props) {
                 <div className="space-y-3 mb-4">
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {t("pricing.pilot.setupPrice")}€
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {t("pricing.setupFree")}
                     </div>
                   </div>
                   <div>
@@ -284,8 +284,8 @@ export default async function EtablissementsPage({ params }: Props) {
                 <div className="space-y-3 mb-4">
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {t("pricing.class.setupPrice")}€
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {t("pricing.setupFree")}
                     </div>
                   </div>
                   <div>
@@ -338,8 +338,8 @@ export default async function EtablissementsPage({ params }: Props) {
                 <div className="space-y-3 mb-4">
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {t("pricing.school.setupPrice")}€
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {t("pricing.setupFree")}
                     </div>
                   </div>
                   <div>
@@ -392,8 +392,8 @@ export default async function EtablissementsPage({ params }: Props) {
                 <div className="space-y-3 mb-4">
                   <div>
                     <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {t("pricing.institution.setupPrice")}€
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {t("pricing.setupFree")}
                     </div>
                   </div>
                   <div>
