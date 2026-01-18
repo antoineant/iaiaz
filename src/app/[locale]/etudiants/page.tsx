@@ -368,6 +368,17 @@ export default async function EtudiantsPage({ params }: Props) {
             <p className="text-xs text-[var(--muted-foreground)] mt-1">
               {tHome("footer.madeIn")}
             </p>
+            <p className="text-xs text-[var(--muted-foreground)] mt-1">
+              {tHome("footer.madeBy")}{" "}
+              <a
+                href="https://www.girafestudio.fr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 dark:text-primary-400 hover:underline"
+              >
+                {tHome("footer.madeByStudio")}
+              </a>
+            </p>
           </div>
           <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
             <Link href="/legal/cgu" className="hover:text-[var(--foreground)]">

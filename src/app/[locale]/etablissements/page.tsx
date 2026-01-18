@@ -106,7 +106,7 @@ export default async function EtablissementsPage({ params }: Props) {
             {t("hero.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <a href="mailto:contact@iaiaz.com?subject=Demande%20d%27information%20-%20Établissement">
+            <a href="mailto:secretariat@girafestudio.fr?subject=Demande%20d%27information%20-%20Établissement">
               <Button size="lg">
                 <Sparkles className="w-5 h-5 mr-2" />
                 {t("hero.cta")}
@@ -398,7 +398,7 @@ export default async function EtablissementsPage({ params }: Props) {
             <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
               {t("cta.subtitle")}
             </p>
-            <a href="mailto:contact@iaiaz.com?subject=Demande%20d%27information%20-%20Établissement">
+            <a href="mailto:secretariat@girafestudio.fr?subject=Demande%20d%27information%20-%20Établissement">
               <Button size="lg">
                 {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -425,6 +425,17 @@ export default async function EtablissementsPage({ params }: Props) {
             </p>
             <p className="text-xs text-[var(--muted-foreground)] mt-1">
               {tHome("footer.madeIn")}
+            </p>
+            <p className="text-xs text-[var(--muted-foreground)] mt-1">
+              {tHome("footer.madeBy")}{" "}
+              <a
+                href="https://www.girafestudio.fr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 dark:text-primary-400 hover:underline"
+              >
+                {tHome("footer.madeByStudio")}
+              </a>
             </p>
           </div>
           <nav className="flex flex-wrap gap-4 md:gap-6 text-sm text-[var(--muted-foreground)]">
