@@ -17,8 +17,10 @@ export function Footer() {
             <Link href="/" className="inline-block">
               <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">iaiaz</div>
             </Link>
-            <p className="text-xs text-[var(--muted-foreground)] mt-2 max-w-[200px]">
-              {t("footer.tagline")}
+            <p className="text-xs text-[var(--muted-foreground)] mt-2 max-w-[200px] leading-relaxed">
+              {t("footer.tagline1")}<br />
+              {t("footer.tagline2")}<br />
+              {t("footer.tagline3")}
             </p>
           </div>
 
