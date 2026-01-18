@@ -830,31 +830,59 @@
     },
     "pricing": {
       "title": "Plans for institutions",
-      "subtitle": "Choose the plan that fits your needs. All plans include access to all AI models.",
+      "subtitle": "Setup fee + annual subscription. AI credits are purchased separately based on your needs.",
       "popular": "Recommended",
+      "setupFee": "Setup fee",
+      "annualFee": "Annual subscription",
+      "perYear": "/year",
+      "includedFirstYear": "Included 1st year",
+      "creditsNote": "+ AI credits based on usage",
       "pilot": {
         "title": "Pilot",
-        "description": "Test with one class",
+        "students": "1-30 students",
+        "setupPrice": "49",
+        "annualPrice": "0",
+        "annualNote": "Included",
+        "description": "Test with one class for a year",
         "feature1": "Up to 30 students",
-        "feature2": "Credits valid for 6 months",
-        "feature3": "Email support"
+        "feature2": "Basic dashboard",
+        "feature3": "Email support",
+        "feature4": "Credits valid for 12 months"
       },
       "class": {
         "title": "Classroom",
+        "students": "31-100 students",
+        "setupPrice": "149",
+        "annualPrice": "99",
         "description": "For one or multiple classes",
         "feature1": "Up to 100 students",
         "feature2": "Teacher dashboard",
         "feature3": "Usage reports",
-        "feature4": "Priority support"
+        "feature4": "Priority support",
+        "feature5": "Training session (30min)"
+      },
+      "school": {
+        "title": "School",
+        "students": "101-500 students",
+        "setupPrice": "349",
+        "annualPrice": "199",
+        "description": "For multiple programs",
+        "feature1": "Up to 500 students",
+        "feature2": "Multiple administrators",
+        "feature3": "Per-class/student limits",
+        "feature4": "Dedicated onboarding",
+        "feature5": "Phone support"
       },
       "institution": {
         "title": "Institution",
+        "students": "500+ students",
         "price": "Custom quote",
         "description": "For the entire school",
         "feature1": "Unlimited students",
         "feature2": "SSO (Google/Microsoft)",
         "feature3": "LMS integration",
-        "feature4": "Dedicated account manager"
+        "feature4": "Dedicated account manager",
+        "feature5": "Guaranteed SLA"
       }
     },
     "howItWorks": {

@@ -763,31 +763,59 @@
     },
     "pricing": {
       "title": "Formules pour établissements",
-      "subtitle": "Choisissez la formule adaptée à vos besoins. Toutes les formules incluent l'accès à tous les modèles IA.",
+      "subtitle": "Frais de mise en service + abonnement annuel. Les crédits IA sont achetés séparément selon vos besoins.",
       "popular": "Recommandé",
+      "setupFee": "Mise en service",
+      "annualFee": "Abonnement annuel",
+      "perYear": "/an",
+      "includedFirstYear": "Inclus 1ère année",
+      "creditsNote": "+ crédits IA selon usage",
       "pilot": {
         "title": "Pilote",
-        "description": "Testez avec une classe",
+        "students": "1-30 élèves",
+        "setupPrice": "49",
+        "annualPrice": "0",
+        "annualNote": "Inclus",
+        "description": "Testez avec une classe pendant un an",
         "feature1": "Jusqu'à 30 élèves",
-        "feature2": "Crédits valables 6 mois",
-        "feature3": "Support par email"
+        "feature2": "Tableau de bord basique",
+        "feature3": "Support par email",
+        "feature4": "Crédits valables 12 mois"
       },
       "class": {
         "title": "Classe",
+        "students": "31-100 élèves",
+        "setupPrice": "149",
+        "annualPrice": "99",
         "description": "Pour une ou plusieurs classes",
         "feature1": "Jusqu'à 100 élèves",
         "feature2": "Tableau de bord enseignant",
         "feature3": "Rapports d'utilisation",
-        "feature4": "Support prioritaire"
+        "feature4": "Support prioritaire",
+        "feature5": "Session de formation (30min)"
+      },
+      "school": {
+        "title": "École",
+        "students": "101-500 élèves",
+        "setupPrice": "349",
+        "annualPrice": "199",
+        "description": "Pour plusieurs formations",
+        "feature1": "Jusqu'à 500 élèves",
+        "feature2": "Multi-administrateurs",
+        "feature3": "Limites par classe/élève",
+        "feature4": "Onboarding dédié",
+        "feature5": "Support téléphonique"
       },
       "institution": {
         "title": "Institution",
+        "students": "500+ élèves",
         "price": "Sur devis",
         "description": "Pour tout l'établissement",
         "feature1": "Élèves illimités",
         "feature2": "SSO (Google/Microsoft)",
         "feature3": "Intégration LMS",
-        "feature4": "Account manager dédié"
+        "feature4": "Account manager dédié",
+        "feature5": "SLA garanti"
       }
     },
     "howItWorks": {
