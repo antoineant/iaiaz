@@ -314,12 +314,14 @@
     "stats": {
       "currentBalance": "Solde actuel",
       "conversations": "Conversations",
-      "totalSpent": "Total utilisé"
+      "totalSpent": "Total utilisé",
+      "carbonFootprint": "Empreinte CO₂"
     },
     "quickActions": {
       "title": "Actions rapides",
       "newConversation": "Nouvelle conversation",
       "buyCredits": "Acheter des crédits",
+      "analytics": "Statistiques d'utilisation",
       "settings": "Paramètres"
     },
     "accountInfo": {
@@ -338,6 +340,72 @@
         "purchase": "Achat",
         "usage": "Utilisation",
         "bonus": "Bonus"
+      }
+    },
+    "analytics": {
+      "title": "Statistiques d'utilisation",
+      "days": "jours",
+      "periodStats": "Statistiques des {days} derniers jours",
+      "allTimeStats": "Statistiques globales",
+      "noData": "Aucune donnée disponible",
+      "stats": {
+        "cost": "Coût",
+        "co2": "Empreinte CO₂",
+        "messages": "Messages",
+        "tokens": "Tokens",
+        "totalCost": "Coût total",
+        "totalCO2": "CO₂ total",
+        "totalMessages": "Total messages",
+        "totalTokens": "Total tokens",
+        "conversations": "Conversations"
+      },
+      "charts": {
+        "costOverTime": "Évolution des coûts",
+        "co2OverTime": "Évolution de l'empreinte carbone"
+      },
+      "modelBreakdown": {
+        "title": "Utilisation par modèle",
+        "empty": "Aucun modèle utilisé",
+        "model": "Modèle",
+        "messages": "Messages",
+        "cost": "Coût",
+        "tokens": "Tokens"
+      },
+      "providerBreakdown": {
+        "title": "Utilisation par fournisseur",
+        "empty": "Aucun fournisseur utilisé"
+      },
+      "methodology": {
+        "title": "Comment est calculée l'empreinte carbone ?",
+        "intro": "Nous estimons l'empreinte carbone de chaque message en fonction du modèle IA utilisé et du nombre de tokens traités. Ces estimations sont basées sur des recherches publiées et des données industrielles.",
+        "tiers": {
+          "title": "Taux d'émission par catégorie de modèle",
+          "economy": {
+            "name": "Économique",
+            "models": "GPT-4o-mini, Gemini Flash, Mistral Small, Claude Haiku"
+          },
+          "standard": {
+            "name": "Standard",
+            "models": "Claude Sonnet, GPT-4o, GPT-4.1, Gemini Pro, Mistral Large"
+          },
+          "premium": {
+            "name": "Premium",
+            "models": "Claude Opus, GPT-5, Gemini 2.5 Pro"
+          }
+        },
+        "factors": {
+          "title": "Facteurs pris en compte",
+          "pue": "Efficacité énergétique des datacenters (PUE moyen de 1,2)",
+          "gpu": "Consommation électrique des GPU selon la taille du modèle",
+          "grid": "Intensité carbone moyenne du réseau électrique européen (~0,3 kg CO₂/kWh)"
+        },
+        "sources": {
+          "title": "Sources"
+        },
+        "disclaimer": {
+          "title": "Note",
+          "text": "Les émissions réelles varient selon la localisation des serveurs et l'infrastructure utilisée par chaque fournisseur. Ces estimations sont indicatives et visent à sensibiliser les utilisateurs à l'impact environnemental de l'IA."
+        }
       }
     }
   },

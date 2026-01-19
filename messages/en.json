@@ -314,12 +314,14 @@
     "stats": {
       "currentBalance": "Current balance",
       "conversations": "Conversations",
-      "totalSpent": "Total spent"
+      "totalSpent": "Total spent",
+      "carbonFootprint": "Carbon footprint"
     },
     "quickActions": {
       "title": "Quick actions",
       "newConversation": "New conversation",
       "buyCredits": "Buy credits",
+      "analytics": "Usage analytics",
       "settings": "Settings"
     },
     "accountInfo": {
@@ -338,6 +340,72 @@
         "purchase": "Purchase",
         "usage": "Usage",
         "bonus": "Bonus"
+      }
+    },
+    "analytics": {
+      "title": "Usage Analytics",
+      "days": "days",
+      "periodStats": "Last {days} days statistics",
+      "allTimeStats": "All-time statistics",
+      "noData": "No data available",
+      "stats": {
+        "cost": "Cost",
+        "co2": "Carbon footprint",
+        "messages": "Messages",
+        "tokens": "Tokens",
+        "totalCost": "Total cost",
+        "totalCO2": "Total CO₂",
+        "totalMessages": "Total messages",
+        "totalTokens": "Total tokens",
+        "conversations": "Conversations"
+      },
+      "charts": {
+        "costOverTime": "Cost over time",
+        "co2OverTime": "Carbon footprint over time"
+      },
+      "modelBreakdown": {
+        "title": "Usage by model",
+        "empty": "No models used",
+        "model": "Model",
+        "messages": "Messages",
+        "cost": "Cost",
+        "tokens": "Tokens"
+      },
+      "providerBreakdown": {
+        "title": "Usage by provider",
+        "empty": "No providers used"
+      },
+      "methodology": {
+        "title": "How is carbon footprint calculated?",
+        "intro": "We estimate the carbon footprint of each message based on the AI model used and the number of tokens processed. These estimates are based on published research and industry data.",
+        "tiers": {
+          "title": "Emission rates by model category",
+          "economy": {
+            "name": "Economy",
+            "models": "GPT-4o-mini, Gemini Flash, Mistral Small, Claude Haiku"
+          },
+          "standard": {
+            "name": "Standard",
+            "models": "Claude Sonnet, GPT-4o, GPT-4.1, Gemini Pro, Mistral Large"
+          },
+          "premium": {
+            "name": "Premium",
+            "models": "Claude Opus, GPT-5, Gemini 2.5 Pro"
+          }
+        },
+        "factors": {
+          "title": "Factors considered",
+          "pue": "Data center energy efficiency (average PUE of 1.2)",
+          "gpu": "GPU power consumption based on model size",
+          "grid": "Average European grid carbon intensity (~0.3 kg CO₂/kWh)"
+        },
+        "sources": {
+          "title": "Sources"
+        },
+        "disclaimer": {
+          "title": "Note",
+          "text": "Actual emissions vary by server location and infrastructure used by each provider. These estimates are indicative and aim to raise user awareness about AI's environmental impact."
+        }
       }
     }
   },

@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, formatCO2 } from "@/lib/utils";
 import type { ChatMessage, FileAttachment } from "@/types";
 import {
   User,
@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Copy,
   Check,
+  Leaf,
 } from "lucide-react";
 import { formatFileSize } from "@/lib/files";
 
@@ -292,18 +293,24 @@ export function Message({ message }: MessageProps) {
         </div>
 
         {message.tokens && !message.isStreaming && (
-          <div className="mt-2 text-xs text-[var(--muted-foreground)]">
+          <div className="mt-2 text-xs text-[var(--muted-foreground)] flex items-center gap-1 flex-wrap">
             {message.tokens.input > 0 && (
-              <span>
-                {message.tokens.input.toLocaleString()} tokens •{" "}
-                {message.tokens.output.toLocaleString()} tokens
+              <>
+                <span>
+                  {message.tokens.input.toLocaleString()} tokens •{" "}
+                  {message.tokens.output.toLocaleString()} tokens
+                </span>
                 {message.cost !== undefined && message.cost > 0 && (
                   <span className="font-medium text-[var(--foreground)]">
-                    {" "}
                     • {formatCurrency(message.cost)}
                   </span>
                 )}
-              </span>
+                {message.co2Grams !== undefined && message.co2Grams > 0 && (
+                  <span className="inline-flex items-center gap-0.5 text-green-600 dark:text-green-400">
+                    • <Leaf className="w-3 h-3" /> {formatCO2(message.co2Grams)}
+                  </span>
+                )}
+              </>
             )}
           </div>
         )}

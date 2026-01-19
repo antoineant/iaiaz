@@ -223,6 +223,7 @@ export function ChatClient({
                 ...m,
                 content: data.content,
                 cost: data.cost,
+                co2Grams: data.co2Grams,
                 tokens: {
                   input: data.tokensInput,
                   output: data.tokensOutput,

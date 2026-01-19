@@ -4,7 +4,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatCO2 } from "@/lib/utils";
 import {
   CreditCard,
   MessageSquare,
@@ -12,6 +12,8 @@ import {
   ArrowRight,
   Wallet,
   Settings,
+  BarChart3,
+  Leaf,
 } from "lucide-react";
 
 type Props = {
@@ -60,10 +62,11 @@ export default async function DashboardPage({ params }: Props) {
 
   const { data: usageData } = await supabase
     .from("api_usage")
-    .select("cost_eur")
+    .select("cost_eur, co2_grams")
     .eq("user_id", user.id);
 
   const totalSpent = usageData?.reduce((acc, u) => acc + u.cost_eur, 0) || 0;
+  const totalCO2 = usageData?.reduce((acc, u) => acc + (u.co2_grams || 0), 0) || 0;
 
   // Fetch recent transactions
   const { data: transactions } = await supabase
@@ -105,7 +108,7 @@ export default async function DashboardPage({ params }: Props) {
         <h1 className="text-2xl font-bold mb-8">{t("title")}</h1>
 
         {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -143,8 +146,8 @@ export default async function DashboardPage({ params }: Props) {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
                   <p className="text-sm text-[var(--muted-foreground)]">
@@ -152,6 +155,24 @@ export default async function DashboardPage({ params }: Props) {
                   </p>
                   <p className="text-2xl font-bold">
                     {formatCurrency(totalSpent)}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <Leaf className="w-6 h-6 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("stats.carbonFootprint")}
+                  </p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {formatCO2(totalCO2)}
                   </p>
                 </div>
               </div>
@@ -175,6 +196,15 @@ export default async function DashboardPage({ params }: Props) {
               <Link href="/dashboard/credits">
                 <Button variant="outline" className="w-full justify-between">
                   {t("quickActions.buyCredits")}
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+              <Link href="/dashboard/analytics">
+                <Button variant="outline" className="w-full justify-between">
+                  <span className="flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4" />
+                    {t("quickActions.analytics")}
+                  </span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>

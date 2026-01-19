@@ -7,6 +7,7 @@ import {
   calculateCostFromDBAdmin,
   getModelFromDBAdmin,
   getAppSettingsAdmin,
+  calculateCO2,
 } from "@/lib/pricing-db";
 import {
   checkRateLimit,
@@ -245,6 +246,14 @@ export async function POST(request: NextRequest) {
       aiResponse.tokensOutput
     );
 
+    // Calculate CO2 emissions using model's CO2 rate
+    const co2Rate = modelInfo.co2_per_1k_tokens ?? 0.15;
+    const co2Grams = calculateCO2(
+      aiResponse.tokensInput,
+      aiResponse.tokensOutput,
+      co2Rate
+    );
+
     // Create or update conversation
     let finalConversationId = conversationId;
 
@@ -308,6 +317,7 @@ export async function POST(request: NextRequest) {
           tokens_input: aiResponse.tokensInput,
           tokens_output: aiResponse.tokensOutput,
           cost: actualCost,
+          co2_grams: co2Grams,
         })
         .select()
         .single();
@@ -322,6 +332,7 @@ export async function POST(request: NextRequest) {
           tokens_input: aiResponse.tokensInput,
           tokens_output: aiResponse.tokensOutput,
           cost_eur: actualCost,
+          co2_grams: co2Grams,
         });
       }
     }
@@ -347,6 +358,7 @@ export async function POST(request: NextRequest) {
         tokensInput: aiResponse.tokensInput,
         tokensOutput: aiResponse.tokensOutput,
         cost: actualCost,
+        co2Grams: co2Grams,
         conversationId: finalConversationId,
         rateLimit: {
           remaining: rateLimitResult.remaining,

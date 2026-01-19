@@ -13,6 +13,7 @@ export interface DBModel {
   is_recommended: boolean;
   is_active: boolean;
   max_tokens: number;
+  co2_per_1k_tokens?: number;
   capabilities?: {
     images?: boolean;
     pdf?: boolean;
@@ -196,4 +197,46 @@ export async function getModelFromDBAdmin(modelId: string): Promise<DBModel | nu
   }
 
   return data;
+}
+
+// CO2 emission rates by model tier (grams per 1k tokens)
+// Based on: IEA data center estimates, Strubell et al. (2019), Patterson et al. (2021)
+const DEFAULT_CO2_RATE = 0.15; // Standard tier default
+
+/**
+ * Calculate CO2 emissions for a message based on token count and model
+ *
+ * Methodology:
+ * - Economy models (small/fast): ~0.03g CO2 per 1k tokens
+ * - Standard models (balanced): ~0.15g CO2 per 1k tokens
+ * - Premium models (large/powerful): ~0.50g CO2 per 1k tokens
+ *
+ * These estimates are based on:
+ * 1. Average data center PUE (Power Usage Effectiveness) of 1.2
+ * 2. GPU power consumption estimates by model size
+ * 3. Regional grid carbon intensity (EU average ~0.3 kg CO2/kWh)
+ *
+ * Note: Actual emissions vary by provider location and infrastructure.
+ * These are conservative estimates for user awareness.
+ */
+export function calculateCO2(
+  inputTokens: number,
+  outputTokens: number,
+  co2PerKTokens: number = DEFAULT_CO2_RATE
+): number {
+  const totalTokens = inputTokens + outputTokens;
+  return (totalTokens / 1000) * co2PerKTokens;
+}
+
+/**
+ * Calculate CO2 using model info from database
+ */
+export async function calculateCO2FromDBAdmin(
+  modelId: string,
+  inputTokens: number,
+  outputTokens: number
+): Promise<number> {
+  const model = await getModelFromDBAdmin(modelId);
+  const co2Rate = model?.co2_per_1k_tokens ?? DEFAULT_CO2_RATE;
+  return calculateCO2(inputTokens, outputTokens, co2Rate);
 }

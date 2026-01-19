@@ -69,6 +69,7 @@ export const pathnames = {
   '/dashboard': '/dashboard',
   '/dashboard/credits': '/dashboard/credits',
   '/dashboard/credits/success': '/dashboard/credits/success',
+  '/dashboard/analytics': '/dashboard/analytics',
   '/dashboard/settings': '/dashboard/settings',
   '/join': '/join',
   '/org': '/org',

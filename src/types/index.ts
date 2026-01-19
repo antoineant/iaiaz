@@ -22,6 +22,7 @@ export interface Message {
   tokens_input: number | null;
   tokens_output: number | null;
   cost: number | null;
+  co2_grams: number | null;
   created_at: string;
   file_ids?: string[]; // Array of file attachment IDs
 }
@@ -44,6 +45,7 @@ export interface ApiUsage {
   tokens_input: number;
   tokens_output: number;
   cost_eur: number;
+  co2_grams: number | null;
   created_at: string;
 }
 
@@ -92,6 +94,7 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   cost?: number;
+  co2Grams?: number;
   tokens?: {
     input: number;
     output: number;
