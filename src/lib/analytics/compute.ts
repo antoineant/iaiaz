@@ -29,14 +29,27 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
   const end = endDate || new Date();
   const start = startDate || new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  // Get all students in this class
+  // Get all students in this class (fetch members and profiles separately to avoid join issues)
   const { data: members } = await adminClient
     .from("organization_members")
-    .select("user_id, profiles(id, display_name, email)")
+    .select("user_id, display_name")
     .eq("class_id", classId)
     .eq("status", "active");
 
   const studentIds = members?.map((m) => m.user_id) || [];
+
+  // Fetch profiles for these students to get display names
+  let profileMap = new Map<string, { display_name: string | null; email: string }>();
+  if (studentIds.length > 0) {
+    const { data: profiles } = await adminClient
+      .from("profiles")
+      .select("id, display_name, email")
+      .in("id", studentIds);
+
+    if (profiles) {
+      profileMap = new Map(profiles.map((p) => [p.id, { display_name: p.display_name, email: p.email }]));
+    }
+  }
 
   if (studentIds.length === 0) {
     return {
@@ -179,18 +192,24 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
     }))
     .sort((a, b) => a.date.localeCompare(b.date));
 
-  // Get top students
-  const memberMap = new Map(
-    members?.map((m) => {
-      const profile = m.profiles as unknown as { id: string; display_name: string | null; email: string } | null;
-      return [m.user_id, profile?.display_name || profile?.email?.split("@")[0] || "Anonymous"];
-    })
-  );
+  // Get top students - use profileMap and member display names
+  const getStudentName = (userId: string): string => {
+    // First try profile
+    const profile = profileMap.get(userId);
+    if (profile?.display_name) return profile.display_name;
+    if (profile?.email) return profile.email.split("@")[0];
+
+    // Fall back to member display_name
+    const member = members?.find((m) => m.user_id === userId);
+    if (member?.display_name) return member.display_name;
+
+    return "Anonymous";
+  };
 
   const topStudents = Object.entries(studentStats)
     .map(([userId, stats]) => ({
       id: userId,
-      name: memberMap.get(userId) || "Anonymous",
+      name: getStudentName(userId),
       messages: stats.messages,
       cost: Math.round(stats.cost * 100) / 100,
     }))
