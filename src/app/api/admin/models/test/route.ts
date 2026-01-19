@@ -93,14 +93,18 @@ export async function POST(request: NextRequest) {
     console.error(`[model-test] Error: ${errorMessage}`);
 
     // Log error to database
-    const adminClient = createAdminClient();
-    await adminClient.from("model_test_logs").insert({
-      model_id: modelId,
-      status: "error",
-      response_time_ms: responseTime,
-      prompt,
-      error_message: errorMessage,
-    }).catch(e => console.error("[model-test] Failed to log to DB:", e));
+    try {
+      const adminClient = createAdminClient();
+      await adminClient.from("model_test_logs").insert({
+        model_id: modelId,
+        status: "error",
+        response_time_ms: responseTime,
+        prompt,
+        error_message: errorMessage,
+      });
+    } catch (e) {
+      console.error("[model-test] Failed to log to DB:", e);
+    }
 
     return NextResponse.json({
       success: false,
