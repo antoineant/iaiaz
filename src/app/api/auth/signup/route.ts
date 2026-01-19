@@ -11,7 +11,7 @@ import {
 interface SignupRequest {
   email: string;
   password: string;
-  accountType?: "personal" | "trainer";
+  accountType?: "student" | "trainer";
   displayName?: string;
 }
 
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
         password,
         email_confirm: false, // Require email confirmation
         user_metadata: {
-          account_type: accountType || "personal",
+          account_type: accountType || "student",
           display_name: displayName || undefined,
         },
       });

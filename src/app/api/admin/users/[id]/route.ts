@@ -53,7 +53,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 
   // Validate account_type if provided
-  if (body.account_type && !["personal", "trainer", "admin"].includes(body.account_type)) {
+  if (body.account_type && !["student", "trainer", "admin"].includes(body.account_type)) {
     return NextResponse.json(
       { error: "Invalid account type" },
       { status: 400 }

@@ -455,8 +455,8 @@
       "subtitle": "Create your account and get $1 free credit",
       "accountType": {
         "label": "Account type",
-        "personal": "Personal",
-        "personalDesc": "To use AI",
+        "student": "Student",
+        "studentDesc": "To use AI",
         "trainer": "Trainer",
         "trainerDesc": "To create classes"
       },

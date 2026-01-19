@@ -9,12 +9,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
 import { Check, User, GraduationCap } from "lucide-react";
 
-type AccountType = "personal" | "trainer";
+type AccountType = "student" | "trainer";
 
 export default function SignupPage() {
   const t = useTranslations("auth.signup");
 
-  const [accountType, setAccountType] = useState<AccountType>("personal");
+  const [accountType, setAccountType] = useState<AccountType>("student");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -133,29 +133,29 @@ export default function SignupPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setAccountType("personal")}
+                    onClick={() => setAccountType("student")}
                     className={`relative p-4 rounded-lg border-2 transition-all text-left ${
-                      accountType === "personal"
+                      accountType === "student"
                         ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
                         : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        accountType === "personal"
+                        accountType === "student"
                           ? "bg-primary-600 text-white"
                           : "bg-[var(--muted)] text-[var(--muted-foreground)]"
                       }`}>
                         <User className="w-4 h-4" />
                       </div>
                       <div>
-                        <p className="font-medium text-sm">{t("accountType.personal")}</p>
+                        <p className="font-medium text-sm">{t("accountType.student")}</p>
                         <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
-                          {t("accountType.personalDesc")}
+                          {t("accountType.studentDesc")}
                         </p>
                       </div>
                     </div>
-                    {accountType === "personal" && (
+                    {accountType === "student" && (
                       <div className="absolute top-2 right-2">
                         <Check className="w-4 h-4 text-primary-600" />
                       </div>

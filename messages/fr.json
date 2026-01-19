@@ -388,8 +388,8 @@
       "subtitle": "Créez votre compte et recevez 1€ de crédits gratuits",
       "accountType": {
         "label": "Type de compte",
-        "personal": "Personnel",
-        "personalDesc": "Pour utiliser l'IA",
+        "student": "Étudiant",
+        "studentDesc": "Pour utiliser l'IA",
         "trainer": "Formateur",
         "trainerDesc": "Pour créer des classes"
       },
