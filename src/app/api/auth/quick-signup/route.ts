@@ -89,22 +89,22 @@ export async function POST(request: NextRequest) {
     if (authError) {
       // Check if user already exists
       if (authError.message.includes("already") || authError.message.includes("exists")) {
-        // User exists - get their ID by email
-        const { data: existingUsers, error: listError } = await adminClient.auth.admin.listUsers({
-          filter: `email.eq.${email}`,
-          page: 1,
-          perPage: 1,
-        });
+        // User exists - get their ID from profiles table
+        const { data: existingProfile, error: profileError } = await adminClient
+          .from("profiles")
+          .select("id")
+          .eq("email", email.toLowerCase())
+          .single();
 
-        if (listError || !existingUsers?.users?.length) {
-          console.error("Error finding existing user:", listError);
+        if (profileError || !existingProfile) {
+          console.error("Error finding existing user:", profileError);
           return NextResponse.json(
             { error: "Email already registered. Please log in.", code: "EMAIL_EXISTS" },
             { status: 400 }
           );
         }
 
-        userId = existingUsers.users[0].id;
+        userId = existingProfile.id;
       } else {
         console.error("Error creating user:", authError);
         return NextResponse.json(
