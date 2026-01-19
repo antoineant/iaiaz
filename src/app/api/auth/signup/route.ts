@@ -16,12 +16,17 @@ interface SignupRequest {
 }
 
 export async function POST(request: NextRequest) {
+  console.log("[signup] Starting signup request");
+
   try {
     const body: SignupRequest = await request.json();
     const { email, password, accountType, displayName } = body;
 
+    console.log("[signup] Email:", email?.substring(0, 5) + "...", "AccountType:", accountType);
+
     // Basic validation
     if (!email || !password) {
+      console.log("[signup] Missing email or password");
       return NextResponse.json(
         { error: "Email et mot de passe requis", code: "MISSING_FIELDS" },
         { status: 400 }
