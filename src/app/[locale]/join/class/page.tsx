@@ -296,14 +296,20 @@ function JoinClassContent() {
               </Button>
             ) : (
               <div className="space-y-3">
-                <NextLink href={`/auth/login?redirect=/join/class?token=${token}`} className="block">
-                  <Button className="w-full">{t("loginToJoin")}</Button>
-                </NextLink>
                 <NextLink href={`/join/class/signup?token=${token}`} className="block">
-                  <Button variant="outline" className="w-full">
-                    {t("createAccount")}
+                  <Button className="w-full">
+                    {t("quickJoin")}
                   </Button>
                 </NextLink>
+                <p className="text-center text-sm text-[var(--muted-foreground)]">
+                  {t("alreadyHaveAccount")}{" "}
+                  <NextLink
+                    href={`/auth/login?redirect=/join/class?token=${token}`}
+                    className="text-primary-600 dark:text-primary-400 hover:underline"
+                  >
+                    {t("login")}
+                  </NextLink>
+                </p>
               </div>
             )}
 
