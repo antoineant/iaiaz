@@ -54,11 +54,8 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    console.log("[getUserOrgMembership] No user found");
     return null;
   }
-
-  console.log("[getUserOrgMembership] User ID:", user.id);
 
   const { data: memberships, error } = await supabase
     .from("organization_members")
@@ -77,24 +74,14 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
     .order("created_at", { ascending: false })
     .limit(1);
 
-  console.log("[getUserOrgMembership] Query result:", { memberships, error });
-
-  if (error) {
-    console.log("[getUserOrgMembership] Query error:", error);
-    return null;
-  }
-
-  if (!memberships || memberships.length === 0) {
-    console.log("[getUserOrgMembership] No memberships found");
+  if (error || !memberships || memberships.length === 0) {
     return null;
   }
 
   const membership = memberships[0];
-  console.log("[getUserOrgMembership] Membership:", membership);
 
   const org = membership.organization as unknown as { id: string; name: string } | null;
   if (!org) {
-    console.log("[getUserOrgMembership] Organization is null in join");
     return null;
   }
 
