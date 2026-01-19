@@ -89,7 +89,18 @@ export default function ClassDashboardPage() {
       const classJson = await classRes.json();
       const studentsJson = studentsRes.ok ? await studentsRes.json() : [];
 
-      setClassData(classJson);
+      // Ensure stats has default values to prevent toFixed errors
+      const stats = {
+        total_students: 0,
+        active_today: 0,
+        total_credit_allocated: 0,
+        total_credit_used: 0,
+        usage_today: 0,
+        usage_this_week: 0,
+        ...classJson.stats,
+      };
+
+      setClassData({ ...classJson, stats });
       setStudents(studentsJson);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load data");
