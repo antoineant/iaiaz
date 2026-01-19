@@ -1963,6 +1963,9 @@
         "title": "Erreur",
         "invalidToken": "Lien d'invitation invalide."
       },
+      "errors": {
+        "needsManualLogin": "Compte créé. Utilisez 'Mot de passe oublié' pour vous connecter."
+      },
       "backToHome": "Retour à l'accueil",
       "form": {
         "name": "Votre nom",
@@ -1971,12 +1974,29 @@
         "emailPlaceholder": "votre@email.com",
         "submit": "Créer mon compte"
       },
+      "quickJoin": {
+        "title": "Rejoindre la classe",
+        "subtitle": "Entrez vos informations pour accéder instantanément",
+        "firstName": "Prénom",
+        "firstNamePlaceholder": "Jean",
+        "lastName": "Nom",
+        "lastNamePlaceholder": "Dupont",
+        "email": "Email",
+        "emailPlaceholder": "votre@email.com",
+        "emailHint": "Pour récupérer votre compte plus tard",
+        "submit": "Rejoindre maintenant"
+      },
+      "success": {
+        "title": "Bienvenue !",
+        "description": "Vous avez rejoint la classe {className}.",
+        "redirecting": "Redirection vers le chat..."
+      },
       "emailSent": {
         "title": "Email envoyé !",
         "description": "Un lien de connexion a été envoyé à {email}.",
         "checkSpam": "Vérifiez vos spams si vous ne le voyez pas."
       },
-      "termsNotice": "En créant un compte, vous acceptez les conditions d'utilisation.",
+      "termsNotice": "En rejoignant, vous acceptez les conditions d'utilisation.",
       "alreadyHaveAccount": "Vous avez déjà un compte ?",
       "login": "Se connecter"
     }

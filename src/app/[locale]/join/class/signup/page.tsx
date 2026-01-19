@@ -12,9 +12,9 @@ import {
   AlertCircle,
   GraduationCap,
   Building2,
-  Mail,
   CheckCircle2,
   ArrowLeft,
+  User,
 } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -30,6 +30,8 @@ interface ClassInfo {
     id: string;
     name: string;
   };
+  is_accessible?: boolean;
+  access_message?: string;
 }
 
 export default function ClassSignupPage() {
@@ -60,11 +62,12 @@ function ClassSignupContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [emailSent, setEmailSent] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
-    display_name: "",
   });
 
   useEffect(() => {
@@ -94,27 +97,53 @@ function ClassSignupContent() {
     setIsSubmitting(true);
 
     try {
-      const supabase = createClient();
-
-      // Send magic link with class join redirect
-      const { error: authError } = await supabase.auth.signInWithOtp({
-        email: formData.email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?redirect=/join/class?token=${token}`,
-          data: {
-            display_name: formData.display_name,
-            join_class_token: token,
-          },
-        },
+      // Call the quick signup API
+      const response = await fetch("/api/auth/quick-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          classToken: token,
+        }),
       });
 
-      if (authError) {
-        throw authError;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to join class");
       }
 
-      setEmailSent(true);
+      if (data.needsManualLogin) {
+        // Rare case - user created but couldn't auto sign in
+        setError(t("errors.needsManualLogin"));
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Sign in using the token hash
+      if (data.tokenHash) {
+        const supabase = createClient();
+        const { error: verifyError } = await supabase.auth.verifyOtp({
+          token_hash: data.tokenHash,
+          type: "magiclink",
+        });
+
+        if (verifyError) {
+          console.error("Error verifying OTP:", verifyError);
+          // Still show success - user can login with password reset
+        }
+      }
+
+      setSuccess(true);
+
+      // Redirect to chat after a brief success message
+      setTimeout(() => {
+        router.push("/chat");
+      }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send email");
+      setError(err instanceof Error ? err.message : "Failed to join class");
       setIsSubmitting(false);
     }
   };
@@ -152,7 +181,7 @@ function ClassSignupContent() {
     );
   }
 
-  if (emailSent) {
+  if (success) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -160,13 +189,16 @@ function ClassSignupContent() {
           <Card className="max-w-md w-full">
             <CardContent className="pt-8 text-center">
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
-              <h1 className="text-xl font-bold mb-2">{t("emailSent.title")}</h1>
+              <h1 className="text-xl font-bold mb-2">{t("success.title")}</h1>
               <p className="text-[var(--muted-foreground)] mb-4">
-                {t("emailSent.description", { email: formData.email })}
+                {t("success.description", { className: classInfo.class?.name })}
               </p>
-              <p className="text-sm text-[var(--muted-foreground)]">{t("emailSent.checkSpam")}</p>
+              <div className="flex items-center justify-center gap-2 text-sm text-[var(--muted-foreground)]">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {t("success.redirecting")}
+              </div>
             </CardContent>
           </Card>
         </main>
@@ -193,10 +225,12 @@ function ClassSignupContent() {
 
             <div className="text-center mb-6">
               <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-4">
-                <GraduationCap className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                <User className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
-              <h1 className="text-xl font-bold">{t("title")}</h1>
-              <p className="text-sm text-[var(--muted-foreground)] mt-1">{t("subtitle")}</p>
+              <h1 className="text-xl font-bold">{t("quickJoin.title")}</h1>
+              <p className="text-sm text-[var(--muted-foreground)] mt-1">
+                {t("quickJoin.subtitle")}
+              </p>
             </div>
 
             {/* Class info */}
@@ -213,28 +247,57 @@ function ClassSignupContent() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">{t("form.name")}*</label>
-                <input
-                  type="text"
-                  value={formData.display_name}
-                  onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-                  className="w-full p-3 border rounded-lg bg-background"
-                  placeholder={t("form.namePlaceholder")}
-                  required
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("quickJoin.firstName")}*
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, firstName: e.target.value })
+                    }
+                    className="w-full p-3 border rounded-lg bg-background"
+                    placeholder={t("quickJoin.firstNamePlaceholder")}
+                    required
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("quickJoin.lastName")}*
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.lastName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, lastName: e.target.value })
+                    }
+                    className="w-full p-3 border rounded-lg bg-background"
+                    placeholder={t("quickJoin.lastNamePlaceholder")}
+                    required
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">{t("form.email")}*</label>
+                <label className="block text-sm font-medium mb-2">
+                  {t("quickJoin.email")}*
+                </label>
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full p-3 border rounded-lg bg-background"
-                  placeholder={t("form.emailPlaceholder")}
+                  placeholder={t("quickJoin.emailPlaceholder")}
                   required
                 />
+                <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                  {t("quickJoin.emailHint")}
+                </p>
               </div>
 
               {error && (
@@ -246,10 +309,15 @@ function ClassSignupContent() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isSubmitting || !formData.email || !formData.display_name}
+                disabled={
+                  isSubmitting ||
+                  !formData.firstName ||
+                  !formData.lastName ||
+                  !formData.email
+                }
               >
                 {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                {t("form.submit")}
+                {t("quickJoin.submit")}
               </Button>
             </form>
 
