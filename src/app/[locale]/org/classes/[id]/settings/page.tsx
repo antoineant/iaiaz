@@ -220,7 +220,7 @@ export default function ClassSettingsPage() {
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full p-3 border rounded-lg bg-background"
+                className="w-full p-3 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)]"
                 required
               />
             </div>
@@ -229,7 +229,7 @@ export default function ClassSettingsPage() {
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full p-3 border rounded-lg bg-background min-h-[100px]"
+                className="w-full p-3 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] min-h-[100px]"
               />
             </div>
           </CardContent>
@@ -289,7 +289,7 @@ export default function ClassSettingsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, default_credit_per_student: e.target.value })
                   }
-                  className="w-32 p-2 border rounded-lg bg-background"
+                  className="w-32 p-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)]"
                   placeholder="5.00"
                 />
                 <span className="text-[var(--muted-foreground)]">€</span>
@@ -310,7 +310,7 @@ export default function ClassSettingsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, daily_limit_per_student: e.target.value })
                   }
-                  className="w-32 p-2 border rounded-lg bg-background"
+                  className="w-32 p-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)]"
                   placeholder={t("form.noLimit")}
                 />
                 <span className="text-[var(--muted-foreground)]">€</span>
