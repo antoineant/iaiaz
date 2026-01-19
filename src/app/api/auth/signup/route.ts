@@ -50,19 +50,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("[signup] Creating admin client...");
     const adminClient = createAdminClient();
+    console.log("[signup] Admin client created");
+
     const clientIP = getClientIP(request.headers);
     const userAgent = request.headers.get("user-agent") || "";
     const emailDomain = extractEmailDomain(email);
+    console.log("[signup] IP:", clientIP, "Domain:", emailDomain);
 
     // 1. Check if email domain is blocked (database lookup)
+    console.log("[signup] Checking blocked domain...");
     const { data: isBlocked, error: blockCheckError } = await adminClient.rpc(
       "is_email_domain_blocked",
       { p_email: email }
     );
+    console.log("[signup] Blocked check result:", { isBlocked, error: blockCheckError?.message });
 
     if (blockCheckError) {
-      console.error("Error checking blocked domain:", blockCheckError);
+      console.error("[signup] Error checking blocked domain:", blockCheckError);
       // Continue anyway - don't block signup due to DB error
     }
 
@@ -107,13 +113,15 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Check IP rate limit
+    console.log("[signup] Checking rate limit...");
     const { data: rateLimitResult, error: rateLimitError } =
       await adminClient.rpc("check_signup_rate_limit", {
         p_ip_address: clientIP,
       });
+    console.log("[signup] Rate limit result:", { rateLimitResult, error: rateLimitError?.message });
 
     if (rateLimitError) {
-      console.error("Error checking rate limit:", rateLimitError);
+      console.error("[signup] Error checking rate limit:", rateLimitError);
       // Continue anyway - don't block signup due to DB error
     }
 
@@ -149,6 +157,7 @@ export async function POST(request: NextRequest) {
     // 4. All validations passed - proceed with Supabase signup
     // Note: account_type and display_name are passed as user_metadata
     // The handle_new_user trigger will read these and create the profile
+    console.log("[signup] Creating user in Supabase...");
     const { data: authData, error: authError } =
       await adminClient.auth.admin.createUser({
         email,
@@ -159,6 +168,7 @@ export async function POST(request: NextRequest) {
           display_name: displayName || undefined,
         },
       });
+    console.log("[signup] User creation result:", { success: !!authData?.user, error: authError?.message });
 
     if (authError) {
       console.error("[signup] Auth error:", {
