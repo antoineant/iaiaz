@@ -193,7 +193,7 @@ function ClassSignupContent() {
               </div>
               <h1 className="text-xl font-bold mb-2">{t("success.title")}</h1>
               <p className="text-[var(--muted-foreground)] mb-4">
-                {t("success.description", { className: classInfo.class?.name })}
+                {t("success.description", { className: classInfo.class?.name || "" })}
               </p>
               <div className="flex items-center justify-center gap-2 text-sm text-[var(--muted-foreground)]">
                 <Loader2 className="w-4 h-4 animate-spin" />
