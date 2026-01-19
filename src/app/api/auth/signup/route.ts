@@ -161,14 +161,25 @@ export async function POST(request: NextRequest) {
       });
 
     if (authError) {
-      // Log failed signup
-      await adminClient.rpc("log_signup_attempt", {
-        p_email: email,
-        p_ip_address: clientIP,
-        p_user_agent: userAgent,
-        p_status: "error",
-        p_block_reason: authError.message,
+      console.error("[signup] Auth error:", {
+        message: authError.message,
+        status: authError.status,
+        code: authError.code,
+        name: authError.name,
       });
+
+      // Log failed signup
+      try {
+        await adminClient.rpc("log_signup_attempt", {
+          p_email: email,
+          p_ip_address: clientIP,
+          p_user_agent: userAgent,
+          p_status: "error",
+          p_block_reason: authError.message,
+        });
+      } catch (logError) {
+        console.error("[signup] Failed to log attempt:", logError);
+      }
 
       // Handle specific Supabase errors
       if (authError.message.includes("already registered") ||
