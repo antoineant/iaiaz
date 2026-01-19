@@ -11,12 +11,14 @@ import {
 interface SignupRequest {
   email: string;
   password: string;
+  accountType?: "personal" | "trainer";
+  displayName?: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: SignupRequest = await request.json();
-    const { email, password } = body;
+    const { email, password, accountType, displayName } = body;
 
     // Basic validation
     if (!email || !password) {
@@ -140,11 +142,17 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. All validations passed - proceed with Supabase signup
+    // Note: account_type and display_name are passed as user_metadata
+    // The handle_new_user trigger will read these and create the profile
     const { data: authData, error: authError } =
       await adminClient.auth.admin.createUser({
         email,
         password,
         email_confirm: false, // Require email confirmation
+        user_metadata: {
+          account_type: accountType || "personal",
+          display_name: displayName || undefined,
+        },
       });
 
     if (authError) {

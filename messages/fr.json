@@ -386,6 +386,15 @@
     "signup": {
       "title": "Inscription",
       "subtitle": "Créez votre compte et recevez 1€ de crédits gratuits",
+      "accountType": {
+        "label": "Type de compte",
+        "personal": "Personnel",
+        "personalDesc": "Pour utiliser l'IA",
+        "trainer": "Formateur",
+        "trainerDesc": "Pour créer des classes"
+      },
+      "displayName": "Nom d'affichage",
+      "displayNamePlaceholder": "Votre nom (optionnel)",
       "email": "Email",
       "password": "Mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
@@ -955,6 +964,41 @@
       "cta": "Créer mon espace classe",
       "ctaSecondary": "Voir les tarifs",
       "stat": "de vos étudiants utilisent ChatGPT. Vous ne le savez pas, parce qu'ils le cachent."
+    },
+    "stats": {
+      "title": "Les chiffres que vous devez connaître",
+      "subtitle": "Sources : Pew Research, Wiley, RM Conseil, Campus France 2024-2025",
+      "stat1": {
+        "value": "86%",
+        "label": "des étudiants français",
+        "description": "utilisent l'IA dans leurs études"
+      },
+      "stat2": {
+        "value": "90%",
+        "label": "des lycéens",
+        "description": "ont déjà utilisé l'IA pour leurs devoirs"
+      },
+      "stat3": {
+        "value": "53%",
+        "label": "se disent « accros »",
+        "description": "et auraient du mal à s'en passer"
+      },
+      "stat4": {
+        "value": "96%",
+        "label": "des enseignants",
+        "description": "pensent qu'au moins un étudiant a triché cette année"
+      },
+      "stat5": {
+        "value": "28%",
+        "label": "d'efficacité",
+        "description": "pour les outils de détection IA (eCampusOntario)"
+      },
+      "stat6": {
+        "value": "24%",
+        "label": "des établissements",
+        "description": "fournissent un outil IA — le reste est invisible"
+      },
+      "conclusion": "L'interdiction a échoué. La détection aussi. Il est temps de passer à la visibilité."
     },
     "problem": {
       "title": "Le vrai problème n'est pas l'IA",
@@ -1680,6 +1724,7 @@
   "org": {
     "nav": {
       "dashboard": "Tableau de bord",
+      "classes": "Classes",
       "members": "Membres",
       "invites": "Invitations",
       "backToChat": "Retour au chat",
@@ -1747,6 +1792,193 @@
       "status": "Statut",
       "sentAt": "Envoyée le",
       "success": "Invitation envoyée avec succès"
+    },
+    "classes": {
+      "title": "Mes classes",
+      "createClass": "Créer une classe",
+      "createFirstClass": "Créer ma première classe",
+      "noClasses": "Aucune classe",
+      "noClassesDescription": "Créez votre première classe pour permettre à vos étudiants d'accéder à l'IA via un QR code.",
+      "students": "étudiants",
+      "error": "Erreur",
+      "dashboard": "Tableau de bord",
+      "settings": "Paramètres",
+      "qrCode": "QR Code",
+      "archivedClasses": "Classes archivées",
+      "endsAt": "Termine le {date}",
+      "createdAt": "Créée le {date}",
+      "archivedAt": "Archivée le {date}",
+      "backToClasses": "Retour aux classes",
+      "backToDashboard": "Retour au tableau de bord",
+      "closeSession": "Fermer la session",
+      "reopenSession": "Rouvrir la session",
+      "joinLink": "Lien d'inscription",
+      "copyLink": "Copier le lien",
+      "studentsList": "Liste des étudiants",
+      "noStudents": "Aucun étudiant inscrit",
+      "shareQrCode": "Partagez le QR code pour que les étudiants rejoignent cette classe.",
+      "anonymous": "Anonyme",
+      "never": "Jamais",
+      "confirmArchive": "Êtes-vous sûr de vouloir archiver cette classe ? Les étudiants ne pourront plus y accéder.",
+      "settingsTitle": "Paramètres de la classe",
+      "settingsBasic": "Informations de base",
+      "settingsSession": "Durée de la session",
+      "settingsCredits": "Crédits et limites",
+      "settingsModels": "Modèles IA",
+      "settingsSaved": "Paramètres enregistrés",
+      "archiveClass": "Archiver la classe",
+      "createDescription": "Créez une classe pour permettre à vos étudiants d'accéder à l'IA. Un QR code sera généré pour faciliter l'inscription.",
+      "status": {
+        "active": "Active",
+        "scheduled": "Planifiée",
+        "closed": "Fermée",
+        "expired": "Expirée",
+        "archived": "Archivée",
+        "inactive": "Inactive"
+      },
+      "stats": {
+        "students": "Étudiants",
+        "activeToday": "actifs aujourd'hui",
+        "credits": "Crédits alloués",
+        "used": "utilisés",
+        "usageToday": "Usage aujourd'hui",
+        "usageWeek": "Usage cette semaine"
+      },
+      "table": {
+        "student": "Étudiant",
+        "credits": "Crédits",
+        "lastActivity": "Dernière activité",
+        "status": "Statut"
+      },
+      "form": {
+        "name": "Nom de la classe",
+        "namePlaceholder": "Ex: Cours d'anglais B1",
+        "description": "Description",
+        "descriptionPlaceholder": "Description optionnelle de la classe...",
+        "sessionTime": "Durée de la session (optionnel)",
+        "startsAt": "Début",
+        "startsAtHint": "Laissez vide pour un accès immédiat",
+        "endsAt": "Fin",
+        "endsAtHint": "Laissez vide pour pas de limite",
+        "defaultCredit": "Crédits par défaut par étudiant",
+        "defaultCreditHint": "Laissez vide pour utiliser la valeur de l'organisation",
+        "dailyLimit": "Limite quotidienne par étudiant",
+        "dailyLimitHint": "Laissez vide pour pas de limite",
+        "noLimit": "Pas de limite",
+        "allowFallback": "Permettre les crédits personnels",
+        "allowFallbackHint": "Si activé, les étudiants peuvent utiliser leurs crédits personnels quand les crédits de classe sont épuisés",
+        "restrictModels": "Restreindre les modèles disponibles",
+        "restrictModelsHint": "Si activé, seuls les modèles sélectionnés seront accessibles aux étudiants de cette classe",
+        "selectModels": "Sélectionnez les modèles autorisés",
+        "noModelsWarning": "Attention : aucun modèle sélectionné. Les étudiants ne pourront pas utiliser le chat.",
+        "cancel": "Annuler",
+        "create": "Créer la classe",
+        "save": "Enregistrer"
+      },
+      "qr": {
+        "sessionActive": "Session active",
+        "sessionClosed": "Session fermée",
+        "sessionInactive": "Session inactive",
+        "instructions": "Demandez à vos étudiants de scanner ce QR code pour rejoindre la classe.",
+        "joinUrl": "Lien d'inscription",
+        "copyLink": "Copier le lien",
+        "copied": "Copié !",
+        "downloadQR": "Télécharger le QR code",
+        "sessionInfo": "Informations de session",
+        "startsAt": "Début",
+        "endsAt": "Fin"
+      },
+      "analytics": {
+        "title": "Analytiques",
+        "backToDashboard": "Retour au tableau de bord",
+        "error": "Erreur",
+        "period": "Période",
+        "last7days": "7 derniers jours",
+        "last30days": "30 derniers jours",
+        "last90days": "90 derniers jours",
+        "totalMessages": "Messages",
+        "activeStudents": "Étudiants actifs",
+        "totalCost": "Coût total",
+        "conversations": "Conversations",
+        "dailyUsage": "Usage quotidien",
+        "modelUsage": "Usage par modèle",
+        "topStudents": "Top étudiants",
+        "peakHours": "Heures de pointe",
+        "messages": "messages",
+        "noData": "Pas de données disponibles",
+        "aiInsights": "Insights IA",
+        "generateInsights": "Générer des insights",
+        "refreshInsights": "Rafraîchir",
+        "noInsightsYet": "Cliquez sur le bouton pour générer des insights personnalisés basés sur l'activité de votre classe.",
+        "engagementLevel": "Niveau d'engagement",
+        "engagement": {
+          "low": "Faible",
+          "medium": "Moyen",
+          "high": "Élevé"
+        },
+        "usagePatterns": "Patterns d'utilisation",
+        "recommendations": "Recommandations",
+        "generatedAt": "Généré le {date}"
+      }
+    }
+  },
+  "joinClass": {
+    "title": "Rejoindre une classe",
+    "backToHome": "Retour à l'accueil",
+    "joinButton": "Rejoindre la classe",
+    "loginToJoin": "Se connecter pour rejoindre",
+    "createAccount": "Créer un compte",
+    "termsNotice": "En rejoignant, vous acceptez les conditions d'utilisation.",
+    "sessionEnds": "Session jusqu'au {date}",
+    "goToChat": "Accéder au chat",
+    "errors": {
+      "noToken": "Lien invalide. Veuillez scanner à nouveau le QR code.",
+      "loadFailed": "Impossible de charger les informations de la classe.",
+      "unknown": "Une erreur est survenue."
+    },
+    "error": {
+      "title": "Impossible de rejoindre"
+    },
+    "alreadyMember": {
+      "title": "Vous êtes déjà inscrit",
+      "description": "Vous êtes déjà membre de la classe {className}."
+    },
+    "sessionClosed": {
+      "title": "Session terminée",
+      "description": "Cette session a été fermée par le formateur."
+    },
+    "sessionNotStarted": {
+      "title": "Session pas encore commencée",
+      "description": "Cette session commencera le {date}."
+    },
+    "sessionExpired": {
+      "title": "Session expirée",
+      "description": "Cette session est terminée."
+    },
+    "signup": {
+      "title": "Créer un compte",
+      "subtitle": "Inscrivez-vous pour rejoindre la classe",
+      "back": "Retour",
+      "error": {
+        "title": "Erreur",
+        "invalidToken": "Lien d'invitation invalide."
+      },
+      "backToHome": "Retour à l'accueil",
+      "form": {
+        "name": "Votre nom",
+        "namePlaceholder": "Prénom Nom",
+        "email": "Email",
+        "emailPlaceholder": "votre@email.com",
+        "submit": "Créer mon compte"
+      },
+      "emailSent": {
+        "title": "Email envoyé !",
+        "description": "Un lien de connexion a été envoyé à {email}.",
+        "checkSpam": "Vérifiez vos spams si vous ne le voyez pas."
+      },
+      "termsNotice": "En créant un compte, vous acceptez les conditions d'utilisation.",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "login": "Se connecter"
     }
   },
   "settings": {

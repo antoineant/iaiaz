@@ -14,6 +14,7 @@ import {
   LogOut,
   Loader2,
   Building2,
+  GraduationCap,
 } from "lucide-react";
 
 interface OrgMembership {
@@ -56,7 +57,22 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
       );
 
       if (error || !orgMember || orgMember.length === 0) {
-        // Not a member of any organization
+        // Check if user is a trainer - they should have an org auto-created
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("account_type")
+          .eq("id", user.id)
+          .single();
+
+        if (profile?.account_type === "personal") {
+          // Personal accounts can't access trainer features
+          router.push("/chat");
+          return;
+        }
+
+        // Trainer/admin without org - something went wrong, redirect to chat
+        // The org should have been auto-created by the database trigger
+        console.error("Trainer without organization - trigger may have failed");
         router.push("/chat");
         return;
       }
@@ -90,6 +106,7 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: "/org", label: t("nav.dashboard"), icon: LayoutDashboard },
+    { href: "/org/classes", label: t("nav.classes"), icon: GraduationCap },
     { href: "/org/members", label: t("nav.members"), icon: Users },
     { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
   ];

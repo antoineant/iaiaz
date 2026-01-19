@@ -104,7 +104,7 @@ export default async function FormateursPage({ params }: Props) {
 
           {/* Key stat */}
           <div className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-4 rounded-2xl mb-8">
-            <div className="text-2xl md:text-3xl font-bold">67%</div>
+            <div className="text-2xl md:text-3xl font-bold">86%</div>
             <div className="text-primary-100 text-sm max-w-xs">{t("hero.stat")}</div>
           </div>
 
@@ -132,6 +132,53 @@ export default async function FormateursPage({ params }: Props) {
             <span className="flex items-center gap-2">
               <Check className="w-4 h-4 text-green-500" /> {t("pricing.feature3")}
             </span>
+          </div>
+        </section>
+
+        {/* Stats Section - Research-backed numbers */}
+        <section className="bg-gradient-to-b from-gray-900 to-gray-800 text-white py-16">
+          <div className="max-w-6xl mx-auto px-4">
+            <h2 className="text-2xl font-bold text-center mb-2">{t("stats.title")}</h2>
+            <p className="text-center text-gray-400 mb-12 text-sm">
+              {t("stats.subtitle")}
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+              <div className="text-center p-4">
+                <div className="text-4xl md:text-5xl font-bold text-primary-400 mb-2">{t("stats.stat1.value")}</div>
+                <div className="text-sm font-medium text-gray-300">{t("stats.stat1.label")}</div>
+                <div className="text-xs text-gray-500 mt-1">{t("stats.stat1.description")}</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-4xl md:text-5xl font-bold text-primary-400 mb-2">{t("stats.stat2.value")}</div>
+                <div className="text-sm font-medium text-gray-300">{t("stats.stat2.label")}</div>
+                <div className="text-xs text-gray-500 mt-1">{t("stats.stat2.description")}</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-4xl md:text-5xl font-bold text-orange-400 mb-2">{t("stats.stat3.value")}</div>
+                <div className="text-sm font-medium text-gray-300">{t("stats.stat3.label")}</div>
+                <div className="text-xs text-gray-500 mt-1">{t("stats.stat3.description")}</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-4xl md:text-5xl font-bold text-red-400 mb-2">{t("stats.stat4.value")}</div>
+                <div className="text-sm font-medium text-gray-300">{t("stats.stat4.label")}</div>
+                <div className="text-xs text-gray-500 mt-1">{t("stats.stat4.description")}</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-4xl md:text-5xl font-bold text-red-400 mb-2">{t("stats.stat5.value")}</div>
+                <div className="text-sm font-medium text-gray-300">{t("stats.stat5.label")}</div>
+                <div className="text-xs text-gray-500 mt-1">{t("stats.stat5.description")}</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">{t("stats.stat6.value")}</div>
+                <div className="text-sm font-medium text-gray-300">{t("stats.stat6.label")}</div>
+                <div className="text-xs text-gray-500 mt-1">{t("stats.stat6.description")}</div>
+              </div>
+            </div>
+
+            <p className="text-center text-lg font-medium text-gray-300 max-w-2xl mx-auto">
+              {t("stats.conclusion")}
+            </p>
           </div>
         </section>
 

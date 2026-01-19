@@ -22,6 +22,7 @@ import {
   deductCredits,
   getEffectiveBalance,
 } from "@/lib/credits";
+import { isModelAllowedForUser } from "@/lib/org";
 
 interface ChatRequest {
   message: string;
@@ -102,6 +103,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Modèle invalide ou désactivé" },
         { status: 400 }
+      );
+    }
+
+    // Check if model is allowed for user's class
+    const modelAllowed = await isModelAllowedForUser(user.id, model);
+    if (!modelAllowed) {
+      return NextResponse.json(
+        { error: "Ce modèle n'est pas disponible pour votre classe" },
+        { status: 403 }
       );
     }
 

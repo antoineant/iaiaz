@@ -11,11 +11,12 @@ export async function isAdmin(): Promise<boolean> {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("is_admin")
+    .select("is_admin, account_type")
     .eq("id", user.id)
     .single();
 
-  return profile?.is_admin === true;
+  // Check both is_admin flag and account_type for compatibility
+  return profile?.is_admin === true || profile?.account_type === "admin";
 }
 
 export async function requireAdmin() {

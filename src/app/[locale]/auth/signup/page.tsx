@@ -7,11 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
-import { Check } from "lucide-react";
+import { Check, User, GraduationCap } from "lucide-react";
+
+type AccountType = "personal" | "trainer";
 
 export default function SignupPage() {
   const t = useTranslations("auth.signup");
 
+  const [accountType, setAccountType] = useState<AccountType>("personal");
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,7 +43,12 @@ export default function SignupPage() {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          accountType,
+          displayName: displayName.trim() || undefined,
+        }),
       });
 
       const data = await response.json();
@@ -117,6 +126,85 @@ export default function SignupPage() {
                   {error}
                 </div>
               )}
+
+              {/* Account Type Selection */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t("accountType.label")}</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setAccountType("personal")}
+                    className={`relative p-4 rounded-lg border-2 transition-all text-left ${
+                      accountType === "personal"
+                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        accountType === "personal"
+                          ? "bg-primary-600 text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}>
+                        <User className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{t("accountType.personal")}</p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
+                          {t("accountType.personalDesc")}
+                        </p>
+                      </div>
+                    </div>
+                    {accountType === "personal" && (
+                      <div className="absolute top-2 right-2">
+                        <Check className="w-4 h-4 text-primary-600" />
+                      </div>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountType("trainer")}
+                    className={`relative p-4 rounded-lg border-2 transition-all text-left ${
+                      accountType === "trainer"
+                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        accountType === "trainer"
+                          ? "bg-primary-600 text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}>
+                        <GraduationCap className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{t("accountType.trainer")}</p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
+                          {t("accountType.trainerDesc")}
+                        </p>
+                      </div>
+                    </div>
+                    {accountType === "trainer" && (
+                      <div className="absolute top-2 right-2">
+                        <Check className="w-4 h-4 text-primary-600" />
+                      </div>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Display Name (optional but encouraged for trainers) */}
+              <Input
+                id="displayName"
+                type="text"
+                label={t("displayName")}
+                placeholder={t("displayNamePlaceholder")}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                autoComplete="name"
+              />
 
               <Input
                 id="email"

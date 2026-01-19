@@ -453,6 +453,15 @@
     "signup": {
       "title": "Sign up",
       "subtitle": "Create your account and get $1 free credit",
+      "accountType": {
+        "label": "Account type",
+        "personal": "Personal",
+        "personalDesc": "To use AI",
+        "trainer": "Trainer",
+        "trainerDesc": "To create classes"
+      },
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Your name (optional)",
       "email": "Email",
       "password": "Password",
       "confirmPassword": "Confirm password",
@@ -1747,6 +1756,7 @@
   "org": {
     "nav": {
       "dashboard": "Dashboard",
+      "classes": "Classes",
       "members": "Members",
       "invites": "Invitations",
       "backToChat": "Back to chat",
@@ -1814,6 +1824,193 @@
       "status": "Status",
       "sentAt": "Sent on",
       "success": "Invitation sent successfully"
+    },
+    "classes": {
+      "title": "My Classes",
+      "createClass": "Create Class",
+      "createFirstClass": "Create my first class",
+      "noClasses": "No classes yet",
+      "noClassesDescription": "Create your first class to allow students to access AI via a QR code.",
+      "students": "students",
+      "error": "Error",
+      "dashboard": "Dashboard",
+      "settings": "Settings",
+      "qrCode": "QR Code",
+      "archivedClasses": "Archived Classes",
+      "endsAt": "Ends on {date}",
+      "createdAt": "Created on {date}",
+      "archivedAt": "Archived on {date}",
+      "backToClasses": "Back to classes",
+      "backToDashboard": "Back to dashboard",
+      "closeSession": "Close Session",
+      "reopenSession": "Reopen Session",
+      "joinLink": "Join Link",
+      "copyLink": "Copy Link",
+      "studentsList": "Student List",
+      "noStudents": "No students enrolled",
+      "shareQrCode": "Share the QR code for students to join this class.",
+      "anonymous": "Anonymous",
+      "never": "Never",
+      "confirmArchive": "Are you sure you want to archive this class? Students will no longer be able to access it.",
+      "settingsTitle": "Class Settings",
+      "settingsBasic": "Basic Information",
+      "settingsSession": "Session Duration",
+      "settingsCredits": "Credits and Limits",
+      "settingsModels": "AI Models",
+      "settingsSaved": "Settings saved",
+      "archiveClass": "Archive Class",
+      "createDescription": "Create a class to allow students to access AI. A QR code will be generated to facilitate enrollment.",
+      "status": {
+        "active": "Active",
+        "scheduled": "Scheduled",
+        "closed": "Closed",
+        "expired": "Expired",
+        "archived": "Archived",
+        "inactive": "Inactive"
+      },
+      "stats": {
+        "students": "Students",
+        "activeToday": "active today",
+        "credits": "Credits Allocated",
+        "used": "used",
+        "usageToday": "Usage Today",
+        "usageWeek": "Usage This Week"
+      },
+      "table": {
+        "student": "Student",
+        "credits": "Credits",
+        "lastActivity": "Last Activity",
+        "status": "Status"
+      },
+      "form": {
+        "name": "Class Name",
+        "namePlaceholder": "E.g., English Course B1",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional class description...",
+        "sessionTime": "Session Duration (optional)",
+        "startsAt": "Start",
+        "startsAtHint": "Leave empty for immediate access",
+        "endsAt": "End",
+        "endsAtHint": "Leave empty for no limit",
+        "defaultCredit": "Default credits per student",
+        "defaultCreditHint": "Leave empty to use organization default",
+        "dailyLimit": "Daily limit per student",
+        "dailyLimitHint": "Leave empty for no limit",
+        "noLimit": "No limit",
+        "allowFallback": "Allow personal credits",
+        "allowFallbackHint": "If enabled, students can use their personal credits when class credits are exhausted",
+        "restrictModels": "Restrict available models",
+        "restrictModelsHint": "If enabled, only selected models will be accessible to students in this class",
+        "selectModels": "Select allowed models",
+        "noModelsWarning": "Warning: no model selected. Students will not be able to use the chat.",
+        "cancel": "Cancel",
+        "create": "Create Class",
+        "save": "Save"
+      },
+      "qr": {
+        "sessionActive": "Session Active",
+        "sessionClosed": "Session Closed",
+        "sessionInactive": "Session Inactive",
+        "instructions": "Ask your students to scan this QR code to join the class.",
+        "joinUrl": "Join URL",
+        "copyLink": "Copy Link",
+        "copied": "Copied!",
+        "downloadQR": "Download QR Code",
+        "sessionInfo": "Session Information",
+        "startsAt": "Starts",
+        "endsAt": "Ends"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "backToDashboard": "Back to Dashboard",
+        "error": "Error",
+        "period": "Period",
+        "last7days": "Last 7 days",
+        "last30days": "Last 30 days",
+        "last90days": "Last 90 days",
+        "totalMessages": "Messages",
+        "activeStudents": "Active Students",
+        "totalCost": "Total Cost",
+        "conversations": "Conversations",
+        "dailyUsage": "Daily Usage",
+        "modelUsage": "Model Usage",
+        "topStudents": "Top Students",
+        "peakHours": "Peak Hours",
+        "messages": "messages",
+        "noData": "No data available",
+        "aiInsights": "AI Insights",
+        "generateInsights": "Generate Insights",
+        "refreshInsights": "Refresh",
+        "noInsightsYet": "Click the button to generate personalized insights based on your class activity.",
+        "engagementLevel": "Engagement Level",
+        "engagement": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "usagePatterns": "Usage Patterns",
+        "recommendations": "Recommendations",
+        "generatedAt": "Generated on {date}"
+      }
+    }
+  },
+  "joinClass": {
+    "title": "Join a Class",
+    "backToHome": "Back to home",
+    "joinButton": "Join Class",
+    "loginToJoin": "Log in to join",
+    "createAccount": "Create an account",
+    "termsNotice": "By joining, you accept the terms of use.",
+    "sessionEnds": "Session until {date}",
+    "goToChat": "Go to chat",
+    "errors": {
+      "noToken": "Invalid link. Please scan the QR code again.",
+      "loadFailed": "Unable to load class information.",
+      "unknown": "An error occurred."
+    },
+    "error": {
+      "title": "Unable to join"
+    },
+    "alreadyMember": {
+      "title": "Already enrolled",
+      "description": "You are already a member of the class {className}."
+    },
+    "sessionClosed": {
+      "title": "Session ended",
+      "description": "This session has been closed by the trainer."
+    },
+    "sessionNotStarted": {
+      "title": "Session not started yet",
+      "description": "This session will start on {date}."
+    },
+    "sessionExpired": {
+      "title": "Session expired",
+      "description": "This session has ended."
+    },
+    "signup": {
+      "title": "Create an account",
+      "subtitle": "Sign up to join the class",
+      "back": "Back",
+      "error": {
+        "title": "Error",
+        "invalidToken": "Invalid invitation link."
+      },
+      "backToHome": "Back to home",
+      "form": {
+        "name": "Your name",
+        "namePlaceholder": "First Last",
+        "email": "Email",
+        "emailPlaceholder": "your@email.com",
+        "submit": "Create my account"
+      },
+      "emailSent": {
+        "title": "Email sent!",
+        "description": "A login link has been sent to {email}.",
+        "checkSpam": "Check your spam folder if you don't see it."
+      },
+      "termsNotice": "By creating an account, you accept the terms of use.",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Log in"
     }
   }
 }

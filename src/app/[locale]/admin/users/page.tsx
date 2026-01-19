@@ -5,11 +5,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Minus, Shield, ShieldOff } from "lucide-react";
+import { Search, Plus, Minus, Shield, ShieldOff, User, GraduationCap, Building2 } from "lucide-react";
 
 interface Profile {
   id: string;
   email: string;
+  display_name: string | null;
+  account_type: "personal" | "trainer" | "admin";
   credits_balance: number;
   is_admin: boolean;
   created_at: string;
@@ -29,7 +31,7 @@ export default function UsersPage() {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, email, credits_balance, is_admin, created_at")
+      .select("id, email, display_name, account_type, credits_balance, is_admin, created_at")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -141,24 +143,37 @@ export default function UsersPage() {
     fetchUsers();
   };
 
-  const toggleAdmin = async (userId: string, currentStatus: boolean) => {
+  const updateAccountType = async (userId: string, newType: "personal" | "trainer" | "admin") => {
     const supabase = createClient();
     setError("");
     setSuccess("");
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({ is_admin: !currentStatus })
-      .eq("id", userId);
-
-    if (error) {
-      setError("Erreur lors de la modification du statut admin");
+    // Get current user to prevent self-demotion
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (currentUser?.id === userId && newType !== "admin") {
+      setError("Vous ne pouvez pas retirer vos propres droits admin");
       return;
     }
 
-    setSuccess(
-      currentStatus ? "Droits admin retirés" : "Droits admin accordés"
-    );
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        account_type: newType,
+        is_admin: newType === "admin" // Sync for backwards compatibility
+      })
+      .eq("id", userId);
+
+    if (error) {
+      setError("Erreur lors de la modification du type de compte");
+      return;
+    }
+
+    const typeLabels = {
+      personal: "Personnel",
+      trainer: "Formateur",
+      admin: "Admin"
+    };
+    setSuccess(`Type de compte changé en ${typeLabels[newType]}`);
     fetchUsers();
   };
 
@@ -208,20 +223,45 @@ export default function UsersPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="py-4">
             <p className="text-sm text-[var(--muted-foreground)]">
-              Total utilisateurs
+              Total
             </p>
             <p className="text-2xl font-bold">{users.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="py-4">
-            <p className="text-sm text-[var(--muted-foreground)]">Admins</p>
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-blue-500" />
+              <p className="text-sm text-[var(--muted-foreground)]">Personnels</p>
+            </div>
             <p className="text-2xl font-bold">
-              {users.filter((u) => u.is_admin).length}
+              {users.filter((u) => u.account_type === "personal").length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-4 h-4 text-green-500" />
+              <p className="text-sm text-[var(--muted-foreground)]">Formateurs</p>
+            </div>
+            <p className="text-2xl font-bold">
+              {users.filter((u) => u.account_type === "trainer").length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-purple-500" />
+              <p className="text-sm text-[var(--muted-foreground)]">Admins</p>
+            </div>
+            <p className="text-2xl font-bold">
+              {users.filter((u) => u.account_type === "admin" || u.is_admin).length}
             </p>
           </CardContent>
         </Card>
@@ -250,106 +290,106 @@ export default function UsersPage() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y divide-[var(--border)]">
-            {filteredUsers.map((user) => (
-              <div
-                key={user.id}
-                className="p-4 flex items-center justify-between hover:bg-[var(--muted)]/50"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{user.email}</span>
-                    {user.is_admin && (
-                      <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-700 rounded-full flex items-center gap-1">
-                        <Shield className="w-3 h-3" />
-                        Admin
+            {filteredUsers.map((user) => {
+              const accountType = user.account_type || (user.is_admin ? "admin" : "personal");
+              const accountTypeConfig = {
+                personal: { icon: User, label: "Personnel", bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-400" },
+                trainer: { icon: GraduationCap, label: "Formateur", bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-700 dark:text-green-400" },
+                admin: { icon: Shield, label: "Admin", bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-400" },
+              };
+              const config = accountTypeConfig[accountType];
+              const TypeIcon = config.icon;
+
+              return (
+                <div
+                  key={user.id}
+                  className="p-4 flex items-center justify-between hover:bg-[var(--muted)]/50"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium">{user.display_name || user.email}</span>
+                      <span className={`px-2 py-0.5 text-xs ${config.bg} ${config.text} rounded-full flex items-center gap-1`}>
+                        <TypeIcon className="w-3 h-3" />
+                        {config.label}
                       </span>
+                    </div>
+                    <p className="text-sm text-[var(--muted-foreground)]">
+                      {user.display_name ? user.email + " • " : ""}
+                      Inscrit le{" "}
+                      {new Date(user.created_at).toLocaleDateString("fr-FR")}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="font-medium">
+                        {user.credits_balance.toFixed(2)} €
+                      </p>
+                      <p className="text-xs text-[var(--muted-foreground)]">
+                        Solde
+                      </p>
+                    </div>
+
+                    {editingUserId === user.id ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="Montant"
+                          className="w-24"
+                          value={creditAmount}
+                          onChange={(e) => setCreditAmount(e.target.value)}
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => addCredits(user.id)}
+                          title="Ajouter"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => removeCredits(user.id)}
+                          title="Retirer"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setEditingUserId(null);
+                            setCreditAmount("");
+                          }}
+                        >
+                          Annuler
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setEditingUserId(user.id)}
+                        >
+                          Crédits
+                        </Button>
+                        <select
+                          value={accountType}
+                          onChange={(e) => updateAccountType(user.id, e.target.value as "personal" | "trainer" | "admin")}
+                          className="text-sm border border-[var(--border)] rounded-lg px-2 py-1.5 bg-[var(--background)] cursor-pointer"
+                        >
+                          <option value="personal">Personnel</option>
+                          <option value="trainer">Formateur</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </div>
                     )}
                   </div>
-                  <p className="text-sm text-[var(--muted-foreground)]">
-                    Inscrit le{" "}
-                    {new Date(user.created_at).toLocaleDateString("fr-FR")}
-                  </p>
                 </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="font-medium">
-                      {user.credits_balance.toFixed(2)} €
-                    </p>
-                    <p className="text-xs text-[var(--muted-foreground)]">
-                      Solde
-                    </p>
-                  </div>
-
-                  {editingUserId === user.id ? (
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Montant"
-                        className="w-24"
-                        value={creditAmount}
-                        onChange={(e) => setCreditAmount(e.target.value)}
-                      />
-                      <Button
-                        size="sm"
-                        onClick={() => addCredits(user.id)}
-                        title="Ajouter"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => removeCredits(user.id)}
-                        title="Retirer"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          setEditingUserId(null);
-                          setCreditAmount("");
-                        }}
-                      >
-                        Annuler
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setEditingUserId(user.id)}
-                      >
-                        Modifier crédits
-                      </Button>
-                      <button
-                        onClick={() => toggleAdmin(user.id, user.is_admin)}
-                        className={`p-2 rounded-lg transition-colors ${
-                          user.is_admin
-                            ? "bg-purple-100 text-purple-600 hover:bg-purple-200"
-                            : "hover:bg-[var(--muted)] text-[var(--muted-foreground)]"
-                        }`}
-                        title={
-                          user.is_admin
-                            ? "Retirer droits admin"
-                            : "Donner droits admin"
-                        }
-                      >
-                        {user.is_admin ? (
-                          <ShieldOff className="w-4 h-4" />
-                        ) : (
-                          <Shield className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
