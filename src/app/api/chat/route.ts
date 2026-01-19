@@ -369,14 +369,52 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Chat API error:", error);
+
+    // Parse error for user-friendly messages
+    let userMessage = "Erreur lors du traitement de la requête";
+    let statusCode = 500;
+
+    if (error instanceof Error) {
+      const errorMsg = error.message.toLowerCase();
+
+      // Model not found (404 from provider)
+      if (errorMsg.includes("not_found") || errorMsg.includes("model") && errorMsg.includes("404")) {
+        userMessage = "Ce modèle est temporairement indisponible. Veuillez en sélectionner un autre.";
+        statusCode = 503;
+      }
+      // Rate limit from provider
+      else if (errorMsg.includes("rate_limit") || errorMsg.includes("429") || errorMsg.includes("too many requests")) {
+        userMessage = "Le service est surchargé. Veuillez réessayer dans quelques instants.";
+        statusCode = 429;
+      }
+      // Authentication error with provider
+      else if (errorMsg.includes("unauthorized") || errorMsg.includes("401") || errorMsg.includes("invalid_api_key")) {
+        userMessage = "Erreur de configuration du service. Contactez l'administrateur.";
+        statusCode = 503;
+      }
+      // Content policy / safety
+      else if (errorMsg.includes("content_policy") || errorMsg.includes("safety") || errorMsg.includes("blocked")) {
+        userMessage = "Votre message n'a pas pu être traité. Veuillez reformuler votre demande.";
+        statusCode = 400;
+      }
+      // Timeout
+      else if (errorMsg.includes("timeout") || errorMsg.includes("timed out")) {
+        userMessage = "La requête a pris trop de temps. Veuillez réessayer.";
+        statusCode = 504;
+      }
+      // Context length exceeded
+      else if (errorMsg.includes("context_length") || errorMsg.includes("too long") || errorMsg.includes("maximum")) {
+        userMessage = "Le message est trop long. Veuillez raccourcir votre conversation.";
+        statusCode = 400;
+      }
+    }
+
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erreur lors du traitement de la requête",
+        error: userMessage,
+        code: "AI_ERROR",
       },
-      { status: 500 }
+      { status: statusCode }
     );
   }
 }

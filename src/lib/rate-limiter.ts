@@ -32,7 +32,7 @@ const MODEL_TIERS: Record<string, ModelTier> = {
 
   // Standard models (10 req/min) - everything else
   "claude-sonnet-4-20250514": "standard",
-  "claude-haiku-3-5-20241022": "standard",
+  "claude-3-5-haiku-20241022": "standard",
   "gpt-4.1": "standard",
   "gpt-4o": "standard",
   "gemini-1.5-pro": "standard",
