@@ -13,12 +13,17 @@ interface QuickSignupRequest {
  * This is designed for classroom scenarios where students need instant access
  */
 export async function POST(request: NextRequest) {
+  console.log("[quick-signup] Starting request");
+
   try {
     const body: QuickSignupRequest = await request.json();
     const { firstName, lastName, email, classToken } = body;
 
+    console.log("[quick-signup] Received:", { firstName, lastName, email: email?.substring(0, 5) + "...", classToken: classToken?.substring(0, 8) + "..." });
+
     // Validate required fields
     if (!firstName || !lastName || !email || !classToken) {
+      console.log("[quick-signup] Missing fields");
       return NextResponse.json(
         { error: "All fields are required", code: "MISSING_FIELDS" },
         { status: 400 }
@@ -28,30 +33,36 @@ export async function POST(request: NextRequest) {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.log("[quick-signup] Invalid email format");
       return NextResponse.json(
         { error: "Invalid email format", code: "INVALID_EMAIL" },
         { status: 400 }
       );
     }
 
+    console.log("[quick-signup] Creating admin client");
     const adminClient = createAdminClient();
     const displayName = `${firstName} ${lastName}`.trim();
 
     // First verify the class token is valid
+    console.log("[quick-signup] Verifying class token");
     const { data: classInfo, error: classError } = await adminClient.rpc(
       "get_class_by_token",
       { p_token: classToken }
     );
 
     if (classError) {
-      console.error("Error fetching class:", classError);
+      console.error("[quick-signup] Error fetching class:", classError);
       return NextResponse.json(
         { error: "Failed to verify class", code: "CLASS_ERROR" },
         { status: 500 }
       );
     }
 
+    console.log("[quick-signup] Class info:", classInfo);
+
     if (!classInfo?.success) {
+      console.log("[quick-signup] Class not found or invalid");
       return NextResponse.json(
         { error: "Invalid class token", code: "INVALID_TOKEN" },
         { status: 400 }
@@ -59,6 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!classInfo.is_accessible) {
+      console.log("[quick-signup] Class not accessible:", classInfo.access_message);
       return NextResponse.json(
         { error: "Class is not accessible", code: classInfo.access_message },
         { status: 400 }
@@ -69,6 +81,7 @@ export async function POST(request: NextRequest) {
     const randomPassword = crypto.randomUUID() + crypto.randomUUID();
 
     // Try to create user - if they already exist, we'll get an error
+    console.log("[quick-signup] Creating user");
     const { data: authData, error: authError } =
       await adminClient.auth.admin.createUser({
         email,
@@ -84,11 +97,15 @@ export async function POST(request: NextRequest) {
         },
       });
 
+    console.log("[quick-signup] Create user result:", { authData: !!authData, authError });
+
     let userId: string;
 
     if (authError) {
+      console.log("[quick-signup] Auth error:", authError.message);
       // Check if user already exists
       if (authError.message.includes("already") || authError.message.includes("exists")) {
+        console.log("[quick-signup] User already exists, looking up profile");
         // User exists - get their ID from profiles table
         const { data: existingProfile, error: profileError } = await adminClient
           .from("profiles")
@@ -96,8 +113,10 @@ export async function POST(request: NextRequest) {
           .eq("email", email.toLowerCase())
           .single();
 
+        console.log("[quick-signup] Profile lookup result:", { existingProfile, profileError });
+
         if (profileError || !existingProfile) {
-          console.error("Error finding existing user:", profileError);
+          console.error("[quick-signup] Error finding existing user:", profileError);
           return NextResponse.json(
             { error: "Email already registered. Please log in.", code: "EMAIL_EXISTS" },
             { status: 400 }
@@ -106,7 +125,7 @@ export async function POST(request: NextRequest) {
 
         userId = existingProfile.id;
       } else {
-        console.error("Error creating user:", authError);
+        console.error("[quick-signup] Error creating user:", authError);
         return NextResponse.json(
           { error: "Failed to create account", code: "AUTH_ERROR" },
           { status: 500 }
@@ -114,9 +133,11 @@ export async function POST(request: NextRequest) {
       }
     } else {
       userId = authData.user!.id;
+      console.log("[quick-signup] User created with ID:", userId);
     }
 
     // Join the class using the RPC function
+    console.log("[quick-signup] Joining class");
     const { data: joinResult, error: joinError } = await adminClient.rpc(
       "join_class",
       {
@@ -126,8 +147,10 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    console.log("[quick-signup] Join result:", { joinResult, joinError });
+
     if (joinError) {
-      console.error("Error joining class:", joinError);
+      console.error("[quick-signup] Error joining class:", joinError);
       return NextResponse.json(
         { error: "Failed to join class", code: "JOIN_ERROR" },
         { status: 500 }
@@ -135,6 +158,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!joinResult?.success) {
+      console.log("[quick-signup] Join failed:", joinResult?.error);
       return NextResponse.json(
         { error: joinResult?.error || "Failed to join class", code: joinResult?.error },
         { status: 400 }
@@ -142,6 +166,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate a magic link to sign the user in automatically
+    console.log("[quick-signup] Generating magic link");
     const { data: linkData, error: linkError } =
       await adminClient.auth.admin.generateLink({
         type: "magiclink",
@@ -151,8 +176,10 @@ export async function POST(request: NextRequest) {
         },
       });
 
+    console.log("[quick-signup] Magic link result:", { linkData: !!linkData, linkError });
+
     if (linkError) {
-      console.error("Error generating sign-in link:", linkError);
+      console.error("[quick-signup] Error generating sign-in link:", linkError);
       // User was created and joined, but we couldn't auto-sign them in
       // They can use password reset to get access
       return NextResponse.json({
@@ -164,6 +191,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    console.log("[quick-signup] Success!");
     // Return the magic link token for client-side sign-in
     return NextResponse.json({
       success: true,
@@ -174,7 +202,7 @@ export async function POST(request: NextRequest) {
       email,
     });
   } catch (error) {
-    console.error("Quick signup error:", error);
+    console.error("[quick-signup] Unexpected error:", error);
     return NextResponse.json(
       { error: "Internal server error", code: "SERVER_ERROR" },
       { status: 500 }
