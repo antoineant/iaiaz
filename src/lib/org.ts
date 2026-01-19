@@ -57,7 +57,7 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
     return null;
   }
 
-  const { data: membership, error } = await supabase
+  const { data: memberships, error } = await supabase
     .from("organization_members")
     .select(`
       id,
@@ -71,11 +71,14 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
     `)
     .eq("user_id", user.id)
     .eq("status", "active")
-    .single();
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  if (error || !membership) {
+  if (error || !memberships || memberships.length === 0) {
     return null;
   }
+
+  const membership = memberships[0];
 
   const org = membership.organization as unknown as { id: string; name: string } | null;
   if (!org) {

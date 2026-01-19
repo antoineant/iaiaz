@@ -208,6 +208,7 @@ RETURNS TRIGGER AS $$
 DECLARE
   v_org_id uuid;
   v_org_name text;
+  v_slug text;
 BEGIN
   -- Only create org for trainers who don't already have one
   IF NEW.account_type = 'trainer' THEN
@@ -222,9 +223,12 @@ BEGIN
         split_part(NEW.email, '@', 1) || '''s Classes'
       );
 
+      -- Generate unique slug from user id
+      v_slug := 'trainer-' || substring(NEW.id::text, 1, 8) || '-' || floor(random() * 1000)::text;
+
       -- Create the organization with default credits
-      INSERT INTO organizations (name, owner_id, credit_balance)
-      VALUES (v_org_name, NEW.id, 5.00) -- Give trainers 5€ starting credits
+      INSERT INTO organizations (name, slug, contact_email, type, status, credit_balance)
+      VALUES (v_org_name, v_slug, NEW.email, 'training_center', 'active', 5.00)
       RETURNING id INTO v_org_id;
 
       -- Add the trainer as owner of the organization
