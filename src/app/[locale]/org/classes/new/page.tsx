@@ -116,7 +116,7 @@ export default function NewClassPage() {
                     type="datetime-local"
                     value={formData.starts_at}
                     onChange={(e) => setFormData({ ...formData, starts_at: e.target.value })}
-                    className="w-full p-2 border rounded-lg bg-background text-sm"
+                    className="w-full p-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] text-sm dark:[color-scheme:dark]"
                   />
                   <p className="text-xs text-[var(--muted-foreground)] mt-1">
                     {t("form.startsAtHint")}
@@ -128,7 +128,7 @@ export default function NewClassPage() {
                     type="datetime-local"
                     value={formData.ends_at}
                     onChange={(e) => setFormData({ ...formData, ends_at: e.target.value })}
-                    className="w-full p-2 border rounded-lg bg-background text-sm"
+                    className="w-full p-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)] text-sm dark:[color-scheme:dark]"
                   />
                   <p className="text-xs text-[var(--muted-foreground)] mt-1">
                     {t("form.endsAtHint")}
