@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 
 interface QuickSignupRequest {
   firstName: string;
@@ -44,7 +43,15 @@ export async function POST(request: NextRequest) {
       { p_token: classToken }
     );
 
-    if (classError || !classInfo?.success) {
+    if (classError) {
+      console.error("Error fetching class:", classError);
+      return NextResponse.json(
+        { error: "Failed to verify class", code: "CLASS_ERROR" },
+        { status: 500 }
+      );
+    }
+
+    if (!classInfo?.success) {
       return NextResponse.json(
         { error: "Invalid class token", code: "INVALID_TOKEN" },
         { status: 400 }
@@ -61,60 +68,51 @@ export async function POST(request: NextRequest) {
     // Generate a random password (user won't need it - they can reset later if needed)
     const randomPassword = crypto.randomUUID() + crypto.randomUUID();
 
-    // Check if user already exists
-    const { data: existingUsers } = await adminClient.auth.admin.listUsers();
-    const existingUser = existingUsers?.users?.find(
-      (u) => u.email?.toLowerCase() === email.toLowerCase()
-    );
+    // Try to create user - if they already exist, we'll get an error
+    const { data: authData, error: authError } =
+      await adminClient.auth.admin.createUser({
+        email,
+        password: randomPassword,
+        email_confirm: true, // Auto-confirm email for class join
+        user_metadata: {
+          display_name: displayName,
+          first_name: firstName,
+          last_name: lastName,
+          account_type: "student",
+          quick_signup: true,
+          class_token: classToken,
+        },
+      });
 
     let userId: string;
 
-    if (existingUser) {
-      // User exists - just use their ID
-      userId = existingUser.id;
-
-      // Update their display name if not set
-      if (!existingUser.user_metadata?.display_name) {
-        await adminClient.auth.admin.updateUserById(userId, {
-          user_metadata: {
-            ...existingUser.user_metadata,
-            display_name: displayName,
-          },
-        });
-      }
-    } else {
-      // Create new user without email confirmation
-      const { data: authData, error: authError } =
-        await adminClient.auth.admin.createUser({
-          email,
-          password: randomPassword,
-          email_confirm: true, // Auto-confirm email for class join
-          user_metadata: {
-            display_name: displayName,
-            first_name: firstName,
-            last_name: lastName,
-            account_type: "student",
-            quick_signup: true,
-            class_token: classToken,
-          },
+    if (authError) {
+      // Check if user already exists
+      if (authError.message.includes("already") || authError.message.includes("exists")) {
+        // User exists - get their ID by email
+        const { data: existingUsers, error: listError } = await adminClient.auth.admin.listUsers({
+          filter: `email.eq.${email}`,
+          page: 1,
+          perPage: 1,
         });
 
-      if (authError) {
-        console.error("Error creating user:", authError);
-
-        if (authError.message.includes("already registered")) {
+        if (listError || !existingUsers?.users?.length) {
+          console.error("Error finding existing user:", listError);
           return NextResponse.json(
-            { error: "Email already registered", code: "EMAIL_EXISTS" },
+            { error: "Email already registered. Please log in.", code: "EMAIL_EXISTS" },
             { status: 400 }
           );
         }
 
+        userId = existingUsers.users[0].id;
+      } else {
+        console.error("Error creating user:", authError);
         return NextResponse.json(
           { error: "Failed to create account", code: "AUTH_ERROR" },
           { status: 500 }
         );
       }
-
+    } else {
       userId = authData.user!.id;
     }
 
@@ -167,13 +165,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Return the magic link token for client-side sign-in
-    // The hashed_token from generateLink can be used with verifyOtp
     return NextResponse.json({
       success: true,
       userId,
       memberId: joinResult.member_id,
       creditAllocated: joinResult.credit_allocated,
-      // Return the token hash for client-side verification
       tokenHash: linkData.properties?.hashed_token,
       email,
     });
