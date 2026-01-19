@@ -52,26 +52,15 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
     };
   }
 
-  // Get all messages from class students within the date range
-  const { data: messages } = await adminClient
-    .from("messages")
-    .select(`
-      id,
-      role,
-      cost,
-      created_at,
-      conversation:conversations!inner (
-        id,
-        user_id,
-        model
-      )
-    `)
-    .in("conversation.user_id", studentIds)
+  // First, get all conversations for class students
+  const { data: conversations } = await adminClient
+    .from("conversations")
+    .select("id, user_id, model")
+    .in("user_id", studentIds)
     .gte("created_at", start.toISOString())
-    .lte("created_at", end.toISOString())
-    .order("created_at", { ascending: true });
+    .lte("updated_at", end.toISOString());
 
-  if (!messages || messages.length === 0) {
+  if (!conversations || conversations.length === 0) {
     return {
       total_messages: 0,
       total_conversations: 0,
@@ -85,8 +74,34 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
     };
   }
 
+  const conversationIds = conversations.map((c) => c.id);
+  const conversationMap = new Map(conversations.map((c) => [c.id, c]));
+
+  // Then get all messages from those conversations within the date range
+  const { data: messages } = await adminClient
+    .from("messages")
+    .select("id, role, cost, created_at, conversation_id")
+    .in("conversation_id", conversationIds)
+    .gte("created_at", start.toISOString())
+    .lte("created_at", end.toISOString())
+    .order("created_at", { ascending: true });
+
+  if (!messages || messages.length === 0) {
+    return {
+      total_messages: 0,
+      total_conversations: conversations.length,
+      total_cost: 0,
+      unique_students: members?.length || 0,
+      active_students: new Set(conversations.map((c) => c.user_id)).size,
+      model_usage: {},
+      peak_hours: [],
+      daily_usage: [],
+      top_students: [],
+    };
+  }
+
   // Compute metrics
-  const conversationIds = new Set<string>();
+  const activeConversationIds = new Set<string>();
   const activeStudentIds = new Set<string>();
   const modelUsage: Record<string, number> = {};
   const hourCounts: Record<number, number> = {};
@@ -97,7 +112,8 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
   let totalCost = 0;
 
   for (const msg of messages) {
-    const conv = msg.conversation as unknown as { id: string; user_id: string; model: string };
+    const conv = conversationMap.get(msg.conversation_id);
+    if (!conv) continue;
 
     // Count user messages only for message count
     if (msg.role === "user") {
@@ -105,7 +121,7 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
     }
 
     // Track conversations
-    conversationIds.add(conv.id);
+    activeConversationIds.add(conv.id);
 
     // Track active students
     activeStudentIds.add(conv.user_id);
@@ -183,7 +199,7 @@ export async function computeClassMetrics(options: ComputeOptions): Promise<Clas
 
   return {
     total_messages: totalMessages,
-    total_conversations: conversationIds.size,
+    total_conversations: activeConversationIds.size,
     total_cost: Math.round(totalCost * 100) / 100,
     unique_students: members?.length || 0,
     active_students: activeStudentIds.size,
