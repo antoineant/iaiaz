@@ -563,7 +563,9 @@
         "student": "Student",
         "studentDesc": "To use AI",
         "trainer": "Trainer",
-        "trainerDesc": "To create classes"
+        "trainerDesc": "To create classes",
+        "school": "School",
+        "schoolDesc": "To manage trainers and classes"
       },
       "displayName": "Display name",
       "displayNamePlaceholder": "Your name (optional)",
@@ -1900,14 +1902,49 @@
       "remaining": "Remaining",
       "actions": "Actions",
       "noMembers": "No members yet",
-      "allocate": "Allocate credits",
+      "allocate": "Allocate",
       "suspend": "Suspend",
       "remove": "Remove",
-      "allocateCredits": {
-        "title": "Allocate Credits",
-        "amount": "Amount",
-        "submit": "Allocate"
-      }
+      "editMember": "Edit member",
+      "allocateCredits": "Allocate credits",
+      "reactivate": "Reactivate",
+      "suspended": "Suspended",
+      "classPlaceholder": "E.g., Class A",
+      "cancel": "Cancel",
+      "save": "Save",
+      "currentAllocation": "Current allocation",
+      "amountToAdd": "Amount to add",
+      "invalidAmount": "Amount must be a positive number",
+      "confirmSuspend": "Suspend this member?",
+      "confirmReactivate": "Reactivate this member?",
+      "confirmRemove": "Remove this member?",
+      "suspendDescription": "Member {email} will no longer be able to access the organization.",
+      "reactivateDescription": "Member {email} will be able to access the organization again.",
+      "removeDescription": "Member {email} will be permanently removed from the organization.",
+      "confirm": "Confirm",
+      "members": "members"
+    },
+    "setup": {
+      "title": "Set up your organization",
+      "subtitle": "A few details to customize your workspace.",
+      "orgName": "Organization name",
+      "orgNamePlaceholder": "E.g., Lincoln High School",
+      "orgType": "Organization type",
+      "types": {
+        "school": "High School / Middle School",
+        "university": "University",
+        "businessSchool": "Business School",
+        "trainingCenter": "Training Center"
+      },
+      "contactEmail": "Contact email",
+      "contactEmailPlaceholder": "contact@school.edu",
+      "contactEmailHint": "For communications regarding your organization.",
+      "billingEmail": "Billing email (optional)",
+      "billingEmailPlaceholder": "billing@school.edu",
+      "billingEmailHint": "If different from the contact email.",
+      "continue": "Continue",
+      "skipForNow": "Skip for now",
+      "error": "An error occurred. Please try again."
     },
     "invites": {
       "title": "Invitations",

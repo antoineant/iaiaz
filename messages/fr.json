@@ -496,7 +496,9 @@
         "student": "Étudiant",
         "studentDesc": "Pour utiliser l'IA",
         "trainer": "Formateur",
-        "trainerDesc": "Pour créer des classes"
+        "trainerDesc": "Pour créer des classes",
+        "school": "Établissement",
+        "schoolDesc": "Pour gérer formateurs et classes"
       },
       "displayName": "Nom d'affichage",
       "displayNamePlaceholder": "Votre nom (optionnel)",
@@ -1868,14 +1870,49 @@
       "remaining": "Restant",
       "actions": "Actions",
       "noMembers": "Aucun membre pour le moment",
-      "allocate": "Allouer des crédits",
+      "allocate": "Allouer",
       "suspend": "Suspendre",
       "remove": "Retirer",
-      "allocateCredits": {
-        "title": "Allouer des crédits",
-        "amount": "Montant",
-        "submit": "Allouer"
-      }
+      "editMember": "Modifier le membre",
+      "allocateCredits": "Allouer des crédits",
+      "reactivate": "Réactiver",
+      "suspended": "Suspendu",
+      "classPlaceholder": "Ex: Classe A",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "currentAllocation": "Allocation actuelle",
+      "amountToAdd": "Montant à ajouter",
+      "invalidAmount": "Le montant doit être un nombre positif",
+      "confirmSuspend": "Suspendre ce membre ?",
+      "confirmReactivate": "Réactiver ce membre ?",
+      "confirmRemove": "Retirer ce membre ?",
+      "suspendDescription": "Le membre {email} ne pourra plus accéder à l'organisation.",
+      "reactivateDescription": "Le membre {email} pourra à nouveau accéder à l'organisation.",
+      "removeDescription": "Le membre {email} sera retiré de l'organisation de façon définitive.",
+      "confirm": "Confirmer",
+      "members": "membres"
+    },
+    "setup": {
+      "title": "Configurez votre organisation",
+      "subtitle": "Quelques informations pour personnaliser votre espace.",
+      "orgName": "Nom de l'organisation",
+      "orgNamePlaceholder": "Ex: Lycée Victor Hugo",
+      "orgType": "Type d'établissement",
+      "types": {
+        "school": "Lycée / Collège",
+        "university": "Université",
+        "businessSchool": "École de commerce",
+        "trainingCenter": "Centre de formation"
+      },
+      "contactEmail": "Email de contact",
+      "contactEmailPlaceholder": "contact@etablissement.fr",
+      "contactEmailHint": "Pour les communications relatives à votre organisation.",
+      "billingEmail": "Email de facturation (optionnel)",
+      "billingEmailPlaceholder": "comptabilite@etablissement.fr",
+      "billingEmailHint": "Si différent de l'email de contact.",
+      "continue": "Continuer",
+      "skipForNow": "Passer cette étape",
+      "error": "Une erreur est survenue. Veuillez réessayer."
     },
     "invites": {
       "title": "Invitations",

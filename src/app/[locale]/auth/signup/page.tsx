@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
-import { Check, User, GraduationCap } from "lucide-react";
+import { Check, User, GraduationCap, Building2 } from "lucide-react";
 
-type AccountType = "student" | "trainer";
+type AccountType = "student" | "trainer" | "school";
 
 export default function SignupPage() {
   const t = useTranslations("auth.signup");
@@ -130,31 +130,27 @@ export default function SignupPage() {
               {/* Account Type Selection */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("accountType.label")}</label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
                     onClick={() => setAccountType("student")}
-                    className={`relative p-4 rounded-lg border-2 transition-all text-left ${
+                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
                       accountType === "student"
                         ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
                         : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
                     }`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        accountType === "student"
-                          ? "bg-primary-600 text-white"
-                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                      }`}>
-                        <User className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{t("accountType.student")}</p>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
-                          {t("accountType.studentDesc")}
-                        </p>
-                      </div>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                      accountType === "student"
+                        ? "bg-primary-600 text-white"
+                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                    }`}>
+                      <User className="w-5 h-5" />
                     </div>
+                    <p className="font-medium text-sm">{t("accountType.student")}</p>
+                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
+                      {t("accountType.studentDesc")}
+                    </p>
                     {accountType === "student" && (
                       <div className="absolute top-2 right-2">
                         <Check className="w-4 h-4 text-primary-600" />
@@ -165,28 +161,51 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => setAccountType("trainer")}
-                    className={`relative p-4 rounded-lg border-2 transition-all text-left ${
+                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
                       accountType === "trainer"
                         ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
                         : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
                     }`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        accountType === "trainer"
-                          ? "bg-primary-600 text-white"
-                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                      }`}>
-                        <GraduationCap className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{t("accountType.trainer")}</p>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
-                          {t("accountType.trainerDesc")}
-                        </p>
-                      </div>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                      accountType === "trainer"
+                        ? "bg-primary-600 text-white"
+                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                    }`}>
+                      <GraduationCap className="w-5 h-5" />
                     </div>
+                    <p className="font-medium text-sm">{t("accountType.trainer")}</p>
+                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
+                      {t("accountType.trainerDesc")}
+                    </p>
                     {accountType === "trainer" && (
+                      <div className="absolute top-2 right-2">
+                        <Check className="w-4 h-4 text-primary-600" />
+                      </div>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountType("school")}
+                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
+                      accountType === "school"
+                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                      accountType === "school"
+                        ? "bg-primary-600 text-white"
+                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                    }`}>
+                      <Building2 className="w-5 h-5" />
+                    </div>
+                    <p className="font-medium text-sm">{t("accountType.school")}</p>
+                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
+                      {t("accountType.schoolDesc")}
+                    </p>
+                    {accountType === "school" && (
                       <div className="absolute top-2 right-2">
                         <Check className="w-4 h-4 text-primary-600" />
                       </div>

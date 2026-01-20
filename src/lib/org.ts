@@ -35,6 +35,7 @@ export async function canAccessTrainerFeatures(): Promise<boolean> {
 }
 
 export interface OrgMembership {
+  userId: string;
   organizationId: string;
   organizationName: string;
   role: OrgRole;
@@ -86,6 +87,7 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
   }
 
   return {
+    userId: user.id,
     organizationId: org.id,
     organizationName: org.name,
     role: membership.role as OrgRole,

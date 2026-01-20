@@ -75,6 +75,7 @@ export const pathnames = {
   '/class/[classId]': '/class/[classId]',
   '/join': '/join',
   '/org': '/org',
+  '/org/setup': '/org/setup',
   '/org/members': '/org/members',
   '/org/invites': '/org/invites',
   '/org/classes': '/org/classes',

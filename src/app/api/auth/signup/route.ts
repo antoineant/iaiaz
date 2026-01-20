@@ -11,7 +11,7 @@ import {
 interface SignupRequest {
   email: string;
   password: string;
-  accountType?: "student" | "trainer";
+  accountType?: "student" | "trainer" | "school";
   displayName?: string;
 }
 
