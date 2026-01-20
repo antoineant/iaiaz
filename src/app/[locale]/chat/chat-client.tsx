@@ -57,8 +57,9 @@ export function ChatClient({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
-  // Get default model (recommended or first)
-  const defaultModel = pricingData.models.find((m) => m.is_recommended)?.id ||
+  // Get default model from settings, falling back to recommended or first available
+  const defaultModel = pricingData.defaultModel ||
+                       pricingData.models.find((m) => m.is_recommended)?.id ||
                        pricingData.models[0]?.id ||
                        "claude-sonnet-4-20250514";
 

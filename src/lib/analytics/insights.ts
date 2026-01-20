@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { callAI } from "@/lib/ai/providers";
+import { getAnalyticsModel } from "@/lib/models";
 import type { ClassMetrics } from "./compute";
 
 export interface AIInsights {
@@ -26,8 +27,10 @@ export async function generateClassInsights(
   const prompt = buildInsightsPrompt(className, metrics, locale);
 
   try {
-    // Use Sonnet for higher quality insights
-    const response = await callAI("claude-sonnet-4-20250514", [
+    // Get analytics model from database config
+    const analyticsModelId = await getAnalyticsModel();
+
+    const response = await callAI(analyticsModelId, [
       { role: "user", content: prompt },
     ]);
 

@@ -1,4 +1,3 @@
-import type { ModelId } from "@/lib/pricing";
 import type { ContentPart, MultimodalMessage } from "@/types";
 
 // Legacy text-only message type (for backward compatibility)
@@ -283,7 +282,7 @@ function getProvider(
 
 // Main router function - supports both text-only and multimodal messages
 export async function callAI(
-  modelId: ModelId,
+  modelId: string,
   messages: UnifiedMessage[]
 ): Promise<AIResponse> {
   const provider = getProvider(modelId);

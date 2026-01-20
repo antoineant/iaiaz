@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getDefaultChatModel } from "@/lib/models";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export interface DBModel {
@@ -30,6 +31,7 @@ export interface AppSettings {
 export interface PricingData {
   settings: AppSettings;
   models: DBModel[];
+  defaultModel: string;
 }
 
 // Default settings used when database is unavailable
@@ -102,11 +104,12 @@ async function fetchSettingsWithClient(supabase: SupabaseClient): Promise<AppSet
 
 // Get full pricing data for server components (settings + models)
 export async function getPricingData(): Promise<PricingData> {
-  const [settings, models] = await Promise.all([
+  const [settings, models, defaultModel] = await Promise.all([
     getAppSettings(),
     getModelsFromDB(),
+    getDefaultChatModel(),
   ]);
-  return { settings, models };
+  return { settings, models, defaultModel };
 }
 
 // Calculate cost using database model and settings (for server components)

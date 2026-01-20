@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getClassModelRestrictions } from "@/lib/org";
+import { getDefaultChatModel } from "@/lib/models";
 
 export async function GET() {
   try {
@@ -39,8 +40,12 @@ export async function GET() {
       );
     }
 
+    // Get default chat model from settings
+    const defaultModel = await getDefaultChatModel();
+
     return NextResponse.json({
       models: filteredModels,
+      defaultModel,
       restrictions: {
         hasClass: restrictions.hasClass,
         className: restrictions.className,

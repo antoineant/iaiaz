@@ -30,6 +30,15 @@ interface AIModel {
   is_recommended: boolean;
   is_active: boolean;
   max_tokens: number;
+  rate_limit_tier: "economy" | "standard" | "premium";
+  capabilities: {
+    images?: boolean;
+    pdf?: boolean;
+    code?: boolean;
+  };
+  system_role: string | null;
+  display_order: number;
+  co2_per_million_tokens: number;
 }
 
 interface TestResult {
@@ -48,6 +57,19 @@ const CATEGORIES = [
   { value: "fast", label: "Rapide" },
   { value: "economy", label: "Économique" },
   { value: "code", label: "Code" },
+];
+
+const RATE_LIMIT_TIERS = [
+  { value: "economy", label: "Économique (20/min)" },
+  { value: "standard", label: "Standard (10/min)" },
+  { value: "premium", label: "Premium (3/min)" },
+];
+
+const SYSTEM_ROLES = [
+  { value: "", label: "Aucun" },
+  { value: "default_chat", label: "Chat par défaut" },
+  { value: "analytics", label: "Analytics" },
+  { value: "economy_fallback", label: "Fallback économique" },
 ];
 
 const PROVIDERS = ["Anthropic", "OpenAI", "Google", "Mistral"];
@@ -104,6 +126,11 @@ export default function ModelsPage() {
       is_recommended: false,
       is_active: true,
       max_tokens: 4096,
+      rate_limit_tier: "standard",
+      capabilities: { images: false, pdf: false, code: false },
+      system_role: null,
+      display_order: 100,
+      co2_per_million_tokens: 0.5,
     });
   };
 
@@ -138,6 +165,11 @@ export default function ModelsPage() {
           is_recommended: formData.is_recommended,
           is_active: formData.is_active,
           max_tokens: formData.max_tokens,
+          rate_limit_tier: formData.rate_limit_tier,
+          capabilities: formData.capabilities,
+          system_role: formData.system_role || null,
+          display_order: formData.display_order,
+          co2_per_million_tokens: formData.co2_per_million_tokens,
         },
       ]);
 
@@ -162,6 +194,11 @@ export default function ModelsPage() {
             is_recommended: formData.is_recommended,
             is_active: formData.is_active,
             max_tokens: formData.max_tokens,
+            rate_limit_tier: formData.rate_limit_tier,
+            capabilities: formData.capabilities,
+            system_role: formData.system_role || null,
+            display_order: formData.display_order,
+            co2_per_million_tokens: formData.co2_per_million_tokens,
           },
         ]);
 
@@ -194,6 +231,11 @@ export default function ModelsPage() {
             is_recommended: formData.is_recommended,
             is_active: formData.is_active,
             max_tokens: formData.max_tokens,
+            rate_limit_tier: formData.rate_limit_tier,
+            capabilities: formData.capabilities,
+            system_role: formData.system_role || null,
+            display_order: formData.display_order,
+            co2_per_million_tokens: formData.co2_per_million_tokens,
           })
           .eq("id", editingId);
 
@@ -431,6 +473,83 @@ export default function ModelsPage() {
                   setFormData({ ...formData, max_tokens: parseInt(e.target.value) })
                 }
               />
+              <div>
+                <label className="block text-sm font-medium mb-1.5">Rate Limit</label>
+                <select
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)]"
+                  value={formData.rate_limit_tier || "standard"}
+                  onChange={(e) => setFormData({ ...formData, rate_limit_tier: e.target.value as "economy" | "standard" | "premium" })}
+                >
+                  {RATE_LIMIT_TIERS.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1.5">Rôle système</label>
+                <select
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)]"
+                  value={formData.system_role || ""}
+                  onChange={(e) => setFormData({ ...formData, system_role: e.target.value || null })}
+                >
+                  {SYSTEM_ROLES.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <Input
+                label="Ordre d'affichage"
+                type="number"
+                value={formData.display_order || 100}
+                onChange={(e) =>
+                  setFormData({ ...formData, display_order: parseInt(e.target.value) })
+                }
+              />
+              <Input
+                label="CO2 (g/1M tokens)"
+                type="number"
+                step="0.01"
+                value={formData.co2_per_million_tokens || 0.5}
+                onChange={(e) =>
+                  setFormData({ ...formData, co2_per_million_tokens: parseFloat(e.target.value) })
+                }
+              />
+              <div className="col-span-full">
+                <label className="block text-sm font-medium mb-2">Capacités</label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.capabilities?.images || false}
+                      onChange={(e) => setFormData({ ...formData, capabilities: { ...formData.capabilities, images: e.target.checked } })}
+                      className="w-4 h-4"
+                    />
+                    Images
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.capabilities?.pdf || false}
+                      onChange={(e) => setFormData({ ...formData, capabilities: { ...formData.capabilities, pdf: e.target.checked } })}
+                      className="w-4 h-4"
+                    />
+                    PDF
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.capabilities?.code || false}
+                      onChange={(e) => setFormData({ ...formData, capabilities: { ...formData.capabilities, code: e.target.checked } })}
+                      className="w-4 h-4"
+                    />
+                    Code
+                  </label>
+                </div>
+              </div>
               <div className="flex items-center gap-4 pt-6">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -524,6 +643,81 @@ export default function ModelsPage() {
                               })
                             }
                           />
+                          <div>
+                            <label className="block text-sm font-medium mb-1.5">Rate Limit</label>
+                            <select
+                              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-sm"
+                              value={formData.rate_limit_tier || "standard"}
+                              onChange={(e) => setFormData({ ...formData, rate_limit_tier: e.target.value as "economy" | "standard" | "premium" })}
+                            >
+                              {RATE_LIMIT_TIERS.map((t) => (
+                                <option key={t.value} value={t.value}>
+                                  {t.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-1.5">Rôle système</label>
+                            <select
+                              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-sm"
+                              value={formData.system_role || ""}
+                              onChange={(e) => setFormData({ ...formData, system_role: e.target.value || null })}
+                            >
+                              {SYSTEM_ROLES.map((r) => (
+                                <option key={r.value} value={r.value}>
+                                  {r.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <Input
+                            label="Ordre"
+                            type="number"
+                            value={formData.display_order || 100}
+                            onChange={(e) =>
+                              setFormData({ ...formData, display_order: parseInt(e.target.value) })
+                            }
+                          />
+                          <Input
+                            label="CO2 (g/1M)"
+                            type="number"
+                            step="0.01"
+                            value={formData.co2_per_million_tokens || 0.5}
+                            onChange={(e) =>
+                              setFormData({ ...formData, co2_per_million_tokens: parseFloat(e.target.value) })
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="text-sm font-medium">Capacités:</span>
+                          <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <input
+                              type="checkbox"
+                              checked={formData.capabilities?.images || false}
+                              onChange={(e) => setFormData({ ...formData, capabilities: { ...formData.capabilities, images: e.target.checked } })}
+                              className="w-4 h-4"
+                            />
+                            Images
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <input
+                              type="checkbox"
+                              checked={formData.capabilities?.pdf || false}
+                              onChange={(e) => setFormData({ ...formData, capabilities: { ...formData.capabilities, pdf: e.target.checked } })}
+                              className="w-4 h-4"
+                            />
+                            PDF
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <input
+                              type="checkbox"
+                              checked={formData.capabilities?.code || false}
+                              onChange={(e) => setFormData({ ...formData, capabilities: { ...formData.capabilities, code: e.target.checked } })}
+                              className="w-4 h-4"
+                            />
+                            Code
+                          </label>
                         </div>
                         <div className="flex gap-2">
                           <Button size="sm" onClick={saveModel}>
@@ -555,6 +749,20 @@ export default function ModelsPage() {
                             <span className="px-2 py-0.5 text-xs bg-[var(--muted)] rounded-full">
                               {CATEGORIES.find((c) => c.value === model.category)?.label}
                             </span>
+                            <span className={`px-2 py-0.5 text-xs rounded-full ${
+                              model.rate_limit_tier === "premium"
+                                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400"
+                                : model.rate_limit_tier === "economy"
+                                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                                  : "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                            }`}>
+                              {RATE_LIMIT_TIERS.find((t) => t.value === model.rate_limit_tier)?.label || "Standard"}
+                            </span>
+                            {model.system_role && (
+                              <span className="px-2 py-0.5 text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded-full">
+                                {SYSTEM_ROLES.find((r) => r.value === model.system_role)?.label}
+                              </span>
+                            )}
                             {/* Test status indicator */}
                             {testResult && (
                               <span

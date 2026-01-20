@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { ModelId } from "@/lib/pricing";
+import { getModelRateLimitTier } from "@/lib/models";
 
 export type ModelTier = "economy" | "standard" | "premium";
 
@@ -17,20 +17,23 @@ export interface RateLimitStatus {
   reset_at: string;
 }
 
-// Map model IDs to their rate limit tiers
-const MODEL_TIERS: Record<string, ModelTier> = {
-  // Premium models (3 req/min) - most expensive/powerful
+/**
+ * Static fallback tiers for sync usage and when DB is unavailable
+ * @deprecated The canonical source is now the database ai_models.rate_limit_tier
+ */
+const FALLBACK_TIERS: Record<string, ModelTier> = {
+  // Premium models (3 req/min)
   "claude-opus-4-5-20250514": "premium",
   "gpt-5": "premium",
   "gemini-2.5-pro-preview-06-05": "premium",
 
-  // Economy models (20 req/min) - cheap/fast
+  // Economy models (20 req/min)
   "gpt-4o-mini": "economy",
   "gemini-2.0-flash": "economy",
   "gemini-1.5-flash": "economy",
   "mistral-small-latest": "economy",
 
-  // Standard models (10 req/min) - everything else
+  // Standard models (10 req/min)
   "claude-sonnet-4-20250514": "standard",
   "claude-3-5-haiku-20241022": "standard",
   "gpt-4.1": "standard",
@@ -41,9 +44,24 @@ const MODEL_TIERS: Record<string, ModelTier> = {
   "codestral-latest": "standard",
 };
 
-// Get the tier for a model
-export function getModelTier(modelId: ModelId | string): ModelTier {
-  return MODEL_TIERS[modelId] || "standard";
+/**
+ * Get the tier for a model (async - fetches from DB)
+ */
+export async function getModelTierAsync(modelId: string): Promise<ModelTier> {
+  try {
+    return await getModelRateLimitTier(modelId);
+  } catch {
+    // Fallback to static config
+    return FALLBACK_TIERS[modelId] || "standard";
+  }
+}
+
+/**
+ * Get the tier for a model (sync fallback)
+ * @deprecated Use getModelTierAsync when possible
+ */
+export function getModelTier(modelId: string): ModelTier {
+  return FALLBACK_TIERS[modelId] || "standard";
 }
 
 // Get tier limits
@@ -62,9 +80,9 @@ export function getTierLimits(tier: ModelTier): { limit: number; description: st
 export async function checkRateLimit(
   supabase: SupabaseClient,
   userId: string,
-  modelId: ModelId | string
+  modelId: string
 ): Promise<RateLimitResult> {
-  const tier = getModelTier(modelId);
+  const tier = await getModelTierAsync(modelId);
 
   const { data, error } = await supabase.rpc("check_rate_limit", {
     p_user_id: userId,
@@ -89,9 +107,9 @@ export async function checkRateLimit(
 export async function getRateLimitStatus(
   supabase: SupabaseClient,
   userId: string,
-  modelId: ModelId | string
+  modelId: string
 ): Promise<RateLimitStatus> {
-  const tier = getModelTier(modelId);
+  const tier = await getModelTierAsync(modelId);
 
   const { data, error } = await supabase.rpc("get_rate_limit_status", {
     p_user_id: userId,
@@ -125,8 +143,30 @@ export function formatWaitTime(resetAt: string): string {
 }
 
 // Generate user-friendly rate limit error message
-export function getRateLimitErrorMessage(
-  modelId: ModelId | string,
+export async function getRateLimitErrorMessage(
+  modelId: string,
+  resetAt: string
+): Promise<string> {
+  const tier = await getModelTierAsync(modelId);
+  const limits = getTierLimits(tier);
+  const waitTime = formatWaitTime(resetAt);
+
+  const tierName =
+    tier === "premium"
+      ? "premium (Claude Opus, GPT-5)"
+      : tier === "economy"
+        ? "économiques"
+        : "standard";
+
+  return `Vous avez atteint la limite de ${limits.description} pour les modèles ${tierName}. Réessayez dans ${waitTime}.`;
+}
+
+/**
+ * Sync version for error messages when async not possible
+ * @deprecated Use getRateLimitErrorMessage when possible
+ */
+export function getRateLimitErrorMessageSync(
+  modelId: string,
   resetAt: string
 ): string {
   const tier = getModelTier(modelId);

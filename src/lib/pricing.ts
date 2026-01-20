@@ -1,14 +1,35 @@
-// Pricing per 1 million tokens (in USD, converted at ~1:1 for EUR)
-// Sources:
-// - Anthropic: https://docs.anthropic.com/en/docs/about-claude/models
-// - OpenAI: https://platform.openai.com/docs/pricing
-// - Google: https://ai.google.dev/gemini-api/docs/pricing
-// - Mistral: https://docs.mistral.ai/deployment/ai-studio/pricing
+/**
+ * Pricing Module (Legacy Compatibility Layer)
+ *
+ * This module provides backwards compatibility for code that uses static MODEL_PRICING.
+ * New code should use the async functions from @/lib/models instead.
+ *
+ * @deprecated Use @/lib/models for new code
+ */
 
+// Re-export everything from models.ts for new code
+export {
+  calculateCost,
+  estimateCost,
+  getModelPricing,
+  getModelCapabilities,
+  getModel as getModelInfo,
+  getModelsForDisplay as getAllModels,
+  getModelsByCategory,
+  getModelsByProvider,
+  CREDIT_PACKS,
+} from "./models";
+
+// ============================================================================
+// STATIC FALLBACK (for sync code that can't use async)
+// ============================================================================
+
+/**
+ * @deprecated Use async functions from @/lib/models instead
+ * This static data is only used as fallback when DB is unavailable
+ */
 export const MODEL_PRICING = {
   // ===== ANTHROPIC CLAUDE =====
-  // All Claude models support vision and PDF natively
-  // Source: https://docs.claude.com/en/docs/about-claude/models/overview
   "claude-opus-4-5-20250514": {
     name: "Claude Opus 4.5",
     provider: "Anthropic",
@@ -41,8 +62,6 @@ export const MODEL_PRICING = {
   },
 
   // ===== OPENAI GPT =====
-  // GPT models support images but NOT native PDF (must convert to images)
-  // Source: https://learn.microsoft.com/en-us/answers/questions/2264533/does-azure-openai-support-pdf-upload-for-gpt-4o
   "gpt-5": {
     name: "GPT-5",
     provider: "OpenAI",
@@ -85,9 +104,6 @@ export const MODEL_PRICING = {
   },
 
   // ===== GOOGLE GEMINI =====
-  // All Gemini models support images and PDF natively
-  // Source: https://ai.google.dev/gemini-api/docs/models
-  // Note: Gemini 1.5 models are retired as of April 2025
   "gemini-2.5-pro": {
     name: "Gemini 2.5 Pro",
     provider: "Google",
@@ -130,8 +146,6 @@ export const MODEL_PRICING = {
   },
 
   // ===== MISTRAL =====
-  // Mistral Large/Medium/Small support images, but PDF requires separate OCR API
-  // Source: https://docs.mistral.ai/capabilities/vision
   "mistral-large-latest": {
     name: "Mistral Large",
     provider: "Mistral",
@@ -179,75 +193,30 @@ export type ModelId = keyof typeof MODEL_PRICING;
 // Markup applied to API costs (50%)
 export const MARKUP = 1.5;
 
-export function calculateCost(
-  modelId: ModelId,
+/**
+ * @deprecated Use calculateCost from @/lib/models instead
+ * Synchronous fallback for legacy code
+ */
+export function calculateCostSync(
+  modelId: string,
   inputTokens: number,
   outputTokens: number
 ): number {
-  const pricing = MODEL_PRICING[modelId];
+  const pricing = MODEL_PRICING[modelId as ModelId];
+  if (!pricing) {
+    // Fallback for unknown models
+    const baseCost = (inputTokens * 3.0 + outputTokens * 15.0) / 1_000_000;
+    return baseCost * MARKUP;
+  }
   const baseCost =
     (inputTokens * pricing.input + outputTokens * pricing.output) / 1_000_000;
   return baseCost * MARKUP;
 }
 
-export function estimateCost(
-  modelId: ModelId,
-  inputText: string,
-  estimatedOutputTokens = 500
-): { inputTokens: number; outputTokens: number; cost: number } {
-  // Rough estimation: ~4 characters per token
-  const inputTokens = Math.ceil(inputText.length / 4);
-  const cost = calculateCost(modelId, inputTokens, estimatedOutputTokens);
-  return { inputTokens, outputTokens: estimatedOutputTokens, cost };
+/**
+ * @deprecated Use getModelCapabilities from @/lib/models instead
+ */
+export function getModelCapabilitiesSync(modelId: string) {
+  const pricing = MODEL_PRICING[modelId as ModelId];
+  return pricing?.capabilities || { images: false, pdf: false };
 }
-
-export function getModelInfo(modelId: ModelId) {
-  return MODEL_PRICING[modelId];
-}
-
-export function getAllModels() {
-  return Object.entries(MODEL_PRICING).map(([id, info]) => ({
-    id: id as ModelId,
-    ...info,
-  }));
-}
-
-export function getModelsByCategory(category: string) {
-  return getAllModels().filter((m) => m.category === category);
-}
-
-export function getModelsByProvider(provider: string) {
-  return getAllModels().filter((m) => m.provider === provider);
-}
-
-export function getModelCapabilities(modelId: ModelId) {
-  return MODEL_PRICING[modelId].capabilities;
-}
-
-// Credit packs available for purchase
-export const CREDIT_PACKS = [
-  {
-    id: "starter",
-    name: "Starter",
-    credits: 5,
-    price: 5,
-    description: "Idéal pour découvrir",
-    popular: false,
-  },
-  {
-    id: "regular",
-    name: "Regular",
-    credits: 10,
-    price: 10,
-    description: "Le plus populaire",
-    popular: true,
-  },
-  {
-    id: "power",
-    name: "Power",
-    credits: 20,
-    price: 20,
-    description: "Pour les gros utilisateurs",
-    popular: false,
-  },
-] as const;
