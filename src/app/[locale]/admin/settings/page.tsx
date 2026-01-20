@@ -10,7 +10,7 @@ import { Save, RefreshCw, MessageSquare, FileText, Zap } from "lucide-react";
 interface AppSetting {
   id: string;
   key: string;
-  value: { percentage?: number; amount?: number };
+  value: { percentage?: number; amount?: number; model_id?: string };
   description: string;
   updated_at: string;
 }
@@ -81,6 +81,11 @@ export default function SettingsPage() {
   const [freeCredits, setFreeCredits] = useState(1.0);
   const [minBalanceWarning, setMinBalanceWarning] = useState(0.5);
 
+  // Model role selections
+  const [defaultChatModel, setDefaultChatModel] = useState("");
+  const [analyticsModel, setAnalyticsModel] = useState("");
+  const [economyModel, setEconomyModel] = useState("");
+
   const fetchData = async () => {
     const supabase = createClient();
 
@@ -103,6 +108,15 @@ export default function SettingsPage() {
         }
         if (setting.key === "min_balance_warning" && setting.value.amount) {
           setMinBalanceWarning(setting.value.amount);
+        }
+        if (setting.key === "default_chat_model" && setting.value.model_id) {
+          setDefaultChatModel(setting.value.model_id);
+        }
+        if (setting.key === "analytics_model" && setting.value.model_id) {
+          setAnalyticsModel(setting.value.model_id);
+        }
+        if (setting.key === "economy_model" && setting.value.model_id) {
+          setEconomyModel(setting.value.model_id);
         }
       });
     }
@@ -154,6 +168,22 @@ export default function SettingsPage() {
 
       err = await saveSetting("min_balance_warning", { amount: minBalanceWarning });
       if (err) throw new Error("Erreur lors de la sauvegarde du seuil d'alerte");
+
+      // Save model role settings
+      if (defaultChatModel) {
+        err = await saveSetting("default_chat_model", { model_id: defaultChatModel });
+        if (err) throw new Error("Erreur lors de la sauvegarde du modèle par défaut");
+      }
+
+      if (analyticsModel) {
+        err = await saveSetting("analytics_model", { model_id: analyticsModel });
+        if (err) throw new Error("Erreur lors de la sauvegarde du modèle analytics");
+      }
+
+      if (economyModel) {
+        err = await saveSetting("economy_model", { model_id: economyModel });
+        if (err) throw new Error("Erreur lors de la sauvegarde du modèle économique");
+      }
 
       setSuccess("Paramètres sauvegardés avec succès");
       fetchData();
@@ -495,6 +525,80 @@ export default function SettingsPage() {
                 </p>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Model Roles Configuration */}
+        <Card>
+          <CardHeader>
+            <h2 className="font-semibold">Configuration des modèles</h2>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              Définir quel modèle utiliser pour chaque fonction
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                Modèle par défaut (Chat)
+              </label>
+              <select
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)]"
+                value={defaultChatModel}
+                onChange={(e) => setDefaultChatModel(e.target.value)}
+              >
+                <option value="">-- Sélectionner --</option>
+                {models.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name} ({m.provider})
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                Modèle sélectionné par défaut pour les nouvelles conversations
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                Modèle Analytics
+              </label>
+              <select
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)]"
+                value={analyticsModel}
+                onChange={(e) => setAnalyticsModel(e.target.value)}
+              >
+                <option value="">-- Sélectionner --</option>
+                {models.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name} ({m.provider})
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                Modèle utilisé pour générer les insights des classes
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                Modèle économique (fallback)
+              </label>
+              <select
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)]"
+                value={economyModel}
+                onChange={(e) => setEconomyModel(e.target.value)}
+              >
+                <option value="">-- Sélectionner --</option>
+                {models.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name} ({m.provider})
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                Modèle utilisé pour les tâches de fond (économique)
+              </p>
+            </div>
           </CardContent>
         </Card>
 
