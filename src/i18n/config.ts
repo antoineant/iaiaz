@@ -71,6 +71,8 @@ export const pathnames = {
   '/dashboard/credits/success': '/dashboard/credits/success',
   '/dashboard/analytics': '/dashboard/analytics',
   '/dashboard/settings': '/dashboard/settings',
+  '/dashboard/classes': '/dashboard/classes',
+  '/class/[classId]': '/class/[classId]',
   '/join': '/join',
   '/org': '/org',
   '/org/members': '/org/members',
