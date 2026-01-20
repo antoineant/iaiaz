@@ -551,8 +551,12 @@
       "noAccount": "Don't have an account?",
       "createAccount": "Create account",
       "loading": "Loading...",
+      "resendConfirmation": "Resend confirmation email",
+      "confirmationSent": "Confirmation email sent! Check your inbox.",
       "errors": {
-        "invalidCredentials": "Invalid email or password"
+        "invalidCredentials": "Invalid email or password",
+        "emailNotConfirmed": "Your email has not been confirmed",
+        "confirmationRequired": "Please confirm your email address to sign in."
       }
     },
     "signup": {

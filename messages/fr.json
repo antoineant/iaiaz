@@ -484,8 +484,12 @@
       "noAccount": "Pas encore de compte ?",
       "createAccount": "Créer un compte",
       "loading": "Chargement...",
+      "resendConfirmation": "Renvoyer l'email de confirmation",
+      "confirmationSent": "Email de confirmation envoyé ! Vérifiez votre boîte de réception.",
       "errors": {
-        "invalidCredentials": "Email ou mot de passe incorrect"
+        "invalidCredentials": "Email ou mot de passe incorrect",
+        "emailNotConfirmed": "Votre email n'a pas été confirmé",
+        "confirmationRequired": "Veuillez confirmer votre adresse email pour vous connecter."
       }
     },
     "signup": {

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
+import { Loader2, Mail } from "lucide-react";
 
 function LoginForm() {
   const router = useRouter();
@@ -20,10 +21,15 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setEmailNotConfirmed(false);
+    setResendSuccess(false);
     setIsLoading(true);
 
     const supabase = createClient();
@@ -33,9 +39,17 @@ function LoginForm() {
     });
 
     if (error) {
+      // Check if error is about email not being confirmed
+      const isEmailNotConfirmed =
+        error.message.toLowerCase().includes("email not confirmed") ||
+        error.message.toLowerCase().includes("email is not confirmed");
+
+      setEmailNotConfirmed(isEmailNotConfirmed);
       setError(
         error.message === "Invalid login credentials"
           ? t("errors.invalidCredentials")
+          : isEmailNotConfirmed
+          ? t("errors.emailNotConfirmed")
           : error.message
       );
       setIsLoading(false);
@@ -44,6 +58,27 @@ function LoginForm() {
 
     router.push(redirect);
     router.refresh();
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email) return;
+
+    setResendingEmail(true);
+    setResendSuccess(false);
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+    });
+
+    setResendingEmail(false);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setResendSuccess(true);
+    }
   };
 
   return (
@@ -60,6 +95,33 @@ function LoginForm() {
           {error && (
             <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
               {error}
+            </div>
+          )}
+
+          {emailNotConfirmed && !resendSuccess && (
+            <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+              <p className="text-amber-700 dark:text-amber-400 text-sm mb-2">
+                {t("errors.confirmationRequired")}
+              </p>
+              <button
+                type="button"
+                onClick={handleResendConfirmation}
+                disabled={resendingEmail}
+                className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 disabled:opacity-50"
+              >
+                {resendingEmail ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Mail className="w-4 h-4" />
+                )}
+                {t("resendConfirmation")}
+              </button>
+            </div>
+          )}
+
+          {resendSuccess && (
+            <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm">
+              {t("confirmationSent")}
             </div>
           )}
 
