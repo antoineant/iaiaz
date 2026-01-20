@@ -41,8 +41,9 @@ BEGIN
   v_display_name := NEW.raw_user_meta_data->>'display_name';
 
   -- Get free credits from app_settings (default 1.00)
+  -- Use public schema explicitly
   SELECT COALESCE((value->>'amount')::numeric, 1.00) INTO v_free_credits
-  FROM app_settings WHERE key = 'free_credits';
+  FROM public.app_settings WHERE key = 'free_credits';
 
   IF v_free_credits IS NULL THEN
     v_free_credits := 1.00;
