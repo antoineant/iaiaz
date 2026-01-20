@@ -26,8 +26,8 @@ export async function generateClassInsights(
   const prompt = buildInsightsPrompt(className, metrics, locale);
 
   try {
-    // Use a cost-effective model for insights generation
-    const response = await callAI("claude-3-5-haiku-20241022", [
+    // Use Sonnet for higher quality insights
+    const response = await callAI("claude-sonnet-4-20250514", [
       { role: "user", content: prompt },
     ]);
 
