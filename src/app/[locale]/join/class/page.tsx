@@ -16,7 +16,9 @@ import {
   Clock,
   XCircle,
   ArrowRight,
+  Keyboard,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
@@ -69,17 +71,21 @@ function JoinClassContent() {
   const t = useTranslations("joinClass");
   const searchParams = useSearchParams();
   const router = useRouter();
-  const token = searchParams.get("token");
+  const token = searchParams.get("token") || searchParams.get("code");
 
   const [classInfo, setClassInfo] = useState<ClassInfo | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!!token); // Only loading if we have a token
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Manual code entry state
+  const [manualCode, setManualCode] = useState("");
+  const [isLoadingCode, setIsLoadingCode] = useState(false);
+
+  // Load class info if token is present in URL
   useEffect(() => {
     const loadClassInfo = async () => {
       if (!token) {
-        setError(t("errors.noToken"));
         setIsLoading(false);
         return;
       }
@@ -102,8 +108,36 @@ function JoinClassContent() {
     loadClassInfo();
   }, [token, t]);
 
+  // Handle manual code submission
+  const handleCodeSubmit = async () => {
+    if (manualCode.length < 6) return;
+
+    setIsLoadingCode(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/class/join?code=${manualCode.toUpperCase()}`);
+      const data = await response.json();
+
+      if (!data.success) {
+        setError(data.error === "class_not_found" ? t("enterCode.invalidCode") : data.error);
+        setIsLoadingCode(false);
+        return;
+      }
+
+      setClassInfo(data);
+      // Update URL with the code for consistency
+      router.replace(`/join/class?code=${manualCode.toUpperCase()}`);
+    } catch {
+      setError(t("errors.loadFailed"));
+    } finally {
+      setIsLoadingCode(false);
+    }
+  };
+
   const handleJoin = async () => {
-    if (!token) return;
+    const joinToken = token || manualCode;
+    if (!joinToken) return;
     setIsJoining(true);
     setError(null);
 
@@ -111,7 +145,7 @@ function JoinClassContent() {
       const response = await fetch("/api/class/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ code: joinToken }),
       });
 
       const data = await response.json();
@@ -140,7 +174,66 @@ function JoinClassContent() {
     );
   }
 
-  if (!token || error || !classInfo?.success) {
+  // No token provided - show code entry form
+  if (!token && !classInfo) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center p-4">
+          <Card className="max-w-md w-full">
+            <CardContent className="pt-8">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-4">
+                  <Keyboard className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                </div>
+                <h1 className="text-xl font-bold mb-2">{t("enterCode.title")}</h1>
+                <p className="text-[var(--muted-foreground)]">
+                  {t("enterCode.subtitle")}
+                </p>
+              </div>
+
+              {/* Code input */}
+              <div className="space-y-4">
+                <Input
+                  value={manualCode}
+                  onChange={(e) => setManualCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""))}
+                  placeholder={t("enterCode.placeholder")}
+                  maxLength={8}
+                  className="text-center text-2xl tracking-[0.5em] font-mono uppercase h-14"
+                  onKeyDown={(e) => e.key === "Enter" && handleCodeSubmit()}
+                />
+
+                {error && (
+                  <div className="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 rounded-lg text-sm text-center">
+                    {error}
+                  </div>
+                )}
+
+                <Button
+                  className="w-full"
+                  onClick={handleCodeSubmit}
+                  disabled={manualCode.length < 6 || isLoadingCode}
+                >
+                  {isLoadingCode && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {t("enterCode.submit")}
+                </Button>
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-[var(--border)]">
+                <p className="text-sm text-[var(--muted-foreground)] text-center">
+                  {t("enterCode.qrHint")}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Error state (when token was provided but failed)
+  if (error || !classInfo?.success) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -152,9 +245,18 @@ function JoinClassContent() {
               <p className="text-[var(--muted-foreground)] mb-6">
                 {error || classInfo?.error || t("errors.unknown")}
               </p>
-              <Link href="/">
-                <Button variant="outline">{t("backToHome")}</Button>
-              </Link>
+              <div className="space-y-3">
+                <Button variant="outline" onClick={() => {
+                  setError(null);
+                  setClassInfo(null);
+                  router.replace("/join/class");
+                }}>
+                  {t("enterCode.tryAgain")}
+                </Button>
+                <Link href="/" className="block">
+                  <Button variant="ghost" className="w-full">{t("backToHome")}</Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </main>

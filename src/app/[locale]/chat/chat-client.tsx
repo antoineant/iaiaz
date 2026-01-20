@@ -28,6 +28,14 @@ interface UserInfo {
   avatarUrl?: string | null;
 }
 
+interface StudentClass {
+  class_id: string;
+  class_name: string;
+  organization_name: string;
+  is_accessible: boolean;
+  credits_remaining: number;
+}
+
 interface ChatClientProps {
   userId: string;
   initialBalance: number;
@@ -73,6 +81,24 @@ export function ChatClient({
   >(conversationId);
   const [rateLimit, setRateLimit] = useState<RateLimitInfo | null>(null);
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
+  const [classes, setClasses] = useState<StudentClass[]>([]);
+
+  // Fetch student classes on mount
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch("/api/student/classes");
+        if (response.ok) {
+          const data = await response.json();
+          // Only show active classes in the sidebar
+          setClasses(data.active_classes || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch classes:", error);
+      }
+    };
+    fetchClasses();
+  }, []);
 
   // Fetch rate limit status when model changes
   const fetchRateLimitStatus = useCallback(async () => {
@@ -294,6 +320,7 @@ export function ChatClient({
           } : undefined,
         } : undefined}
         userInfo={userInfo}
+        classes={classes}
       />
 
       <main className="flex-1 flex flex-col min-w-0">

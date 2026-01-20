@@ -255,7 +255,10 @@
       "dashboard": "Tableau de bord",
       "logout": "Se déconnecter",
       "orgCredits": "Établissement",
-      "personalCredits": "Personnel"
+      "personalCredits": "Personnel",
+      "classes": "Mes classes",
+      "viewAllClasses": "Voir toutes les classes",
+      "noClasses": "Aucune classe"
     },
     "input": {
       "placeholder": "Écrivez votre message ou déposez un fichier...",
@@ -406,6 +409,39 @@
           "title": "Note",
           "text": "Les émissions réelles varient selon la localisation des serveurs et l'infrastructure utilisée par chaque fournisseur. Ces estimations sont indicatives et visent à sensibiliser les utilisateurs à l'impact environnemental de l'IA."
         }
+      }
+    },
+    "classes": {
+      "title": "Mes classes",
+      "subtitle": "Historique de vos classes",
+      "joinClass": "Rejoindre une classe",
+      "stats": {
+        "totalJoined": "Classes rejointes",
+        "activeClasses": "Classes actives",
+        "creditsAllocated": "Crédits alloués",
+        "creditsUsed": "Crédits utilisés"
+      },
+      "activeSection": "Classes actives",
+      "pastSection": "Classes passées",
+      "empty": {
+        "title": "Aucune classe",
+        "description": "Vous n'avez pas encore rejoint de classe. Scannez un QR code ou entrez un code classe pour commencer.",
+        "cta": "Rejoindre une classe"
+      },
+      "card": {
+        "credits": "Crédits",
+        "remaining": "restants",
+        "used": "utilisés",
+        "joined": "Rejoint le",
+        "endsAt": "Fin",
+        "goToChat": "Accéder au chat",
+        "viewDetails": "Voir les détails"
+      },
+      "status": {
+        "active": "Active",
+        "closed": "Fermée",
+        "expired": "Expirée",
+        "archived": "Archivée"
       }
     }
   },
@@ -1993,6 +2029,15 @@
   "joinClass": {
     "title": "Rejoindre une classe",
     "backToHome": "Retour à l'accueil",
+    "enterCode": {
+      "title": "Entrer un code classe",
+      "subtitle": "Entrez le code fourni par votre formateur",
+      "placeholder": "ABC123",
+      "submit": "Rejoindre",
+      "invalidCode": "Code invalide. Vérifiez et réessayez.",
+      "qrHint": "Vous pouvez aussi scanner un QR code si votre formateur en a affiché un.",
+      "tryAgain": "Réessayer"
+    },
     "joinButton": "Rejoindre la classe",
     "quickJoin": "Rejoindre la classe",
     "alreadyHaveAccount": "Vous avez déjà un compte ?",
@@ -2071,6 +2116,30 @@
       "alreadyHaveAccount": "Vous avez déjà un compte ?",
       "login": "Se connecter"
     }
+  },
+  "classInfo": {
+    "error": {
+      "title": "Erreur",
+      "notFound": "Classe introuvable ou vous n'êtes pas membre"
+    },
+    "backToClasses": "Retour aux classes",
+    "status": {
+      "active": "Active",
+      "expired": "Expirée",
+      "notStarted": "Pas commencée",
+      "closed": "Fermée"
+    },
+    "description": "Description",
+    "session": "Session",
+    "startsAt": "Début",
+    "endsAt": "Fin",
+    "credits": "Crédits",
+    "allocated": "Alloués",
+    "used": "Utilisés",
+    "remaining": "Restants",
+    "joinedOn": "Rejoint le {date}",
+    "goToChat": "Accéder au chat",
+    "classClosed": "Classe fermée"
   },
   "settings": {
     "title": "Paramètres",

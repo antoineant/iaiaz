@@ -20,6 +20,7 @@ import {
   Trash2,
   Building2,
   ChevronRight,
+  GraduationCap,
 } from "lucide-react";
 
 interface OrgContext {
@@ -38,6 +39,14 @@ interface UserInfo {
   avatarUrl?: string | null;
 }
 
+interface StudentClass {
+  class_id: string;
+  class_name: string;
+  organization_name: string;
+  is_accessible: boolean;
+  credits_remaining: number;
+}
+
 interface SidebarProps {
   conversations: Conversation[];
   currentConversationId?: string;
@@ -47,6 +56,7 @@ interface SidebarProps {
   onDeleteConversation: (id: string) => void;
   orgContext?: OrgContext;
   userInfo?: UserInfo;
+  classes?: StudentClass[];
 }
 
 export function Sidebar({
@@ -58,6 +68,7 @@ export function Sidebar({
   onDeleteConversation,
   orgContext,
   userInfo,
+  classes,
 }: SidebarProps) {
   const router = useRouter();
   const t = useTranslations("chat.sidebar");
@@ -199,6 +210,41 @@ export function Sidebar({
           </ul>
         )}
       </div>
+
+      {/* Classes section (for students) */}
+      {classes && classes.length > 0 && (
+        <div className="px-2 py-2 border-t border-[var(--border)]">
+          <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
+            {t("classes")}
+          </div>
+          <ul className="space-y-1">
+            {classes.slice(0, 3).map((cls) => (
+              <li key={cls.class_id}>
+                <Link
+                  href={{ pathname: "/class/[classId]", params: { classId: cls.class_id } }}
+                  className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className={cn(
+                    "w-2 h-2 rounded-full flex-shrink-0",
+                    cls.is_accessible ? "bg-green-500" : "bg-gray-400"
+                  )} />
+                  <GraduationCap className="w-4 h-4 flex-shrink-0 text-[var(--muted-foreground)]" />
+                  <span className="flex-1 truncate">{cls.class_name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/dashboard/classes"
+            className="flex items-center justify-center gap-1 px-2 py-2 text-xs text-primary-600 dark:text-primary-400 hover:underline"
+            onClick={() => setIsOpen(false)}
+          >
+            {t("viewAllClasses")}
+            <ChevronRight className="w-3 h-3" />
+          </Link>
+        </div>
+      )}
 
       {/* Footer */}
       <div className="p-4 border-t border-[var(--border)] space-y-1">

@@ -255,7 +255,10 @@
       "dashboard": "Dashboard",
       "logout": "Log out",
       "orgCredits": "Organization",
-      "personalCredits": "Personal"
+      "personalCredits": "Personal",
+      "classes": "My Classes",
+      "viewAllClasses": "View all classes",
+      "noClasses": "No classes"
     },
     "input": {
       "placeholder": "Write your message or drop a file...",
@@ -406,6 +409,39 @@
           "title": "Note",
           "text": "Actual emissions vary by server location and infrastructure used by each provider. These estimates are indicative and aim to raise user awareness about AI's environmental impact."
         }
+      }
+    },
+    "classes": {
+      "title": "My Classes",
+      "subtitle": "Your class history",
+      "joinClass": "Join a class",
+      "stats": {
+        "totalJoined": "Classes joined",
+        "activeClasses": "Active classes",
+        "creditsAllocated": "Credits allocated",
+        "creditsUsed": "Credits used"
+      },
+      "activeSection": "Active classes",
+      "pastSection": "Past classes",
+      "empty": {
+        "title": "No classes",
+        "description": "You haven't joined any classes yet. Scan a QR code or enter a class code to get started.",
+        "cta": "Join a class"
+      },
+      "card": {
+        "credits": "Credits",
+        "remaining": "remaining",
+        "used": "used",
+        "joined": "Joined on",
+        "endsAt": "Ends",
+        "goToChat": "Go to chat",
+        "viewDetails": "View details"
+      },
+      "status": {
+        "active": "Active",
+        "closed": "Closed",
+        "expired": "Expired",
+        "archived": "Archived"
       }
     }
   },
@@ -2025,6 +2061,15 @@
   "joinClass": {
     "title": "Join a Class",
     "backToHome": "Back to home",
+    "enterCode": {
+      "title": "Enter a class code",
+      "subtitle": "Enter the code provided by your trainer",
+      "placeholder": "ABC123",
+      "submit": "Join",
+      "invalidCode": "Invalid code. Please check and try again.",
+      "qrHint": "You can also scan a QR code if your trainer has displayed one.",
+      "tryAgain": "Try again"
+    },
     "joinButton": "Join Class",
     "quickJoin": "Join Class",
     "alreadyHaveAccount": "Already have an account?",
@@ -2103,5 +2148,29 @@
       "alreadyHaveAccount": "Already have an account?",
       "login": "Log in"
     }
+  },
+  "classInfo": {
+    "error": {
+      "title": "Error",
+      "notFound": "Class not found or you are not a member"
+    },
+    "backToClasses": "Back to classes",
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "notStarted": "Not started",
+      "closed": "Closed"
+    },
+    "description": "Description",
+    "session": "Session",
+    "startsAt": "Starts",
+    "endsAt": "Ends",
+    "credits": "Credits",
+    "allocated": "Allocated",
+    "used": "Used",
+    "remaining": "Remaining",
+    "joinedOn": "Joined on {date}",
+    "goToChat": "Go to chat",
+    "classClosed": "Class closed"
   }
 }
