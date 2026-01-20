@@ -314,7 +314,7 @@ function PastClassRow({
         : t("status.expired");
 
   return (
-    <Link href={`/class/${classData.class_id}`}>
+    <Link href={{ pathname: "/class/[classId]", params: { classId: classData.class_id } }}>
       <Card className="hover:bg-[var(--muted)] transition-colors cursor-pointer">
         <CardContent className="py-4">
           <div className="flex items-center justify-between">
