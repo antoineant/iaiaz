@@ -169,20 +169,43 @@ export default function SettingsPage() {
       err = await saveSetting("min_balance_warning", { amount: minBalanceWarning });
       if (err) throw new Error("Erreur lors de la sauvegarde du seuil d'alerte");
 
-      // Save model role settings
+      // Save model role settings and sync to ai_models.system_role
+      const supabase = createClient();
+
+      // Clear existing system_role assignments for roles we're updating
+      await supabase
+        .from("ai_models")
+        .update({ system_role: null })
+        .in("system_role", ["default_chat", "analytics", "economy_fallback"]);
+
       if (defaultChatModel) {
         err = await saveSetting("default_chat_model", { model_id: defaultChatModel });
         if (err) throw new Error("Erreur lors de la sauvegarde du modèle par défaut");
+        // Sync to ai_models
+        await supabase
+          .from("ai_models")
+          .update({ system_role: "default_chat" })
+          .eq("id", defaultChatModel);
       }
 
       if (analyticsModel) {
         err = await saveSetting("analytics_model", { model_id: analyticsModel });
         if (err) throw new Error("Erreur lors de la sauvegarde du modèle analytics");
+        // Sync to ai_models
+        await supabase
+          .from("ai_models")
+          .update({ system_role: "analytics" })
+          .eq("id", analyticsModel);
       }
 
       if (economyModel) {
         err = await saveSetting("economy_model", { model_id: economyModel });
         if (err) throw new Error("Erreur lors de la sauvegarde du modèle économique");
+        // Sync to ai_models
+        await supabase
+          .from("ai_models")
+          .update({ system_role: "economy_fallback" })
+          .eq("id", economyModel);
       }
 
       setSuccess("Paramètres sauvegardés avec succès");
