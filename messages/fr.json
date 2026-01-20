@@ -91,7 +91,8 @@
       "login": "Connexion",
       "signup": "Commencer",
       "home": "Accueil",
-      "menu": "Menu"
+      "menu": "Menu",
+      "chat": "Chat"
     },
     "buttons": {
       "startFree": "Créer un compte gratuit",
