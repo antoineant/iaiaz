@@ -120,11 +120,13 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/org", label: t("nav.dashboard"), icon: LayoutDashboard },
     { href: "/org/classes", label: t("nav.classes"), icon: GraduationCap },
-    // Only show Members for school accounts
+    // Only show Members and Invites for school accounts
     ...(isSchool
-      ? [{ href: "/org/members", label: t("nav.members"), icon: Users }]
+      ? [
+          { href: "/org/members", label: t("nav.members"), icon: Users },
+          { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
+        ]
       : []),
-    { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
     { href: "/org/subscription", label: t("nav.subscription"), icon: Crown },
     { href: "/org/credits", label: t("nav.credits"), icon: CreditCard },
   ];
