@@ -7,6 +7,7 @@ import NextLink from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StudentMatrix } from "@/components/analytics/student-matrix";
+import { PromptQualitySection } from "@/components/analytics/prompt-quality";
 import type { QuadrantSummary } from "@/lib/analytics/student-metrics";
 import {
   ArrowLeft,
@@ -58,6 +59,34 @@ interface StudentMatrixData {
   quadrants: QuadrantSummary[];
 }
 
+interface NLPBreakdown {
+  clarity: number;
+  context: number;
+  sophistication: number;
+  actionability: number;
+  overall: number;
+  messageCount: number;
+}
+
+interface ExamplePrompt {
+  content: string;
+  overall: number;
+  topic?: string;
+}
+
+interface ExamplesByTier {
+  low: ExamplePrompt[];
+  medium: ExamplePrompt[];
+  high: ExamplePrompt[];
+}
+
+interface PromptQualityData {
+  classBreakdown: NLPBreakdown | null;
+  examples: ExamplesByTier;
+  analyzedCount: number;
+  totalMessages: number;
+}
+
 export default function ClassAnalyticsPage() {
   const t = useTranslations("org.classes.analytics");
   const locale = useLocale();
@@ -66,6 +95,7 @@ export default function ClassAnalyticsPage() {
 
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [matrixData, setMatrixData] = useState<StudentMatrixData | null>(null);
+  const [promptQualityData, setPromptQualityData] = useState<PromptQualityData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,10 +110,11 @@ export default function ClassAnalyticsPage() {
     setError(null);
 
     try {
-      // Load both analytics and student matrix data in parallel
-      const [analyticsResponse, matrixResponse] = await Promise.all([
+      // Load analytics, student matrix, and prompt quality data in parallel
+      const [analyticsResponse, matrixResponse, promptQualityResponse] = await Promise.all([
         fetch(`/api/org/classes/${classId}/analytics?period=${period}`),
         fetch(`/api/org/classes/${classId}/analytics/students?period=${period}`),
+        fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
       ]);
 
       if (!analyticsResponse.ok) throw new Error("Failed to load analytics");
@@ -93,6 +124,11 @@ export default function ClassAnalyticsPage() {
       if (matrixResponse.ok) {
         const matrixDataResponse = await matrixResponse.json();
         setMatrixData(matrixDataResponse);
+      }
+
+      if (promptQualityResponse.ok) {
+        const promptQualityDataResponse = await promptQualityResponse.json();
+        setPromptQualityData(promptQualityDataResponse);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");
@@ -210,6 +246,18 @@ export default function ClassAnalyticsPage() {
             quadrants={matrixData.quadrants}
             totalStudents={matrixData.totalStudents}
             periodDays={matrixData.periodDays}
+          />
+        </div>
+      )}
+
+      {/* Prompt Quality Analysis */}
+      {promptQualityData && (
+        <div className="mb-6">
+          <PromptQualitySection
+            breakdown={promptQualityData.classBreakdown}
+            examples={promptQualityData.examples}
+            analyzedCount={promptQualityData.analyzedCount}
+            totalMessages={promptQualityData.totalMessages}
           />
         </div>
       )}

@@ -2213,6 +2213,31 @@
             "at_risk": "These students need personalized follow-up. Check if they're facing difficulties.",
             "superficial": "These students master AI but engage little. Check their understanding of the subject."
           }
+        },
+        "promptQuality": {
+          "breakdownTitle": "Prompt Quality",
+          "breakdownSubtitle": "Analysis of the quality of questions asked by students",
+          "overallScore": "Overall Score",
+          "analyzed": "{count} analyzed out of {total} messages",
+          "noData": "No analysis data available",
+          "dimensions": {
+            "clarity": "Clarity",
+            "context": "Context",
+            "sophistication": "Sophistication",
+            "actionability": "Actionability"
+          },
+          "dimensionDesc": {
+            "clarity": "Is the question clear and specific?",
+            "context": "Is the necessary context provided?",
+            "sophistication": "What is the analytical depth of the question?",
+            "actionability": "Can the AI provide a useful response?"
+          },
+          "examplesTitle": "Prompt Examples",
+          "examplesSubtitle": "Anonymized examples from the class by quality level",
+          "noExamples": "No examples available",
+          "tierHigh": "High Quality",
+          "tierMedium": "Medium Quality",
+          "tierLow": "Needs Improvement"
         }
       }
     }

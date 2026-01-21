@@ -252,3 +252,201 @@ export function calculateAverageNLPScore(
 
   return scores.reduce((a, b) => a + b, 0) / scores.length;
 }
+
+/**
+ * Calculate detailed NLP breakdown for a set of message IDs
+ */
+export interface NLPBreakdown {
+  clarity: number;
+  context: number;
+  sophistication: number;
+  actionability: number;
+  overall: number;
+  messageCount: number;
+}
+
+export function calculateNLPBreakdown(
+  messageIds: string[],
+  analysis: Map<string, PromptAnalysisResult>
+): NLPBreakdown | null {
+  const results = messageIds
+    .map((id) => analysis.get(id))
+    .filter((r): r is PromptAnalysisResult => r !== undefined);
+
+  if (results.length === 0) {
+    return null;
+  }
+
+  const sum = results.reduce(
+    (acc, r) => ({
+      clarity: acc.clarity + r.clarity,
+      context: acc.context + r.context,
+      sophistication: acc.sophistication + r.sophistication,
+      actionability: acc.actionability + r.actionability,
+      overall: acc.overall + r.overall,
+    }),
+    { clarity: 0, context: 0, sophistication: 0, actionability: 0, overall: 0 }
+  );
+
+  const count = results.length;
+  return {
+    clarity: Math.round(sum.clarity / count),
+    context: Math.round(sum.context / count),
+    sophistication: Math.round(sum.sophistication / count),
+    actionability: Math.round(sum.actionability / count),
+    overall: Math.round(sum.overall / count),
+    messageCount: count,
+  };
+}
+
+/**
+ * Get example prompts by quality tier
+ */
+export interface ExamplePrompt {
+  content: string;
+  overall: number;
+  topic?: string;
+}
+
+export interface ExamplesByTier {
+  low: ExamplePrompt[];    // < 40
+  medium: ExamplePrompt[]; // 40-70
+  high: ExamplePrompt[];   // > 70
+}
+
+export async function getExamplePromptsByTier(
+  messageIds: string[],
+  maxPerTier: number = 3
+): Promise<ExamplesByTier> {
+  if (messageIds.length === 0) {
+    return { low: [], medium: [], high: [] };
+  }
+
+  const adminClient = createAdminClient();
+
+  // Fetch analyzed messages with their content
+  const { data } = await adminClient
+    .from("prompt_analysis")
+    .select(`
+      message_id,
+      overall_score,
+      topic,
+      messages!inner(content)
+    `)
+    .in("message_id", messageIds)
+    .order("overall_score", { ascending: true });
+
+  if (!data || data.length === 0) {
+    return { low: [], medium: [], high: [] };
+  }
+
+  const examples: ExamplesByTier = { low: [], medium: [], high: [] };
+
+  for (const row of data) {
+    const message = row.messages as unknown as { content: string };
+    const content = message?.content || "";
+    // Truncate and anonymize
+    const truncated = content.length > 150 ? content.slice(0, 147) + "..." : content;
+
+    const example: ExamplePrompt = {
+      content: truncated,
+      overall: row.overall_score,
+      topic: row.topic || undefined,
+    };
+
+    if (row.overall_score < 40 && examples.low.length < maxPerTier) {
+      examples.low.push(example);
+    } else if (row.overall_score >= 40 && row.overall_score <= 70 && examples.medium.length < maxPerTier) {
+      examples.medium.push(example);
+    } else if (row.overall_score > 70 && examples.high.length < maxPerTier) {
+      examples.high.push(example);
+    }
+  }
+
+  return examples;
+}
+
+/**
+ * Get class-wide NLP breakdown (average across all students)
+ */
+export async function getClassNLPBreakdown(
+  classId: string,
+  periodDays: number = 30
+): Promise<NLPBreakdown | null> {
+  const adminClient = createAdminClient();
+
+  const endDate = new Date();
+  const startDate = new Date(endDate.getTime() - periodDays * 24 * 60 * 60 * 1000);
+
+  // Get all class members
+  const { data: members } = await adminClient
+    .from("organization_members")
+    .select("user_id")
+    .eq("class_id", classId)
+    .eq("status", "active")
+    .eq("role", "student");
+
+  if (!members || members.length === 0) {
+    return null;
+  }
+
+  const studentIds = members.map((m) => m.user_id);
+
+  // Get conversations for these students
+  const { data: conversations } = await adminClient
+    .from("conversations")
+    .select("id")
+    .in("user_id", studentIds)
+    .gte("created_at", startDate.toISOString())
+    .lte("created_at", endDate.toISOString());
+
+  if (!conversations || conversations.length === 0) {
+    return null;
+  }
+
+  const conversationIds = conversations.map((c) => c.id);
+
+  // Get user messages
+  const { data: messages } = await adminClient
+    .from("messages")
+    .select("id")
+    .in("conversation_id", conversationIds)
+    .eq("role", "user");
+
+  if (!messages || messages.length === 0) {
+    return null;
+  }
+
+  const messageIds = messages.map((m) => m.id);
+
+  // Get prompt analysis for these messages
+  const { data: analysis } = await adminClient
+    .from("prompt_analysis")
+    .select("clarity_score, context_score, sophistication_score, actionability_score, overall_score")
+    .in("message_id", messageIds);
+
+  if (!analysis || analysis.length === 0) {
+    return null;
+  }
+
+  const sum = analysis.reduce(
+    (acc, r) => ({
+      clarity: acc.clarity + r.clarity_score,
+      context: acc.context + r.context_score,
+      sophistication: acc.sophistication + r.sophistication_score,
+      actionability: acc.actionability + r.actionability_score,
+      overall: acc.overall + r.overall_score,
+    }),
+    { clarity: 0, context: 0, sophistication: 0, actionability: 0, overall: 0 }
+  );
+
+  const count = analysis.length;
+  return {
+    clarity: Math.round(sum.clarity / count),
+    context: Math.round(sum.context / count),
+    sophistication: Math.round(sum.sophistication / count),
+    actionability: Math.round(sum.actionability / count),
+    overall: Math.round(sum.overall / count),
+    messageCount: count,
+  };
+}

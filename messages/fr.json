@@ -2146,6 +2146,31 @@
             "at_risk": "Ces étudiants ont besoin d'un suivi personnalisé. Vérifiez s'ils rencontrent des difficultés.",
             "superficial": "Ces étudiants maîtrisent l'IA mais s'engagent peu. Vérifiez leur compréhension du sujet."
           }
+        },
+        "promptQuality": {
+          "breakdownTitle": "Qualité des prompts",
+          "breakdownSubtitle": "Analyse de la qualité des questions posées par les étudiants",
+          "overallScore": "Score global",
+          "analyzed": "{count} analysés sur {total} messages",
+          "noData": "Pas de données d'analyse disponibles",
+          "dimensions": {
+            "clarity": "Clarté",
+            "context": "Contexte",
+            "sophistication": "Sophistication",
+            "actionability": "Actionnabilité"
+          },
+          "dimensionDesc": {
+            "clarity": "La question est-elle claire et spécifique ?",
+            "context": "Le contexte nécessaire est-il fourni ?",
+            "sophistication": "Quel est le niveau d'analyse de la question ?",
+            "actionability": "L'IA peut-elle fournir une réponse utile ?"
+          },
+          "examplesTitle": "Exemples de prompts",
+          "examplesSubtitle": "Exemples anonymisés de la classe par niveau de qualité",
+          "noExamples": "Pas d'exemples disponibles",
+          "tierHigh": "Haute qualité",
+          "tierMedium": "Qualité moyenne",
+          "tierLow": "À améliorer"
         }
       }
     }
