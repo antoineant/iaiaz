@@ -62,6 +62,11 @@ interface Student {
   status: string;
   joined_at: string;
   last_activity: string | null;
+  // Analytics data
+  ai_literacy_score: number | null;
+  domain_engagement_score: number | null;
+  quadrant: "ideal" | "train_ai" | "at_risk" | "superficial" | null;
+  total_messages: number;
 }
 
 export default function ClassDashboardPage() {
@@ -362,57 +367,119 @@ export default function ClassDashboardPage() {
                 <thead>
                   <tr className="border-b border-[var(--border)] text-left text-sm text-[var(--muted-foreground)]">
                     <th className="pb-3">{t("table.student")}</th>
+                    <th className="pb-3">{t("table.aiLiteracy")}</th>
+                    <th className="pb-3">{t("table.engagement")}</th>
                     <th className="pb-3">{t("table.credits")}</th>
                     <th className="pb-3">{t("table.lastActivity")}</th>
                     <th className="pb-3">{t("table.status")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((student) => (
-                    <tr key={student.id} className="border-b border-[var(--border)] last:border-0">
-                      <td className="py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-sm font-medium">
-                            {(student.display_name || student.email || "?")[0].toUpperCase()}
+                  {students.map((student) => {
+                    const quadrantColors: Record<string, string> = {
+                      ideal: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+                      train_ai: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+                      at_risk: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+                      superficial: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+                    };
+
+                    return (
+                      <tr key={student.id} className="border-b border-[var(--border)] last:border-0">
+                        <td className="py-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-sm font-medium">
+                              {(student.display_name || student.email || "?")[0].toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-medium">
+                                {student.display_name || t("anonymous")}
+                              </p>
+                              <p className="text-xs text-[var(--muted-foreground)]">
+                                {student.email || "-"}
+                              </p>
+                            </div>
                           </div>
+                        </td>
+                        <td className="py-3">
+                          {student.ai_literacy_score !== null ? (
+                            <div className="flex items-center gap-2">
+                              <div className="w-12 h-2 bg-[var(--muted)] rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${
+                                    student.ai_literacy_score >= 70
+                                      ? "bg-green-500"
+                                      : student.ai_literacy_score >= 40
+                                      ? "bg-yellow-500"
+                                      : "bg-red-500"
+                                  }`}
+                                  style={{ width: `${student.ai_literacy_score}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium">{Math.round(student.ai_literacy_score)}</span>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-[var(--muted-foreground)]">-</span>
+                          )}
+                        </td>
+                        <td className="py-3">
+                          {student.domain_engagement_score !== null ? (
+                            <div className="flex items-center gap-2">
+                              <div className="w-12 h-2 bg-[var(--muted)] rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${
+                                    student.domain_engagement_score >= 70
+                                      ? "bg-green-500"
+                                      : student.domain_engagement_score >= 40
+                                      ? "bg-yellow-500"
+                                      : "bg-red-500"
+                                  }`}
+                                  style={{ width: `${student.domain_engagement_score}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-medium">{Math.round(student.domain_engagement_score)}</span>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-[var(--muted-foreground)]">-</span>
+                          )}
+                        </td>
+                        <td className="py-3">
                           <div>
-                            <p className="font-medium">
-                              {student.display_name || t("anonymous")}
+                            <p className="font-mono text-sm">
+                              {student.credit_remaining.toFixed(2)}€
                             </p>
                             <p className="text-xs text-[var(--muted-foreground)]">
-                              {student.email || "-"}
+                              / {student.credit_allocated.toFixed(2)}€
                             </p>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-3">
-                        <div>
-                          <p className="font-mono text-sm">
-                            {student.credit_remaining.toFixed(2)}€
-                          </p>
-                          <p className="text-xs text-[var(--muted-foreground)]">
-                            / {student.credit_allocated.toFixed(2)}€
-                          </p>
-                        </div>
-                      </td>
-                      <td className="py-3 text-sm text-[var(--muted-foreground)]">
-                        {student.last_activity
-                          ? new Date(student.last_activity).toLocaleString()
-                          : t("never")}
-                      </td>
-                      <td className="py-3">
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                            student.status === "active"
-                              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                              : "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400"
-                          }`}
-                        >
-                          {student.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-3 text-sm text-[var(--muted-foreground)]">
+                          {student.last_activity
+                            ? new Date(student.last_activity).toLocaleString()
+                            : t("never")}
+                        </td>
+                        <td className="py-3">
+                          <div className="flex flex-col gap-1">
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                student.status === "active"
+                                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                                  : "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400"
+                              }`}
+                            >
+                              {student.status}
+                            </span>
+                            {student.quadrant && (
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${quadrantColors[student.quadrant]}`}
+                              >
+                                {t(`quadrants.${student.quadrant}`)}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

@@ -2107,9 +2107,17 @@
       },
       "table": {
         "student": "Student",
+        "aiLiteracy": "AI Literacy",
+        "engagement": "Engagement",
         "credits": "Credits",
         "lastActivity": "Last Activity",
         "status": "Status"
+      },
+      "quadrants": {
+        "ideal": "Ideal",
+        "train_ai": "Train on AI",
+        "at_risk": "At Risk",
+        "superficial": "Superficial"
       },
       "form": {
         "name": "Class Name",
@@ -2167,6 +2175,7 @@
         "peakHours": "Peak Hours",
         "messages": "messages",
         "noData": "No data available",
+        "loadingNLP": "Analyzing prompt quality...",
         "aiInsights": "AI Insights",
         "generateInsights": "Generate Insights",
         "refreshInsights": "Refresh",

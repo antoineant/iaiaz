@@ -97,6 +97,7 @@ export default function ClassAnalyticsPage() {
   const [matrixData, setMatrixData] = useState<StudentMatrixData | null>(null);
   const [promptQualityData, setPromptQualityData] = useState<PromptQualityData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingNLP, setIsLoadingNLP] = useState(false);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [period, setPeriod] = useState(30);
@@ -110,15 +111,24 @@ export default function ClassAnalyticsPage() {
     setError(null);
 
     try {
-      // Load analytics, student matrix, and prompt quality data in parallel
-      const [analyticsResponse, matrixResponse, promptQualityResponse] = await Promise.all([
+      // PHASE 1: Load basic analytics quickly (no NLP) + cached insights
+      const [analyticsResponse, matrixResponse, insightsResponse] = await Promise.all([
         fetch(`/api/org/classes/${classId}/analytics?period=${period}`),
-        fetch(`/api/org/classes/${classId}/analytics/students?period=${period}`),
-        fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
+        fetch(`/api/org/classes/${classId}/analytics/students?period=${period}&nlp=false`),
+        fetch(`/api/org/classes/${classId}/analytics/insights?period=${period}&locale=${locale}`),
       ]);
 
       if (!analyticsResponse.ok) throw new Error("Failed to load analytics");
       const analyticsData = await analyticsResponse.json();
+
+      // Check for cached insights
+      if (insightsResponse.ok) {
+        const insightsData = await insightsResponse.json();
+        if (insightsData.insights) {
+          analyticsData.insights = insightsData.insights;
+        }
+      }
+
       setData(analyticsData);
 
       if (matrixResponse.ok) {
@@ -126,25 +136,42 @@ export default function ClassAnalyticsPage() {
         setMatrixData(matrixDataResponse);
       }
 
+      setIsLoading(false);
+
+      // PHASE 2: Load NLP data in background (slower, optional enhancement)
+      setIsLoadingNLP(true);
+
+      const [nlpMatrixResponse, promptQualityResponse] = await Promise.all([
+        fetch(`/api/org/classes/${classId}/analytics/students?period=${period}&nlp=true`),
+        fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
+      ]);
+
+      if (nlpMatrixResponse.ok) {
+        const nlpMatrixData = await nlpMatrixResponse.json();
+        setMatrixData(nlpMatrixData);
+      }
+
       if (promptQualityResponse.ok) {
         const promptQualityDataResponse = await promptQualityResponse.json();
         setPromptQualityData(promptQualityDataResponse);
       }
+
+      setIsLoadingNLP(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");
-    } finally {
       setIsLoading(false);
+      setIsLoadingNLP(false);
     }
   };
 
-  const generateInsights = async () => {
+  const generateInsights = async (refresh = false) => {
     setIsGeneratingInsights(true);
 
     try {
       const response = await fetch(`/api/org/classes/${classId}/analytics/insights`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
+        body: JSON.stringify({ locale, period, refresh }),
       });
 
       const result = await response.json();
@@ -238,6 +265,16 @@ export default function ClassAnalyticsPage() {
           color="orange"
         />
       </div>
+
+      {/* NLP Loading Indicator */}
+      {isLoadingNLP && (
+        <div className="mb-6 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 flex items-center gap-3">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600 dark:text-blue-400" />
+          <span className="text-sm text-blue-700 dark:text-blue-400">
+            {t("loadingNLP")}
+          </span>
+        </div>
+      )}
 
       {/* Student Matrix - AI Literacy vs Domain Knowledge */}
       {matrixData && matrixData.totalStudents > 0 && (
@@ -392,7 +429,7 @@ export default function ClassAnalyticsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={generateInsights}
+            onClick={() => generateInsights(!!insights)}
             disabled={isGeneratingInsights}
           >
             {isGeneratingInsights ? (
@@ -470,7 +507,7 @@ export default function ClassAnalyticsPage() {
               <p className="text-[var(--muted-foreground)] mb-4">
                 {t("noInsightsYet")}
               </p>
-              <Button onClick={generateInsights} disabled={isGeneratingInsights}>
+              <Button onClick={() => generateInsights(false)} disabled={isGeneratingInsights}>
                 {isGeneratingInsights && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {t("generateInsights")}
               </Button>

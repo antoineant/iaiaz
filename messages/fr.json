@@ -2040,9 +2040,17 @@
       },
       "table": {
         "student": "Étudiant",
+        "aiLiteracy": "Maîtrise IA",
+        "engagement": "Engagement",
         "credits": "Crédits",
         "lastActivity": "Dernière activité",
         "status": "Statut"
+      },
+      "quadrants": {
+        "ideal": "Idéal",
+        "train_ai": "Former à l'IA",
+        "at_risk": "À risque",
+        "superficial": "Superficiel"
       },
       "form": {
         "name": "Nom de la classe",
@@ -2100,6 +2108,7 @@
         "peakHours": "Heures de pointe",
         "messages": "messages",
         "noData": "Pas de données disponibles",
+        "loadingNLP": "Analyse de la qualité des prompts en cours...",
         "aiInsights": "Insights IA",
         "generateInsights": "Générer des insights",
         "refreshInsights": "Rafraîchir",
