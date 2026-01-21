@@ -39,8 +39,8 @@ interface CreditPack {
 
 const ORG_CREDIT_PACKS: CreditPack[] = [
   {
-    id: "org-starter",
-    name: "Classe",
+    id: "org-50",
+    name: "50€",
     credits: 50,
     price: 50,
     popular: false,
@@ -49,8 +49,8 @@ const ORG_CREDIT_PACKS: CreditPack[] = [
     studentsSemester: 12,
   },
   {
-    id: "org-standard",
-    name: "Formation",
+    id: "org-100",
+    name: "100€",
     credits: 100,
     price: 95,
     popular: true,
@@ -59,8 +59,8 @@ const ORG_CREDIT_PACKS: CreditPack[] = [
     studentsSemester: 25,
   },
   {
-    id: "org-premium",
-    name: "Établissement",
+    id: "org-200",
+    name: "200€",
     credits: 200,
     price: 180,
     popular: false,
@@ -69,8 +69,8 @@ const ORG_CREDIT_PACKS: CreditPack[] = [
     studentsSemester: 50,
   },
   {
-    id: "org-enterprise",
-    name: "Institution",
+    id: "org-500",
+    name: "500€",
     credits: 500,
     price: 425,
     popular: false,
