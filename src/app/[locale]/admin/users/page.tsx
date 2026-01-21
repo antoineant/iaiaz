@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Minus, Shield, User, GraduationCap, Building2, Trash2, Loader2, X } from "lucide-react";
+import { Search, Plus, Minus, Shield, User, GraduationCap, Building2, Trash2, Loader2, X, Mail, MailCheck, MailX, RefreshCw } from "lucide-react";
 
 interface Profile {
   id: string;
@@ -15,6 +15,9 @@ interface Profile {
   credits_balance: number;
   is_admin: boolean;
   created_at: string;
+  email_confirmed_at: string | null;
+  last_sign_in_at: string | null;
+  last_activity: string | null;
 }
 
 export default function UsersPage() {
@@ -28,21 +31,99 @@ export default function UsersPage() {
   const [creditAmount, setCreditAmount] = useState("");
   const [deletingUser, setDeletingUser] = useState<Profile | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState<string | null>(null);
+  const [cleanupPreview, setCleanupPreview] = useState<{ users: Array<{ id: string; email: string; reason: string }>; inactiveDays: number } | null>(null);
+  const [isCleaningUp, setIsCleaningUp] = useState(false);
+  const [cleanupDays, setCleanupDays] = useState(7);
 
   const fetchUsers = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("id, email, display_name, account_type, credits_balance, is_admin, created_at")
-      .order("created_at", { ascending: false });
-
-    if (error) {
+    try {
+      const response = await fetch("/api/admin/users?limit=1000");
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      setUsers(data.users || []);
+      setFilteredUsers(data.users || []);
+    } catch {
       setError("Erreur lors du chargement des utilisateurs");
-    } else {
-      setUsers(data || []);
-      setFilteredUsers(data || []);
     }
     setIsLoading(false);
+  };
+
+  const resendConfirmationEmail = async (userId: string) => {
+    setResendingEmail(userId);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/resend-confirmation`, {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors de l'envoi");
+        return;
+      }
+
+      setSuccess("Email de confirmation envoyé");
+    } catch {
+      setError("Erreur lors de l'envoi de l'email");
+    } finally {
+      setResendingEmail(null);
+    }
+  };
+
+  const previewCleanup = async () => {
+    setIsCleaningUp(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/admin/users/cleanup?inactiveDays=${cleanupDays}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors de la prévisualisation");
+        return;
+      }
+
+      setCleanupPreview({ users: data.users, inactiveDays: data.inactiveDays });
+    } catch {
+      setError("Erreur lors de la prévisualisation");
+    } finally {
+      setIsCleaningUp(false);
+    }
+  };
+
+  const executeCleanup = async () => {
+    setIsCleaningUp(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch("/api/admin/users/cleanup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inactiveDays: cleanupDays, dryRun: false }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors du nettoyage");
+        return;
+      }
+
+      setSuccess(`${data.deleted?.length || 0} utilisateur(s) supprimé(s)`);
+      setCleanupPreview(null);
+      fetchUsers();
+    } catch {
+      setError("Erreur lors du nettoyage");
+    } finally {
+      setIsCleaningUp(false);
+    }
   };
 
   useEffect(() => {
@@ -321,7 +402,104 @@ export default function UsersPage() {
             </p>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-2">
+              <MailX className="w-4 h-4 text-red-500" />
+              <p className="text-sm text-[var(--muted-foreground)]">Non confirmés</p>
+            </div>
+            <p className="text-2xl font-bold">
+              {users.filter((u) => !u.email_confirmed_at).length}
+            </p>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Cleanup section */}
+      <Card>
+        <CardHeader>
+          <h2 className="font-semibold">Nettoyage automatique</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">
+            Supprimer les comptes avec email non confirmé et sans activité
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label className="text-sm">Inactifs depuis</label>
+              <Input
+                type="number"
+                min="1"
+                max="365"
+                value={cleanupDays}
+                onChange={(e) => setCleanupDays(parseInt(e.target.value) || 7)}
+                className="w-20"
+              />
+              <span className="text-sm">jours</span>
+            </div>
+            <Button
+              variant="outline"
+              onClick={previewCleanup}
+              disabled={isCleaningUp}
+            >
+              {isCleaningUp ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Search className="w-4 h-4 mr-2" />
+              )}
+              Prévisualiser
+            </Button>
+          </div>
+
+          {cleanupPreview && (
+            <div className="mt-4 p-4 border border-[var(--border)] rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <p className="font-medium">
+                  {cleanupPreview.users.length} utilisateur(s) à supprimer
+                </p>
+                {cleanupPreview.users.length > 0 && (
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCleanupPreview(null)}
+                    >
+                      Annuler
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={executeCleanup}
+                      disabled={isCleaningUp}
+                    >
+                      {isCleaningUp ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4 mr-2" />
+                      )}
+                      Supprimer
+                    </Button>
+                  </div>
+                )}
+              </div>
+              {cleanupPreview.users.length > 0 ? (
+                <div className="max-h-48 overflow-y-auto space-y-2">
+                  {cleanupPreview.users.map((u) => (
+                    <div key={u.id} className="text-sm p-2 bg-[var(--muted)] rounded">
+                      <span className="font-medium">{u.email}</span>
+                      <p className="text-xs text-[var(--muted-foreground)]">{u.reason}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Aucun utilisateur à supprimer avec ces critères.
+                </p>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Users list */}
       <Card>
@@ -356,11 +534,29 @@ export default function UsersPage() {
                         <TypeIcon className="w-3 h-3" />
                         {config.label}
                       </span>
+                      {/* Email confirmation status */}
+                      {user.email_confirmed_at ? (
+                        <span className="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full flex items-center gap-1" title="Email confirmé">
+                          <MailCheck className="w-3 h-3" />
+                          Confirmé
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full flex items-center gap-1" title="Email non confirmé">
+                          <MailX className="w-3 h-3" />
+                          Non confirmé
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-[var(--muted-foreground)]">
                       {user.display_name ? user.email + " • " : ""}
                       Inscrit le{" "}
                       {new Date(user.created_at).toLocaleDateString("fr-FR")}
+                      {user.last_activity && (
+                        <> • Dernière activité: {new Date(user.last_activity).toLocaleDateString("fr-FR")}</>
+                      )}
+                      {!user.last_activity && user.last_sign_in_at && (
+                        <> • Dernière connexion: {new Date(user.last_sign_in_at).toLocaleDateString("fr-FR")}</>
+                      )}
                     </p>
                   </div>
 
@@ -419,6 +615,22 @@ export default function UsersPage() {
                         >
                           Crédits
                         </Button>
+                        {/* Resend confirmation email button */}
+                        {!user.email_confirmed_at && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => resendConfirmationEmail(user.id)}
+                            disabled={resendingEmail === user.id}
+                            title="Renvoyer l'email de confirmation"
+                          >
+                            {resendingEmail === user.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Mail className="w-4 h-4" />
+                            )}
+                          </Button>
+                        )}
                         <select
                           value={accountType}
                           onChange={(e) => updateAccountType(user.id, e.target.value as "student" | "trainer" | "school" | "admin")}
