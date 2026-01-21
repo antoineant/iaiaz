@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canManageClass } from "@/lib/org";
 
@@ -17,10 +16,10 @@ export async function GET(_request: Request, { params }: RouteParams) {
       );
     }
 
-    const supabase = await createClient();
     const adminClient = createAdminClient();
 
-    const { data: students, error } = await supabase
+    // Use admin client to bypass RLS - authorization is already checked via canManageClass
+    const { data: students, error } = await adminClient
       .from("organization_members")
       .select(`
         id,
@@ -55,7 +54,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
     let lastActivity: Record<string, string> = {};
 
     if (studentIds.length > 0) {
-      const { data: activities } = await supabase
+      const { data: activities } = await adminClient
         .from("organization_transactions")
         .select("member_id, created_at")
         .in("member_id", studentIds)
