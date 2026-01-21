@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import {
-  computeClassStudentMetrics,
+  computeClassStudentMetricsWithNLP,
   storeStudentAnalytics,
   getStoredStudentAnalytics,
 } from "@/lib/analytics/student-metrics";
@@ -19,6 +19,7 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const period = parseInt(searchParams.get("period") || "30");
     const refresh = searchParams.get("refresh") === "true";
+    const enableNLP = searchParams.get("nlp") !== "false"; // NLP enabled by default
 
     const supabase = await createClient();
 
@@ -69,8 +70,12 @@ export async function GET(
       }
     }
 
-    // Compute fresh metrics
-    const matrixData = await computeClassStudentMetrics(classId, period);
+    // Compute fresh metrics with NLP analysis
+    const matrixData = await computeClassStudentMetricsWithNLP(
+      classId,
+      period,
+      enableNLP
+    );
 
     // Store for caching (async, don't wait)
     if (matrixData.students.length > 0) {
@@ -82,6 +87,7 @@ export async function GET(
     return NextResponse.json({
       ...matrixData,
       cached: false,
+      nlpEnabled: enableNLP,
     });
   } catch (error) {
     console.error("Error fetching student analytics:", error);
@@ -104,6 +110,7 @@ export async function POST(
     const { id: classId } = await params;
     const body = await request.json();
     const period = body.period || 30;
+    const enableNLP = body.nlp !== false; // NLP enabled by default
 
     const supabase = await createClient();
 
@@ -142,8 +149,12 @@ export async function POST(
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Compute fresh metrics
-    const matrixData = await computeClassStudentMetrics(classId, period);
+    // Compute fresh metrics with NLP analysis
+    const matrixData = await computeClassStudentMetricsWithNLP(
+      classId,
+      period,
+      enableNLP
+    );
 
     // Store results
     if (matrixData.students.length > 0) {
@@ -154,6 +165,7 @@ export async function POST(
       ...matrixData,
       cached: false,
       recomputed: true,
+      nlpEnabled: enableNLP,
     });
   } catch (error) {
     console.error("Error recomputing student analytics:", error);

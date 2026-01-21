@@ -1,4 +1,9 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  analyzePrompts,
+  calculateAverageNLPScore,
+  type PromptAnalysisResult,
+} from "./prompt-analyzer";
 
 // Types
 export type Quadrant = "ideal" | "train_ai" | "at_risk" | "superficial";
@@ -16,12 +21,14 @@ export interface StudentMetrics {
   sessionCount: number;
   avgMessagesPerSession: number;
   consistencyScore: number;
+  messageIds: string[]; // Track message IDs for NLP analysis
 }
 
 export interface StudentAnalytics extends StudentMetrics {
   aiLiteracyScore: number;
   domainEngagementScore: number;
   quadrant: Quadrant;
+  nlpScore?: number; // Average NLP quality score (0-100), if analyzed
 }
 
 export interface ClassAverages {
@@ -54,12 +61,16 @@ export interface StudentMatrixData {
 /**
  * Compute AI Literacy score based on available signals
  * Scale: 0-100
+ *
+ * Phase 2: If NLP analysis is available, it accounts for 50% of the score
+ * Phase 1 fallback: Uses heuristics only (prompt length, follow-up rate, etc.)
  */
 export function computeAILiteracyScore(
   student: StudentMetrics,
-  classAvg: ClassAverages
+  classAvg: ClassAverages,
+  nlpScore?: number | null
 ): number {
-  // Prompt length score (30%)
+  // Prompt length score
   // Longer prompts generally indicate more specific, thoughtful questions
   let lengthScore = 0;
   if (student.avgPromptLength < 20) lengthScore = 20;
@@ -67,24 +78,38 @@ export function computeAILiteracyScore(
   else if (student.avgPromptLength < 100) lengthScore = 75;
   else lengthScore = 100;
 
-  // Follow-up rate score (30%)
+  // Follow-up rate score
   // Students who iterate on conversations show better AI usage
   const followUpScore = Math.min(100, student.followUpRate * 100);
 
-  // Model diversity score (20%)
+  // Model diversity score
   // Using different models shows awareness of model strengths
   let diversityScore = 0;
   if (student.modelDiversity === 1) diversityScore = 30;
   else if (student.modelDiversity === 2) diversityScore = 60;
   else if (student.modelDiversity >= 3) diversityScore = 100;
 
-  // Activity relative to class (20%)
+  // Activity relative to class
   // Being more active than average indicates engagement with AI
   const activityScore =
     classAvg.avgConversations > 0
       ? Math.min(100, (student.totalConversations / classAvg.avgConversations) * 50)
       : 50;
 
+  // If NLP score is available (Phase 2), use weighted formula
+  if (nlpScore !== undefined && nlpScore !== null) {
+    // Phase 2 weights: NLP 50%, follow-up 20%, diversity 15%, activity 15%
+    const score =
+      nlpScore * 0.5 +
+      followUpScore * 0.2 +
+      diversityScore * 0.15 +
+      activityScore * 0.15;
+
+    return Math.round(score * 100) / 100;
+  }
+
+  // Phase 1 fallback: heuristics only
+  // Weights: length 30%, follow-up 30%, diversity 20%, activity 20%
   const score =
     lengthScore * 0.3 +
     followUpScore * 0.3 +
@@ -217,6 +242,7 @@ export async function computeClassStudentMetrics(
       sessionCount: 0,
       avgMessagesPerSession: 0,
       consistencyScore: 0,
+      messageIds: [],
       aiLiteracyScore: 0,
       domainEngagementScore: 0,
       quadrant: "at_risk" as Quadrant,
@@ -275,6 +301,7 @@ export async function computeClassStudentMetrics(
       sessionCount: 0,
       avgMessagesPerSession: 0,
       consistencyScore: 50,
+      messageIds: [],
     });
   }
 
@@ -318,6 +345,7 @@ export async function computeClassStudentMetrics(
 
     if (msg.role === "user") {
       metrics.totalMessages++;
+      metrics.messageIds.push(msg.id); // Track message ID for NLP analysis
       studentPromptLengths.get(userId)?.push(msg.content?.length || 0);
 
       // Track messages per conversation for follow-up rate
@@ -555,6 +583,7 @@ export async function getStoredStudentAnalytics(
       sessionCount: row.session_count,
       avgMessagesPerSession: row.avg_messages_per_session,
       consistencyScore: row.consistency_score,
+      messageIds: [], // Not stored in cache, empty for cached data
       aiLiteracyScore: row.ai_literacy_score,
       domainEngagementScore: row.domain_engagement_score,
       quadrant: row.quadrant as Quadrant,
@@ -617,5 +646,112 @@ export async function getStoredStudentAnalytics(
     quadrants,
     students,
     classAverages,
+  };
+}
+
+/**
+ * Compute class student metrics with NLP analysis (Phase 2)
+ * This function:
+ * 1. Computes basic metrics
+ * 2. Analyzes prompts using LLM (on-demand, cached)
+ * 3. Recalculates AI Literacy scores using NLP analysis
+ */
+export async function computeClassStudentMetricsWithNLP(
+  classId: string,
+  periodDays: number = 30,
+  enableNLP: boolean = true
+): Promise<StudentMatrixData> {
+  const adminClient = createAdminClient();
+
+  // First, compute basic metrics
+  const basicMetrics = await computeClassStudentMetrics(classId, periodDays);
+
+  if (!enableNLP || basicMetrics.students.length === 0) {
+    return basicMetrics;
+  }
+
+  // Collect all user messages that need analysis
+  const allMessageIds = basicMetrics.students.flatMap((s) => s.messageIds);
+
+  if (allMessageIds.length === 0) {
+    return basicMetrics;
+  }
+
+  // Fetch message content for analysis
+  const { data: messages } = await adminClient
+    .from("messages")
+    .select("id, content")
+    .in("id", allMessageIds)
+    .eq("role", "user");
+
+  if (!messages || messages.length === 0) {
+    return basicMetrics;
+  }
+
+  // Analyze prompts (will use cache for already-analyzed ones)
+  const promptsToAnalyze = messages.map((m) => ({
+    id: m.id,
+    content: m.content || "",
+  }));
+
+  const nlpAnalysis = await analyzePrompts(promptsToAnalyze);
+
+  // Recalculate AI Literacy scores with NLP
+  const studentsWithNLP: StudentAnalytics[] = basicMetrics.students.map(
+    (student) => {
+      const nlpScore = calculateAverageNLPScore(student.messageIds, nlpAnalysis);
+
+      // Recalculate AI Literacy score with NLP
+      const aiLiteracyScore = computeAILiteracyScore(
+        student,
+        basicMetrics.classAverages,
+        nlpScore
+      );
+
+      const quadrant = assignQuadrant(
+        aiLiteracyScore,
+        student.domainEngagementScore
+      );
+
+      return {
+        ...student,
+        aiLiteracyScore,
+        quadrant,
+        nlpScore: nlpScore ?? undefined,
+      };
+    }
+  );
+
+  // Regroup by quadrant
+  const quadrantGroups = new Map<Quadrant, StudentAnalytics[]>();
+  for (const student of studentsWithNLP) {
+    const group = quadrantGroups.get(student.quadrant) || [];
+    group.push(student);
+    quadrantGroups.set(student.quadrant, group);
+  }
+
+  const quadrants: QuadrantSummary[] = (
+    ["ideal", "train_ai", "at_risk", "superficial"] as Quadrant[]
+  ).map((q) => {
+    const qStudents = quadrantGroups.get(q) || [];
+    return {
+      quadrant: q,
+      count: qStudents.length,
+      students: qStudents.map((s) => ({
+        userId: s.userId,
+        name: s.name,
+        aiLiteracyScore: s.aiLiteracyScore,
+        domainEngagementScore: s.domainEngagementScore,
+        totalMessages: s.totalMessages,
+      })),
+    };
+  });
+
+  return {
+    totalStudents: basicMetrics.totalStudents,
+    periodDays,
+    quadrants,
+    students: studentsWithNLP,
+    classAverages: basicMetrics.classAverages,
   };
 }
