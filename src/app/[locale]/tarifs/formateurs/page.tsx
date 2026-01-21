@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { Check, ArrowRight, Users, BarChart3, Eye, Zap } from "lucide-react";
+import NextLink from "next/link";
+import { Check, ArrowRight, Users, BarChart3, Crown, CreditCard, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
@@ -45,9 +46,6 @@ export default async function TarifsFormateursPage({ params }: Props) {
   const t = await getTranslations("tarifsFormateurs");
 
   const baseUrl = "https://www.iaiaz.com";
-  const currencySymbol = locale === "fr" ? "€" : "$";
-  const analyticsPrice = locale === "fr" ? "4,90" : "4.90";
-  const analyticsTotalPrice = locale === "fr" ? "24,50" : "24.50";
 
   const faqs = [
     { question: t("faq.q1"), answer: t("faq.a1") },
@@ -55,6 +53,22 @@ export default async function TarifsFormateursPage({ params }: Props) {
     { question: t("faq.q3"), answer: t("faq.a3") },
     { question: t("faq.q4"), answer: t("faq.a4") },
   ];
+
+  const subscriptionFeatures = locale === "fr"
+    ? [
+        "Jusqu'à 5 classes",
+        "Tableau de bord analytics",
+        "Gestion des étudiants",
+        "Allocation de crédits",
+        "Support par email",
+      ]
+    : [
+        "Up to 5 classes",
+        "Analytics dashboard",
+        "Student management",
+        "Credit allocation",
+        "Email support",
+      ];
 
   return (
     <div className="min-h-screen">
@@ -73,7 +87,7 @@ export default async function TarifsFormateursPage({ params }: Props) {
         {/* Hero */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 dark:from-orange-900/40 dark:to-amber-900/40 text-orange-700 dark:text-orange-300 text-sm font-medium mb-6">
-            <Eye className="w-4 h-4" />
+            <BarChart3 className="w-4 h-4" />
             {t("hero.badge")}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -84,80 +98,118 @@ export default async function TarifsFormateursPage({ params }: Props) {
           </p>
         </div>
 
-        {/* Pricing Cards */}
+        {/* Pricing Model */}
         <section className="mb-16">
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {/* Student Usage */}
-            <Card>
-              <CardContent className="pt-8 pb-6 text-center">
-                <Users className="w-10 h-10 text-primary-600 dark:text-primary-400 mx-auto mb-4" />
-                <h3 className="font-bold text-lg mb-2">{t("pricing.usage.title")}</h3>
-                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">
-                  {t("pricing.usage.price")}
-                </div>
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  {t("pricing.usage.unit")}
-                </p>
-                <p className="text-xs text-[var(--muted-foreground)]">
-                  {t("pricing.usage.description")}
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Analytics */}
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Subscription */}
             <Card className="ring-2 ring-primary-500 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-600 text-white text-xs px-3 py-1 rounded-full">
-                {t("pricing.analytics.badge")}
+                {locale === "fr" ? "Abonnement" : "Subscription"}
               </div>
-              <CardContent className="pt-8 pb-6 text-center">
-                <BarChart3 className="w-10 h-10 text-primary-600 dark:text-primary-400 mx-auto mb-4" />
-                <h3 className="font-bold text-lg mb-2">{t("pricing.analytics.title")}</h3>
-                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-1">
-                  {t("pricing.analytics.price")}
+              <CardContent className="pt-8 pb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+                    <Crown className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Formateur Pro</h3>
+                    <p className="text-sm text-[var(--muted-foreground)]">
+                      {locale === "fr" ? "Gestion & Analytics" : "Management & Analytics"}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  {t("pricing.analytics.unit")}
+
+                <div className="mb-6">
+                  <span className="text-4xl font-bold">9,90€</span>
+                  <span className="text-[var(--muted-foreground)]">/{locale === "fr" ? "mois" : "month"}</span>
+                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {subscriptionFeatures.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="text-xs text-[var(--muted-foreground)] mb-4">
+                  {locale === "fr"
+                    ? "14 jours d'essai gratuit. Annulez à tout moment."
+                    : "14-day free trial. Cancel anytime."}
                 </p>
-                <p className="text-xs text-[var(--muted-foreground)]">
-                  {t("pricing.analytics.description")}
-                </p>
+
+                <NextLink href="/auth/signup?type=trainer">
+                  <Button className="w-full" size="lg">
+                    {locale === "fr" ? "Commencer l'essai gratuit" : "Start free trial"}
+                  </Button>
+                </NextLink>
               </CardContent>
             </Card>
 
-            {/* Setup */}
+            {/* Credits */}
             <Card>
-              <CardContent className="pt-8 pb-6 text-center">
-                <Zap className="w-10 h-10 text-green-600 dark:text-green-400 mx-auto mb-4" />
-                <h3 className="font-bold text-lg mb-2">{t("pricing.setup.title")}</h3>
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
-                  {t("pricing.setup.price")}
+              <CardContent className="pt-8 pb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                    <CreditCard className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">
+                      {locale === "fr" ? "Crédits IA" : "AI Credits"}
+                    </h3>
+                    <p className="text-sm text-[var(--muted-foreground)]">
+                      {locale === "fr" ? "Usage des étudiants" : "Student usage"}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  &nbsp;
-                </p>
-                <p className="text-xs text-[var(--muted-foreground)]">
-                  {t("pricing.setup.description")}
-                </p>
+
+                <div className="mb-6">
+                  <span className="text-4xl font-bold">~2€</span>
+                  <span className="text-[var(--muted-foreground)]">/{locale === "fr" ? "étudiant/mois" : "student/month"}</span>
+                </div>
+
+                <div className="space-y-3 mb-6 text-sm">
+                  <p className="text-[var(--muted-foreground)]">
+                    {locale === "fr"
+                      ? "Achetez des crédits selon vos besoins. Vos étudiants les consomment en utilisant l'IA."
+                      : "Buy credits as needed. Your students consume them when using AI."}
+                  </p>
+                  <div className="p-3 rounded-lg bg-[var(--muted)]">
+                    <p className="font-medium mb-1">
+                      {locale === "fr" ? "Exemple : classe de 30 étudiants" : "Example: class of 30 students"}
+                    </p>
+                    <p className="text-[var(--muted-foreground)]">
+                      {locale === "fr"
+                        ? "~50€ de crédits pour un semestre complet"
+                        : "~€50 in credits for a full semester"}
+                    </p>
+                  </div>
+                </div>
+
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    {locale === "fr" ? "Pas de minimum" : "No minimum"}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    {locale === "fr" ? "Remises volume : jusqu'à -15%" : "Volume discounts: up to -15%"}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    {locale === "fr" ? "Crédits non-expirables" : "Credits never expire"}
+                  </li>
+                </ul>
               </CardContent>
             </Card>
           </div>
 
-          <div className="mt-8 max-w-2xl mx-auto">
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                {t("pricing.feature1")}
-              </span>
-              <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                {t("pricing.feature2")}
-              </span>
-              <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500" />
-                {t("pricing.feature3")}
-              </span>
-            </div>
-          </div>
+          <p className="text-center text-sm text-[var(--muted-foreground)] mt-6">
+            {locale === "fr"
+              ? "L'abonnement couvre la gestion. Les crédits couvrent l'usage IA - deux coûts séparés, transparents."
+              : "Subscription covers management. Credits cover AI usage - two separate, transparent costs."}
+          </p>
         </section>
 
         {/* Example Calculation */}
@@ -166,28 +218,22 @@ export default async function TarifsFormateursPage({ params }: Props) {
           <div className="max-w-xl mx-auto">
             <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-[var(--border)]">
-                <span>{t("example.class")}</span>
-                <span className="font-medium">30 {t("example.students")}</span>
+                <span>{locale === "fr" ? "Abonnement Formateur Pro" : "Trainer Pro subscription"}</span>
+                <span className="font-medium">9,90€/{locale === "fr" ? "mois" : "month"}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-[var(--border)]">
-                <span>{t("example.questions")}</span>
-                <span className="font-medium">~50 / {t("example.perStudent")}</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-[var(--border)]">
-                <span>{t("example.usageCost")}</span>
-                <span className="font-medium">~{currencySymbol}50 / {t("example.semester")}</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-[var(--border)]">
-                <span>{t("example.analyticsCost")}</span>
-                <span className="font-medium">{currencySymbol}{analyticsPrice} x 5 = {currencySymbol}{analyticsTotalPrice}</span>
+                <span>{locale === "fr" ? "Crédits pour 30 étudiants (1 semestre)" : "Credits for 30 students (1 semester)"}</span>
+                <span className="font-medium">~50€</span>
               </div>
               <div className="flex justify-between items-center py-4 bg-primary-50 dark:bg-primary-950/30 rounded-lg px-4 -mx-4">
-                <span className="font-bold">{t("example.total")}</span>
-                <span className="font-bold text-xl text-primary-600 dark:text-primary-400">~{currencySymbol}75 / {t("example.semester")}</span>
+                <span className="font-bold">{locale === "fr" ? "Coût total / semestre" : "Total cost / semester"}</span>
+                <span className="font-bold text-xl text-primary-600 dark:text-primary-400">~100€</span>
               </div>
             </div>
             <p className="text-center text-sm text-[var(--muted-foreground)] mt-4">
-              {t("example.note")}
+              {locale === "fr"
+                ? "Soit ~3,30€ par étudiant pour un semestre complet"
+                : "About €3.30 per student for a full semester"}
             </p>
           </div>
         </section>
@@ -242,17 +288,20 @@ export default async function TarifsFormateursPage({ params }: Props) {
         <section className="text-center bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 rounded-2xl p-8 md:p-12">
           <h2 className="text-3xl font-bold mb-4">{t("cta.title")}</h2>
           <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
-            {t("cta.subtitle")}
+            {locale === "fr"
+              ? "Créez votre compte formateur et bénéficiez de 14 jours d'essai gratuit."
+              : "Create your trainer account and get a 14-day free trial."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="mailto:secretariat@girafestudio.fr?subject=Créer%20mon%20espace%20classe">
+            <NextLink href="/auth/signup?type=trainer">
               <Button size="lg">
-                {t("cta.button")}
+                {locale === "fr" ? "Créer mon compte formateur" : "Create trainer account"}
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-            </a>
+            </NextLink>
             <Link href="/comparatif/formateurs">
               <Button variant="outline" size="lg">
-                {t("cta.compare")} <ArrowRight className="w-5 h-5 ml-2" />
+                {t("cta.compare")}
               </Button>
             </Link>
           </div>
