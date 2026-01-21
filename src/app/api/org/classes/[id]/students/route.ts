@@ -29,12 +29,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
         credit_used,
         status,
         created_at,
-        updated_at,
-        profile:profiles (
-          email,
-          display_name,
-          avatar_url
-        )
+        updated_at
       `)
       .eq("class_id", id)
       .eq("role", "student")
@@ -50,9 +45,26 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
     console.log(`[Students API] Class ${id}: Found ${students?.length || 0} students`);
 
+    // Fetch profiles separately
+    const userIds = students?.map((s) => s.user_id) || [];
+    let profilesMap: Record<string, { email?: string; display_name?: string; avatar_url?: string }> = {};
+
+    if (userIds.length > 0) {
+      const { data: profiles } = await adminClient
+        .from("profiles")
+        .select("id, email, display_name, avatar_url")
+        .in("id", userIds);
+
+      if (profiles) {
+        profilesMap = profiles.reduce((acc, p) => {
+          acc[p.id] = { email: p.email, display_name: p.display_name, avatar_url: p.avatar_url };
+          return acc;
+        }, {} as Record<string, { email?: string; display_name?: string; avatar_url?: string }>);
+      }
+    }
+
     // Get recent activity for each student
     const studentIds = students?.map((s) => s.id) || [];
-    const userIds = students?.map((s) => s.user_id) || [];
     let lastActivity: Record<string, string> = {};
 
     if (studentIds.length > 0) {
@@ -114,7 +126,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
     // Format response
     const formattedStudents = students?.map((s) => {
-      const profile = s.profile as { email?: string; display_name?: string; avatar_url?: string } | null;
+      const profile = profilesMap[s.user_id];
       const analytics = analyticsMap[s.user_id];
       return {
         id: s.id,
