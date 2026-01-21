@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import {
   extractEmailDomain,
   matchesDisposablePattern,
@@ -218,24 +219,20 @@ export async function POST(request: NextRequest) {
       p_user_id: authData.user?.id,
     });
 
-    // 6. Generate and send email confirmation link
-    // admin.createUser doesn't send confirmation email, so we generate one
-    const { data: linkData, error: linkError } =
-      await adminClient.auth.admin.generateLink({
-        type: "magiclink",
-        email,
-        options: {
-          redirectTo: `${request.nextUrl.origin}/auth/callback`,
-        },
-      });
+    // 6. Send confirmation email
+    // admin.createUser doesn't send confirmation email, so we trigger it using resend
+    // This uses the same SMTP flow that works from the login page
+    const supabase = await createClient();
+    const { error: emailError } = await supabase.auth.resend({
+      type: "signup",
+      email,
+    });
 
-    if (linkError) {
-      console.error("Error generating confirmation link:", linkError);
-      // User is created but email failed - they can request a password reset
-    } else if (linkData?.properties?.hashed_token) {
-      // The link is generated but we need to send it via email
-      // Supabase will have sent the email if email hooks are configured
-      // Otherwise, the user can use "forgot password" to get access
+    if (emailError) {
+      console.error("[signup] Error sending confirmation email:", emailError);
+      // User is created but email failed - they can use resend on login page
+    } else {
+      console.log("[signup] Confirmation email sent successfully");
     }
 
     return NextResponse.json({
