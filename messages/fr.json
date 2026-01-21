@@ -48,11 +48,11 @@
       "ogDescription": "Équipez tous vos étudiants en IA pour 1€/mois par élève. 23x moins cher que ChatGPT Team."
     },
     "tarifsFormateurs": {
-      "title": "Tarifs Formateurs - Analytics IA à 4.90€/mois | iaiaz",
-      "description": "Tarifs transparents pour formateurs: utilisation étudiants 0.02-0.05€/question, analytics enseignant 4.90€/mois par classe.",
+      "title": "Tarifs Formateurs - Abonnement à 9.90€/mois | iaiaz",
+      "description": "Tarifs transparents pour formateurs: abonnement 9.90€/mois pour gérer jusqu'à 5 classes avec analytics complet.",
       "keywords": "tarifs formateur ia, prix analytics pédagogique, cout classe ia, tableau de bord enseignant prix",
-      "ogTitle": "Tarifs iaiaz pour Formateurs - Analytics à 4.90€/mois",
-      "ogDescription": "Suivez l'utilisation IA de vos étudiants pour 4.90€/mois par classe. Usage étudiants ~50€/semestre."
+      "ogTitle": "Tarifs iaiaz pour Formateurs - 9.90€/mois",
+      "ogDescription": "Gérez jusqu'à 5 classes avec analytics complet pour 9.90€/mois. Crédits IA achetés séparément."
     },
     "comparatifEtudiants": {
       "title": "Comparatif iaiaz vs ChatGPT Plus pour Étudiants",
@@ -950,62 +950,27 @@
     },
     "pricing": {
       "title": "1€ par élève par mois",
-      "titleHighlight": "23x moins cher que ChatGPT",
-      "subtitle": "Mise en service offerte + abonnement mensuel. Les crédits IA sont achetés séparément selon vos besoins.",
-      "popular": "Recommandé",
-      "setupFee": "Mise en service",
-      "setupFree": "Offert",
-      "monthlyFee": "Abonnement mensuel",
-      "perMonth": "/mois",
-      "perStudent": "soit ~1€/élève",
-      "creditsNote": "+ crédits IA selon usage réel",
+      "titleHighlight": "23x moins cher que ChatGPT Team",
+      "subtitle": "Un tarif simple et transparent. Minimum 10 élèves. Crédits IA achetés séparément.",
+      "popular": "Simple et transparent",
+      "perStudent": "par élève actif / mois",
+      "creditsNote": "+ crédits IA selon usage réel (~2€/élève/mois en moyenne)",
       "comparisonNote": "ChatGPT Team = 23€/élève/mois",
-      "pilot": {
-        "title": "Pilote",
-        "students": "1-30 élèves",
-        "setupPrice": "49",
-        "monthlyPrice": "29",
-        "description": "Testez avec une classe",
-        "feature1": "Jusqu'à 30 élèves",
-        "feature2": "Tableau de bord basique",
-        "feature3": "Support par email",
-        "feature4": "Tous les modèles IA inclus"
+      "minimum": "Minimum 10 élèves (10€/mois)",
+      "features": {
+        "title": "Tout inclus",
+        "feature1": "Classes illimitées",
+        "feature2": "Analytics complet par classe",
+        "feature3": "Multi-administrateurs",
+        "feature4": "Gestion des formateurs",
+        "feature5": "Rapports exportables",
+        "feature6": "Support prioritaire"
       },
-      "class": {
-        "title": "Classe",
-        "students": "31-100 élèves",
-        "setupPrice": "149",
-        "monthlyPrice": "99",
-        "description": "Pour une ou plusieurs classes",
-        "feature1": "Jusqu'à 100 élèves",
-        "feature2": "Tableau de bord enseignant",
-        "feature3": "Rapports d'utilisation",
-        "feature4": "Support prioritaire",
-        "feature5": "Session de formation (30min)"
-      },
-      "school": {
-        "title": "École",
-        "students": "101-500 élèves",
-        "setupPrice": "499",
-        "monthlyPrice": "499",
-        "description": "Pour plusieurs formations",
-        "feature1": "Jusqu'à 500 élèves",
-        "feature2": "Multi-administrateurs",
-        "feature3": "Limites par classe/élève",
-        "feature4": "Onboarding dédié",
-        "feature5": "Support téléphonique"
-      },
-      "institution": {
-        "title": "Institution",
-        "students": "500+ élèves",
-        "setupPrice": "999",
-        "price": "Sur devis",
-        "description": "Pour tout l'établissement",
-        "feature1": "Élèves illimités",
-        "feature2": "SSO (Google/Microsoft)",
-        "feature3": "Intégration LMS",
-        "feature4": "Account manager dédié",
-        "feature5": "SLA garanti"
+      "yearly": {
+        "title": "Économisez avec l'annuel",
+        "price": "10€",
+        "unit": "par élève / an",
+        "savings": "2 mois offerts"
       }
     },
     "howItWorks": {
@@ -1188,27 +1153,27 @@
     },
     "pricing": {
       "title": "Tarification transparente",
-      "subtitle": "Un accès simple à la puissance de l'IA + des insights pédagogiques précieux.",
+      "subtitle": "Un abonnement simple pour gérer vos classes + crédits IA selon usage.",
       "studentUsage": {
-        "title": "Utilisation étudiants",
-        "price": "0,02-0,05€",
-        "unit": "par question",
-        "description": "Vos étudiants paient ce qu'ils consomment. ~50€ par classe/semestre."
+        "title": "Crédits IA",
+        "price": "À l'usage",
+        "unit": "achat séparé",
+        "description": "Achetez des crédits et allouez-les à vos étudiants. ~2€/étudiant/mois en moyenne."
       },
       "analytics": {
-        "title": "Analytics enseignant",
-        "price": "4,90€",
-        "unit": "/ mois / classe",
-        "description": "Tableau de bord, insights automatiques, alertes pédagogiques.",
-        "badge": "Valeur ajoutée"
+        "title": "Abonnement Formateur",
+        "price": "9,90€",
+        "unit": "/ mois",
+        "description": "Jusqu'à 5 classes, analytics complet, gestion des étudiants.",
+        "badge": "Tout inclus"
       },
       "setup": {
         "title": "Mise en place",
         "price": "Offert",
         "description": "Configuration de l'espace classe et onboarding inclus."
       },
-      "feature1": "Tous les modèles IA inclus",
-      "feature2": "Insights hebdomadaires automatiques",
+      "feature1": "Jusqu'à 5 classes incluses",
+      "feature2": "Analytics et insights automatiques",
       "feature3": "Sans engagement, résiliable à tout moment"
     },
     "objections": {

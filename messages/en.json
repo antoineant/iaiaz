@@ -48,11 +48,11 @@
       "ogDescription": "Equip all your students with AI for $1/month per student. 23x cheaper than ChatGPT Team."
     },
     "tarifsFormateurs": {
-      "title": "Trainer Pricing - AI Analytics at $4.90/month | iaiaz",
-      "description": "Transparent pricing for trainers: student usage $0.02-0.05/question, teacher analytics $4.90/month per class.",
+      "title": "Trainer Pricing - Subscription at $9.90/month | iaiaz",
+      "description": "Transparent pricing for trainers: $9.90/month subscription to manage up to 5 classes with full analytics.",
       "keywords": "trainer ai pricing, pedagogical analytics price, class ai cost, teacher dashboard pricing",
-      "ogTitle": "iaiaz Trainer Pricing - Analytics at $4.90/month",
-      "ogDescription": "Track your students' AI usage for $4.90/month per class. Student usage ~$50/semester."
+      "ogTitle": "iaiaz Trainer Pricing - $9.90/month",
+      "ogDescription": "Manage up to 5 classes with full analytics for $9.90/month. AI credits purchased separately."
     },
     "comparatifEtudiants": {
       "title": "iaiaz vs ChatGPT Plus Comparison for Students",
@@ -1017,62 +1017,27 @@
     },
     "pricing": {
       "title": "$1 per student per month",
-      "titleHighlight": "23x cheaper than ChatGPT",
-      "subtitle": "Free setup + monthly subscription. AI credits are purchased separately based on your needs.",
-      "popular": "Recommended",
-      "setupFee": "Setup",
-      "setupFree": "Free",
-      "monthlyFee": "Monthly subscription",
-      "perMonth": "/month",
-      "perStudent": "~$1/student",
-      "creditsNote": "+ AI credits based on actual usage",
+      "titleHighlight": "23x cheaper than ChatGPT Team",
+      "subtitle": "Simple and transparent pricing. Minimum 10 students. AI credits purchased separately.",
+      "popular": "Simple and transparent",
+      "perStudent": "per active student / month",
+      "creditsNote": "+ AI credits based on actual usage (~$2/student/month average)",
       "comparisonNote": "ChatGPT Team = $25/student/month",
-      "pilot": {
-        "title": "Pilot",
-        "students": "1-30 students",
-        "setupPrice": "49",
-        "monthlyPrice": "29",
-        "description": "Test with one class",
-        "feature1": "Up to 30 students",
-        "feature2": "Basic dashboard",
-        "feature3": "Email support",
-        "feature4": "All AI models included"
+      "minimum": "Minimum 10 students ($10/month)",
+      "features": {
+        "title": "All included",
+        "feature1": "Unlimited classes",
+        "feature2": "Full analytics per class",
+        "feature3": "Multiple administrators",
+        "feature4": "Trainer management",
+        "feature5": "Exportable reports",
+        "feature6": "Priority support"
       },
-      "class": {
-        "title": "Classroom",
-        "students": "31-100 students",
-        "setupPrice": "149",
-        "monthlyPrice": "99",
-        "description": "For one or multiple classes",
-        "feature1": "Up to 100 students",
-        "feature2": "Teacher dashboard",
-        "feature3": "Usage reports",
-        "feature4": "Priority support",
-        "feature5": "Training session (30min)"
-      },
-      "school": {
-        "title": "School",
-        "students": "101-500 students",
-        "setupPrice": "499",
-        "monthlyPrice": "499",
-        "description": "For multiple programs",
-        "feature1": "Up to 500 students",
-        "feature2": "Multiple administrators",
-        "feature3": "Per-class/student limits",
-        "feature4": "Dedicated onboarding",
-        "feature5": "Phone support"
-      },
-      "institution": {
-        "title": "Institution",
-        "students": "500+ students",
-        "setupPrice": "999",
-        "price": "Custom quote",
-        "description": "For the entire school",
-        "feature1": "Unlimited students",
-        "feature2": "SSO (Google/Microsoft)",
-        "feature3": "LMS integration",
-        "feature4": "Dedicated account manager",
-        "feature5": "Guaranteed SLA"
+      "yearly": {
+        "title": "Save with annual",
+        "price": "$10",
+        "unit": "per student / year",
+        "savings": "2 months free"
       }
     },
     "howItWorks": {
@@ -1148,6 +1113,41 @@
       "ctaSecondary": "See pricing",
       "stat": "of your students use ChatGPT. You don't know because they hide it."
     },
+    "stats": {
+      "title": "The numbers you need to know",
+      "subtitle": "Sources: Pew Research, Wiley, RM Conseil, Campus France 2024-2025",
+      "stat1": {
+        "value": "86%",
+        "label": "of French students",
+        "description": "use AI in their studies"
+      },
+      "stat2": {
+        "value": "90%",
+        "label": "of high school students",
+        "description": "have already used AI for homework"
+      },
+      "stat3": {
+        "value": "53%",
+        "label": "say they're 'hooked'",
+        "description": "and would struggle to do without it"
+      },
+      "stat4": {
+        "value": "96%",
+        "label": "of teachers",
+        "description": "think at least one student has cheated this year"
+      },
+      "stat5": {
+        "value": "28%",
+        "label": "effectiveness",
+        "description": "for AI detection tools (eCampusOntario)"
+      },
+      "stat6": {
+        "value": "24%",
+        "label": "of institutions",
+        "description": "provide an AI tool — the rest is invisible"
+      },
+      "conclusion": "Banning failed. Detection too. It's time to switch to visibility."
+    },
     "problem": {
       "title": "The real problem isn't AI",
       "subtitle": "It's invisible AI. When a student uses ChatGPT secretly, you lose everything.",
@@ -1220,27 +1220,27 @@
     },
     "pricing": {
       "title": "Transparent pricing",
-      "subtitle": "Simple access to AI power + valuable pedagogical insights.",
+      "subtitle": "A simple subscription to manage your classes + AI credits based on usage.",
       "studentUsage": {
-        "title": "Student usage",
-        "price": "$0.02-0.05",
-        "unit": "per question",
-        "description": "Students pay what they use. ~$50 per class/semester."
+        "title": "AI Credits",
+        "price": "Pay-as-you-go",
+        "unit": "separate purchase",
+        "description": "Buy credits and allocate them to your students. ~$2/student/month average."
       },
       "analytics": {
-        "title": "Teacher analytics",
-        "price": "$4.90",
-        "unit": "/ month / class",
-        "description": "Dashboard, automatic insights, pedagogical alerts.",
-        "badge": "Added value"
+        "title": "Trainer Subscription",
+        "price": "$9.90",
+        "unit": "/ month",
+        "description": "Up to 5 classes, full analytics, student management.",
+        "badge": "All included"
       },
       "setup": {
         "title": "Setup",
         "price": "Free",
         "description": "Classroom setup and onboarding included."
       },
-      "feature1": "All AI models included",
-      "feature2": "Weekly automatic insights",
+      "feature1": "Up to 5 classes included",
+      "feature2": "Analytics and automatic insights",
       "feature3": "No commitment, cancel anytime"
     },
     "objections": {

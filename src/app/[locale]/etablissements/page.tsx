@@ -214,245 +214,100 @@ export default async function EtablissementsPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Pricing Models */}
+        {/* Pricing - Simple €1/student */}
         <section className="max-w-6xl mx-auto px-4 py-16">
-          {/* Big highlight */}
-          <div className="text-center mb-8">
-            <div className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-3 rounded-2xl mb-4">
-              <h2 className="text-3xl md:text-4xl font-bold">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-8 py-4 rounded-2xl mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold">
                 {t("pricing.title")}
               </h2>
-              <p className="text-primary-100 text-lg font-medium">
+              <p className="text-primary-100 text-xl font-medium mt-1">
                 {t("pricing.titleHighlight")}
               </p>
             </div>
             <p className="text-[var(--muted-foreground)] max-w-xl mx-auto mb-2">
               {t("pricing.subtitle")}
             </p>
-            <p className="text-sm text-primary-600 dark:text-primary-400 font-medium mb-2">
-              {t("pricing.creditsNote")}
-            </p>
-            <p className="text-xs text-[var(--muted-foreground)]">
-              {t("pricing.comparisonNote")}
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Pilot */}
-            <Card className="relative">
-              <CardContent className="pt-6">
-                <div className="text-xs font-medium text-[var(--muted-foreground)] mb-1">
-                  {t("pricing.pilot.students")}
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Main pricing card */}
+            <Card className="border-primary-500 dark:border-primary-400 border-2">
+              <CardContent className="pt-8 pb-8 text-center">
+                <div className="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium rounded-full mb-4">
+                  {t("pricing.popular")}
                 </div>
-                <h3 className="font-bold text-lg mb-4">{t("pricing.pilot.title")}</h3>
-
-                <div className="space-y-3 mb-4">
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                      {currencySymbol}{t("pricing.pilot.setupPrice")}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
-                    <div className="text-lg font-semibold">
-                      {currencySymbol}{t("pricing.pilot.monthlyPrice")}{t("pricing.perMonth")}
-                    </div>
-                    <div className="text-xs text-[var(--muted-foreground)]">
-                      {t("pricing.perStudent")}
-                    </div>
-                  </div>
+                <div className="text-6xl font-bold text-primary-600 dark:text-primary-400 mb-2">
+                  1{currencySymbol}
                 </div>
-
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  {t("pricing.pilot.description")}
+                <div className="text-[var(--muted-foreground)] mb-6">
+                  {t("pricing.perStudent")}
+                </div>
+                <p className="text-sm text-[var(--muted-foreground)] mb-2">
+                  {t("pricing.minimum")}
                 </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.pilot.feature1")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.pilot.feature2")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.pilot.feature3")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.pilot.feature4")}
-                  </li>
-                </ul>
+                <p className="text-sm text-primary-600 dark:text-primary-400 font-medium">
+                  {t("pricing.creditsNote")}
+                </p>
               </CardContent>
             </Card>
 
-            {/* Class - Recommended */}
-            <Card className="relative border-primary-500 dark:border-primary-400 border-2">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary-600 text-white text-xs font-medium rounded-full">
-                {t("pricing.popular")}
-              </div>
-              <CardContent className="pt-6">
-                <div className="text-xs font-medium text-[var(--muted-foreground)] mb-1">
-                  {t("pricing.class.students")}
-                </div>
-                <h3 className="font-bold text-lg mb-4">{t("pricing.class.title")}</h3>
-
-                <div className="space-y-3 mb-4">
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      {t("pricing.setupFree")}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
-                    <div className="text-lg font-semibold">
-                      {currencySymbol}{t("pricing.class.monthlyPrice")}{t("pricing.perMonth")}
-                    </div>
-                    <div className="text-xs text-[var(--muted-foreground)]">
-                      {t("pricing.perStudent")}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  {t("pricing.class.description")}
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.class.feature1")}
+            {/* Features card */}
+            <Card>
+              <CardContent className="pt-8">
+                <h3 className="font-bold text-lg mb-4">{t("pricing.features.title")}</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>{t("pricing.features.feature1")}</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.class.feature2")}
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>{t("pricing.features.feature2")}</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.class.feature3")}
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>{t("pricing.features.feature3")}</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.class.feature4")}
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>{t("pricing.features.feature4")}</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.class.feature5")}
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>{t("pricing.features.feature5")}</span>
                   </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* School */}
-            <Card className="relative">
-              <CardContent className="pt-6">
-                <div className="text-xs font-medium text-[var(--muted-foreground)] mb-1">
-                  {t("pricing.school.students")}
-                </div>
-                <h3 className="font-bold text-lg mb-4">{t("pricing.school.title")}</h3>
-
-                <div className="space-y-3 mb-4">
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      {t("pricing.setupFree")}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
-                    <div className="text-lg font-semibold">
-                      {currencySymbol}{t("pricing.school.monthlyPrice")}{t("pricing.perMonth")}
-                    </div>
-                    <div className="text-xs text-[var(--muted-foreground)]">
-                      {t("pricing.perStudent")}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  {t("pricing.school.description")}
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.school.feature1")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.school.feature2")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.school.feature3")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.school.feature4")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.school.feature5")}
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Institution */}
-            <Card className="relative bg-gradient-to-br from-primary-50 to-accent-50 dark:from-primary-950/50 dark:to-accent-950/50">
-              <CardContent className="pt-6">
-                <div className="text-xs font-medium text-[var(--muted-foreground)] mb-1">
-                  {t("pricing.institution.students")}
-                </div>
-                <h3 className="font-bold text-lg mb-4">{t("pricing.institution.title")}</h3>
-
-                <div className="space-y-3 mb-4">
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.setupFee")}</div>
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      {t("pricing.setupFree")}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-[var(--muted-foreground)]">{t("pricing.monthlyFee")}</div>
-                    <div className="text-lg font-semibold">
-                      {t("pricing.institution.price")}
-                    </div>
-                    <div className="text-xs text-[var(--muted-foreground)]">
-                      {t("pricing.perStudent")}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  {t("pricing.institution.description")}
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.institution.feature1")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.institution.feature2")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.institution.feature3")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.institution.feature4")}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {t("pricing.institution.feature5")}
+                  <li className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span>{t("pricing.features.feature6")}</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
           </div>
+
+          {/* Yearly option */}
+          <div className="mt-8 text-center">
+            <Card className="inline-block bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800">
+              <CardContent className="py-4 px-8 flex items-center gap-4">
+                <div>
+                  <div className="font-bold text-green-700 dark:text-green-300">
+                    {t("pricing.yearly.title")}
+                  </div>
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {t("pricing.yearly.price")} <span className="text-sm font-normal">{t("pricing.yearly.unit")}</span>
+                  </div>
+                </div>
+                <div className="px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full">
+                  {t("pricing.yearly.savings")}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <p className="text-center text-xs text-[var(--muted-foreground)] mt-4">
+            {t("pricing.comparisonNote")}
+          </p>
         </section>
 
         {/* How it Works */}
