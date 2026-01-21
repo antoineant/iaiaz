@@ -584,8 +584,13 @@
       "login": "Sign in",
       "success": {
         "title": "Check your email",
-        "description": "We sent a confirmation link to {email}",
-        "hint": "Click the link in the email to activate your account and receive your free credits."
+        "description": "We sent a confirmation link to:",
+        "deliveryTime": "The email may take a few minutes to arrive",
+        "hint": "Check your spam folder if you don't see it. Click the link in the email to activate your account.",
+        "resendButton": "Resend confirmation email",
+        "resendCooldown": "Resend in {seconds}s",
+        "resendSuccess": "Email sent! Check your inbox.",
+        "backToLogin": "Back to sign in"
       },
       "errors": {
         "passwordMismatch": "Passwords don't match",

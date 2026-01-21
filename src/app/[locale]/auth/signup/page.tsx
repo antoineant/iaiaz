@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
-import { Check, User, GraduationCap, Building2 } from "lucide-react";
+import { Check, User, GraduationCap, Building2, Mail, RefreshCw, Clock } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 type AccountType = "student" | "trainer" | "school";
 
@@ -22,6 +23,43 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [isResending, setIsResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+
+  // Cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
+
+  const handleResendEmail = async () => {
+    if (resendCooldown > 0 || isResending) return;
+
+    setIsResending(true);
+    setResendSuccess(false);
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+      });
+
+      if (error) {
+        console.error("Resend error:", error);
+      } else {
+        setResendSuccess(true);
+        setResendCooldown(60); // 60 second cooldown
+      }
+    } catch (err) {
+      console.error("Resend error:", err);
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,15 +121,60 @@ export default function SignupPage() {
           <Card>
             <CardContent className="pt-6 text-center">
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <Mail className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
               <h1 className="text-xl font-semibold mb-2">{t("success.title")}</h1>
-              <p className="text-[var(--muted-foreground)] mb-4">
+              <p className="text-[var(--muted-foreground)] mb-2">
                 {t("success.description", { email })}
               </p>
-              <p className="text-sm text-[var(--muted-foreground)]">
+
+              {/* Email display */}
+              <div className="bg-[var(--muted)] rounded-lg px-4 py-2 mb-4 inline-block">
+                <span className="font-medium">{email}</span>
+              </div>
+
+              {/* Delivery time notice */}
+              <div className="flex items-center justify-center gap-2 text-sm text-[var(--muted-foreground)] mb-4">
+                <Clock className="w-4 h-4" />
+                <span>{t("success.deliveryTime")}</span>
+              </div>
+
+              <p className="text-sm text-[var(--muted-foreground)] mb-6">
                 {t("success.hint")}
               </p>
+
+              {/* Resend success message */}
+              {resendSuccess && (
+                <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm mb-4">
+                  {t("success.resendSuccess")}
+                </div>
+              )}
+
+              {/* Resend button */}
+              <div className="space-y-3">
+                <Button
+                  variant="outline"
+                  onClick={handleResendEmail}
+                  disabled={resendCooldown > 0 || isResending}
+                  className="w-full"
+                >
+                  {isResending ? (
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                  )}
+                  {resendCooldown > 0
+                    ? t("success.resendCooldown", { seconds: resendCooldown })
+                    : t("success.resendButton")
+                  }
+                </Button>
+
+                <Link href="/auth/login" className="block">
+                  <Button variant="ghost" className="w-full">
+                    {t("success.backToLogin")}
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </div>

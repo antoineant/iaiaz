@@ -517,8 +517,13 @@
       "login": "Se connecter",
       "success": {
         "title": "Vérifiez votre email",
-        "description": "Nous avons envoyé un lien de confirmation à {email}",
-        "hint": "Cliquez sur le lien dans l'email pour activer votre compte et recevoir vos crédits gratuits."
+        "description": "Nous avons envoyé un lien de confirmation à :",
+        "deliveryTime": "L'email peut prendre quelques minutes à arriver",
+        "hint": "Pensez à vérifier vos spams si vous ne voyez rien. Cliquez sur le lien dans l'email pour activer votre compte.",
+        "resendButton": "Renvoyer l'email de confirmation",
+        "resendCooldown": "Renvoyer dans {seconds}s",
+        "resendSuccess": "Email renvoyé ! Vérifiez votre boîte de réception.",
+        "backToLogin": "Retour à la connexion"
       },
       "errors": {
         "passwordMismatch": "Les mots de passe ne correspondent pas",
