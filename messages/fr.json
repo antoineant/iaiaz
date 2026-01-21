@@ -1843,6 +1843,7 @@
       "classes": "Classes",
       "members": "Membres",
       "invites": "Invitations",
+      "credits": "Crédits",
       "backToChat": "Retour au chat",
       "logout": "Déconnexion"
     },
@@ -1922,6 +1923,33 @@
       "continue": "Continuer",
       "skipForNow": "Passer cette étape",
       "error": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "credits": {
+      "title": "Crédits organisation",
+      "subtitle": "Rechargez les crédits de votre organisation pour vos formateurs et étudiants.",
+      "balance": "Solde total",
+      "available": "Disponible",
+      "members": "Membres",
+      "choosePack": "Choisir un pack",
+      "volumeDiscounts": "Réductions automatiques sur les montants élevés",
+      "popular": "Populaire",
+      "creditsLabel": "de crédits",
+      "customAmount": "Montant personnalisé",
+      "youPay": "Vous payez",
+      "discountTiers": "100€+ : -5% | 200€+ : -10% | 500€+ : -15%",
+      "purchase": "Acheter des crédits",
+      "errors": {
+        "invalidAmount": "Le montant doit être entre 50€ et 2000€",
+        "selectPack": "Veuillez sélectionner un pack ou entrer un montant",
+        "generic": "Une erreur est survenue. Veuillez réessayer."
+      },
+      "success": {
+        "verifying": "Vérification du paiement...",
+        "title": "Paiement réussi !",
+        "description": "Les crédits ont été ajoutés à votre organisation.",
+        "backToDashboard": "Retour au tableau de bord",
+        "allocateCredits": "Allouer des crédits"
+      }
     },
     "invites": {
       "title": "Invitations",

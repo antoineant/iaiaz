@@ -15,6 +15,7 @@ import {
   Loader2,
   Building2,
   GraduationCap,
+  CreditCard,
 } from "lucide-react";
 
 interface OrgMembership {
@@ -109,6 +110,7 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
     { href: "/org/classes", label: t("nav.classes"), icon: GraduationCap },
     { href: "/org/members", label: t("nav.members"), icon: Users },
     { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
+    { href: "/org/credits", label: t("nav.credits"), icon: CreditCard },
   ];
 
   if (isLoading) {

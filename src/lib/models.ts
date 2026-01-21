@@ -384,3 +384,63 @@ export const CREDIT_PACKS = [
     popular: false,
   },
 ] as const;
+
+// ============================================================================
+// ORGANIZATION CREDIT PACKS (for schools and trainers)
+// ============================================================================
+
+export const ORG_CREDIT_PACKS = [
+  {
+    id: "org-starter",
+    name: "Classe",
+    credits: 50,
+    price: 50,
+    description: "Pour une classe (~25 étudiants)",
+    popular: false,
+    discount: 0,
+  },
+  {
+    id: "org-standard",
+    name: "Formation",
+    credits: 100,
+    price: 95, // 5% discount
+    description: "Pour plusieurs classes",
+    popular: true,
+    discount: 5,
+  },
+  {
+    id: "org-premium",
+    name: "Établissement",
+    credits: 200,
+    price: 180, // 10% discount
+    description: "Pour un département",
+    popular: false,
+    discount: 10,
+  },
+  {
+    id: "org-enterprise",
+    name: "Institution",
+    credits: 500,
+    price: 425, // 15% discount
+    description: "Pour tout l'établissement",
+    popular: false,
+    discount: 15,
+  },
+] as const;
+
+/**
+ * Calculate discounted price for custom org amounts
+ * - 100€+: 5% discount
+ * - 200€+: 10% discount
+ * - 500€+: 15% discount
+ */
+export function calculateOrgDiscount(amount: number): { price: number; discount: number } {
+  if (amount >= 500) {
+    return { price: Math.round(amount * 0.85), discount: 15 };
+  } else if (amount >= 200) {
+    return { price: Math.round(amount * 0.90), discount: 10 };
+  } else if (amount >= 100) {
+    return { price: Math.round(amount * 0.95), discount: 5 };
+  }
+  return { price: amount, discount: 0 };
+}

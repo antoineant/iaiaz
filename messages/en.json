@@ -1875,6 +1875,7 @@
       "classes": "Classes",
       "members": "Members",
       "invites": "Invitations",
+      "credits": "Credits",
       "backToChat": "Back to chat",
       "logout": "Log out"
     },
@@ -1954,6 +1955,33 @@
       "continue": "Continue",
       "skipForNow": "Skip for now",
       "error": "An error occurred. Please try again."
+    },
+    "credits": {
+      "title": "Organization Credits",
+      "subtitle": "Top up credits for your organization's trainers and students.",
+      "balance": "Total Balance",
+      "available": "Available",
+      "members": "Members",
+      "choosePack": "Choose a pack",
+      "volumeDiscounts": "Automatic discounts on larger amounts",
+      "popular": "Popular",
+      "creditsLabel": "in credits",
+      "customAmount": "Custom amount",
+      "youPay": "You pay",
+      "discountTiers": "€100+: -5% | €200+: -10% | €500+: -15%",
+      "purchase": "Purchase credits",
+      "errors": {
+        "invalidAmount": "Amount must be between €50 and €2000",
+        "selectPack": "Please select a pack or enter an amount",
+        "generic": "An error occurred. Please try again."
+      },
+      "success": {
+        "verifying": "Verifying payment...",
+        "title": "Payment successful!",
+        "description": "Credits have been added to your organization.",
+        "backToDashboard": "Back to dashboard",
+        "allocateCredits": "Allocate credits"
+      }
     },
     "invites": {
       "title": "Invitations",

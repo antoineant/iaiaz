@@ -292,3 +292,87 @@ BAJURIAN SAS - SIRET 828 446 435
 `,
   });
 }
+
+/**
+ * Send organization credits purchase confirmation email
+ */
+export async function sendOrgCreditsPurchaseEmail(
+  to: string,
+  organizationName: string,
+  amount: number,
+  newBalance: number
+): Promise<EmailResult> {
+  const formattedAmount = amount.toFixed(2);
+  const formattedBalance = newBalance.toFixed(2);
+
+  return sendEmail({
+    to,
+    subject: `iaiaz - ${formattedAmount}€ ajoutés à ${organizationName}`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; color: #2563eb; margin: 0;">iaiaz</h1>
+  </div>
+
+  <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Crédits ajoutés à votre organisation</h2>
+
+  <div style="background: #eff6ff; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #bfdbfe;">
+    <p style="margin: 0 0 4px 0; color: #1e40af; font-weight: 600;">${organizationName}</p>
+    <p style="margin: 0 0 16px 0; color: #6b7280; font-size: 14px;">Crédits organisation</p>
+    <p style="margin: 0 0 8px 0; color: #6b7280;">Montant ajouté</p>
+    <p style="margin: 0; font-size: 32px; font-weight: 700; color: #10b981;">+${formattedAmount}€</p>
+  </div>
+
+  <p style="margin-bottom: 16px;">
+    Le nouveau solde de votre organisation est de <strong style="color: #2563eb;">${formattedBalance}€</strong>.
+  </p>
+
+  <p style="margin-bottom: 24px;">
+    Ces crédits peuvent être alloués à vos formateurs et étudiants depuis votre tableau de bord.
+  </p>
+
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="https://www.iaiaz.com/org" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Gérer mon organisation
+    </a>
+  </div>
+
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
+    Merci de votre confiance,<br>
+    L'équipe iaiaz
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+
+  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+    BAJURIAN SAS - SIRET 828 446 435<br>
+    135 Avenue des Pyrénées, 31830 Plaisance du Touch<br>
+    <a href="https://www.iaiaz.com/legal/cgv" style="color: #9ca3af;">CGV</a>
+  </p>
+</body>
+</html>
+    `,
+    text: `Crédits ajoutés à votre organisation
+
+Organisation : ${organizationName}
+Montant ajouté : ${formattedAmount}€
+Nouveau solde : ${formattedBalance}€
+
+Ces crédits peuvent être alloués à vos formateurs et étudiants depuis votre tableau de bord.
+
+Gérer mon organisation : https://www.iaiaz.com/org
+
+Merci de votre confiance,
+L'équipe iaiaz
+
+BAJURIAN SAS - SIRET 828 446 435
+135 Avenue des Pyrénées, 31830 Plaisance du Touch
+`,
+  });
+}
