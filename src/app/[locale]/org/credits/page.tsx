@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Users,
   Percent,
+  Clock,
 } from "lucide-react";
 
 interface OrgCreditsInfo {
@@ -29,9 +30,11 @@ interface CreditPack {
   name: string;
   credits: number;
   price: number;
-  description: string;
   popular: boolean;
   discount: number;
+  // Usage estimates based on ~2€/student/month average
+  studentsPerMonth: number;
+  studentsSemester: number;
 }
 
 const ORG_CREDIT_PACKS: CreditPack[] = [
@@ -40,36 +43,40 @@ const ORG_CREDIT_PACKS: CreditPack[] = [
     name: "Classe",
     credits: 50,
     price: 50,
-    description: "Pour une classe (~25 étudiants)",
     popular: false,
     discount: 0,
+    studentsPerMonth: 25,
+    studentsSemester: 12,
   },
   {
     id: "org-standard",
     name: "Formation",
     credits: 100,
     price: 95,
-    description: "Pour plusieurs classes",
     popular: true,
     discount: 5,
+    studentsPerMonth: 50,
+    studentsSemester: 25,
   },
   {
     id: "org-premium",
     name: "Établissement",
     credits: 200,
     price: 180,
-    description: "Pour un département",
     popular: false,
     discount: 10,
+    studentsPerMonth: 100,
+    studentsSemester: 50,
   },
   {
     id: "org-enterprise",
     name: "Institution",
     credits: 500,
     price: 425,
-    description: "Pour tout l'établissement",
     popular: false,
     discount: 15,
+    studentsPerMonth: 250,
+    studentsSemester: 125,
   },
 ];
 
@@ -294,10 +301,9 @@ export default function OrgCreditsPage() {
 
                 <div className="mb-3">
                   <h3 className="font-semibold">{pack.name}</h3>
-                  <p className="text-xs text-[var(--muted-foreground)]">{pack.description}</p>
                 </div>
 
-                <div className="flex items-baseline gap-1 mb-2">
+                <div className="flex items-baseline gap-1 mb-1">
                   <span className="text-2xl font-bold">{pack.price}€</span>
                   {pack.discount > 0 && (
                     <span className="text-sm text-[var(--muted-foreground)] line-through">
@@ -306,9 +312,23 @@ export default function OrgCreditsPage() {
                   )}
                 </div>
 
-                <p className="text-sm text-[var(--muted-foreground)]">
+                <p className="text-sm text-[var(--muted-foreground)] mb-3">
                   {pack.credits}€ {t("creditsLabel")}
                 </p>
+
+                {/* Usage estimates */}
+                <div className="pt-3 border-t border-[var(--border)] space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
+                    <Clock className="w-3 h-3" />
+                    <span>{t("usageEstimate")}</span>
+                  </div>
+                  <p className="text-xs">
+                    <span className="font-medium">{pack.studentsPerMonth}</span> {t("studentsMonth")}
+                  </p>
+                  <p className="text-xs text-[var(--muted-foreground)]">
+                    {t("or")} <span className="font-medium">{pack.studentsSemester}</span> {t("studentsSemester")}
+                  </p>
+                </div>
 
                 {selectedPack === pack.id && (
                   <div className="absolute top-3 right-3">
