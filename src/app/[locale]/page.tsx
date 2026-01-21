@@ -43,8 +43,8 @@ export default async function HomePage({ params }: Props) {
   const otherModels = allModels.filter((m) => !m.is_recommended);
   const displayModels = [...recommendedModels, ...otherModels].slice(0, 4);
 
-  // Currency symbol based on locale
-  const currencySymbol = locale === "fr" ? "€" : "$";
+  // Always use Euro for European service
+  const currencySymbol = "€";
 
   return (
     <div className="min-h-screen">
@@ -433,7 +433,7 @@ export default async function HomePage({ params }: Props) {
                       {t("models.avgCost")}
                     </p>
                     <p className="text-lg font-semibold text-primary-600 dark:text-primary-400">
-                      ~${((model.input_price * 500 + model.output_price * 500) * markupMultiplier / 1_000_000).toFixed(2)}
+                      ~{((model.input_price * 500 + model.output_price * 500) * markupMultiplier / 1_000_000).toFixed(2)}€
                     </p>
                   </div>
                 </CardContent>
@@ -468,7 +468,7 @@ export default async function HomePage({ params }: Props) {
                     </span>
                   )}
                   <h3 className="text-xl font-semibold mt-2">{pack.name}</h3>
-                  <p className="text-4xl font-bold my-4">${pack.price}</p>
+                  <p className="text-4xl font-bold my-4">{pack.price}€</p>
                   <p className="text-[var(--muted-foreground)] mb-2">
                     {pack.description}
                   </p>
