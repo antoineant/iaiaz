@@ -20,12 +20,13 @@ interface IncomePeriod {
   org_purchases: number;
   subscription_revenue: number;
   total_revenue: number;
+  usage_revenue: number;  // What users paid for usage (with markup)
   cost_anthropic: number;
   cost_openai: number;
   cost_google: number;
   cost_mistral: number;
   total_cost: number;
-  net_margin: number;
+  net_margin: number;     // usage_revenue - total_cost (what I keep)
   margin_percent: number;
 }
 
@@ -34,6 +35,7 @@ interface IncomeTotals {
   org_purchases: number;
   subscription_revenue: number;
   total_revenue: number;
+  usage_revenue: number;
   cost_anthropic: number;
   cost_openai: number;
   cost_google: number;
@@ -182,29 +184,31 @@ export default function IncomeDashboard() {
       "Achats individuels",
       "Achats organisations",
       "Abonnements",
-      "Total revenus",
+      "Encaissements",
+      "Revenus usage",
       "Coût Anthropic",
       "Coût OpenAI",
       "Coût Google",
       "Coût Mistral",
-      "Total coûts",
-      "Marge nette",
+      "Total coûts IA",
+      "Ma marge",
       "Marge %",
     ];
 
     const rows = data.periods.map((p) => [
       p.period_start,
-      p.personal_purchases.toFixed(2),
-      p.org_purchases.toFixed(2),
-      p.subscription_revenue.toFixed(2),
-      p.total_revenue.toFixed(2),
-      p.cost_anthropic.toFixed(2),
-      p.cost_openai.toFixed(2),
-      p.cost_google.toFixed(2),
-      p.cost_mistral.toFixed(2),
-      p.total_cost.toFixed(2),
-      p.net_margin.toFixed(2),
-      p.margin_percent.toFixed(1),
+      Number(p.personal_purchases).toFixed(2),
+      Number(p.org_purchases).toFixed(2),
+      Number(p.subscription_revenue).toFixed(2),
+      Number(p.total_revenue).toFixed(2),
+      Number(p.usage_revenue).toFixed(2),
+      Number(p.cost_anthropic).toFixed(2),
+      Number(p.cost_openai).toFixed(2),
+      Number(p.cost_google).toFixed(2),
+      Number(p.cost_mistral).toFixed(2),
+      Number(p.total_cost).toFixed(2),
+      Number(p.net_margin).toFixed(2),
+      Number(p.margin_percent).toFixed(1),
     ]);
 
     // Add totals row
@@ -214,6 +218,7 @@ export default function IncomeDashboard() {
       data.totals.org_purchases.toFixed(2),
       data.totals.subscription_revenue.toFixed(2),
       data.totals.total_revenue.toFixed(2),
+      data.totals.usage_revenue.toFixed(2),
       data.totals.cost_anthropic.toFixed(2),
       data.totals.cost_openai.toFixed(2),
       data.totals.cost_google.toFixed(2),
@@ -341,32 +346,39 @@ export default function IncomeDashboard() {
 
       {/* Summary Cards */}
       {data && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <StatCard
-            title="Revenus totaux"
+            title="Encaissements"
             value={`${data.totals.total_revenue.toFixed(2)} €`}
             icon={Euro}
-            description={`${data.periods.length} période(s)`}
+            description="Achats crédits + abonnements"
+          />
+          <StatCard
+            title="Revenus usage"
+            value={`${data.totals.usage_revenue.toFixed(2)} €`}
+            icon={TrendingUp}
+            description="Crédits consommés (avec markup)"
           />
           <StatCard
             title="Coûts IA"
             value={`${data.totals.total_cost.toFixed(2)} €`}
             icon={TrendingDown}
-            description="Tous fournisseurs"
+            description="À payer aux fournisseurs"
           />
           <StatCard
-            title="Marge nette"
+            title="Ma marge"
             value={`${data.totals.net_margin.toFixed(2)} €`}
-            icon={TrendingUp}
+            icon={Euro}
             trendUp={data.totals.net_margin > 0}
-            trend={data.totals.net_margin > 0 ? "Positif" : "Négatif"}
+            trend="Ce que je garde"
+            description="Usage - Coûts IA"
           />
           <StatCard
             title="Marge %"
             value={`${data.totals.margin_percent.toFixed(1)}%`}
             icon={BarChart3}
             trendUp={data.totals.margin_percent > 50}
-            trend={data.totals.margin_percent > 50 ? "Au-dessus de 50%" : "En dessous de 50%"}
+            trend={`Markup: ${((100 / (100 - data.totals.margin_percent)) * data.totals.margin_percent).toFixed(0)}%`}
           />
         </div>
       )}
@@ -446,9 +458,10 @@ export default function IncomeDashboard() {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-2 px-2">Période</th>
-                    <th className="text-right py-2 px-2">Revenus</th>
-                    <th className="text-right py-2 px-2">Coûts</th>
-                    <th className="text-right py-2 px-2">Marge</th>
+                    <th className="text-right py-2 px-2">Encaissements</th>
+                    <th className="text-right py-2 px-2">Usage</th>
+                    <th className="text-right py-2 px-2">Coûts IA</th>
+                    <th className="text-right py-2 px-2">Ma marge</th>
                     <th className="text-right py-2 px-2">%</th>
                   </tr>
                 </thead>
@@ -462,10 +475,13 @@ export default function IncomeDashboard() {
                         {Number(p.total_revenue).toFixed(2)} €
                       </td>
                       <td className="text-right py-2 px-2">
+                        {Number(p.usage_revenue).toFixed(2)} €
+                      </td>
+                      <td className="text-right py-2 px-2 text-red-600 dark:text-red-400">
                         {Number(p.total_cost).toFixed(2)} €
                       </td>
                       <td
-                        className={`text-right py-2 px-2 ${
+                        className={`text-right py-2 px-2 font-medium ${
                           Number(p.net_margin) >= 0
                             ? "text-green-600 dark:text-green-400"
                             : "text-red-600 dark:text-red-400"
@@ -486,6 +502,9 @@ export default function IncomeDashboard() {
                       {data.totals.total_revenue.toFixed(2)} €
                     </td>
                     <td className="text-right py-2 px-2">
+                      {data.totals.usage_revenue.toFixed(2)} €
+                    </td>
+                    <td className="text-right py-2 px-2 text-red-600 dark:text-red-400">
                       {data.totals.total_cost.toFixed(2)} €
                     </td>
                     <td

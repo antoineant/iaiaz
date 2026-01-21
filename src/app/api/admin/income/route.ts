@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
       org_purchases: number;
       subscription_revenue: number;
       total_revenue: number;
+      usage_revenue: number;
       cost_anthropic: number;
       cost_openai: number;
       cost_google: number;
@@ -61,6 +62,7 @@ export async function GET(request: NextRequest) {
       org_purchases: number;
       subscription_revenue: number;
       total_revenue: number;
+      usage_revenue: number;
       cost_anthropic: number;
       cost_openai: number;
       cost_google: number;
@@ -72,6 +74,7 @@ export async function GET(request: NextRequest) {
       acc.org_purchases += Number(row.org_purchases) || 0;
       acc.subscription_revenue += Number(row.subscription_revenue) || 0;
       acc.total_revenue += Number(row.total_revenue) || 0;
+      acc.usage_revenue += Number(row.usage_revenue) || 0;
       acc.cost_anthropic += Number(row.cost_anthropic) || 0;
       acc.cost_openai += Number(row.cost_openai) || 0;
       acc.cost_google += Number(row.cost_google) || 0;
@@ -85,6 +88,7 @@ export async function GET(request: NextRequest) {
       org_purchases: 0,
       subscription_revenue: 0,
       total_revenue: 0,
+      usage_revenue: 0,
       cost_anthropic: 0,
       cost_openai: 0,
       cost_google: 0,
@@ -94,9 +98,9 @@ export async function GET(request: NextRequest) {
     }
   );
 
-  // Calculate overall margin percentage
-  const margin_percent = totals.total_revenue > 0
-    ? ((totals.net_margin / totals.total_revenue) * 100)
+  // Calculate overall margin percentage (based on usage revenue)
+  const margin_percent = totals.usage_revenue > 0
+    ? ((totals.net_margin / totals.usage_revenue) * 100)
     : 0;
 
   return NextResponse.json({
