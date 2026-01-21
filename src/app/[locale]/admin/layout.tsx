@@ -11,6 +11,8 @@ import {
   Settings,
   LogOut,
   ChevronLeft,
+  Euro,
+  Server,
 } from "lucide-react";
 
 interface Profile {
@@ -21,6 +23,8 @@ interface Profile {
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/income", label: "Revenus", icon: Euro },
+  { href: "/admin/providers", label: "Fournisseurs IA", icon: Server },
   { href: "/admin/models", label: "Modèles", icon: Bot },
   { href: "/admin/users", label: "Utilisateurs", icon: Users },
   { href: "/admin/settings", label: "Paramètres", icon: Settings },
