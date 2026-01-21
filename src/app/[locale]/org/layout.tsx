@@ -16,6 +16,7 @@ import {
   Building2,
   GraduationCap,
   CreditCard,
+  Crown,
 } from "lucide-react";
 
 interface OrgMembership {
@@ -110,6 +111,7 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
     { href: "/org/classes", label: t("nav.classes"), icon: GraduationCap },
     { href: "/org/members", label: t("nav.members"), icon: Users },
     { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
+    { href: "/org/subscription", label: t("nav.subscription"), icon: Crown },
     { href: "/org/credits", label: t("nav.credits"), icon: CreditCard },
   ];
 

@@ -1875,6 +1875,7 @@
       "classes": "Classes",
       "members": "Members",
       "invites": "Invitations",
+      "subscription": "Subscription",
       "credits": "Credits",
       "backToChat": "Back to chat",
       "logout": "Log out"
@@ -1985,6 +1986,51 @@
         "description": "Credits have been added to your organization.",
         "backToDashboard": "Back to dashboard",
         "allocateCredits": "Allocate credits"
+      }
+    },
+    "subscription": {
+      "title": "Subscription",
+      "subtitle": "Manage your subscription to access management features.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "yearlyDiscount": "-17%",
+      "perMonth": "month",
+      "perYear": "year",
+      "perStudent": "student/month",
+      "minimum": "Minimum {min} students",
+      "subscribe": "Subscribe",
+      "trialInfo": "14-day free trial. Cancel anytime.",
+      "manageSubscription": "Manage subscription",
+      "updatePayment": "Update payment",
+      "status": {
+        "active": "Active subscription",
+        "trial": "Trial period",
+        "pastDue": "Payment overdue",
+        "pastDueDescription": "Please update your payment method to continue using features.",
+        "renewsAt": "Renews on {date}",
+        "cancelsAt": "Ends on {date}",
+        "cancelWarning": "Your subscription will be canceled at the end of the period. You can reactivate it anytime."
+      },
+      "seatCount": {
+        "title": "Number of students",
+        "description": "Adjust the number of students included in your subscription.",
+        "students": "students",
+        "warning": "You currently have {current} active students. Increase this number to include them all."
+      },
+      "errors": {
+        "selectPlan": "Please select a plan",
+        "generic": "An error occurred. Please try again."
+      },
+      "success": {
+        "verifying": "Activating your subscription...",
+        "title": "Subscription activated!",
+        "description": "Your subscription is now active. You have access to all features.",
+        "nextSteps": "Next steps",
+        "step1": "Create your first classes",
+        "step2": "Invite your students via QR code",
+        "step3": "Purchase credits for AI usage",
+        "backToDashboard": "Back to dashboard",
+        "purchaseCredits": "Purchase credits"
       }
     },
     "invites": {

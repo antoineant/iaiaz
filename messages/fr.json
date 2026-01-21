@@ -1843,6 +1843,7 @@
       "classes": "Classes",
       "members": "Membres",
       "invites": "Invitations",
+      "subscription": "Abonnement",
       "credits": "Crédits",
       "backToChat": "Retour au chat",
       "logout": "Déconnexion"
@@ -1953,6 +1954,51 @@
         "description": "Les crédits ont été ajoutés à votre organisation.",
         "backToDashboard": "Retour au tableau de bord",
         "allocateCredits": "Allouer des crédits"
+      }
+    },
+    "subscription": {
+      "title": "Abonnement",
+      "subtitle": "Gérez votre abonnement pour accéder aux fonctionnalités de gestion.",
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "yearlyDiscount": "-17%",
+      "perMonth": "mois",
+      "perYear": "an",
+      "perStudent": "étudiant/mois",
+      "minimum": "Minimum {min} étudiants",
+      "subscribe": "S'abonner",
+      "trialInfo": "14 jours d'essai gratuit. Annulez à tout moment.",
+      "manageSubscription": "Gérer l'abonnement",
+      "updatePayment": "Mettre à jour le paiement",
+      "status": {
+        "active": "Abonnement actif",
+        "trial": "Période d'essai",
+        "pastDue": "Paiement en retard",
+        "pastDueDescription": "Veuillez mettre à jour votre moyen de paiement pour continuer à utiliser les fonctionnalités.",
+        "renewsAt": "Renouvellement le {date}",
+        "cancelsAt": "Prend fin le {date}",
+        "cancelWarning": "Votre abonnement sera annulé à la fin de la période. Vous pouvez le réactiver à tout moment."
+      },
+      "seatCount": {
+        "title": "Nombre d'étudiants",
+        "description": "Ajustez le nombre d'étudiants inclus dans votre abonnement.",
+        "students": "étudiants",
+        "warning": "Vous avez actuellement {current} étudiants actifs. Augmentez ce nombre pour les inclure tous."
+      },
+      "errors": {
+        "selectPlan": "Veuillez sélectionner un plan",
+        "generic": "Une erreur est survenue. Veuillez réessayer."
+      },
+      "success": {
+        "verifying": "Activation de votre abonnement...",
+        "title": "Abonnement activé !",
+        "description": "Votre abonnement est maintenant actif. Vous avez accès à toutes les fonctionnalités.",
+        "nextSteps": "Prochaines étapes",
+        "step1": "Créez vos premières classes",
+        "step2": "Invitez vos étudiants via QR code",
+        "step3": "Achetez des crédits pour l'utilisation de l'IA",
+        "backToDashboard": "Retour au tableau de bord",
+        "purchaseCredits": "Acheter des crédits"
       }
     },
     "invites": {

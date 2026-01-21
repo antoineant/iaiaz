@@ -376,3 +376,248 @@ BAJURIAN SAS - SIRET 828 446 435
 `,
   });
 }
+
+/**
+ * Send subscription-related emails (created, canceled, payment failed)
+ */
+export async function sendSubscriptionEmail(
+  to: string,
+  organizationName: string,
+  planId: string,
+  eventType: "created" | "canceled" | "payment_failed",
+  trialEnd?: Date
+): Promise<EmailResult> {
+  const planNames: Record<string, string> = {
+    "trainer-pro": "Formateur Pro",
+    "school-seat": "Établissement",
+  };
+  const planName = planNames[planId] || planId;
+
+  // Different email content based on event type
+  if (eventType === "created") {
+    const trialInfo = trialEnd
+      ? `<p style="margin-bottom: 16px; padding: 12px; background: #fef3c7; border-radius: 8px; color: #92400e;">
+          <strong>Essai gratuit :</strong> Votre période d'essai se termine le ${trialEnd.toLocaleDateString("fr-FR")}. Aucun paiement ne sera prélevé avant cette date.
+        </p>`
+      : "";
+
+    return sendEmail({
+      to,
+      subject: `iaiaz - Bienvenue dans ${planName} !`,
+      html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; color: #2563eb; margin: 0;">iaiaz</h1>
+  </div>
+
+  <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Bienvenue dans votre abonnement !</h2>
+
+  <div style="background: #eff6ff; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #bfdbfe;">
+    <p style="margin: 0 0 4px 0; color: #1e40af; font-weight: 600;">${organizationName}</p>
+    <p style="margin: 0 0 16px 0; color: #6b7280; font-size: 14px;">Abonnement activé</p>
+    <p style="margin: 0; font-size: 24px; font-weight: 700; color: #2563eb;">${planName}</p>
+  </div>
+
+  ${trialInfo}
+
+  <p style="margin-bottom: 16px;">
+    Votre abonnement ${planName} est maintenant actif. Vous avez accès à toutes les fonctionnalités incluses :
+  </p>
+
+  <ul style="margin-bottom: 24px; padding-left: 20px;">
+    <li style="margin-bottom: 8px;">Tableau de bord analytics complet</li>
+    <li style="margin-bottom: 8px;">Gestion des classes et étudiants</li>
+    <li style="margin-bottom: 8px;">Allocation de crédits</li>
+    <li style="margin-bottom: 8px;">Support prioritaire</li>
+  </ul>
+
+  <p style="margin-bottom: 24px; font-size: 14px; color: #6b7280;">
+    <strong>Rappel :</strong> L'abonnement couvre l'accès à la plateforme. Les crédits pour l'utilisation de l'IA se gèrent séparément.
+  </p>
+
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="https://www.iaiaz.com/org" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Accéder à mon tableau de bord
+    </a>
+  </div>
+
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
+    Bienvenue parmi nous,<br>
+    L'équipe iaiaz
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+
+  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+    BAJURIAN SAS - SIRET 828 446 435<br>
+    135 Avenue des Pyrénées, 31830 Plaisance du Touch<br>
+    <a href="https://www.iaiaz.com/legal/cgv" style="color: #9ca3af;">CGV</a>
+  </p>
+</body>
+</html>
+      `,
+      text: `Bienvenue dans votre abonnement !
+
+Organisation : ${organizationName}
+Plan : ${planName}
+
+${trialEnd ? `Essai gratuit jusqu'au ${trialEnd.toLocaleDateString("fr-FR")}` : ""}
+
+Votre abonnement ${planName} est maintenant actif.
+
+Rappel : L'abonnement couvre l'accès à la plateforme. Les crédits pour l'utilisation de l'IA se gèrent séparément.
+
+Accéder à mon tableau de bord : https://www.iaiaz.com/org
+
+L'équipe iaiaz
+`,
+    });
+  }
+
+  if (eventType === "canceled") {
+    return sendEmail({
+      to,
+      subject: `iaiaz - Confirmation d'annulation de votre abonnement`,
+      html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; color: #2563eb; margin: 0;">iaiaz</h1>
+  </div>
+
+  <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Votre abonnement a été annulé</h2>
+
+  <div style="background: #fef2f2; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #fecaca;">
+    <p style="margin: 0 0 4px 0; color: #991b1b; font-weight: 600;">${organizationName}</p>
+    <p style="margin: 0; color: #6b7280; font-size: 14px;">Abonnement ${planName} annulé</p>
+  </div>
+
+  <p style="margin-bottom: 16px;">
+    Nous confirmons l'annulation de votre abonnement ${planName} pour ${organizationName}.
+  </p>
+
+  <p style="margin-bottom: 24px;">
+    <strong>Important :</strong> Vos crédits restants sont toujours disponibles et vos étudiants peuvent continuer à utiliser la plateforme jusqu'à épuisement des crédits.
+  </p>
+
+  <p style="margin-bottom: 24px;">
+    Vous pouvez réactiver votre abonnement à tout moment depuis votre tableau de bord.
+  </p>
+
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="https://www.iaiaz.com/org/subscription" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Réactiver mon abonnement
+    </a>
+  </div>
+
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
+    Une question ? Contactez-nous.<br>
+    L'équipe iaiaz
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+
+  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+    BAJURIAN SAS - SIRET 828 446 435<br>
+    135 Avenue des Pyrénées, 31830 Plaisance du Touch
+  </p>
+</body>
+</html>
+      `,
+      text: `Votre abonnement a été annulé
+
+Organisation : ${organizationName}
+Plan annulé : ${planName}
+
+Nous confirmons l'annulation de votre abonnement.
+
+Important : Vos crédits restants sont toujours disponibles et vos étudiants peuvent continuer à utiliser la plateforme jusqu'à épuisement des crédits.
+
+Réactiver mon abonnement : https://www.iaiaz.com/org/subscription
+
+L'équipe iaiaz
+`,
+    });
+  }
+
+  if (eventType === "payment_failed") {
+    return sendEmail({
+      to,
+      subject: `iaiaz - Action requise : paiement échoué`,
+      html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; color: #2563eb; margin: 0;">iaiaz</h1>
+  </div>
+
+  <h2 style="font-size: 24px; color: #dc2626; margin-bottom: 16px;">Paiement échoué</h2>
+
+  <div style="background: #fef2f2; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #fecaca;">
+    <p style="margin: 0 0 4px 0; color: #991b1b; font-weight: 600;">${organizationName}</p>
+    <p style="margin: 0; color: #6b7280; font-size: 14px;">Abonnement ${planName}</p>
+  </div>
+
+  <p style="margin-bottom: 16px;">
+    Le paiement de votre abonnement ${planName} a échoué. Veuillez mettre à jour votre moyen de paiement pour éviter une interruption de service.
+  </p>
+
+  <p style="margin-bottom: 24px; padding: 12px; background: #fef3c7; border-radius: 8px; color: #92400e;">
+    <strong>Action requise :</strong> Mettez à jour votre carte bancaire dans les 7 jours pour maintenir votre accès.
+  </p>
+
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="https://www.iaiaz.com/org/subscription" style="display: inline-block; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Mettre à jour mon paiement
+    </a>
+  </div>
+
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
+    Besoin d'aide ? Contactez-nous.<br>
+    L'équipe iaiaz
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+
+  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+    BAJURIAN SAS - SIRET 828 446 435<br>
+    135 Avenue des Pyrénées, 31830 Plaisance du Touch
+  </p>
+</body>
+</html>
+      `,
+      text: `Paiement échoué
+
+Organisation : ${organizationName}
+Plan : ${planName}
+
+Le paiement de votre abonnement a échoué. Veuillez mettre à jour votre moyen de paiement pour éviter une interruption de service.
+
+Action requise : Mettez à jour votre carte bancaire dans les 7 jours.
+
+Mettre à jour mon paiement : https://www.iaiaz.com/org/subscription
+
+L'équipe iaiaz
+`,
+    });
+  }
+
+  // Default fallback
+  return { success: false, error: "Unknown event type" };
+}

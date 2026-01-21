@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendCreditsPurchaseEmail, sendOrgCreditsPurchaseEmail } from "@/lib/email";
+import { sendCreditsPurchaseEmail, sendOrgCreditsPurchaseEmail, sendSubscriptionEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -29,15 +29,49 @@ export async function POST(request: NextRequest) {
 
   console.log(`Webhook received: ${event.type}`);
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const metadata = session.metadata || {};
+  switch (event.type) {
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const metadata = session.metadata || {};
 
-    // Check if this is an organization purchase
-    if (metadata.type === "organization") {
-      await handleOrganizationPurchase(session, metadata);
-    } else {
-      await handlePersonalPurchase(session, metadata);
+      if (metadata.type === "subscription") {
+        // Subscription checkout - handled by customer.subscription.created
+        console.log("Subscription checkout completed, waiting for subscription event");
+      } else if (metadata.type === "organization") {
+        await handleOrganizationPurchase(session, metadata);
+      } else {
+        await handlePersonalPurchase(session, metadata);
+      }
+      break;
+    }
+
+    case "customer.subscription.created":
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      await handleSubscriptionUpdate(subscription, event.type);
+      break;
+    }
+
+    case "customer.subscription.deleted": {
+      const subscription = event.data.object as Stripe.Subscription;
+      await handleSubscriptionCanceled(subscription);
+      break;
+    }
+
+    case "invoice.payment_succeeded": {
+      const invoice = event.data.object as Stripe.Invoice;
+      if (invoice.subscription) {
+        await handleSubscriptionPayment(invoice);
+      }
+      break;
+    }
+
+    case "invoice.payment_failed": {
+      const invoice = event.data.object as Stripe.Invoice;
+      if (invoice.subscription) {
+        await handleSubscriptionPaymentFailed(invoice);
+      }
+      break;
     }
   }
 
@@ -187,5 +221,259 @@ async function handleOrganizationPurchase(
     } else {
       console.error(`Failed to send org email: ${emailResult.error}`);
     }
+  }
+}
+
+/**
+ * Handle subscription created or updated
+ */
+async function handleSubscriptionUpdate(
+  subscription: Stripe.Subscription,
+  eventType: string
+) {
+  const metadata = subscription.metadata || {};
+  const { organizationId, planId, seatCount } = metadata;
+
+  console.log(`Subscription ${eventType}:`, { organizationId, planId, seatCount, status: subscription.status });
+
+  if (!organizationId) {
+    console.error("Missing organizationId in subscription metadata");
+    return;
+  }
+
+  const adminClient = createAdminClient();
+
+  // Map Stripe status to our status
+  const statusMap: Record<string, string> = {
+    active: "active",
+    trialing: "trialing",
+    past_due: "past_due",
+    canceled: "canceled",
+    unpaid: "unpaid",
+    incomplete: "none",
+    incomplete_expired: "none",
+    paused: "canceled",
+  };
+
+  const status = statusMap[subscription.status] || "none";
+
+  // Update organization subscription
+  const { error } = await adminClient
+    .from("organizations")
+    .update({
+      subscription_plan_id: planId || null,
+      subscription_status: status,
+      subscription_stripe_id: subscription.id,
+      subscription_current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+      subscription_current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      subscription_cancel_at_period_end: subscription.cancel_at_period_end,
+      subscription_trial_end: subscription.trial_end
+        ? new Date(subscription.trial_end * 1000).toISOString()
+        : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", organizationId);
+
+  if (error) {
+    console.error("Error updating organization subscription:", error);
+    return;
+  }
+
+  // Log subscription event
+  await adminClient
+    .from("organization_subscription_events")
+    .insert({
+      organization_id: organizationId,
+      event_type: eventType === "customer.subscription.created" ? "subscription_created" : "subscription_updated",
+      stripe_event_id: subscription.id,
+      stripe_subscription_id: subscription.id,
+      new_plan_id: planId,
+      metadata: {
+        status: subscription.status,
+        seat_count: seatCount,
+        cancel_at_period_end: subscription.cancel_at_period_end,
+      },
+    });
+
+  console.log(`Successfully updated subscription for organization ${organizationId}`);
+
+  // Send email notification for new subscriptions
+  if (eventType === "customer.subscription.created") {
+    const { data: org } = await adminClient
+      .from("organizations")
+      .select("name, contact_email")
+      .eq("id", organizationId)
+      .single();
+
+    if (org?.contact_email) {
+      const emailResult = await sendSubscriptionEmail(
+        org.contact_email,
+        org.name,
+        planId || "unknown",
+        "created",
+        subscription.trial_end ? new Date(subscription.trial_end * 1000) : undefined
+      );
+
+      if (emailResult.success) {
+        console.log(`Subscription confirmation email sent to ${org.contact_email}`);
+      }
+    }
+  }
+}
+
+/**
+ * Handle subscription canceled
+ */
+async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
+  const metadata = subscription.metadata || {};
+  const { organizationId } = metadata;
+
+  console.log("Subscription canceled:", { organizationId });
+
+  if (!organizationId) {
+    console.error("Missing organizationId in subscription metadata");
+    return;
+  }
+
+  const adminClient = createAdminClient();
+
+  // Update organization subscription status
+  const { error } = await adminClient
+    .from("organizations")
+    .update({
+      subscription_status: "canceled",
+      subscription_canceled_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", organizationId);
+
+  if (error) {
+    console.error("Error updating organization subscription:", error);
+    return;
+  }
+
+  // Log subscription event
+  await adminClient
+    .from("organization_subscription_events")
+    .insert({
+      organization_id: organizationId,
+      event_type: "subscription_canceled",
+      stripe_subscription_id: subscription.id,
+      previous_plan_id: metadata.planId,
+    });
+
+  console.log(`Subscription canceled for organization ${organizationId}`);
+
+  // Send cancellation email
+  const { data: org } = await adminClient
+    .from("organizations")
+    .select("name, contact_email")
+    .eq("id", organizationId)
+    .single();
+
+  if (org?.contact_email) {
+    await sendSubscriptionEmail(
+      org.contact_email,
+      org.name,
+      metadata.planId || "unknown",
+      "canceled"
+    );
+  }
+}
+
+/**
+ * Handle successful subscription payment
+ */
+async function handleSubscriptionPayment(invoice: Stripe.Invoice) {
+  const subscriptionId = typeof invoice.subscription === "string"
+    ? invoice.subscription
+    : invoice.subscription?.id;
+
+  if (!subscriptionId) return;
+
+  // Get subscription to find org
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  const organizationId = subscription.metadata?.organizationId;
+
+  if (!organizationId) return;
+
+  const adminClient = createAdminClient();
+
+  // Log payment event
+  await adminClient
+    .from("organization_subscription_events")
+    .insert({
+      organization_id: organizationId,
+      event_type: "payment_succeeded",
+      stripe_subscription_id: subscriptionId,
+      amount: (invoice.amount_paid || 0) / 100,
+      currency: invoice.currency,
+      metadata: {
+        invoice_id: invoice.id,
+        invoice_number: invoice.number,
+      },
+    });
+
+  console.log(`Subscription payment succeeded for organization ${organizationId}: ${(invoice.amount_paid || 0) / 100} ${invoice.currency}`);
+}
+
+/**
+ * Handle failed subscription payment
+ */
+async function handleSubscriptionPaymentFailed(invoice: Stripe.Invoice) {
+  const subscriptionId = typeof invoice.subscription === "string"
+    ? invoice.subscription
+    : invoice.subscription?.id;
+
+  if (!subscriptionId) return;
+
+  // Get subscription to find org
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  const organizationId = subscription.metadata?.organizationId;
+
+  if (!organizationId) return;
+
+  const adminClient = createAdminClient();
+
+  // Update subscription status to past_due
+  await adminClient
+    .from("organizations")
+    .update({
+      subscription_status: "past_due",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", organizationId);
+
+  // Log payment failed event
+  await adminClient
+    .from("organization_subscription_events")
+    .insert({
+      organization_id: organizationId,
+      event_type: "payment_failed",
+      stripe_subscription_id: subscriptionId,
+      amount: (invoice.amount_due || 0) / 100,
+      currency: invoice.currency,
+      metadata: {
+        invoice_id: invoice.id,
+        attempt_count: invoice.attempt_count,
+      },
+    });
+
+  console.log(`Subscription payment failed for organization ${organizationId}`);
+
+  // Send payment failed email
+  const { data: org } = await adminClient
+    .from("organizations")
+    .select("name, contact_email")
+    .eq("id", organizationId)
+    .single();
+
+  if (org?.contact_email) {
+    await sendSubscriptionEmail(
+      org.contact_email,
+      org.name,
+      subscription.metadata?.planId || "unknown",
+      "payment_failed"
+    );
   }
 }

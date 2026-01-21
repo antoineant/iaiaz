@@ -444,3 +444,137 @@ export function calculateOrgDiscount(amount: number): { price: number; discount:
   }
   return { price: amount, discount: 0 };
 }
+
+// ============================================================================
+// SUBSCRIPTION PLANS (for trainers and schools)
+// ============================================================================
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  nameEn: string;
+  description: string;
+  descriptionEn: string;
+  features: string[];
+  featuresEn: string[];
+  accountType: "trainer" | "school";
+  // Pricing model
+  pricingModel: "flat" | "per_seat";
+  monthlyPrice: number; // For flat: total price. For per_seat: price per student
+  yearlyPrice: number; // Same logic, yearly (with discount)
+  // Limits
+  maxClasses: number | null; // null = unlimited
+  includedSeats?: number; // For per_seat plans, minimum seats included
+  // Features
+  analyticsIncluded: boolean;
+  multiAdmin: boolean;
+  prioritySupport: boolean;
+}
+
+export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
+  // Trainer plan - flat €9.90/month
+  {
+    id: "trainer-pro",
+    name: "Formateur Pro",
+    nameEn: "Trainer Pro",
+    description: "Gérez vos classes avec analytics",
+    descriptionEn: "Manage your classes with analytics",
+    features: [
+      "Jusqu'à 5 classes",
+      "Tableau de bord analytics",
+      "Gestion des étudiants",
+      "Allocation de crédits",
+      "Support par email",
+    ],
+    featuresEn: [
+      "Up to 5 classes",
+      "Analytics dashboard",
+      "Student management",
+      "Credit allocation",
+      "Email support",
+    ],
+    accountType: "trainer",
+    pricingModel: "flat",
+    monthlyPrice: 9.90,
+    yearlyPrice: 99, // ~2 months free
+    maxClasses: 5,
+    analyticsIncluded: true,
+    multiAdmin: false,
+    prioritySupport: false,
+  },
+  // School plan - €1/student/month
+  {
+    id: "school-seat",
+    name: "Établissement",
+    nameEn: "School",
+    description: "1€ par étudiant actif par mois",
+    descriptionEn: "€1 per active student per month",
+    features: [
+      "Classes illimitées",
+      "Analytics complets",
+      "Multi-administrateurs",
+      "Gestion des formateurs",
+      "Allocation de crédits",
+      "Rapports exportables",
+      "Support prioritaire",
+    ],
+    featuresEn: [
+      "Unlimited classes",
+      "Full analytics",
+      "Multiple administrators",
+      "Trainer management",
+      "Credit allocation",
+      "Exportable reports",
+      "Priority support",
+    ],
+    accountType: "school",
+    pricingModel: "per_seat",
+    monthlyPrice: 1.00, // €1 per student
+    yearlyPrice: 10.00, // €10 per student/year (~2 months free)
+    maxClasses: null,
+    includedSeats: 10, // Minimum 10 students (€10/month minimum)
+    analyticsIncluded: true,
+    multiAdmin: true,
+    prioritySupport: true,
+  },
+];
+
+/**
+ * Get subscription plan by ID
+ */
+export function getSubscriptionPlan(planId: string): SubscriptionPlan | undefined {
+  return SUBSCRIPTION_PLANS.find((p) => p.id === planId);
+}
+
+/**
+ * Get plans available for an account type
+ */
+export function getPlansForAccountType(accountType: "trainer" | "school"): SubscriptionPlan[] {
+  return SUBSCRIPTION_PLANS.filter((p) => p.accountType === accountType);
+}
+
+/**
+ * Calculate subscription price based on plan and seat count
+ */
+export function calculateSubscriptionPrice(
+  plan: SubscriptionPlan,
+  seatCount: number,
+  billingPeriod: "monthly" | "yearly"
+): { price: number; seats: number; pricePerSeat?: number } {
+  if (plan.pricingModel === "flat") {
+    return {
+      price: billingPeriod === "monthly" ? plan.monthlyPrice : plan.yearlyPrice,
+      seats: 0,
+    };
+  }
+
+  // Per-seat pricing
+  const effectiveSeats = Math.max(seatCount, plan.includedSeats || 0);
+  const pricePerSeat = billingPeriod === "monthly" ? plan.monthlyPrice : plan.yearlyPrice;
+
+  return {
+    price: effectiveSeats * pricePerSeat,
+    seats: effectiveSeats,
+    pricePerSeat,
+  };
+}
