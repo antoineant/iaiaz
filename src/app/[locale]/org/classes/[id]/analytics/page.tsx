@@ -6,6 +6,8 @@ import { useTranslations, useLocale } from "next-intl";
 import NextLink from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { StudentMatrix } from "@/components/analytics/student-matrix";
+import type { QuadrantSummary } from "@/lib/analytics/student-metrics";
 import {
   ArrowLeft,
   Loader2,
@@ -50,6 +52,12 @@ interface AnalyticsData {
   insights: AIInsights | null;
 }
 
+interface StudentMatrixData {
+  totalStudents: number;
+  periodDays: number;
+  quadrants: QuadrantSummary[];
+}
+
 export default function ClassAnalyticsPage() {
   const t = useTranslations("org.classes.analytics");
   const locale = useLocale();
@@ -57,6 +65,7 @@ export default function ClassAnalyticsPage() {
   const classId = params.id as string;
 
   const [data, setData] = useState<AnalyticsData | null>(null);
+  const [matrixData, setMatrixData] = useState<StudentMatrixData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -71,10 +80,20 @@ export default function ClassAnalyticsPage() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/org/classes/${classId}/analytics?period=${period}`);
-      if (!response.ok) throw new Error("Failed to load analytics");
-      const analyticsData = await response.json();
+      // Load both analytics and student matrix data in parallel
+      const [analyticsResponse, matrixResponse] = await Promise.all([
+        fetch(`/api/org/classes/${classId}/analytics?period=${period}`),
+        fetch(`/api/org/classes/${classId}/analytics/students?period=${period}`),
+      ]);
+
+      if (!analyticsResponse.ok) throw new Error("Failed to load analytics");
+      const analyticsData = await analyticsResponse.json();
       setData(analyticsData);
+
+      if (matrixResponse.ok) {
+        const matrixDataResponse = await matrixResponse.json();
+        setMatrixData(matrixDataResponse);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");
     } finally {
@@ -183,6 +202,17 @@ export default function ClassAnalyticsPage() {
           color="orange"
         />
       </div>
+
+      {/* Student Matrix - AI Literacy vs Domain Knowledge */}
+      {matrixData && matrixData.totalStudents > 0 && (
+        <div className="mb-6">
+          <StudentMatrix
+            quadrants={matrixData.quadrants}
+            totalStudents={matrixData.totalStudents}
+            periodDays={matrixData.periodDays}
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Daily Usage Chart */}

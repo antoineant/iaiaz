@@ -2179,7 +2179,41 @@
         },
         "usagePatterns": "Usage Patterns",
         "recommendations": "Recommendations",
-        "generatedAt": "Generated on {date}"
+        "generatedAt": "Generated on {date}",
+        "matrix": {
+          "title": "Student Distribution",
+          "subtitle": "{count} students over {days} days",
+          "help": "Help",
+          "helpTitle": "How to read this matrix?",
+          "helpDescription": "Each student is classified on two dimensions: AI mastery (horizontal) and subject engagement (vertical).",
+          "helpIdeal": "Ideal: Good AI use + engaged",
+          "helpTrainAI": "Train on AI: Engaged but poor AI use",
+          "helpAtRisk": "At Risk: Low engagement + poor AI use",
+          "helpSuperficial": "Superficial: Good AI but low engagement",
+          "xAxisLabel": "AI USAGE",
+          "yAxisLabel": "ENGAGEMENT",
+          "student": "student",
+          "students": "students",
+          "studentList": "Student List",
+          "noStudents": "No students in this quadrant",
+          "aiLiteracy": "AI Mastery",
+          "domainEngagement": "Engagement",
+          "clickToExpand": "Click on a quadrant to see students",
+          "atRiskAlert": "{count} student(s) at risk",
+          "recommendation": "Recommendation",
+          "quadrants": {
+            "ideal": "Ideal",
+            "train_ai": "Train on AI",
+            "at_risk": "At Risk",
+            "superficial": "Superficial"
+          },
+          "recommendations": {
+            "ideal": "These students are on the right track. Encourage them to explore more advanced topics.",
+            "train_ai": "These students are engaged but use AI poorly. Offer them training on good prompting practices.",
+            "at_risk": "These students need personalized follow-up. Check if they're facing difficulties.",
+            "superficial": "These students master AI but engage little. Check their understanding of the subject."
+          }
+        }
       }
     }
   },

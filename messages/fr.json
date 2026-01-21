@@ -2147,7 +2147,41 @@
         },
         "usagePatterns": "Patterns d'utilisation",
         "recommendations": "Recommandations",
-        "generatedAt": "Généré le {date}"
+        "generatedAt": "Généré le {date}",
+        "matrix": {
+          "title": "Répartition des étudiants",
+          "subtitle": "{count} étudiants sur {days} jours",
+          "help": "Aide",
+          "helpTitle": "Comment lire cette matrice ?",
+          "helpDescription": "Chaque étudiant est classé selon deux dimensions : sa maîtrise de l'IA (horizontal) et son engagement sur le sujet (vertical).",
+          "helpIdeal": "Idéal : Bonne utilisation IA + engagé",
+          "helpTrainAI": "Former à l'IA : Engagé mais utilise mal l'IA",
+          "helpAtRisk": "À risque : Peu engagé + mauvaise utilisation",
+          "helpSuperficial": "Superficiel : Bonne IA mais peu engagé",
+          "xAxisLabel": "UTILISATION IA",
+          "yAxisLabel": "ENGAGEMENT",
+          "student": "étudiant",
+          "students": "étudiants",
+          "studentList": "Liste des étudiants",
+          "noStudents": "Aucun étudiant dans ce quadrant",
+          "aiLiteracy": "Maîtrise IA",
+          "domainEngagement": "Engagement",
+          "clickToExpand": "Cliquez sur un quadrant pour voir les étudiants",
+          "atRiskAlert": "{count} étudiant(s) à risque",
+          "recommendation": "Recommandation",
+          "quadrants": {
+            "ideal": "Idéal",
+            "train_ai": "Former à l'IA",
+            "at_risk": "À risque",
+            "superficial": "Superficiel"
+          },
+          "recommendations": {
+            "ideal": "Ces étudiants sont sur la bonne voie. Encouragez-les à explorer des sujets plus avancés.",
+            "train_ai": "Ces étudiants sont engagés mais utilisent mal l'IA. Proposez-leur une formation sur les bonnes pratiques de prompting.",
+            "at_risk": "Ces étudiants ont besoin d'un suivi personnalisé. Vérifiez s'ils rencontrent des difficultés.",
+            "superficial": "Ces étudiants maîtrisent l'IA mais s'engagent peu. Vérifiez leur compréhension du sujet."
+          }
+        }
       }
     }
   },
