@@ -18,10 +18,10 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
     const supabase = await createClient();
 
-    // Get class token
+    // Get class token and join code
     const { data: classData, error } = await supabase
       .from("organization_classes")
-      .select("id, name, join_token, status, starts_at, ends_at, closed_at")
+      .select("id, name, join_token, join_code, status, starts_at, ends_at, closed_at")
       .eq("id", id)
       .single();
 
@@ -51,6 +51,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
       class_id: classData.id,
       class_name: classData.name,
       join_token: classData.join_token,
+      join_code: classData.join_code,
       join_url: joinUrl,
       is_accessible: isAccessible,
       status: classData.status,

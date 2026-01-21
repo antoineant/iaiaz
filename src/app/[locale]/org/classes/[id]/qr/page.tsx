@@ -21,6 +21,7 @@ interface QRData {
   class_id: string;
   class_name: string;
   join_token: string;
+  join_code: string;
   join_url: string;
   is_accessible: boolean;
   status: string;
@@ -128,6 +129,26 @@ export default function ClassQRPage() {
                   {qrData.closed_at ? t("qr.sessionClosed") : t("qr.sessionInactive")}
                 </span>
               )}
+            </div>
+
+            {/* Join Code */}
+            <div className="mb-6">
+              <p className="text-sm text-[var(--muted-foreground)] mb-2">{t("qr.joinCode")}</p>
+              <div className="inline-flex items-center gap-3 bg-[var(--muted)] px-6 py-3 rounded-xl">
+                <span className="text-3xl font-mono font-bold tracking-widest">{qrData.join_code}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(qrData.join_code);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="p-2 hover:bg-[var(--background)] rounded-lg transition-colors"
+                  title={t("qr.copyCode")}
+                >
+                  <Copy className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-xs text-[var(--muted-foreground)] mt-2">{t("qr.joinCodeHint")}</p>
             </div>
 
             {/* QR Code */}
