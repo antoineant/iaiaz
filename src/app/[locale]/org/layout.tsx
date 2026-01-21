@@ -25,6 +25,7 @@ interface OrgMembership {
   organization_name: string;
   role: string;
   credit_remaining: number;
+  account_type: string;
 }
 
 export default function OrgLayout({ children }: { children: React.ReactNode }) {
@@ -87,12 +88,20 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      // Get account type from profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("account_type")
+        .eq("id", user.id)
+        .single();
+
       setMembership({
         id: member.id,
         organization_id: member.organization_id,
         organization_name: member.organization_name,
         role: member.role,
         credit_remaining: member.credit_remaining,
+        account_type: profile?.account_type || "trainer",
       });
       setIsLoading(false);
     };
@@ -106,10 +115,15 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
     router.push("/");
   };
 
+  const isSchool = membership?.account_type === "school";
+
   const navItems = [
     { href: "/org", label: t("nav.dashboard"), icon: LayoutDashboard },
     { href: "/org/classes", label: t("nav.classes"), icon: GraduationCap },
-    { href: "/org/members", label: t("nav.members"), icon: Users },
+    // Only show Members for school accounts
+    ...(isSchool
+      ? [{ href: "/org/members", label: t("nav.members"), icon: Users }]
+      : []),
     { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
     { href: "/org/subscription", label: t("nav.subscription"), icon: Crown },
     { href: "/org/credits", label: t("nav.credits"), icon: CreditCard },
