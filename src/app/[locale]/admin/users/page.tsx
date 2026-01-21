@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Minus, Shield, ShieldOff, User, GraduationCap, Building2 } from "lucide-react";
+import { Search, Plus, Minus, Shield, User, GraduationCap, Trash2, Loader2, X } from "lucide-react";
 
 interface Profile {
   id: string;
@@ -26,6 +26,8 @@ export default function UsersPage() {
   const [success, setSuccess] = useState("");
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [creditAmount, setCreditAmount] = useState("");
+  const [deletingUser, setDeletingUser] = useState<Profile | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchUsers = async () => {
     const supabase = createClient();
@@ -175,6 +177,35 @@ export default function UsersPage() {
     };
     setSuccess(`Type de compte changé en ${typeLabels[newType]}`);
     fetchUsers();
+  };
+
+  const deleteUser = async () => {
+    if (!deletingUser) return;
+
+    setIsDeleting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch(`/api/admin/users/${deletingUser.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors de la suppression");
+        return;
+      }
+
+      setSuccess(`Utilisateur ${deletingUser.email} supprimé avec succès`);
+      setDeletingUser(null);
+      fetchUsers();
+    } catch {
+      setError("Erreur lors de la suppression de l'utilisateur");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (isLoading) {
@@ -384,6 +415,15 @@ export default function UsersPage() {
                           <option value="trainer">Formateur</option>
                           <option value="admin">Admin</option>
                         </select>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setDeletingUser(user)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950/30"
+                          title="Supprimer l'utilisateur"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -393,6 +433,77 @@ export default function UsersPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      {deletingUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[var(--background)] rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold text-red-600 dark:text-red-400">
+                Supprimer l&apos;utilisateur
+              </h2>
+              <button
+                onClick={() => setDeletingUser(null)}
+                className="p-1 hover:bg-[var(--muted)] rounded"
+                disabled={isDeleting}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-[var(--muted-foreground)] mb-4">
+                Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est{" "}
+                <strong className="text-red-600 dark:text-red-400">irréversible</strong>.
+              </p>
+
+              <div className="p-3 bg-[var(--muted)] rounded-lg">
+                <p className="font-medium">{deletingUser.display_name || deletingUser.email}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">{deletingUser.email}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Solde: {deletingUser.credits_balance.toFixed(2)} €
+                </p>
+              </div>
+
+              <p className="text-sm text-[var(--muted-foreground)] mt-4">
+                Toutes les données associées seront supprimées :
+              </p>
+              <ul className="text-sm text-[var(--muted-foreground)] list-disc list-inside mt-1">
+                <li>Conversations et messages</li>
+                <li>Fichiers uploadés</li>
+                <li>Historique des crédits</li>
+                <li>Appartenances aux organisations</li>
+              </ul>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeletingUser(null)}
+                className="flex-1"
+                disabled={isDeleting}
+              >
+                Annuler
+              </Button>
+              <Button
+                variant="danger"
+                onClick={deleteUser}
+                disabled={isDeleting}
+                className="flex-1"
+              >
+                {isDeleting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Supprimer
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

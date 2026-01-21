@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdmin } from "@/lib/admin";
 
 interface RouteParams {
@@ -91,4 +92,88 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 
   return NextResponse.json(data);
+}
+
+// DELETE - Delete user and all related data
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const supabase = await createClient();
+  const adminClient = createAdminClient();
+
+  // Get current admin user to prevent self-deletion
+  const { data: { user: currentUser } } = await supabase.auth.getUser();
+
+  if (currentUser?.id === id) {
+    return NextResponse.json(
+      { error: "Cannot delete your own account" },
+      { status: 400 }
+    );
+  }
+
+  // Check if user exists
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, email")
+    .eq("id", id)
+    .single();
+
+  if (profileError || !profile) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  try {
+    // 1. Delete user's files from storage buckets
+    const buckets = ["chat-attachments", "avatars"];
+
+    for (const bucket of buckets) {
+      const { data: files } = await adminClient.storage
+        .from(bucket)
+        .list(id);
+
+      if (files && files.length > 0) {
+        const filePaths = files.map(f => `${id}/${f.name}`);
+        await adminClient.storage.from(bucket).remove(filePaths);
+      }
+    }
+
+    // 2. Delete organization-related data that might not cascade
+    // Delete organization transactions for this user
+    await adminClient
+      .from("organization_transactions")
+      .delete()
+      .eq("user_id", id);
+
+    // Delete organization memberships (will cascade to transactions via member_id)
+    await adminClient
+      .from("organization_members")
+      .delete()
+      .eq("user_id", id);
+
+    // 3. Delete from auth.users - this cascades to profiles and all related tables
+    const { error: authError } = await adminClient.auth.admin.deleteUser(id);
+
+    if (authError) {
+      console.error("Error deleting auth user:", authError);
+      return NextResponse.json(
+        { error: "Failed to delete user from auth system" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `User ${profile.email} and all related data deleted`
+    });
+
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return NextResponse.json(
+      { error: "Failed to delete user" },
+      { status: 500 }
+    );
+  }
 }
