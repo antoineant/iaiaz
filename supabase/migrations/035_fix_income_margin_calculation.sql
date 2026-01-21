@@ -1,6 +1,9 @@
 -- Fix margin calculation to account for markup
 -- Margin = Usage Revenue (what users paid) - AI Costs (what we pay providers)
 
+-- Drop the existing function first (return type changed)
+DROP FUNCTION IF EXISTS get_admin_income_stats(TIMESTAMPTZ, TIMESTAMPTZ, TEXT);
+
 CREATE OR REPLACE FUNCTION get_admin_income_stats(
   p_start_date TIMESTAMPTZ,
   p_end_date TIMESTAMPTZ,
