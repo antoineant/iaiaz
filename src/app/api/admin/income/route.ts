@@ -56,7 +56,9 @@ export async function GET(request: NextRequest) {
       cost_google: number;
       cost_mistral: number;
       total_cost: number;
-      net_margin: number;
+      theoretical_margin: number;
+      true_margin: number;
+      credits_outstanding: number;
     }, row: {
       personal_purchases: number;
       org_purchases: number;
@@ -68,7 +70,9 @@ export async function GET(request: NextRequest) {
       cost_google: number;
       cost_mistral: number;
       total_cost: number;
-      net_margin: number;
+      theoretical_margin: number;
+      true_margin: number;
+      credits_outstanding: number;
     }) => {
       acc.personal_purchases += Number(row.personal_purchases) || 0;
       acc.org_purchases += Number(row.org_purchases) || 0;
@@ -80,7 +84,9 @@ export async function GET(request: NextRequest) {
       acc.cost_google += Number(row.cost_google) || 0;
       acc.cost_mistral += Number(row.cost_mistral) || 0;
       acc.total_cost += Number(row.total_cost) || 0;
-      acc.net_margin += Number(row.net_margin) || 0;
+      acc.theoretical_margin += Number(row.theoretical_margin) || 0;
+      acc.true_margin += Number(row.true_margin) || 0;
+      acc.credits_outstanding += Number(row.credits_outstanding) || 0;
       return acc;
     },
     {
@@ -94,13 +100,15 @@ export async function GET(request: NextRequest) {
       cost_google: 0,
       cost_mistral: 0,
       total_cost: 0,
-      net_margin: 0,
+      theoretical_margin: 0,
+      true_margin: 0,
+      credits_outstanding: 0,
     }
   );
 
-  // Calculate overall margin percentage (based on usage revenue)
-  const margin_percent = totals.usage_revenue > 0
-    ? ((totals.net_margin / totals.usage_revenue) * 100)
+  // Calculate overall margin percentage (based on actual cash in)
+  const margin_percent = totals.total_revenue > 0
+    ? ((totals.true_margin / totals.total_revenue) * 100)
     : 0;
 
   return NextResponse.json({
