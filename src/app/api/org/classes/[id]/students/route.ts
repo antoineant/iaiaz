@@ -48,6 +48,8 @@ export async function GET(_request: Request, { params }: RouteParams) {
       );
     }
 
+    console.log(`[Students API] Class ${id}: Found ${students?.length || 0} students`);
+
     // Get recent activity for each student
     const studentIds = students?.map((s) => s.id) || [];
     const userIds = students?.map((s) => s.user_id) || [];

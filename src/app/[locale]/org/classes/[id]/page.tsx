@@ -92,7 +92,14 @@ export default function ClassDashboardPage() {
       }
 
       const classJson = await classRes.json();
-      const studentsJson = studentsRes.ok ? await studentsRes.json() : [];
+
+      // Handle students response with better error logging
+      let studentsJson: Student[] = [];
+      if (studentsRes.ok) {
+        studentsJson = await studentsRes.json();
+      } else {
+        console.error("Failed to load students:", studentsRes.status, await studentsRes.text());
+      }
 
       // Ensure stats has default values to prevent toFixed errors
       const stats = {
