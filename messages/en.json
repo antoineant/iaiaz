@@ -553,6 +553,17 @@
         "confirm": "Delete all",
         "success": "All your conversations have been deleted.",
         "error": "An error occurred while deleting."
+      },
+      "emails": {
+        "title": "Email preferences",
+        "description": "Manage which emails you receive from iaiaz.",
+        "marketing": {
+          "label": "Marketing emails",
+          "description": "Receive emails about news, offers, and usage tips.",
+          "enabled": "Enabled",
+          "disabled": "Disabled"
+        },
+        "saved": "Preferences saved"
       }
     }
   },
@@ -622,6 +633,7 @@
       "emailPlaceholder": "your@email.com",
       "passwordPlaceholder": "At least 6 characters",
       "confirmPasswordPlaceholder": "••••••••",
+      "marketingConsent": "I agree to receive emails about iaiaz news and offers (optional)",
       "submit": "Create my account",
       "hasAccount": "Already have an account?",
       "login": "Sign in",

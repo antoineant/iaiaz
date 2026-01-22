@@ -19,6 +19,7 @@ import {
   AlertCircle,
   Shield,
   Trash2,
+  Mail,
 } from "lucide-react";
 import type { CreditPreference } from "@/lib/credits";
 
@@ -32,6 +33,7 @@ interface Profile {
   credit_preference: CreditPreference;
   credits_balance: number;
   conversation_retention_days: RetentionDays;
+  marketing_consent: boolean;
 }
 
 interface Credits {
@@ -64,6 +66,11 @@ export default function SettingsPage() {
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Email preferences states
+  const [marketingConsent, setMarketingConsent] = useState(false);
+  const [isSavingMarketing, setIsSavingMarketing] = useState(false);
+  const [marketingSuccess, setMarketingSuccess] = useState(false);
+
   // Load profile data
   useEffect(() => {
     async function loadProfile() {
@@ -75,6 +82,7 @@ export default function SettingsPage() {
           setCredits(data.credits);
           setDisplayName(data.profile.display_name || "");
           setRetentionDays(data.profile.conversation_retention_days);
+          setMarketingConsent(data.profile.marketing_consent || false);
         }
       } catch (error) {
         console.error("Failed to load profile:", error);
@@ -174,6 +182,33 @@ export default function SettingsPage() {
       setDeleteError(t("privacy.deleteAll.error"));
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleMarketingConsentChange = async (newConsent: boolean) => {
+    setIsSavingMarketing(true);
+    setMarketingSuccess(false);
+
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ marketing_consent: newConsent }),
+      });
+
+      if (response.ok) {
+        setMarketingConsent(newConsent);
+        if (profile) {
+          setProfile({ ...profile, marketing_consent: newConsent });
+        }
+        setMarketingSuccess(true);
+        setTimeout(() => setMarketingSuccess(false), 3000);
+      }
+    } catch {
+      // Silent fail - revert UI
+      setMarketingConsent(!newConsent);
+    } finally {
+      setIsSavingMarketing(false);
     }
   };
 
@@ -359,6 +394,46 @@ export default function SettingsPage() {
                     {deleteError}
                   </p>
                 )}
+              </div>
+
+              {/* Email Preferences */}
+              <div className="border-t border-[var(--border)] pt-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <Mail className="w-4 h-4" />
+                  <Label>{t("privacy.emails.title")}</Label>
+                </div>
+                <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                  {t("privacy.emails.description")}
+                </p>
+                <div className="flex items-center justify-between p-3 rounded-lg border border-[var(--border)] bg-[var(--muted)]/30">
+                  <div>
+                    <p className="font-medium text-sm">{t("privacy.emails.marketing.label")}</p>
+                    <p className="text-xs text-[var(--muted-foreground)]">
+                      {t("privacy.emails.marketing.description")}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {marketingSuccess && (
+                      <Check className="w-4 h-4 text-green-600" />
+                    )}
+                    {isSavingMarketing && (
+                      <Loader2 className="w-4 h-4 animate-spin text-[var(--muted-foreground)]" />
+                    )}
+                    <button
+                      onClick={() => handleMarketingConsentChange(!marketingConsent)}
+                      disabled={isSavingMarketing}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 ${
+                        marketingConsent ? "bg-primary-600" : "bg-gray-300 dark:bg-gray-600"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          marketingConsent ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

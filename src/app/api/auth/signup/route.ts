@@ -14,6 +14,7 @@ interface SignupRequest {
   password: string;
   accountType?: "student" | "trainer" | "school";
   displayName?: string;
+  marketingConsent?: boolean;
 }
 
 export async function POST(request: NextRequest) {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: SignupRequest = await request.json();
-    const { email, password, accountType, displayName } = body;
+    const { email, password, accountType, displayName, marketingConsent } = body;
 
     console.log("[signup] Email:", email?.substring(0, 5) + "...", "AccountType:", accountType);
 
@@ -167,6 +168,7 @@ export async function POST(request: NextRequest) {
         user_metadata: {
           account_type: accountType || "student",
           display_name: displayName || undefined,
+          marketing_consent: marketingConsent || false,
         },
       });
     console.log("[signup] User creation result:", { success: !!authData?.user, error: authError?.message });

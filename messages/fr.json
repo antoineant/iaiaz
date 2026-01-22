@@ -529,6 +529,7 @@
       "emailPlaceholder": "votre@email.com",
       "passwordPlaceholder": "Au moins 6 caractères",
       "confirmPasswordPlaceholder": "••••••••",
+      "marketingConsent": "J'accepte de recevoir des emails sur les nouveautés et offres d'iaiaz (facultatif)",
       "submit": "Créer mon compte",
       "hasAccount": "Déjà un compte ?",
       "login": "Se connecter",
@@ -2410,6 +2411,17 @@
         "confirm": "Supprimer tout",
         "success": "Toutes vos conversations ont été supprimées.",
         "error": "Une erreur est survenue lors de la suppression."
+      },
+      "emails": {
+        "title": "Préférences email",
+        "description": "Gérez les emails que vous recevez d'iaiaz.",
+        "marketing": {
+          "label": "Emails marketing",
+          "description": "Recevoir des emails sur les nouveautés, offres et conseils d'utilisation.",
+          "enabled": "Activé",
+          "disabled": "Désactivé"
+        },
+        "saved": "Préférences enregistrées"
       }
     }
   }

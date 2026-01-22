@@ -20,6 +20,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -86,6 +87,7 @@ export default function SignupPage() {
           password,
           accountType,
           displayName: displayName.trim() || undefined,
+          marketingConsent,
         }),
       });
 
@@ -340,6 +342,19 @@ export default function SignupPage() {
                 required
                 autoComplete="new-password"
               />
+
+              {/* Marketing consent checkbox - unchecked by default per GDPR */}
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={marketingConsent}
+                  onChange={(e) => setMarketingConsent(e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-[var(--border)] text-primary-600 focus:ring-primary-500 cursor-pointer"
+                />
+                <span className="text-sm text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors">
+                  {t("marketingConsent")}
+                </span>
+              </label>
 
               <Button
                 type="submit"
