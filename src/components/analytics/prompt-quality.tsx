@@ -260,7 +260,7 @@ export function ExamplePromptsByTier({ examples }: ExamplePromptsByTierProps) {
                         &ldquo;{example.content}&rdquo;
                       </p>
                       <div className="flex items-center gap-2 mt-2 text-xs text-[var(--muted-foreground)]">
-                        <span>Score: {example.overall}</span>
+                        <span>{t("score")}: {example.overall}</span>
                         {example.topic && (
                           <>
                             <span>•</span>

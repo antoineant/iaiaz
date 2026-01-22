@@ -2249,7 +2249,8 @@
           "noExamples": "No examples available",
           "tierHigh": "High Quality",
           "tierMedium": "Medium Quality",
-          "tierLow": "Needs Improvement"
+          "tierLow": "Needs Improvement",
+          "score": "Score"
         }
       }
     }

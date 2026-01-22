@@ -172,23 +172,24 @@ export function StudentMatrix({
         )}
 
         {/* Matrix grid */}
-        <div className="relative">
+        <div className="relative flex">
           {/* Y-axis label */}
-          <div className="absolute -left-2 top-1/2 -translate-y-1/2 -translate-x-full">
+          <div className="flex items-center justify-center w-6 shrink-0">
             <div className="transform -rotate-90 whitespace-nowrap text-xs text-[var(--muted-foreground)] font-medium">
               {t("yAxisLabel")} →
             </div>
           </div>
 
-          {/* X-axis label */}
-          <div className="text-center mb-2">
-            <span className="text-xs text-[var(--muted-foreground)] font-medium">
-              {t("xAxisLabel")} →
-            </span>
-          </div>
+          <div className="flex-1">
+            {/* X-axis label */}
+            <div className="text-center mb-2">
+              <span className="text-xs text-[var(--muted-foreground)] font-medium">
+                {t("xAxisLabel")} →
+              </span>
+            </div>
 
-          {/* 2x2 Grid */}
-          <div className="grid grid-cols-2 gap-3 ml-4">
+            {/* 2x2 Grid */}
+            <div className="grid grid-cols-2 gap-3">
             {/* Top row: train_ai (left) | ideal (right) */}
             {renderQuadrantCell("train_ai")}
             {renderQuadrantCell("ideal")}
@@ -196,6 +197,7 @@ export function StudentMatrix({
             {/* Bottom row: at_risk (left) | superficial (right) */}
             {renderQuadrantCell("at_risk")}
             {renderQuadrantCell("superficial")}
+            </div>
           </div>
         </div>
 

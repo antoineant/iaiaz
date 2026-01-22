@@ -2182,7 +2182,8 @@
           "noExamples": "Pas d'exemples disponibles",
           "tierHigh": "Haute qualité",
           "tierMedium": "Qualité moyenne",
-          "tierLow": "À améliorer"
+          "tierLow": "À améliorer",
+          "score": "Score"
         }
       }
     }
