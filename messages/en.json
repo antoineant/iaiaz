@@ -259,7 +259,24 @@
       "personalCredits": "Personal",
       "classes": "My Classes",
       "viewAllClasses": "View all classes",
-      "noClasses": "No classes"
+      "noClasses": "No classes",
+      "privateConversations": "Private conversations"
+    },
+    "privacy": {
+      "title": "Your conversation privacy",
+      "intro": "Your conversations with AI are private and protected.",
+      "whatTrainersSee": "What your trainer CAN see:",
+      "trainerCanSee1": "Number of messages sent",
+      "trainerCanSee2": "Topics discussed (general categories)",
+      "trainerCanSee3": "Prompt quality score (aggregated)",
+      "trainerCanSee4": "Engagement level",
+      "whatTrainersCantSee": "What your trainer CANNOT see:",
+      "trainerCantSee1": "The content of your conversations",
+      "trainerCantSee2": "Your exact questions",
+      "trainerCantSee3": "AI responses",
+      "learnMore": "View privacy policy",
+      "manageData": "Manage my data",
+      "close": "Close"
     },
     "input": {
       "placeholder": "Write your message or drop a file...",
@@ -510,6 +527,32 @@
         "orgOnlyDescription": "Only use organization credits. Will be blocked if exhausted.",
         "personalOnly": "Personal only",
         "personalOnlyDescription": "Only use personal credits. Ignore organization credits."
+      }
+    },
+    "privacy": {
+      "title": "Privacy & data",
+      "description": "Manage your personal data and conversations.",
+      "retention": {
+        "title": "Conversation retention",
+        "description": "Choose how long to keep your conversations.",
+        "options": {
+          "forever": "Keep forever",
+          "365": "Delete after 1 year",
+          "90": "Delete after 90 days",
+          "30": "Delete after 30 days",
+          "7": "Delete after 7 days"
+        }
+      },
+      "deleteAll": {
+        "title": "Delete all conversations",
+        "description": "This will permanently delete all your conversations and cannot be undone.",
+        "button": "Delete all my conversations",
+        "confirmTitle": "Confirm deletion",
+        "confirmMessage": "Are you sure you want to delete all your conversations? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete all",
+        "success": "All your conversations have been deleted.",
+        "error": "An error occurred while deleting."
       }
     }
   },

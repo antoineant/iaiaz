@@ -8,6 +8,7 @@ import NextLink from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { PrivacyInfoModal } from "./privacy-info-modal";
 import type { Conversation } from "@/types";
 import {
   Plus,
@@ -21,6 +22,8 @@ import {
   Building2,
   ChevronRight,
   GraduationCap,
+  Shield,
+  Info,
 } from "lucide-react";
 
 interface OrgContext {
@@ -74,6 +77,7 @@ export function Sidebar({
   const t = useTranslations("chat.sidebar");
   const [isOpen, setIsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const isOrgMember = !!orgContext;
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
@@ -157,6 +161,18 @@ export function Sidebar({
             </Link>
           </>
         )}
+      </div>
+
+      {/* Privacy badge */}
+      <div className="px-3 pb-2">
+        <button
+          onClick={() => setShowPrivacyModal(true)}
+          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+        >
+          <Shield className="w-4 h-4" />
+          <span className="flex-1 text-left">{t("privateConversations")}</span>
+          <Info className="w-3 h-3 opacity-60" />
+        </button>
       </div>
 
       {/* New conversation */}
@@ -307,6 +323,12 @@ export function Sidebar({
       >
         {sidebarContent}
       </aside>
+
+      {/* Privacy info modal */}
+      <PrivacyInfoModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+      />
     </>
   );
 }

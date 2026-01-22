@@ -18,7 +18,7 @@ export async function GET() {
     // Get profile
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("id, email, display_name, avatar_url, credit_preference, credits_balance, created_at")
+      .select("id, email, display_name, avatar_url, credit_preference, credits_balance, conversation_retention_days, created_at")
       .eq("id", user.id)
       .single();
 
@@ -62,7 +62,7 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json();
-    const { display_name, credit_preference } = body;
+    const { display_name, credit_preference, conversation_retention_days } = body;
 
     // Validate credit_preference if provided
     const validPreferences: CreditPreference[] = [
@@ -80,13 +80,25 @@ export async function PATCH(request: Request) {
       );
     }
 
+    // Validate conversation_retention_days if provided
+    const validRetentionDays = [null, 7, 30, 90, 365];
+    if (conversation_retention_days !== undefined && !validRetentionDays.includes(conversation_retention_days)) {
+      return NextResponse.json(
+        { error: "Invalid retention period" },
+        { status: 400 }
+      );
+    }
+
     // Build update object
-    const updates: Record<string, string | null> = {};
+    const updates: Record<string, string | number | null> = {};
     if (display_name !== undefined) {
       updates.display_name = display_name?.trim() || null;
     }
     if (credit_preference !== undefined) {
       updates.credit_preference = credit_preference;
+    }
+    if (conversation_retention_days !== undefined) {
+      updates.conversation_retention_days = conversation_retention_days;
     }
 
     if (Object.keys(updates).length === 0) {
@@ -100,7 +112,7 @@ export async function PATCH(request: Request) {
       .from("profiles")
       .update(updates)
       .eq("id", user.id)
-      .select("id, email, display_name, avatar_url, credit_preference")
+      .select("id, email, display_name, avatar_url, credit_preference, conversation_retention_days")
       .single();
 
     if (error) {

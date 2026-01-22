@@ -259,7 +259,24 @@
       "personalCredits": "Personnel",
       "classes": "Mes classes",
       "viewAllClasses": "Voir toutes les classes",
-      "noClasses": "Aucune classe"
+      "noClasses": "Aucune classe",
+      "privateConversations": "Conversations privées"
+    },
+    "privacy": {
+      "title": "Confidentialité de vos conversations",
+      "intro": "Vos conversations avec l'IA sont privées et protégées.",
+      "whatTrainersSee": "Ce que votre formateur peut voir :",
+      "trainerCanSee1": "Nombre de messages envoyés",
+      "trainerCanSee2": "Thèmes abordés (catégories générales)",
+      "trainerCanSee3": "Score de qualité des prompts (agrégé)",
+      "trainerCanSee4": "Niveau d'engagement",
+      "whatTrainersCantSee": "Ce que votre formateur NE peut PAS voir :",
+      "trainerCantSee1": "Le contenu de vos conversations",
+      "trainerCantSee2": "Vos questions exactes",
+      "trainerCantSee3": "Les réponses de l'IA",
+      "learnMore": "Consulter la politique de confidentialité",
+      "manageData": "Gérer mes données",
+      "close": "Fermer"
     },
     "input": {
       "placeholder": "Écrivez votre message ou déposez un fichier...",
@@ -2367,6 +2384,32 @@
         "orgOnlyDescription": "Utilise uniquement les crédits de l'organisation. Bloqué si épuisés.",
         "personalOnly": "Personnel uniquement",
         "personalOnlyDescription": "Utilise uniquement les crédits personnels. Ignore l'organisation."
+      }
+    },
+    "privacy": {
+      "title": "Confidentialité & données",
+      "description": "Gérez vos données personnelles et conversations.",
+      "retention": {
+        "title": "Conservation des conversations",
+        "description": "Choisissez combien de temps garder vos conversations.",
+        "options": {
+          "forever": "Conserver indéfiniment",
+          "365": "Supprimer après 1 an",
+          "90": "Supprimer après 90 jours",
+          "30": "Supprimer après 30 jours",
+          "7": "Supprimer après 7 jours"
+        }
+      },
+      "deleteAll": {
+        "title": "Supprimer toutes les conversations",
+        "description": "Cette action supprimera définitivement toutes vos conversations et ne peut pas être annulée.",
+        "button": "Supprimer toutes mes conversations",
+        "confirmTitle": "Confirmer la suppression",
+        "confirmMessage": "Êtes-vous sûr de vouloir supprimer toutes vos conversations ? Cette action est irréversible.",
+        "cancel": "Annuler",
+        "confirm": "Supprimer tout",
+        "success": "Toutes vos conversations ont été supprimées.",
+        "error": "Une erreur est survenue lors de la suppression."
       }
     }
   }
