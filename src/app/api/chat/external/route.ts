@@ -15,6 +15,18 @@ import {
   getEffectiveBalance,
 } from "@/lib/credits";
 
+// CORS headers for desktop app
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+// Handle OPTIONS preflight
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 200, headers: corsHeaders });
+}
+
 interface ExternalChatRequest {
   message: string;
   model?: ModelId;
@@ -38,7 +50,7 @@ export async function POST(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { error: "API key required", code: "UNAUTHORIZED" },
-        { status: 401 }
+        { status: 401, headers: corsHeaders }
       );
     }
 
@@ -54,7 +66,7 @@ export async function POST(request: NextRequest) {
     if (profileError || !profile) {
       return NextResponse.json(
         { error: "Invalid API key", code: "INVALID_API_KEY" },
-        { status: 401 }
+        { status: 401, headers: corsHeaders }
       );
     }
 
@@ -67,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (!message?.trim()) {
       return NextResponse.json(
         { error: "Message required", code: "MISSING_MESSAGE" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -76,7 +88,7 @@ export async function POST(request: NextRequest) {
     if (!modelInfo) {
       return NextResponse.json(
         { error: "Invalid model", code: "INVALID_MODEL" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -111,7 +123,7 @@ export async function POST(request: NextRequest) {
             source: userCredits.source,
           },
         },
-        { status: 402 }
+        { status: 402, headers: corsHeaders }
       );
     }
 
@@ -173,7 +185,7 @@ export async function POST(request: NextRequest) {
         remaining: deductResult.remaining ?? effectiveBalance - actualCost,
         orgName: userCredits.orgName,
       },
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error("External chat API error:", error);
 
@@ -197,7 +209,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { error: userMessage, code: "AI_ERROR" },
-      { status: statusCode }
+      { status: statusCode, headers: corsHeaders }
     );
   }
 }
@@ -213,7 +225,7 @@ export async function GET(request: NextRequest) {
   if (!authHeader?.startsWith("Bearer ")) {
     return NextResponse.json(
       { error: "API key required", code: "UNAUTHORIZED" },
-      { status: 401 }
+      { status: 401, headers: corsHeaders }
     );
   }
 
@@ -229,7 +241,7 @@ export async function GET(request: NextRequest) {
   if (profileError || !profile) {
     return NextResponse.json(
       { error: "Invalid API key", code: "INVALID_API_KEY" },
-      { status: 401 }
+      { status: 401, headers: corsHeaders }
     );
   }
 
@@ -248,5 +260,5 @@ export async function GET(request: NextRequest) {
       source: userCredits.source,
       orgName: userCredits.orgName,
     },
-  });
+  }, { headers: corsHeaders });
 }
