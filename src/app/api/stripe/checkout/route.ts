@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "payment",
+      allow_promotion_codes: true,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/credits/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/credits`,
       customer_email: user.email,
