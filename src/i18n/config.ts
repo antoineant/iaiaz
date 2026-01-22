@@ -59,6 +59,10 @@ export const pathnames = {
     fr: '/formateurs',
     en: '/trainers',
   },
+  '/business': {
+    fr: '/business',
+    en: '/business',
+  },
   '/auth/login': '/auth/login',
   '/auth/signup': '/auth/signup',
   '/auth/forgot-password': '/auth/forgot-password',

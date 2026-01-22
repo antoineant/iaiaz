@@ -97,8 +97,9 @@ export default function OrgSubscriptionPage() {
         total: members?.length || 0,
       });
 
-      // Set initial seat count based on current students
-      setSeatCount(Math.max(students, 10));
+      // Set initial seat count based on current members and org type
+      const minSeats = org.type === "business" ? 5 : 10;
+      setSeatCount(Math.max(students, minSeats));
 
       setIsLoading(false);
     };
@@ -162,8 +163,13 @@ export default function OrgSubscriptionPage() {
 
   // Determine which plans to show based on org type
   const isSchool = orgInfo?.type === "school" || orgInfo?.type === "university" || orgInfo?.type === "business_school";
+  const isBusiness = orgInfo?.type === "business";
   const availablePlans = SUBSCRIPTION_PLANS.filter((p) =>
-    isSchool ? p.accountType === "school" : p.accountType === "trainer"
+    isBusiness
+      ? p.accountType === "business"
+      : isSchool
+        ? p.accountType === "school"
+        : p.accountType === "trainer"
   );
 
   const currentPlan = orgInfo?.subscription_plan_id
@@ -318,9 +324,11 @@ export default function OrgSubscriptionPage() {
           {selectedPlan && getSubscriptionPlan(selectedPlan)?.pricingModel === "per_seat" && (
             <Card className="mb-8 max-w-md mx-auto">
               <CardHeader>
-                <h3 className="font-semibold">{t("seatCount.title")}</h3>
+                <h3 className="font-semibold">
+                  {isBusiness ? t("seatCount.titleEmployees") : t("seatCount.title")}
+                </h3>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  {t("seatCount.description")}
+                  {isBusiness ? t("seatCount.descriptionEmployees") : t("seatCount.description")}
                 </p>
               </CardHeader>
               <CardContent>
@@ -329,14 +337,17 @@ export default function OrgSubscriptionPage() {
                     <Users className="w-5 h-5 text-[var(--muted-foreground)]" />
                     <Input
                       type="number"
-                      min={10}
+                      min={getSubscriptionPlan(selectedPlan)?.includedSeats || 5}
                       max={1000}
                       value={seatCount}
-                      onChange={(e) => setSeatCount(Math.max(10, parseInt(e.target.value) || 10))}
+                      onChange={(e) => {
+                        const minSeats = getSubscriptionPlan(selectedPlan)?.includedSeats || 5;
+                        setSeatCount(Math.max(minSeats, parseInt(e.target.value) || minSeats));
+                      }}
                       className="w-24"
                     />
                     <span className="text-sm text-[var(--muted-foreground)]">
-                      {t("seatCount.students")}
+                      {isBusiness ? t("seatCount.employees") : t("seatCount.students")}
                     </span>
                   </div>
                   <div className="text-right">
@@ -354,7 +365,9 @@ export default function OrgSubscriptionPage() {
                 </div>
                 {memberCount.students > seatCount && (
                   <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
-                    {t("seatCount.warning", { current: memberCount.students })}
+                    {isBusiness
+                      ? t("seatCount.warningEmployees", { current: memberCount.students })
+                      : t("seatCount.warning", { current: memberCount.students })}
                   </p>
                 )}
               </CardContent>
@@ -431,10 +444,14 @@ function PlanCard({
           </>
         ) : (
           <>
-            <span className="text-3xl font-bold">{plan.monthlyPrice}€</span>
-            <span className="text-[var(--muted-foreground)]">/{t("perStudent")}</span>
+            <span className="text-3xl font-bold">{plan.monthlyPrice.toFixed(2)}€</span>
+            <span className="text-[var(--muted-foreground)]">
+              /{plan.accountType === "business" ? t("perEmployee") : t("perStudent")}
+            </span>
             <p className="text-sm text-[var(--muted-foreground)] mt-1">
-              {t("minimum", { min: plan.includedSeats || 10 })}
+              {plan.accountType === "business"
+                ? t("minimumEmployees", { min: plan.includedSeats || 5 })
+                : t("minimum", { min: plan.includedSeats || 10 })}
             </p>
           </>
         )}

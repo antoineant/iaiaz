@@ -20,6 +20,11 @@ import {
   Shield,
   Trash2,
   Mail,
+  Key,
+  Copy,
+  RefreshCw,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import type { CreditPreference } from "@/lib/credits";
 
@@ -70,6 +75,13 @@ export default function SettingsPage() {
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [isSavingMarketing, setIsSavingMarketing] = useState(false);
   const [marketingSuccess, setMarketingSuccess] = useState(false);
+
+  // API key states
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [isLoadingApiKey, setIsLoadingApiKey] = useState(false);
+  const [isRegeneratingApiKey, setIsRegeneratingApiKey] = useState(false);
+  const [apiKeyCopied, setApiKeyCopied] = useState(false);
 
   // Load profile data
   useEffect(() => {
@@ -212,6 +224,46 @@ export default function SettingsPage() {
     }
   };
 
+  const handleGetApiKey = async () => {
+    setIsLoadingApiKey(true);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.rpc("get_or_create_api_key");
+      if (error) throw error;
+      setApiKey(data);
+    } catch (error) {
+      console.error("Failed to get API key:", error);
+    } finally {
+      setIsLoadingApiKey(false);
+    }
+  };
+
+  const handleRegenerateApiKey = async () => {
+    if (!profile) return;
+    setIsRegeneratingApiKey(true);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.rpc("regenerate_api_key", {
+        user_id: profile.id,
+      });
+      if (error) throw error;
+      setApiKey(data);
+      setShowApiKey(true);
+    } catch (error) {
+      console.error("Failed to regenerate API key:", error);
+    } finally {
+      setIsRegeneratingApiKey(false);
+    }
+  };
+
+  const handleCopyApiKey = () => {
+    if (apiKey) {
+      navigator.clipboard.writeText(apiKey);
+      setApiKeyCopied(true);
+      setTimeout(() => setApiKeyCopied(false), 2000);
+    }
+  };
+
   const isOrgMember = credits?.orgId !== undefined;
 
   if (isLoading) {
@@ -306,6 +358,78 @@ export default function SettingsPage() {
               <div className="border-t border-[var(--border)] pt-6">
                 <EmailForm currentEmail={profile?.email || ""} />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* API Key Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Key className="w-5 h-5" />
+                {t("apiKey.title")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-[var(--muted-foreground)]">
+                {t("apiKey.description")}
+              </p>
+
+              {apiKey ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 px-3 py-2 bg-[var(--muted)] rounded-md font-mono text-sm overflow-hidden">
+                      {showApiKey ? apiKey : "•".repeat(Math.min(apiKey.length, 40))}
+                    </code>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowApiKey(!showApiKey)}
+                    >
+                      {showApiKey ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyApiKey}
+                    >
+                      {apiKeyCopied ? (
+                        <Check className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={handleRegenerateApiKey}
+                    disabled={isRegeneratingApiKey}
+                    className="text-orange-600 hover:text-orange-700 border-orange-200 hover:border-orange-300 hover:bg-orange-50 dark:border-orange-800 dark:hover:border-orange-700 dark:hover:bg-orange-900/20"
+                  >
+                    {isRegeneratingApiKey ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                    )}
+                    {t("apiKey.regenerate")}
+                  </Button>
+                  <p className="text-xs text-[var(--muted-foreground)]">
+                    {t("apiKey.regenerateWarning")}
+                  </p>
+                </div>
+              ) : (
+                <Button onClick={handleGetApiKey} disabled={isLoadingApiKey}>
+                  {isLoadingApiKey ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Key className="w-4 h-4 mr-2" />
+                  )}
+                  {t("apiKey.generate")}
+                </Button>
+              )}
             </CardContent>
           </Card>
 

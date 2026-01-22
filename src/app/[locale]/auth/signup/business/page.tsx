@@ -1,30 +1,21 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
-import { Check, User, GraduationCap, Building2, Mail, RefreshCw, Clock } from "lucide-react";
+import { Mail, RefreshCw, Clock, Building2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-type AccountType = "student" | "trainer" | "school";
-
-function SignupForm() {
+export default function BusinessSignupPage() {
   const t = useTranslations("auth.signup");
-  const searchParams = useSearchParams();
+  const tBusiness = useTranslations("auth.signupBusiness");
 
-  // Read initial account type from URL param
-  const initialType = searchParams.get("type") as AccountType | null;
-  const [accountType, setAccountType] = useState<AccountType>(
-    initialType && ["student", "trainer", "school"].includes(initialType)
-      ? initialType
-      : "student"
-  );
-  const [displayName, setDisplayName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -61,7 +52,7 @@ function SignupForm() {
         console.error("Resend error:", error);
       } else {
         setResendSuccess(true);
-        setResendCooldown(60); // 60 second cooldown
+        setResendCooldown(60);
       }
     } catch (err) {
       console.error("Resend error:", err);
@@ -93,8 +84,8 @@ function SignupForm() {
         body: JSON.stringify({
           email,
           password,
-          accountType,
-          displayName: displayName.trim() || undefined,
+          accountType: "business",
+          displayName: companyName.trim() || undefined,
           marketingConsent,
         }),
       });
@@ -102,7 +93,6 @@ function SignupForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        // Handle specific error codes with translations
         if (data.code === "DISPOSABLE_EMAIL") {
           setError(t("errors.disposableEmail"));
         } else if (data.code === "RATE_LIMITED") {
@@ -138,12 +128,10 @@ function SignupForm() {
                 {t("success.description", { email })}
               </p>
 
-              {/* Email display */}
               <div className="bg-[var(--muted)] rounded-lg px-4 py-2 mb-4 inline-block">
                 <span className="font-medium">{email}</span>
               </div>
 
-              {/* Delivery time notice */}
               <div className="flex items-center justify-center gap-2 text-sm text-[var(--muted-foreground)] mb-4">
                 <Clock className="w-4 h-4" />
                 <span>{t("success.deliveryTime")}</span>
@@ -153,14 +141,12 @@ function SignupForm() {
                 {t("success.hint")}
               </p>
 
-              {/* Resend success message */}
               {resendSuccess && (
                 <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm mb-4">
                   {t("success.resendSuccess")}
                 </div>
               )}
 
-              {/* Resend button */}
               <div className="space-y-3">
                 <Button
                   variant="outline"
@@ -196,17 +182,25 @@ function SignupForm() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
-            iaiaz
-          </Link>
+          <NextLink href="/business" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+            iaiaz <span className="text-lg font-normal text-[var(--muted-foreground)]">Business</span>
+          </NextLink>
           <p className="text-[var(--muted-foreground)] mt-2">
-            {t("subtitle")}
+            {tBusiness("subtitle")}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <h1 className="text-xl font-semibold">{t("title")}</h1>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold">{tBusiness("title")}</h1>
+                <p className="text-sm text-[var(--muted-foreground)]">{tBusiness("trialNote")}</p>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <GoogleButton mode="signup" />
@@ -220,109 +214,21 @@ function SignupForm() {
                 </div>
               )}
 
-              {/* Account Type Selection */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t("accountType.label")}</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setAccountType("student")}
-                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                      accountType === "student"
-                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                      accountType === "student"
-                        ? "bg-primary-600 text-white"
-                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                    }`}>
-                      <User className="w-5 h-5" />
-                    </div>
-                    <p className="font-medium text-sm">{t("accountType.student")}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                      {t("accountType.studentDesc")}
-                    </p>
-                    {accountType === "student" && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="w-4 h-4 text-primary-600" />
-                      </div>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setAccountType("trainer")}
-                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                      accountType === "trainer"
-                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                      accountType === "trainer"
-                        ? "bg-primary-600 text-white"
-                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                    }`}>
-                      <GraduationCap className="w-5 h-5" />
-                    </div>
-                    <p className="font-medium text-sm">{t("accountType.trainer")}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                      {t("accountType.trainerDesc")}
-                    </p>
-                    {accountType === "trainer" && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="w-4 h-4 text-primary-600" />
-                      </div>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setAccountType("school")}
-                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                      accountType === "school"
-                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                      accountType === "school"
-                        ? "bg-primary-600 text-white"
-                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                    }`}>
-                      <Building2 className="w-5 h-5" />
-                    </div>
-                    <p className="font-medium text-sm">{t("accountType.school")}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                      {t("accountType.schoolDesc")}
-                    </p>
-                    {accountType === "school" && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="w-4 h-4 text-primary-600" />
-                      </div>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Display Name (optional but encouraged for trainers) */}
               <Input
-                id="displayName"
+                id="companyName"
                 type="text"
-                label={t("displayName")}
-                placeholder={t("displayNamePlaceholder")}
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                autoComplete="name"
+                label={tBusiness("companyName")}
+                placeholder={tBusiness("companyNamePlaceholder")}
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                autoComplete="organization"
               />
 
               <Input
                 id="email"
                 type="email"
-                label={t("email")}
-                placeholder={t("emailPlaceholder")}
+                label={tBusiness("email")}
+                placeholder={tBusiness("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -351,7 +257,6 @@ function SignupForm() {
                 autoComplete="new-password"
               />
 
-              {/* Marketing consent checkbox - unchecked by default per GDPR */}
               <label className="flex items-start gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
@@ -369,8 +274,27 @@ function SignupForm() {
                 className="w-full"
                 isLoading={isLoading}
               >
-                {t("submit")}
+                {tBusiness("submit")}
               </Button>
+
+              {/* Benefits */}
+              <div className="pt-4 border-t border-[var(--border)]">
+                <p className="text-xs text-[var(--muted-foreground)] mb-2">{tBusiness("includes")}</p>
+                <ul className="space-y-1">
+                  <li className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+                    <Check className="w-3 h-3 text-green-500" />
+                    {tBusiness("benefit1")}
+                  </li>
+                  <li className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+                    <Check className="w-3 h-3 text-green-500" />
+                    {tBusiness("benefit2")}
+                  </li>
+                  <li className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+                    <Check className="w-3 h-3 text-green-500" />
+                    {tBusiness("benefit3")}
+                  </li>
+                </ul>
+              </div>
             </form>
 
             <div className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
@@ -384,19 +308,14 @@ function SignupForm() {
             </div>
           </CardContent>
         </Card>
+
+        <p className="text-center text-xs text-[var(--muted-foreground)] mt-4">
+          {tBusiness("notBusiness")}{" "}
+          <Link href="/auth/signup" className="text-primary-600 dark:text-primary-400 hover:underline">
+            {tBusiness("personalSignup")}
+          </Link>
+        </p>
       </div>
     </div>
-  );
-}
-
-export default function SignupPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">Loading...</div>
-      </div>
-    }>
-      <SignupForm />
-    </Suspense>
   );
 }

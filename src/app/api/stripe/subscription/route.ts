@@ -19,6 +19,14 @@ const STRIPE_PRICES = {
     monthly: process.env.STRIPE_PRICE_SCHOOL_SEAT_MONTHLY,
     yearly: process.env.STRIPE_PRICE_SCHOOL_SEAT_YEARLY,
   },
+  "business-seat": {
+    monthly: process.env.STRIPE_PRICE_BUSINESS_SEAT_MONTHLY,
+    yearly: process.env.STRIPE_PRICE_BUSINESS_SEAT_YEARLY,
+  },
+  "business-pro": {
+    monthly: process.env.STRIPE_PRICE_BUSINESS_PRO_MONTHLY,
+    yearly: process.env.STRIPE_PRICE_BUSINESS_PRO_YEARLY,
+  },
 };
 
 export async function POST(request: NextRequest) {
@@ -99,6 +107,7 @@ export async function POST(request: NextRequest) {
     // Check account type matches plan
     const isSchool = org.type === "school" || org.type === "university" || org.type === "business_school";
     const isTrainer = org.type === "training_center";
+    const isBusiness = org.type === "business";
 
     if (plan.accountType === "school" && !isSchool) {
       return NextResponse.json(
@@ -110,6 +119,13 @@ export async function POST(request: NextRequest) {
     if (plan.accountType === "trainer" && !isTrainer) {
       return NextResponse.json(
         { error: "Ce plan est réservé aux formateurs" },
+        { status: 400 }
+      );
+    }
+
+    if (plan.accountType === "business" && !isBusiness) {
+      return NextResponse.json(
+        { error: "Ce plan est réservé aux entreprises" },
         { status: 400 }
       );
     }

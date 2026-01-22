@@ -17,6 +17,8 @@ import {
   GraduationCap,
   CreditCard,
   Crown,
+  Shield,
+  BarChart3,
 } from "lucide-react";
 
 interface OrgMembership {
@@ -26,6 +28,7 @@ interface OrgMembership {
   role: string;
   credit_remaining: number;
   account_type: string;
+  subscription_plan_id: string | null;
 }
 
 export default function OrgLayout({ children }: { children: React.ReactNode }) {
@@ -95,6 +98,13 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
         .eq("id", user.id)
         .single();
 
+      // Get organization subscription plan
+      const { data: org } = await supabase
+        .from("organizations")
+        .select("subscription_plan_id")
+        .eq("id", member.organization_id)
+        .single();
+
       setMembership({
         id: member.id,
         organization_id: member.organization_id,
@@ -102,6 +112,7 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
         role: member.role,
         credit_remaining: member.credit_remaining,
         account_type: profile?.account_type || "trainer",
+        subscription_plan_id: org?.subscription_plan_id || null,
       });
       setIsLoading(false);
     };
@@ -116,16 +127,29 @@ export default function OrgLayout({ children }: { children: React.ReactNode }) {
   };
 
   const isSchool = membership?.account_type === "school";
+  const isBusiness = membership?.account_type === "business";
+  const hasAnonymisation = membership?.subscription_plan_id === "business-pro";
 
   const navItems = [
     { href: "/org", label: t("nav.dashboard"), icon: LayoutDashboard },
-    { href: "/org/classes", label: t("nav.classes"), icon: GraduationCap },
-    // Only show Members and Invites for school accounts
-    ...(isSchool
+    // Schools get "Classes", Business gets "Teams", Trainers get "Classes"
+    ...(!isBusiness
+      ? [{ href: "/org/classes", label: t("nav.classes"), icon: GraduationCap }]
+      : [{ href: "/org/teams", label: t("nav.teams"), icon: Users }]),
+    // Members and Invites for school AND business accounts
+    ...((isSchool || isBusiness)
       ? [
-          { href: "/org/members", label: t("nav.members"), icon: Users },
+          { href: "/org/members", label: isBusiness ? t("nav.employees") : t("nav.members"), icon: Users },
           { href: "/org/invites", label: t("nav.invites"), icon: UserPlus },
         ]
+      : []),
+    // Analytics for business accounts
+    ...(isBusiness
+      ? [{ href: "/org/analytics", label: t("nav.analytics"), icon: BarChart3 }]
+      : []),
+    // Anonymise app for business-pro subscribers only
+    ...(isBusiness && hasAnonymisation
+      ? [{ href: "/org/anonymise", label: t("nav.anonymise"), icon: Shield }]
       : []),
     { href: "/org/subscription", label: t("nav.subscription"), icon: Crown },
     { href: "/org/credits", label: t("nav.credits"), icon: CreditCard },

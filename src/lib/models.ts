@@ -457,7 +457,7 @@ export interface SubscriptionPlan {
   descriptionEn: string;
   features: string[];
   featuresEn: string[];
-  accountType: "trainer" | "school";
+  accountType: "trainer" | "school" | "business";
   // Pricing model
   pricingModel: "flat" | "per_seat";
   monthlyPrice: number; // For flat: total price. For per_seat: price per student
@@ -537,6 +537,72 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     multiAdmin: true,
     prioritySupport: true,
   },
+  // Business plan - €4.90/employee/month (basic)
+  {
+    id: "business-seat",
+    name: "Entreprise",
+    nameEn: "Business",
+    description: "4,90€ par collaborateur actif par mois",
+    descriptionEn: "€4.90 per active employee per month",
+    features: [
+      "Équipes illimitées",
+      "Analytics complets",
+      "Multi-administrateurs",
+      "Gestion des collaborateurs",
+      "Support par email",
+    ],
+    featuresEn: [
+      "Unlimited teams",
+      "Full analytics",
+      "Multiple administrators",
+      "Employee management",
+      "Email support",
+    ],
+    accountType: "business",
+    pricingModel: "per_seat",
+    monthlyPrice: 4.90, // €4.90 per employee
+    yearlyPrice: 49.00, // €49 per employee/year (~2 months free)
+    maxClasses: null,
+    includedSeats: 5, // Minimum 5 employees (€24.50/month minimum)
+    analyticsIncluded: true,
+    multiAdmin: true,
+    prioritySupport: false,
+  },
+  // Business Pro plan - €9.90/employee/month (with anonymization)
+  {
+    id: "business-pro",
+    name: "Entreprise Pro",
+    nameEn: "Business Pro",
+    description: "9,90€ par collaborateur actif par mois",
+    descriptionEn: "€9.90 per active employee per month",
+    features: [
+      "Équipes illimitées",
+      "Analytics complets",
+      "Multi-administrateurs",
+      "Gestion des collaborateurs",
+      "Application d'anonymisation",
+      "Données traitées localement",
+      "Support prioritaire",
+    ],
+    featuresEn: [
+      "Unlimited teams",
+      "Full analytics",
+      "Multiple administrators",
+      "Employee management",
+      "Anonymization app",
+      "Data processed locally",
+      "Priority support",
+    ],
+    accountType: "business",
+    pricingModel: "per_seat",
+    monthlyPrice: 9.90, // €9.90 per employee
+    yearlyPrice: 99.00, // €99 per employee/year (~2 months free)
+    maxClasses: null,
+    includedSeats: 5, // Minimum 5 employees (€49.50/month minimum)
+    analyticsIncluded: true,
+    multiAdmin: true,
+    prioritySupport: true,
+  },
 ];
 
 /**
@@ -549,7 +615,7 @@ export function getSubscriptionPlan(planId: string): SubscriptionPlan | undefine
 /**
  * Get plans available for an account type
  */
-export function getPlansForAccountType(accountType: "trainer" | "school"): SubscriptionPlan[] {
+export function getPlansForAccountType(accountType: "trainer" | "school" | "business"): SubscriptionPlan[] {
   return SUBSCRIPTION_PLANS.filter((p) => p.accountType === accountType);
 }
 

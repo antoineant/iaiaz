@@ -78,6 +78,13 @@
     "comparatif": {
       "title": "Compare - Choose Your Profile | iaiaz",
       "description": "Compare iaiaz with alternatives based on your profile: student, school, or trainer. Find the right solution."
+    },
+    "business": {
+      "title": "iaiaz Business - Multi-model AI for Teams | Pay-per-use",
+      "description": "Access Claude, GPT-4, Gemini and Mistral for your teams. Pay-per-use, detailed analytics, cost control. 14-day free trial.",
+      "keywords": "enterprise ai, chatgpt team alternative, claude team alternative, multi-model ai, pay per use ai, enterprise ai analytics",
+      "ogTitle": "iaiaz Business - AI for your teams without overpaying",
+      "ogDescription": "Multi-model (Claude, GPT, Gemini, Mistral) with pay-per-use and detailed analytics. Control your costs."
     }
   },
   "common": {
@@ -507,6 +514,13 @@
       "verificationSentDescription": "Check your inbox at {email}",
       "done": "Done"
     },
+    "apiKey": {
+      "title": "API Key",
+      "description": "Use this key to connect the iaiaz - anonyme app or other external services to your account.",
+      "generate": "Generate API key",
+      "regenerate": "Regenerate key",
+      "regenerateWarning": "Warning: regenerating the key will invalidate the old one. Applications using the old key will need to be updated."
+    },
     "creditPreference": {
       "title": "Credit preferences",
       "description": "Choose how to use your credits when you are a member of an organization.",
@@ -623,7 +637,9 @@
         "trainer": "Trainer",
         "trainerDesc": "To create classes",
         "school": "School",
-        "schoolDesc": "To manage trainers and classes"
+        "schoolDesc": "To manage trainers and classes",
+        "business": "Business",
+        "businessDesc": "For your teams"
       },
       "displayName": "Display name",
       "displayNamePlaceholder": "Your name (optional)",
@@ -655,6 +671,22 @@
         "tooManyAttempts": "Too many signup attempts. Please try again later.",
         "generic": "An error occurred. Please try again."
       }
+    },
+    "signupBusiness": {
+      "title": "Business Account",
+      "subtitle": "AI for your teams, without overpaying",
+      "trialNote": "14-day free trial",
+      "companyName": "Company name",
+      "companyNamePlaceholder": "Acme Inc.",
+      "email": "Work email",
+      "emailPlaceholder": "you@company.com",
+      "submit": "Create my business account",
+      "includes": "Included in trial:",
+      "benefit1": "€10 free AI credits",
+      "benefit2": "All models (Claude, GPT-4, Gemini, Mistral)",
+      "benefit3": "Dashboard and team management",
+      "notBusiness": "Not a business?",
+      "personalSignup": "Create a personal account"
     },
     "forgotPassword": {
       "title": "Forgot password",
@@ -1928,8 +1960,12 @@
     "nav": {
       "dashboard": "Dashboard",
       "classes": "Classes",
+      "teams": "Teams",
       "members": "Members",
+      "employees": "Employees",
       "invites": "Invitations",
+      "analytics": "Analytics",
+      "anonymise": "Anonymisation",
       "subscription": "Subscription",
       "credits": "AI Credits",
       "backToChat": "Back to chat",
@@ -2052,7 +2088,9 @@
       "perMonth": "month",
       "perYear": "year",
       "perStudent": "student/month",
+      "perEmployee": "employee/month",
       "minimum": "Minimum {min} students",
+      "minimumEmployees": "Minimum {min} employees",
       "subscribe": "Subscribe",
       "trialInfo": "14-day free trial. Cancel anytime.",
       "manageSubscription": "Manage subscription",
@@ -2070,7 +2108,11 @@
         "title": "Number of students",
         "description": "Adjust the number of students included in your subscription.",
         "students": "students",
-        "warning": "You currently have {current} active students. Increase this number to include them all."
+        "warning": "You currently have {current} active students. Increase this number to include them all.",
+        "titleEmployees": "Number of employees",
+        "descriptionEmployees": "Adjust the number of employees included in your subscription.",
+        "employees": "employees",
+        "warningEmployees": "You currently have {current} active employees. Increase this number to include them all."
       },
       "errors": {
         "selectPlan": "Please select a plan",
@@ -2086,6 +2128,76 @@
         "step3": "Purchase credits for AI usage",
         "backToDashboard": "Back to dashboard",
         "purchaseCredits": "Purchase credits"
+      }
+    },
+    "anonymise": {
+      "title": "Anonymisation App",
+      "subtitle": "Protect your company's sensitive data with our desktop app. Data is anonymised locally before being sent to AI.",
+      "howItWorks": {
+        "title": "How it works",
+        "step1": "Sensitive data",
+        "step1Sub": "On your machine",
+        "step2": "Local anonymisation",
+        "step2Sub": "Mistral NER",
+        "step3": "Secure transmission",
+        "step3Sub": "Anonymised data",
+        "step4": "De-anonymised response",
+        "step4Sub": "Locally"
+      },
+      "features": {
+        "localProcessing": {
+          "title": "100% local processing",
+          "description": "Your sensitive data never leaves your machine. Only anonymised tokens are sent to the cloud."
+        },
+        "mistralNER": {
+          "title": "Built-in Mistral AI",
+          "description": "Intelligent detection of names, emails, numbers, addresses and other personal data."
+        },
+        "seamlessSync": {
+          "title": "iaiaz integration",
+          "description": "Connect with your iaiaz account and use all AI models with complete privacy."
+        }
+      },
+      "download": {
+        "title": "Download the app",
+        "description": "Install the app on your team members' computers to let them use AI with full privacy.",
+        "mac": "Download for Mac",
+        "windows": "Download for Windows"
+      },
+      "setup": {
+        "title": "Installation",
+        "getApiKey": "Get my API key"
+      },
+      "steps": {
+        "download": {
+          "title": "Download the app",
+          "description": "Download and install the app for your operating system."
+        },
+        "install": {
+          "title": "Install Ollama and Mistral",
+          "description": "The app will guide you to install Ollama and download the Mistral model (~4 GB)."
+        },
+        "apiKey": {
+          "title": "Enter your API key",
+          "description": "Connect the app to your iaiaz account with your API key."
+        },
+        "start": {
+          "title": "Start using",
+          "description": "You can now chat with AI in complete privacy!"
+        }
+      },
+      "teamDeployment": {
+        "title": "Team deployment",
+        "description": "Each team member can install the app on their computer. They will need to generate their own API key from their iaiaz account settings."
+      },
+      "upgrade": {
+        "title": "Upgrade to Business Pro",
+        "description": "The anonymization app is available with the Business Pro plan. Protect your sensitive data locally before sending to the cloud.",
+        "features": "Included in Business Pro:",
+        "feature1": "Desktop anonymization app",
+        "feature2": "Local data processing with Mistral AI",
+        "feature3": "Priority support",
+        "button": "Upgrade to Pro"
       }
     },
     "invites": {
@@ -2308,6 +2420,39 @@
           "score": "Score"
         }
       }
+    },
+    "teams": {
+      "title": "Teams",
+      "createTeam": "Create Team",
+      "createFirstTeam": "Create my first team",
+      "noTeams": "No teams yet",
+      "noTeamsDescription": "Create teams to organize your employees and manage access.",
+      "members": "members",
+      "error": "Error",
+      "teamName": "Team Name",
+      "teamNamePlaceholder": "E.g., Marketing",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional team description...",
+      "cancel": "Cancel",
+      "create": "Create"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "error": "Error",
+      "period": "Period",
+      "last7days": "Last 7 days",
+      "last30days": "Last 30 days",
+      "last90days": "Last 90 days",
+      "totalMessages": "Messages",
+      "activeEmployees": "Active Employees",
+      "totalCost": "Total Cost",
+      "conversations": "Conversations",
+      "dailyUsage": "Daily Usage",
+      "modelUsage": "Model Usage",
+      "topEmployees": "Top Employees",
+      "peakHours": "Peak Hours",
+      "messages": "messages",
+      "noData": "No data available"
     }
   },
   "joinClass": {
@@ -2424,5 +2569,180 @@
     "joinedOn": "Joined on {date}",
     "goToChat": "Go to chat",
     "classClosed": "Class closed"
+  },
+  "business": {
+    "hero": {
+      "badge": "For businesses",
+      "title": "AI for your teams.",
+      "titleHighlight": "Without overpaying for unused licenses.",
+      "subtitle": "Multi-model access (Claude, GPT-4, Gemini, Mistral) with pay-per-use and detailed analytics. Your teams use the AI they need. You control the costs.",
+      "cta": "Start free trial",
+      "ctaSecondary": "Request a demo",
+      "noPerSeat": "No per-seat licensing",
+      "allModels": "All AI models",
+      "analytics": "Detailed analytics"
+    },
+    "problem": {
+      "title": "The problem with current AI subscriptions",
+      "subtitle": "Existing solutions aren't designed for real business needs.",
+      "waste": {
+        "title": "You're paying for unused seats",
+        "description": "ChatGPT Team: $25/user/month. 50 employees = $1,250/month. But only 15 actually use it. You're wasting $875/month."
+      },
+      "vendor": {
+        "title": "You're locked into one model",
+        "description": "Legal prefers Claude, devs want GPT-4, marketing uses Gemini. Result: 3 subscriptions, 3 invoices, no visibility."
+      },
+      "visibility": {
+        "title": "You have no visibility",
+        "description": "Who uses AI? For what? How much does it really cost? Is it worth it? Impossible to know."
+      }
+    },
+    "solution": {
+      "title": "iaiaz Business: One platform, all models, total control",
+      "subtitle": "The solution designed for real business needs.",
+      "multiModel": {
+        "title": "Multi-model",
+        "description": "Claude, GPT-4, Gemini, Mistral... Your teams choose the best tool for each task. One account, one invoice."
+      },
+      "payPerUse": {
+        "title": "Pay-per-use",
+        "description": "No more per-seat licenses. Pay only for what your teams actually use. Quiet months cost less."
+      },
+      "analytics": {
+        "title": "Analytics & Control",
+        "description": "Real-time dashboard: who uses what, how much it costs, what the patterns are. Configurable spending limits and allowed models."
+      }
+    },
+    "comparison": {
+      "title": "Compare the costs",
+      "chatgpt": "ChatGPT Team",
+      "claude": "Claude Team",
+      "pricing": "Pricing model",
+      "perSeat": "Per seat",
+      "payPerUse": "Pay-per-use",
+      "priceLabel": "Price / user",
+      "models": "Models included",
+      "allModels": "Claude + GPT + Gemini + Mistral",
+      "analyticsLabel": "Per-employee analytics",
+      "limits": "Spending limits",
+      "note": "*Based on actual usage. Example based on average of 200 messages/month."
+    },
+    "useCases": {
+      "title": "Adapted to all roles",
+      "subtitle": "Each team has different needs. Each team deserves the right tool.",
+      "legal": {
+        "title": "Legal & Compliance",
+        "description": "Contract analysis, case law research, long document summaries.",
+        "model": "Recommended model: Claude"
+      },
+      "tech": {
+        "title": "Tech & Development",
+        "description": "Debugging, code review, technical documentation, solution exploration.",
+        "model": "Recommended model: GPT-4"
+      },
+      "marketing": {
+        "title": "Marketing & Communications",
+        "description": "Content writing, market analysis, creative brainstorming.",
+        "model": "Recommended model: Gemini / Claude"
+      },
+      "finance": {
+        "title": "Finance & Operations",
+        "description": "Data analysis, report summaries, task automation.",
+        "model": "Recommended model: GPT-4 / Mistral"
+      }
+    },
+    "pricing": {
+      "title": "Simple and transparent pricing",
+      "subtitle": "Platform subscription + usage-based credits. You only pay for what you use.",
+      "perMonth": "/month + usage credits",
+      "popular": "Popular",
+      "starter": {
+        "name": "Starter",
+        "description": "For small teams",
+        "feature1": "Up to 20 employees",
+        "feature2": "Basic analytics dashboard",
+        "feature3": "Email support"
+      },
+      "business": {
+        "name": "Business",
+        "description": "For growing teams",
+        "feature1": "Up to 100 employees",
+        "feature2": "Advanced analytics",
+        "feature3": "SSO (coming soon)",
+        "feature4": "Priority support"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For large organizations",
+        "price": "Custom",
+        "unit": "Contact us",
+        "feature1": "Unlimited employees",
+        "feature2": "Custom analytics",
+        "feature3": "SSO & SAML",
+        "feature4": "Dedicated account manager"
+      },
+      "cta": "14-day free trial",
+      "contact": "Contact us",
+      "note": "AI credits are billed based on usage. Example: a Claude Sonnet message costs ~$0.01-0.03."
+    },
+    "security": {
+      "title": "Built for enterprise",
+      "subtitle": "Security and compliance at the core of the platform.",
+      "eu": {
+        "title": "EU Hosting",
+        "description": "Data hosted in the European Union. No transfers outside the EU."
+      },
+      "gdpr": {
+        "title": "GDPR Native",
+        "description": "Explicit consent, right to erasure, data portability."
+      },
+      "audit": {
+        "title": "Audit Trail",
+        "description": "Complete action history for your compliance needs."
+      },
+      "noTraining": {
+        "title": "No Training",
+        "description": "Your data and prompts are never used to train AI models."
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "billing": {
+        "question": "How does billing work?",
+        "answer": "You pay a monthly subscription (platform) + credits used by your teams. Monthly billing, cancel anytime."
+      },
+      "limits": {
+        "question": "Can we limit spending per employee?",
+        "answer": "Yes. You can set daily, weekly, or monthly limits per employee or per team."
+      },
+      "privacy": {
+        "question": "Can managers see conversations?",
+        "answer": "No. Managers only see aggregated statistics (number of messages, cost, models used). Never the content of conversations."
+      },
+      "models": {
+        "question": "What models are available?",
+        "answer": "Claude (Haiku, Sonnet, Opus), GPT-4, GPT-4o, Gemini Pro, Gemini Flash, Mistral Large, and more. We regularly add new models."
+      },
+      "onboarding": {
+        "question": "How do employees access the platform?",
+        "answer": "By email invitation or by signing up with their work email (authorized domain). Coming soon: SSO."
+      },
+      "commitment": {
+        "question": "Is there a commitment?",
+        "answer": "No. Monthly subscription with no commitment. You can cancel anytime."
+      }
+    },
+    "cta": {
+      "title": "Ready to optimize your AI budget?",
+      "subtitle": "14-day free trial. No credit card required. Cancel anytime.",
+      "button": "Start free trial",
+      "demo": "Request a personalized demo",
+      "note": "Questions? contact@iaiaz.com"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "business": "Business"
+    }
   }
 }

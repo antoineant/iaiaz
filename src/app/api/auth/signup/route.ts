@@ -12,7 +12,7 @@ import {
 interface SignupRequest {
   email: string;
   password: string;
-  accountType?: "student" | "trainer" | "school";
+  accountType?: "student" | "trainer" | "school" | "business";
   displayName?: string;
   marketingConsent?: boolean;
 }
