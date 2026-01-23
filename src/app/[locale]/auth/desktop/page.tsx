@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Loader2, Shield, Check, ExternalLink, AlertCircle } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
-export default function DesktopAuthPage() {
+function DesktopAuthContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get("session");
@@ -225,5 +225,19 @@ export default function DesktopAuthPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function DesktopAuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <DesktopAuthContent />
+    </Suspense>
   );
 }
