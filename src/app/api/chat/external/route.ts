@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { callAI } from "@/lib/ai/providers";
 import { type ModelId } from "@/lib/pricing";
+import { type ContentPart, type MultimodalMessage } from "@/types";
 import {
   calculateCostFromDBAdmin,
   getModelFromDBAdmin,
@@ -27,10 +28,17 @@ export async function OPTIONS() {
   return new NextResponse(null, { status: 200, headers: corsHeaders });
 }
 
+interface ExternalAttachment {
+  base64: string;
+  mimeType: string;
+  filename: string;
+}
+
 interface ExternalChatRequest {
   message: string;
   model?: ModelId;
   messages?: Array<{ role: "user" | "assistant"; content: string }>;
+  attachments?: ExternalAttachment[];
 }
 
 /**
@@ -74,11 +82,11 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body: ExternalChatRequest = await request.json();
-    const { message, model = "claude-3-5-sonnet" as ModelId, messages = [] } = body;
+    const { message, model = "claude-sonnet-4-20250514" as ModelId, messages = [], attachments = [] } = body;
 
-    if (!message?.trim()) {
+    if (!message?.trim() && attachments.length === 0) {
       return NextResponse.json(
-        { error: "Message required", code: "MISSING_MESSAGE" },
+        { error: "Message or attachments required", code: "MISSING_MESSAGE" },
         { status: 400, headers: corsHeaders }
       );
     }
@@ -128,9 +136,50 @@ export async function POST(request: NextRequest) {
     }
 
     // Build message history
-    const fullMessages = [
-      ...messages,
-      { role: "user" as const, content: message },
+    // Convert text-only history messages
+    const historyMessages: MultimodalMessage[] = messages.map(m => ({
+      role: m.role,
+      content: m.content,
+    }));
+
+    // Build the current user message (potentially multimodal)
+    let currentMessageContent: string | ContentPart[];
+
+    if (attachments.length > 0) {
+      // Build multimodal content
+      const contentParts: ContentPart[] = [];
+
+      // Add text message first if present
+      if (message?.trim()) {
+        contentParts.push({ type: "text", text: message });
+      }
+
+      // Add attachments
+      for (const attachment of attachments) {
+        if (attachment.mimeType.startsWith("image/")) {
+          contentParts.push({
+            type: "image",
+            mimeType: attachment.mimeType,
+            base64: attachment.base64,
+          });
+        } else if (attachment.mimeType === "application/pdf") {
+          contentParts.push({
+            type: "document",
+            mimeType: attachment.mimeType,
+            base64: attachment.base64,
+            filename: attachment.filename,
+          });
+        }
+      }
+
+      currentMessageContent = contentParts;
+    } else {
+      currentMessageContent = message;
+    }
+
+    const fullMessages: MultimodalMessage[] = [
+      ...historyMessages,
+      { role: "user" as const, content: currentMessageContent },
     ];
 
     // Call AI
