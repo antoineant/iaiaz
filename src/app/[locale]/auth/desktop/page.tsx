@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 
 export default function DesktopAuthPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const sessionId = searchParams.get("session");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +19,8 @@ export default function DesktopAuthPage() {
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const redirectParam = `/auth/desktop${sessionId ? `?session=${sessionId}` : ""}`;
 
   useEffect(() => {
     checkAuthStatus();
@@ -129,16 +132,19 @@ export default function DesktopAuthPage() {
                 Connectez-vous à votre compte iaiaz pour lier l'application de bureau.
               </p>
               <div className="flex flex-col gap-2">
-                <Link href={`/auth/login?redirect=/auth/desktop${sessionId ? `?session=${sessionId}` : ""}`}>
-                  <Button className="w-full">
-                    Se connecter
-                  </Button>
-                </Link>
-                <Link href={`/auth/signup?redirect=/auth/desktop${sessionId ? `?session=${sessionId}` : ""}`}>
-                  <Button variant="outline" className="w-full">
-                    Créer un compte
-                  </Button>
-                </Link>
+                <Button
+                  className="w-full"
+                  onClick={() => router.push(`/auth/login?redirect=${encodeURIComponent(redirectParam)}`)}
+                >
+                  Se connecter
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => router.push(`/auth/signup?redirect=${encodeURIComponent(redirectParam)}`)}
+                >
+                  Créer un compte
+                </Button>
               </div>
             </div>
           ) : connected ? (
