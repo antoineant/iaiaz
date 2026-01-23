@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     // Look up the API key in profiles table
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('id, email, credits')
+      .select('id, email')
       .eq('api_key', apiKey)
       .single();
 
@@ -86,8 +86,15 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Get user credits from users table
+    const { data: userCredits } = await supabase
+      .from('users')
+      .select('credits')
+      .eq('id', userData.id)
+      .single();
+
     // Calculate total credits (personal + any allocation)
-    const creditsRemaining = userData.credits || 0;
+    const creditsRemaining = userCredits?.credits || 0;
     if (!creditsTotal) {
       creditsTotal = creditsRemaining; // If no org, total = remaining
     }
