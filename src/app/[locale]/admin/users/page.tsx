@@ -5,13 +5,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Minus, Shield, User, GraduationCap, Building2, Trash2, Loader2, X, Mail, MailCheck, MailX, RefreshCw } from "lucide-react";
+import { Search, Plus, Minus, Shield, User, GraduationCap, Building2, Briefcase, Trash2, Loader2, X, Mail, MailCheck, MailX, RefreshCw } from "lucide-react";
 
 interface Profile {
   id: string;
   email: string;
   display_name: string | null;
-  account_type: "student" | "trainer" | "school" | "admin";
+  account_type: "student" | "trainer" | "school" | "business" | "admin";
   credits_balance: number;
   is_admin: boolean;
   created_at: string;
@@ -226,7 +226,7 @@ export default function UsersPage() {
     fetchUsers();
   };
 
-  const updateAccountType = async (userId: string, newType: "student" | "trainer" | "school" | "admin") => {
+  const updateAccountType = async (userId: string, newType: "student" | "trainer" | "school" | "business" | "admin") => {
     const supabase = createClient();
     setError("");
     setSuccess("");
@@ -255,6 +255,7 @@ export default function UsersPage() {
       student: "Étudiant",
       trainer: "Formateur",
       school: "Établissement",
+      business: "Entreprise",
       admin: "Admin"
     };
     setSuccess(`Type de compte changé en ${typeLabels[newType]}`);
@@ -375,6 +376,17 @@ export default function UsersPage() {
             </div>
             <p className="text-2xl font-bold">
               {users.filter((u) => u.account_type === "school").length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-cyan-500" />
+              <p className="text-sm text-[var(--muted-foreground)]">Entreprises</p>
+            </div>
+            <p className="text-2xl font-bold">
+              {users.filter((u) => u.account_type === "business").length}
             </p>
           </CardContent>
         </Card>
@@ -517,6 +529,7 @@ export default function UsersPage() {
                 student: { icon: User, label: "Étudiant", bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-400" },
                 trainer: { icon: GraduationCap, label: "Formateur", bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-700 dark:text-green-400" },
                 school: { icon: Building2, label: "Établissement", bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-700 dark:text-orange-400" },
+                business: { icon: Briefcase, label: "Entreprise", bg: "bg-cyan-100 dark:bg-cyan-900/30", text: "text-cyan-700 dark:text-cyan-400" },
                 admin: { icon: Shield, label: "Admin", bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-400" },
               };
               const config = accountTypeConfig[accountType as keyof typeof accountTypeConfig];
@@ -633,12 +646,13 @@ export default function UsersPage() {
                         )}
                         <select
                           value={accountType}
-                          onChange={(e) => updateAccountType(user.id, e.target.value as "student" | "trainer" | "school" | "admin")}
+                          onChange={(e) => updateAccountType(user.id, e.target.value as "student" | "trainer" | "school" | "business" | "admin")}
                           className="text-sm border border-[var(--border)] rounded-lg px-2 py-1.5 bg-[var(--background)] cursor-pointer"
                         >
                           <option value="student">Étudiant</option>
                           <option value="trainer">Formateur</option>
                           <option value="school">Établissement</option>
+                          <option value="business">Entreprise</option>
                           <option value="admin">Admin</option>
                         </select>
                         <Button
