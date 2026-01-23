@@ -95,6 +95,7 @@
       "students": "Students",
       "schools": "Schools",
       "trainers": "Trainers",
+      "business": "Business",
       "login": "Login",
       "signup": "Get Started",
       "home": "Home",
@@ -2654,37 +2655,40 @@
     },
     "pricing": {
       "title": "Simple and transparent pricing",
-      "subtitle": "Platform subscription + usage-based credits. You only pay for what you use.",
-      "perMonth": "/month + usage credits",
+      "subtitle": "Pay per active employee + usage-based AI credits. Minimum 5 employees.",
+      "perMonth": "/month",
+      "perEmployee": "/ employee / month",
       "popular": "Popular",
-      "starter": {
-        "name": "Starter",
-        "description": "For small teams",
-        "feature1": "Up to 20 employees",
-        "feature2": "Basic analytics dashboard",
-        "feature3": "Email support"
-      },
       "business": {
         "name": "Business",
-        "description": "For growing teams",
-        "feature1": "Up to 100 employees",
-        "feature2": "Advanced analytics",
-        "feature3": "SSO (coming soon)",
-        "feature4": "Priority support"
+        "description": "For teams getting started",
+        "feature1": "Unlimited teams",
+        "feature2": "Full analytics",
+        "feature3": "Multiple administrators",
+        "feature4": "Email support"
+      },
+      "pro": {
+        "name": "Business Pro",
+        "description": "For maximum privacy",
+        "feature1": "Everything in Business +",
+        "feature2": "Anonymization app",
+        "feature3": "Data processed locally",
+        "feature4": "Priority support",
+        "feature5": "Personalized onboarding"
       },
       "enterprise": {
         "name": "Enterprise",
         "description": "For large organizations",
         "price": "Custom",
         "unit": "Contact us",
-        "feature1": "Unlimited employees",
-        "feature2": "Custom analytics",
-        "feature3": "SSO & SAML",
+        "feature1": "SSO & SAML",
+        "feature2": "Custom reports",
+        "feature3": "Dedicated API",
         "feature4": "Dedicated account manager"
       },
       "cta": "14-day free trial",
       "contact": "Contact us",
-      "note": "AI credits are billed based on usage. Example: a Claude Sonnet message costs ~$0.01-0.03."
+      "note": "Minimum 5 employees ($24.50/month for Business, $49.50/month for Pro). AI credits billed based on usage."
     },
     "security": {
       "title": "Built for enterprise",

@@ -344,47 +344,15 @@ export default async function BusinessPage({ params }: Props) {
               {t("pricing.subtitle")}
             </p>
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {/* Starter */}
-              <Card>
-                <CardContent className="pt-8 pb-8">
-                  <h3 className="font-bold text-xl mb-2">{t("pricing.starter.name")}</h3>
-                  <p className="text-sm text-[var(--muted-foreground)] mb-4">{t("pricing.starter.description")}</p>
-                  <div className="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-1">
-                    99{currencySymbol}
-                  </div>
-                  <div className="text-sm text-[var(--muted-foreground)] mb-6">{t("pricing.perMonth")}</div>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center gap-2 text-sm">
-                      <Check className="w-4 h-4 text-green-500" />
-                      {t("pricing.starter.feature1")}
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Check className="w-4 h-4 text-green-500" />
-                      {t("pricing.starter.feature2")}
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Check className="w-4 h-4 text-green-500" />
-                      {t("pricing.starter.feature3")}
-                    </li>
-                  </ul>
-                  <NextLink href="/auth/signup/business" className="block">
-                    <Button variant="outline" className="w-full">{t("pricing.cta")}</Button>
-                  </NextLink>
-                </CardContent>
-              </Card>
-
               {/* Business */}
-              <Card className="border-primary-500 dark:border-primary-400 border-2 relative">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary-600 text-white text-sm font-medium rounded-full">
-                  {t("pricing.popular")}
-                </div>
+              <Card>
                 <CardContent className="pt-8 pb-8">
                   <h3 className="font-bold text-xl mb-2">{t("pricing.business.name")}</h3>
                   <p className="text-sm text-[var(--muted-foreground)] mb-4">{t("pricing.business.description")}</p>
                   <div className="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-1">
-                    249{currencySymbol}
+                    4,90{currencySymbol}
                   </div>
-                  <div className="text-sm text-[var(--muted-foreground)] mb-6">{t("pricing.perMonth")}</div>
+                  <div className="text-sm text-[var(--muted-foreground)] mb-6">{t("pricing.perEmployee")}</div>
                   <ul className="space-y-2 mb-6">
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="w-4 h-4 text-green-500" />
@@ -401,6 +369,46 @@ export default async function BusinessPage({ params }: Props) {
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="w-4 h-4 text-green-500" />
                       {t("pricing.business.feature4")}
+                    </li>
+                  </ul>
+                  <NextLink href="/auth/signup/business" className="block">
+                    <Button variant="outline" className="w-full">{t("pricing.cta")}</Button>
+                  </NextLink>
+                </CardContent>
+              </Card>
+
+              {/* Business Pro */}
+              <Card className="border-primary-500 dark:border-primary-400 border-2 relative">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary-600 text-white text-sm font-medium rounded-full">
+                  {t("pricing.popular")}
+                </div>
+                <CardContent className="pt-8 pb-8">
+                  <h3 className="font-bold text-xl mb-2">{t("pricing.pro.name")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)] mb-4">{t("pricing.pro.description")}</p>
+                  <div className="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-1">
+                    9,90{currencySymbol}
+                  </div>
+                  <div className="text-sm text-[var(--muted-foreground)] mb-6">{t("pricing.perEmployee")}</div>
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-center gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-500" />
+                      {t("pricing.pro.feature1")}
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-500" />
+                      {t("pricing.pro.feature2")}
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-500" />
+                      {t("pricing.pro.feature3")}
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-500" />
+                      {t("pricing.pro.feature4")}
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-500" />
+                      {t("pricing.pro.feature5")}
                     </li>
                   </ul>
                   <NextLink href="/auth/signup/business" className="block">

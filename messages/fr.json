@@ -95,6 +95,7 @@
       "students": "Étudiants",
       "schools": "Établissements",
       "trainers": "Formateurs",
+      "business": "Entreprises",
       "login": "Connexion",
       "signup": "Commencer",
       "home": "Accueil",
@@ -2654,37 +2655,40 @@
     },
     "pricing": {
       "title": "Une tarification claire et sans surprise",
-      "subtitle": "Un abonnement plateforme + des crédits à la consommation. Vous payez ce que vous utilisez.",
-      "perMonth": "/mois + crédits à l'usage",
+      "subtitle": "Payez par collaborateur actif + crédits IA à la consommation. Minimum 5 collaborateurs.",
+      "perMonth": "/mois",
+      "perEmployee": "/ collaborateur / mois",
       "popular": "Le plus choisi",
-      "starter": {
-        "name": "Starter",
-        "description": "Pour les petites équipes",
-        "feature1": "Jusqu'à 20 collaborateurs",
-        "feature2": "Tableau de bord simplifié",
-        "feature3": "Support par email"
-      },
       "business": {
         "name": "Business",
-        "description": "Pour les équipes en croissance",
-        "feature1": "Jusqu'à 100 collaborateurs",
-        "feature2": "Statistiques avancées",
-        "feature3": "SSO (prochainement)",
-        "feature4": "Support prioritaire"
+        "description": "Pour les équipes qui démarrent",
+        "feature1": "Équipes illimitées",
+        "feature2": "Analytics complets",
+        "feature3": "Multi-administrateurs",
+        "feature4": "Support par email"
+      },
+      "pro": {
+        "name": "Business Pro",
+        "description": "Pour une confidentialité maximale",
+        "feature1": "Tout de Business +",
+        "feature2": "Application d'anonymisation",
+        "feature3": "Données traitées localement",
+        "feature4": "Support prioritaire",
+        "feature5": "Onboarding personnalisé"
       },
       "enterprise": {
         "name": "Enterprise",
         "description": "Pour les grandes structures",
         "price": "Sur mesure",
         "unit": "Contactez-nous",
-        "feature1": "Nombre illimité de collaborateurs",
+        "feature1": "SSO & SAML",
         "feature2": "Rapports personnalisés",
-        "feature3": "SSO & SAML",
+        "feature3": "API dédiée",
         "feature4": "Interlocuteur dédié"
       },
       "cta": "Essai gratuit 14 jours",
       "contact": "Nous contacter",
-      "note": "Les crédits IA sont facturés à la consommation. Exemple : un message Claude Sonnet revient à ~0.01-0.03€."
+      "note": "Minimum 5 collaborateurs (24,50€/mois pour Business, 49,50€/mois pour Pro). Crédits IA facturés à la consommation."
     },
     "security": {
       "title": "Pensé pour les entreprises",
