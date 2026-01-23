@@ -63,6 +63,10 @@ export const pathnames = {
     fr: '/business',
     en: '/business',
   },
+  '/business/anonymisation': {
+    fr: '/business/anonymisation',
+    en: '/business/anonymization',
+  },
   '/auth/login': '/auth/login',
   '/auth/signup': '/auth/signup',
   '/auth/forgot-password': '/auth/forgot-password',

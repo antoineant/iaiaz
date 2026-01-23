@@ -85,6 +85,13 @@
       "keywords": "enterprise ai, chatgpt team alternative, claude team alternative, multi-model ai, pay per use ai, enterprise ai analytics",
       "ogTitle": "iaiaz Business - AI for your teams without overpaying",
       "ogDescription": "Multi-model (Claude, GPT, Gemini, Mistral) with pay-per-use and detailed analytics. Control your costs."
+    },
+    "anonymisation": {
+      "title": "AI Anonymization - Protect Your Confidential Data | iaiaz Business",
+      "description": "Local anonymization app to use AI safely. Your sensitive data never leaves your computer. GDPR native, trade secrets protected.",
+      "keywords": "ai anonymization, chatgpt gdpr, ai confidential data, data protection ai, secure enterprise chatgpt, confidential ai, local anonymization, gdpr ai enterprise, data privacy ai",
+      "ogTitle": "AI Anonymization - Use ChatGPT and Claude Risk-Free",
+      "ogDescription": "Our app anonymizes your data locally before sending to AI. Zero leakage of personal data or trade secrets."
     }
   },
   "common": {
@@ -2744,9 +2751,201 @@
       "demo": "Request a personalized demo",
       "note": "Questions? contact@iaiaz.com"
     },
+    "anonymization": {
+      "badge": "iaiaz Exclusive",
+      "title": "Your confidential data never leaves your computer",
+      "subtitle": "Our anonymization app processes your data locally before any AI request. Zero risk of leaks.",
+      "flow": {
+        "step1": {
+          "title": "Your prompt",
+          "description": "With sensitive data"
+        },
+        "step2": {
+          "title": "Local app",
+          "description": "Anonymization on your PC"
+        },
+        "step3": {
+          "title": "Secure AI",
+          "description": "Anonymous data only"
+        }
+      },
+      "example": {
+        "title": "Real example",
+        "before": "Before anonymization",
+        "beforeText": "Write an email to John Smith (john.smith@acme.com) about contract #12345 worth $50,000",
+        "after": "Sent to AI",
+        "afterText": "Write an email to [PERSON_1] ([EMAIL_1]) about contract [REF_1] worth [AMOUNT_1]"
+      },
+      "benefits": {
+        "gdpr": {
+          "title": "GDPR Native",
+          "description": "No personal data ever reaches AI servers. Compliance guaranteed."
+        },
+        "secrets": {
+          "title": "Secrets Protected",
+          "description": "Client names, amounts, references... everything is masked automatically."
+        },
+        "reversible": {
+          "title": "100% Reversible",
+          "description": "AI responses are de-anonymized locally with the real values."
+        }
+      },
+      "cta": "Learn more about anonymization"
+    },
     "breadcrumb": {
       "home": "Home",
       "business": "Business"
+    }
+  },
+  "anonymisationPage": {
+    "hero": {
+      "badge": "Data Protection",
+      "title": "Use AI without ever",
+      "titleHighlight": "exposing your sensitive data",
+      "subtitle": "Our desktop app automatically anonymizes your prompts before sending to AI. Names, emails, amounts, references... everything is masked locally on your computer.",
+      "cta": "Try for free",
+      "ctaSecondary": "Request a demo",
+      "feature1": "100% local processing",
+      "feature2": "GDPR native",
+      "feature3": "Auto-reversible"
+    },
+    "problem": {
+      "title": "The problem with AI in business",
+      "subtitle": "Every prompt sent to ChatGPT or Claude potentially contains sensitive data",
+      "training": {
+        "title": "Training risk",
+        "description": "Your data may be used to train AI models, exposing your confidential information."
+      },
+      "gdpr": {
+        "title": "GDPR non-compliance",
+        "description": "Sending personal data (names, emails) to US servers potentially violates GDPR."
+      },
+      "secrets": {
+        "title": "Secret leaks",
+        "description": "Client names, contract amounts, strategies... everything can leak through your prompts."
+      }
+    },
+    "howItWorks": {
+      "title": "How anonymization works",
+      "subtitle": "A simple 3-step process, fully automated",
+      "step1": {
+        "title": "You write",
+        "description": "Write your prompt normally with all the information you need"
+      },
+      "step2": {
+        "title": "Local anonymization",
+        "description": "The app automatically detects and replaces sensitive data on your PC"
+      },
+      "step3": {
+        "title": "Secure AI",
+        "description": "Only the anonymized prompt is sent. The response is de-anonymized locally."
+      },
+      "keyPoint": "Sensitive data NEVER leaves your computer",
+      "example": {
+        "title": "See the difference",
+        "original": "What you write",
+        "originalText": "Write a payment reminder email to Marie Martin (m.martin@client-xyz.com) about invoice F-2024-0892 for $127,500, overdue since January 15th.",
+        "anonymized": "What's sent to AI",
+        "anonymizedText": "Write a payment reminder email to [PERSON_1] ([EMAIL_1]) about invoice [REF_1] for [AMOUNT_1], overdue since [DATE_1].",
+        "note": "The AI response is automatically de-anonymized with the real values"
+      }
+    },
+    "dataTypes": {
+      "title": "Automatically detected data",
+      "subtitle": "The app recognizes and anonymizes over 15 types of sensitive data",
+      "types": {
+        "names": "People's names",
+        "emails": "Email addresses",
+        "phones": "Phone numbers",
+        "addresses": "Postal addresses",
+        "iban": "IBAN and bank details",
+        "dates": "Sensitive dates",
+        "companies": "Company names",
+        "custom": "Custom patterns"
+      }
+    },
+    "industries": {
+      "title": "Adapted to your industry",
+      "subtitle": "Concrete use cases for every profession",
+      "legal": {
+        "title": "Legal & Law Firms",
+        "description": "Protect professional secrecy while using AI to accelerate your work.",
+        "useCase1": "Contract analysis with masked party names",
+        "useCase2": "Case law research without exposing your clients",
+        "useCase3": "Anonymized brief writing"
+      },
+      "finance": {
+        "title": "Finance & Banking",
+        "description": "Regulatory compliance and client data protection guaranteed.",
+        "useCase1": "Anonymized credit file analysis",
+        "useCase2": "Confidential financial report summaries",
+        "useCase3": "Automation without client data leaks"
+      },
+      "healthcare": {
+        "title": "Healthcare & Medical",
+        "description": "Respect medical confidentiality while benefiting from AI.",
+        "useCase1": "Anonymized patient file summaries",
+        "useCase2": "Diagnostic assistance without identifying data",
+        "useCase3": "Protected medical report writing"
+      },
+      "hr": {
+        "title": "Human Resources",
+        "description": "Manage your HR processes with AI in complete confidentiality.",
+        "useCase1": "CV analysis without bias (masked names)",
+        "useCase2": "Anonymized performance reviews",
+        "useCase3": "Protected salary data processing"
+      }
+    },
+    "comparison": {
+      "title": "Why iaiaz is different",
+      "subtitle": "The only solution with built-in local anonymization",
+      "chatgpt": "ChatGPT Team",
+      "claude": "Claude Team",
+      "localAnon": "Local anonymization",
+      "noDataLeaks": "Zero data leaks",
+      "gdprCompliant": "Full GDPR compliance",
+      "reversible": "Auto de-anonymization",
+      "auditTrail": "Audit trail",
+      "partial": "Partial"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "howItWorks": {
+        "question": "How does anonymization work technically?",
+        "answer": "The app uses named entity recognition (NER) algorithms and regex patterns to detect sensitive data. Processing happens entirely on your computer, with no external connection. Data is replaced with unique tokens that enable de-anonymization after the AI responds."
+      },
+      "dataTypes": {
+        "question": "What types of data are detected?",
+        "answer": "People's names, emails, phone numbers, addresses, IBANs, social security numbers, dates, amounts, company names, document references, and more. You can also define your own custom patterns."
+      },
+      "reversible": {
+        "question": "How does de-anonymization work?",
+        "answer": "Each anonymized piece of data is associated with a unique token (e.g., [PERSON_1]). When the AI responds with that token, the app automatically replaces it with the original value. Everything happens locally—the mapping is never sent to a server."
+      },
+      "platforms": {
+        "question": "What platforms is the app available on?",
+        "answer": "The desktop app is available on Windows and macOS. A Linux version is in development. Anonymization works with all models available on iaiaz (Claude, GPT-4, Gemini, Mistral)."
+      },
+      "offline": {
+        "question": "Does the app work offline?",
+        "answer": "Anonymization and de-anonymization work entirely offline. Only sending the anonymized prompt to AI requires an internet connection."
+      },
+      "pricing": {
+        "question": "Is anonymization included in the subscription?",
+        "answer": "The anonymization app is included in Business Pro at $9.90/employee/month. It's not available with the standard Business plan."
+      }
+    },
+    "cta": {
+      "title": "Ready to use AI safely?",
+      "subtitle": "Try anonymization free for 14 days. No credit card required.",
+      "button": "Start free trial",
+      "learnMore": "Back to iaiaz Business",
+      "note": "Included in Business Pro • Priority support • Personalized onboarding"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "business": "Business",
+      "anonymisation": "Anonymization"
     }
   }
 }

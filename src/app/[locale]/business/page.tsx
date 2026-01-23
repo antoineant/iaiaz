@@ -20,6 +20,10 @@ import {
   Code,
   TrendingUp,
   Briefcase,
+  ShieldCheck,
+  Laptop,
+  Cloud,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -331,6 +335,121 @@ export default async function BusinessPage({ params }: Props) {
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </section>
+
+        {/* Anonymization Section - Key Differentiator */}
+        <section className="bg-gradient-to-b from-green-50 to-white dark:from-green-950/30 dark:to-[var(--background)] py-16 md:py-24">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-sm font-medium mb-6">
+                <ShieldCheck className="w-4 h-4" />
+                {t("anonymization.badge")}
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                {t("anonymization.title")}
+              </h2>
+              <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto">
+                {t("anonymization.subtitle")}
+              </p>
+            </div>
+
+            {/* Visual Flow Diagram */}
+            <div className="bg-white dark:bg-[var(--background)] rounded-2xl border border-[var(--border)] p-8 md:p-12 mb-12">
+              <div className="grid md:grid-cols-5 gap-4 items-center">
+                {/* Step 1: User Input */}
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                    <FileText className="w-8 h-8 text-red-600 dark:text-red-400" />
+                  </div>
+                  <p className="font-medium text-sm mb-1">{t("anonymization.flow.step1.title")}</p>
+                  <p className="text-xs text-[var(--muted-foreground)]">{t("anonymization.flow.step1.description")}</p>
+                </div>
+
+                {/* Arrow */}
+                <div className="hidden md:flex justify-center">
+                  <ArrowRight className="w-6 h-6 text-[var(--muted-foreground)]" />
+                </div>
+
+                {/* Step 2: Local App */}
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center border-2 border-green-500">
+                    <Laptop className="w-8 h-8 text-green-600 dark:text-green-400" />
+                  </div>
+                  <p className="font-medium text-sm mb-1">{t("anonymization.flow.step2.title")}</p>
+                  <p className="text-xs text-[var(--muted-foreground)]">{t("anonymization.flow.step2.description")}</p>
+                </div>
+
+                {/* Arrow */}
+                <div className="hidden md:flex justify-center">
+                  <ArrowRight className="w-6 h-6 text-[var(--muted-foreground)]" />
+                </div>
+
+                {/* Step 3: Cloud AI */}
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                    <Cloud className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <p className="font-medium text-sm mb-1">{t("anonymization.flow.step3.title")}</p>
+                  <p className="text-xs text-[var(--muted-foreground)]">{t("anonymization.flow.step3.description")}</p>
+                </div>
+              </div>
+
+              {/* Example */}
+              <div className="mt-8 pt-8 border-t border-[var(--border)]">
+                <p className="text-center text-sm font-medium mb-4">{t("anonymization.example.title")}</p>
+                <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                  <div className="bg-red-50 dark:bg-red-950/30 rounded-lg p-4 border border-red-200 dark:border-red-800">
+                    <p className="text-xs font-medium text-red-600 dark:text-red-400 mb-2">{t("anonymization.example.before")}</p>
+                    <p className="text-sm font-mono">{t("anonymization.example.beforeText")}</p>
+                  </div>
+                  <div className="bg-green-50 dark:bg-green-950/30 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                    <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-2">{t("anonymization.example.after")}</p>
+                    <p className="text-sm font-mono">{t("anonymization.example.afterText")}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Benefits Grid */}
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <Card className="border-green-200 dark:border-green-800">
+                <CardContent className="pt-6">
+                  <Shield className="w-8 h-8 text-green-600 dark:text-green-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("anonymization.benefits.gdpr.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("anonymization.benefits.gdpr.description")}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-green-200 dark:border-green-800">
+                <CardContent className="pt-6">
+                  <Lock className="w-8 h-8 text-green-600 dark:text-green-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("anonymization.benefits.secrets.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("anonymization.benefits.secrets.description")}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-green-200 dark:border-green-800">
+                <CardContent className="pt-6">
+                  <RefreshCw className="w-8 h-8 text-green-600 dark:text-green-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("anonymization.benefits.reversible.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("anonymization.benefits.reversible.description")}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* CTA */}
+            <div className="text-center">
+              <Link href="/business/anonymisation">
+                <Button size="lg" variant="outline" className="border-green-500 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-950/30">
+                  {t("anonymization.cta")} <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
 

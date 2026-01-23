@@ -85,6 +85,13 @@
       "keywords": "ia entreprise, chatgpt team alternative, claude team alternative, ia multi-modèles, ia facturation usage, suivi ia entreprise",
       "ogTitle": "iaiaz Business - L'IA pour vos équipes sans gaspiller",
       "ogDescription": "Tous les modèles IA (Claude, GPT, Gemini, Mistral) avec facturation à l'usage et suivi détaillé. Gardez le contrôle sur vos coûts."
+    },
+    "anonymisation": {
+      "title": "Anonymisation IA - Protégez vos données confidentielles | iaiaz Business",
+      "description": "Application d'anonymisation locale pour utiliser l'IA en toute sécurité. Vos données sensibles ne quittent jamais votre ordinateur. RGPD natif, secrets d'affaires protégés.",
+      "keywords": "anonymisation ia, chatgpt rgpd, ia données confidentielles, protection données ia, chatgpt entreprise sécurisé, ia confidentiel, anonymisation locale, rgpd ia entreprise",
+      "ogTitle": "Anonymisation IA - Utilisez ChatGPT et Claude sans risque",
+      "ogDescription": "Notre application anonymise vos données localement avant envoi à l'IA. Zéro fuite de données personnelles ou secrets d'affaires."
     }
   },
   "common": {
@@ -2744,9 +2751,201 @@
       "demo": "Demander une démo sur mesure",
       "note": "Des questions ? contact@iaiaz.com"
     },
+    "anonymization": {
+      "badge": "Exclusivité iaiaz",
+      "title": "Vos données confidentielles ne quittent jamais votre ordinateur",
+      "subtitle": "Notre application d'anonymisation traite vos données localement avant tout envoi à l'IA. Zéro risque de fuite.",
+      "flow": {
+        "step1": {
+          "title": "Votre prompt",
+          "description": "Avec données sensibles"
+        },
+        "step2": {
+          "title": "App locale",
+          "description": "Anonymisation sur votre PC"
+        },
+        "step3": {
+          "title": "IA sécurisée",
+          "description": "Données anonymes uniquement"
+        }
+      },
+      "example": {
+        "title": "Exemple concret",
+        "before": "Avant anonymisation",
+        "beforeText": "Rédige un email pour Jean Dupont (jean.dupont@acme.fr) concernant le contrat #12345 de 50 000€",
+        "after": "Envoyé à l'IA",
+        "afterText": "Rédige un email pour [PERSONNE_1] ([EMAIL_1]) concernant le contrat [REF_1] de [MONTANT_1]"
+      },
+      "benefits": {
+        "gdpr": {
+          "title": "RGPD natif",
+          "description": "Aucune donnée personnelle ne transite vers les serveurs IA. Conformité garantie."
+        },
+        "secrets": {
+          "title": "Secrets protégés",
+          "description": "Noms de clients, montants, références... tout est masqué automatiquement."
+        },
+        "reversible": {
+          "title": "100% réversible",
+          "description": "La réponse de l'IA est dé-anonymisée localement avec les vraies valeurs."
+        }
+      },
+      "cta": "En savoir plus sur l'anonymisation"
+    },
     "breadcrumb": {
       "home": "Accueil",
       "business": "Entreprises"
+    }
+  },
+  "anonymisationPage": {
+    "hero": {
+      "badge": "Protection des données",
+      "title": "Utilisez l'IA sans jamais",
+      "titleHighlight": "exposer vos données sensibles",
+      "subtitle": "Notre application desktop anonymise automatiquement vos prompts avant envoi à l'IA. Noms, emails, montants, références... tout est masqué localement sur votre ordinateur.",
+      "cta": "Essayer gratuitement",
+      "ctaSecondary": "Demander une démo",
+      "feature1": "Traitement 100% local",
+      "feature2": "RGPD natif",
+      "feature3": "Réversible automatiquement"
+    },
+    "problem": {
+      "title": "Le problème avec l'IA en entreprise",
+      "subtitle": "Chaque prompt envoyé à ChatGPT ou Claude contient potentiellement des données sensibles",
+      "training": {
+        "title": "Risque d'entraînement",
+        "description": "Vos données peuvent être utilisées pour entraîner les modèles IA, exposant vos informations confidentielles."
+      },
+      "gdpr": {
+        "title": "Non-conformité RGPD",
+        "description": "Envoyer des données personnelles (noms, emails) à des serveurs US viole potentiellement le RGPD."
+      },
+      "secrets": {
+        "title": "Fuite de secrets",
+        "description": "Noms de clients, montants de contrats, stratégies... tout peut fuiter via vos prompts."
+      }
+    },
+    "howItWorks": {
+      "title": "Comment fonctionne l'anonymisation",
+      "subtitle": "Un processus simple en 3 étapes, entièrement automatisé",
+      "step1": {
+        "title": "Vous écrivez",
+        "description": "Rédigez votre prompt normalement avec toutes les informations nécessaires"
+      },
+      "step2": {
+        "title": "Anonymisation locale",
+        "description": "L'app détecte et remplace automatiquement les données sensibles sur votre PC"
+      },
+      "step3": {
+        "title": "IA sécurisée",
+        "description": "Seul le prompt anonymisé est envoyé. La réponse est dé-anonymisée localement."
+      },
+      "keyPoint": "Les données sensibles ne quittent JAMAIS votre ordinateur",
+      "example": {
+        "title": "Voyez la différence",
+        "original": "Ce que vous écrivez",
+        "originalText": "Rédige un email de relance pour Marie Martin (m.martin@client-xyz.com) au sujet de la facture F-2024-0892 de 127 500€ HT, en retard de paiement depuis le 15 janvier.",
+        "anonymized": "Ce qui est envoyé à l'IA",
+        "anonymizedText": "Rédige un email de relance pour [PERSONNE_1] ([EMAIL_1]) au sujet de la facture [REF_1] de [MONTANT_1], en retard de paiement depuis le [DATE_1].",
+        "note": "La réponse de l'IA est automatiquement dé-anonymisée avec les vraies valeurs"
+      }
+    },
+    "dataTypes": {
+      "title": "Données automatiquement détectées",
+      "subtitle": "L'application reconnaît et anonymise plus de 15 types de données sensibles",
+      "types": {
+        "names": "Noms de personnes",
+        "emails": "Adresses email",
+        "phones": "Numéros de téléphone",
+        "addresses": "Adresses postales",
+        "iban": "IBAN et coordonnées bancaires",
+        "dates": "Dates sensibles",
+        "companies": "Noms d'entreprises",
+        "custom": "Patterns personnalisés"
+      }
+    },
+    "industries": {
+      "title": "Adapté à votre secteur",
+      "subtitle": "Des cas d'usage concrets pour chaque métier",
+      "legal": {
+        "title": "Juridique & Avocats",
+        "description": "Protégez le secret professionnel tout en utilisant l'IA pour accélérer votre travail.",
+        "useCase1": "Analyse de contrats avec noms de parties masqués",
+        "useCase2": "Recherche jurisprudentielle sans exposer vos clients",
+        "useCase3": "Rédaction de conclusions anonymisées"
+      },
+      "finance": {
+        "title": "Finance & Banque",
+        "description": "Conformité réglementaire et protection des données clients garanties.",
+        "useCase1": "Analyse de dossiers de crédit anonymisés",
+        "useCase2": "Synthèse de rapports financiers confidentiels",
+        "useCase3": "Automatisation sans fuite de données client"
+      },
+      "healthcare": {
+        "title": "Santé & Médical",
+        "description": "Respectez le secret médical tout en bénéficiant de l'IA.",
+        "useCase1": "Synthèse de dossiers patients anonymisés",
+        "useCase2": "Aide au diagnostic sans données identifiantes",
+        "useCase3": "Rédaction de comptes-rendus protégés"
+      },
+      "hr": {
+        "title": "Ressources Humaines",
+        "description": "Gérez vos processus RH avec l'IA en toute confidentialité.",
+        "useCase1": "Analyse de CV sans biais (noms masqués)",
+        "useCase2": "Rédaction d'évaluations anonymisées",
+        "useCase3": "Traitement de données salariales protégées"
+      }
+    },
+    "comparison": {
+      "title": "Pourquoi iaiaz est différent",
+      "subtitle": "La seule solution avec anonymisation locale intégrée",
+      "chatgpt": "ChatGPT Team",
+      "claude": "Claude Team",
+      "localAnon": "Anonymisation locale",
+      "noDataLeaks": "Zéro fuite de données",
+      "gdprCompliant": "Conformité RGPD totale",
+      "reversible": "Dé-anonymisation auto",
+      "auditTrail": "Piste d'audit",
+      "partial": "Partiel"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "howItWorks": {
+        "question": "Comment fonctionne techniquement l'anonymisation ?",
+        "answer": "L'application utilise des algorithmes de reconnaissance d'entités nommées (NER) et des patterns regex pour détecter les données sensibles. Le traitement se fait entièrement sur votre ordinateur, sans aucune connexion externe. Les données sont remplacées par des tokens uniques qui permettent la dé-anonymisation après réponse de l'IA."
+      },
+      "dataTypes": {
+        "question": "Quels types de données sont détectés ?",
+        "answer": "Noms de personnes, emails, numéros de téléphone, adresses, IBAN, numéros de sécurité sociale, dates, montants, noms d'entreprises, références de documents, et bien plus. Vous pouvez aussi définir vos propres patterns personnalisés."
+      },
+      "reversible": {
+        "question": "Comment fonctionne la dé-anonymisation ?",
+        "answer": "Chaque donnée anonymisée est associée à un token unique (ex: [PERSONNE_1]). Quand l'IA répond avec ce token, l'application le remplace automatiquement par la valeur originale. Tout se passe localement, la correspondance n'est jamais envoyée sur un serveur."
+      },
+      "platforms": {
+        "question": "Sur quelles plateformes l'application est-elle disponible ?",
+        "answer": "L'application desktop est disponible sur Windows et macOS. Une version Linux est en développement. L'anonymisation fonctionne avec tous les modèles disponibles sur iaiaz (Claude, GPT-4, Gemini, Mistral)."
+      },
+      "offline": {
+        "question": "L'application fonctionne-t-elle hors ligne ?",
+        "answer": "L'anonymisation et la dé-anonymisation fonctionnent entièrement hors ligne. Seul l'envoi du prompt anonymisé à l'IA nécessite une connexion internet."
+      },
+      "pricing": {
+        "question": "L'anonymisation est-elle incluse dans l'abonnement ?",
+        "answer": "L'application d'anonymisation est incluse dans l'offre Business Pro à 9,90€/collaborateur/mois. Elle n'est pas disponible avec l'offre Business standard."
+      }
+    },
+    "cta": {
+      "title": "Prêt à utiliser l'IA en toute sécurité ?",
+      "subtitle": "Essayez l'anonymisation gratuitement pendant 14 jours. Aucune carte bancaire requise.",
+      "button": "Démarrer l'essai gratuit",
+      "learnMore": "Retour à iaiaz Business",
+      "note": "Inclus dans l'offre Business Pro • Support prioritaire • Onboarding personnalisé"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "business": "Entreprises",
+      "anonymisation": "Anonymisation"
     }
   }
 }
