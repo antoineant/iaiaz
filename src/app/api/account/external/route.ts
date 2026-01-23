@@ -34,34 +34,21 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Look up the API key to find the user
-    const { data: keyData, error: keyError } = await supabase
-      .from('api_keys')
-      .select('user_id, name')
-      .eq('key', apiKey)
-      .eq('is_active', true)
+    // Look up the API key in profiles table
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, email, credits')
+      .eq('api_key', apiKey)
       .single();
 
-    if (keyError || !keyData) {
+    if (profileError || !profile) {
       return NextResponse.json(
         { error: 'Invalid API key' },
         { status: 401, headers }
       );
     }
 
-    // Get user information
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('id, email, credits')
-      .eq('id', keyData.user_id)
-      .single();
-
-    if (userError || !userData) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404, headers }
-      );
-    }
+    const userData = profile;
 
     // Get organization membership and subscription info
     let plan: string | null = null;

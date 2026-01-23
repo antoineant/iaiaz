@@ -51,38 +51,12 @@ function DesktopAuthContent() {
         return;
       }
 
-      // Get or create API key for desktop app
-      let apiKey: string;
+      // Get or create API key using RPC function
+      const { data: apiKey, error: rpcError } = await supabase
+        .rpc("get_or_create_api_key");
 
-      // Check if user already has a desktop app API key
-      const { data: existingKey } = await supabase
-        .from("api_keys")
-        .select("key")
-        .eq("user_id", user.id)
-        .eq("name", "Desktop App")
-        .eq("is_active", true)
-        .single();
-
-      if (existingKey) {
-        apiKey = existingKey.key;
-      } else {
-        // Create a new API key
-        const newKey = `iaiaz_${crypto.randomUUID().replace(/-/g, "")}`;
-
-        const { error: insertError } = await supabase
-          .from("api_keys")
-          .insert({
-            user_id: user.id,
-            key: newKey,
-            name: "Desktop App",
-            is_active: true,
-          });
-
-        if (insertError) {
-          throw new Error("Impossible de créer la clé API");
-        }
-
-        apiKey = newKey;
+      if (rpcError || !apiKey) {
+        throw new Error("Impossible de créer la clé API");
       }
 
       // Redirect to desktop app via deep link
