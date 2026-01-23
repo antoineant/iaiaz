@@ -34,6 +34,8 @@ export async function GET(request: NextRequest) {
 
     const supabase = createAdminClient();
 
+    console.log('[account/external] Looking up API key:', apiKey.substring(0, 15) + '...');
+
     // Look up the API key in profiles table
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -41,9 +43,12 @@ export async function GET(request: NextRequest) {
       .eq('api_key', apiKey)
       .single();
 
+    console.log('[account/external] Query result:', { profile, error: profileError });
+
     if (profileError || !profile) {
+      console.log('[account/external] Invalid API key - profileError:', profileError);
       return NextResponse.json(
-        { error: 'Invalid API key' },
+        { error: 'Invalid API key', debug: profileError?.message },
         { status: 401, headers }
       );
     }
