@@ -10,7 +10,7 @@ import { Message } from "@/components/chat/message";
 import { ChatInput, type RateLimitInfo } from "@/components/chat/chat-input";
 import type { Conversation, ChatMessage, FileAttachment } from "@/types";
 import type { PricingData } from "@/lib/pricing-db";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Brain, AlertTriangle } from "lucide-react";
 
 interface OrgContext {
   orgName: string;
@@ -82,6 +82,12 @@ export function ChatClient({
   const [rateLimit, setRateLimit] = useState<RateLimitInfo | null>(null);
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
   const [classes, setClasses] = useState<StudentClass[]>([]);
+  const [enableThinking, setEnableThinking] = useState(false);
+
+  // Check if current model supports extended thinking
+  const supportsThinking = model.includes("claude-3-7") ||
+                           model.includes("claude-sonnet-4") ||
+                           model.includes("claude-opus-4");
 
   // Fetch student classes on mount
   useEffect(() => {
@@ -181,14 +187,15 @@ export function ChatClient({
 
     // Add placeholder for assistant
     const assistantMessageId = crypto.randomUUID();
+    const thinkingEnabled = supportsThinking && enableThinking;
     setMessages((prev) => [
       ...prev,
       {
         id: assistantMessageId,
         role: "assistant",
         content: "",
-        thinking: "",
-        isThinking: true,
+        thinking: thinkingEnabled ? "" : undefined,
+        isThinking: thinkingEnabled,
         isStreaming: true,
       },
     ]);
@@ -209,6 +216,7 @@ export function ChatClient({
           })),
           attachments: attachments?.map((a) => a.id) || [],
           stream: true,
+          enableThinking: supportsThinking && enableThinking,
         }),
       });
 
@@ -398,14 +406,40 @@ export function ChatClient({
         {/* Header */}
         <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background)]">
           <div className="lg:hidden w-10" /> {/* Spacer for mobile menu */}
-          <ModelSelector
-            value={model}
-            onChange={setModel}
-            models={pricingData.models}
-            markupMultiplier={pricingData.settings.markupMultiplier}
-          />
-          <div className="text-sm text-[var(--muted-foreground)]">
-            {t("sidebar.balance")}: <span className="font-medium">{balance.toFixed(2)}€</span>
+          <div className="flex items-center gap-3">
+            <ModelSelector
+              value={model}
+              onChange={setModel}
+              models={pricingData.models}
+              markupMultiplier={pricingData.settings.markupMultiplier}
+            />
+            {/* Extended Thinking Toggle */}
+            {supportsThinking && (
+              <button
+                onClick={() => setEnableThinking(!enableThinking)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  enableThinking
+                    ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700"
+                    : "bg-[var(--muted)] text-[var(--muted-foreground)] hover:bg-[var(--muted)]/80 border border-transparent"
+                }`}
+                title={t("thinking.tooltip")}
+              >
+                <Brain className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("thinking.label")}</span>
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {/* Cost warning when thinking enabled */}
+            {enableThinking && supportsThinking && (
+              <div className="hidden md:flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                <span>{t("thinking.costWarning")}</span>
+              </div>
+            )}
+            <div className="text-sm text-[var(--muted-foreground)]">
+              {t("sidebar.balance")}: <span className="font-medium">{balance.toFixed(2)}€</span>
+            </div>
           </div>
         </header>
 

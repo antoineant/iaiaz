@@ -340,6 +340,11 @@
       "placeholder": "Choisir un modèle",
       "recommended": "Recommandé",
       "price": "{price}€ / 1K tokens entrée"
+    },
+    "thinking": {
+      "label": "Réflexion",
+      "tooltip": "Activer la réflexion étendue - L'IA montre son processus de raisonnement (coût supplémentaire)",
+      "costWarning": "~5x plus cher"
     }
   },
   "dashboard": {

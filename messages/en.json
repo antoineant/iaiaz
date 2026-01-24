@@ -340,6 +340,11 @@
       "placeholder": "Choose a model",
       "recommended": "Recommended",
       "price": "${price} / 1K input tokens"
+    },
+    "thinking": {
+      "label": "Thinking",
+      "tooltip": "Enable extended thinking - AI shows its reasoning process (extra cost)",
+      "costWarning": "~5x more expensive"
     }
   },
   "dashboard": {

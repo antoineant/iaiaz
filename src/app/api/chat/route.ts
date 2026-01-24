@@ -32,6 +32,7 @@ interface ChatRequest {
   messages?: Array<{ role: "user" | "assistant"; content: string }>;
   attachments?: string[]; // Array of file IDs for current message
   stream?: boolean;
+  enableThinking?: boolean; // Enable Claude Extended Thinking (costs more tokens)
 }
 
 // Build multimodal content from text and attachments
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: ChatRequest = await request.json();
-    const { message, model, conversationId, messages = [], attachments = [], stream = false } = body;
+    const { message, model, conversationId, messages = [], attachments = [], stream = false, enableThinking = false } = body;
 
     // Require either message or attachments
     if (!message?.trim() && attachments.length === 0) {
@@ -301,10 +302,12 @@ export async function POST(request: NextRequest) {
                 const data = JSON.stringify({ type: "chunk", content: chunk });
                 controller.enqueue(encoder.encode(`data: ${data}\n\n`));
               },
-              (thinkingChunk) => {
-                const data = JSON.stringify({ type: "thinking", content: thinkingChunk });
-                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
-              }
+              enableThinking
+                ? (thinkingChunk) => {
+                    const data = JSON.stringify({ type: "thinking", content: thinkingChunk });
+                    controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+                  }
+                : undefined
             );
 
             // Calculate actual cost
