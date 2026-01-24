@@ -17,6 +17,9 @@ import {
   Copy,
   Check,
   Leaf,
+  Brain,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import { formatFileSize } from "@/lib/files";
 
@@ -147,6 +150,46 @@ function AttachmentPreview({ attachment }: { attachment: FileAttachment }) {
   );
 }
 
+function ThinkingBlock({
+  thinking,
+  isThinking,
+  thinkingLabel,
+}: {
+  thinking: string;
+  isThinking?: boolean;
+  thinkingLabel: string;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!thinking && !isThinking) return null;
+
+  return (
+    <div className="mb-3 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 overflow-hidden">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+      >
+        {isThinking ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Brain className="w-4 h-4" />
+        )}
+        <span>{thinkingLabel}</span>
+        {isExpanded ? (
+          <ChevronDown className="w-4 h-4 ml-auto" />
+        ) : (
+          <ChevronRight className="w-4 h-4 ml-auto" />
+        )}
+      </button>
+      {isExpanded && thinking && (
+        <div className="px-3 pb-3 text-sm text-purple-900 dark:text-purple-100 whitespace-pre-wrap border-t border-purple-200 dark:border-purple-800 pt-2 max-h-64 overflow-y-auto">
+          {thinking}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Message({ message }: MessageProps) {
   const t = useTranslations("chat.message");
   const isUser = message.role === "user";
@@ -194,8 +237,17 @@ export function Message({ message }: MessageProps) {
           </div>
         )}
 
+        {/* Thinking block for Claude extended thinking */}
+        {!isUser && (message.thinking || message.isThinking) && (
+          <ThinkingBlock
+            thinking={message.thinking || ""}
+            isThinking={message.isThinking}
+            thinkingLabel={t("thinkingProcess")}
+          />
+        )}
+
         <div className="prose prose-sm max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent">
-          {message.isStreaming ? (
+          {message.isStreaming && !message.content && !message.thinking ? (
             <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>{t("thinking")}</span>

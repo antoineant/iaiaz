@@ -93,6 +93,8 @@ export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
+  thinking?: string;
+  isThinking?: boolean;
   cost?: number;
   co2Grams?: number;
   tokens?: {

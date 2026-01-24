@@ -333,7 +333,8 @@
       "assistant": "Assistant",
       "copied": "Copied!",
       "copy": "Copy",
-      "thinking": "Thinking..."
+      "thinking": "Thinking...",
+      "thinkingProcess": "Thinking process"
     },
     "modelSelector": {
       "placeholder": "Choose a model",

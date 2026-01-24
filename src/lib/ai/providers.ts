@@ -15,11 +15,13 @@ interface AIResponse {
   tokensOutput: number;
 }
 
-// Streaming callback type
+// Streaming callback types
 export type StreamCallback = (chunk: string) => void;
+export type ThinkingCallback = (chunk: string) => void;
 
 interface AIStreamResponse {
   content: string;
+  thinking?: string;
   tokensInput: number;
   tokensOutput: number;
 }
@@ -283,7 +285,8 @@ async function callMistral(
 async function callAnthropicStream(
   model: string,
   messages: UnifiedMessage[],
-  onChunk: StreamCallback
+  onChunk: StreamCallback,
+  onThinking?: ThinkingCallback
 ): Promise<AIStreamResponse> {
   const Anthropic = (await import("@anthropic-ai/sdk")).default;
   const client = new Anthropic({
@@ -327,21 +330,60 @@ async function callAnthropicStream(
   });
 
   let fullContent = "";
+  let fullThinking = "";
   let inputTokens = 0;
   let outputTokens = 0;
+  let currentBlockType: "thinking" | "text" | null = null;
 
-  const stream = await client.messages.stream({
+  // Check if model supports extended thinking (claude-3-7 and newer)
+  const supportsThinking = model.includes("claude-3-7") ||
+                           model.includes("claude-sonnet-4") ||
+                           model.includes("claude-opus-4");
+
+  // Build request options
+  const requestOptions: Parameters<typeof client.messages.stream>[0] = {
     model,
-    max_tokens: 4096,
+    max_tokens: supportsThinking ? 16000 : 4096,
     messages: anthropicMessages,
-  });
+  };
+
+  // Add thinking configuration for supported models
+  if (supportsThinking && onThinking) {
+    // @ts-expect-error - thinking is a beta feature
+    requestOptions.thinking = {
+      type: "enabled",
+      budget_tokens: 10000,
+    };
+  }
+
+  const stream = await client.messages.stream(requestOptions);
 
   for await (const event of stream) {
-    if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-      const text = event.delta.text;
-      fullContent += text;
-      onChunk(text);
+    // Track which block type we're in
+    if (event.type === "content_block_start") {
+      // @ts-expect-error - thinking block is beta
+      if (event.content_block?.type === "thinking") {
+        currentBlockType = "thinking";
+      } else if (event.content_block?.type === "text") {
+        currentBlockType = "text";
+      }
     }
+
+    // Handle content deltas
+    if (event.type === "content_block_delta") {
+      // @ts-expect-error - thinking_delta is beta
+      if (event.delta.type === "thinking_delta" && onThinking) {
+        // @ts-expect-error - thinking_delta is beta
+        const thinking = event.delta.thinking;
+        fullThinking += thinking;
+        onThinking(thinking);
+      } else if (event.delta.type === "text_delta") {
+        const text = event.delta.text;
+        fullContent += text;
+        onChunk(text);
+      }
+    }
+
     if (event.type === "message_delta" && event.usage) {
       outputTokens = event.usage.output_tokens;
     }
@@ -352,6 +394,7 @@ async function callAnthropicStream(
 
   return {
     content: fullContent,
+    thinking: fullThinking || undefined,
     tokensInput: inputTokens,
     tokensOutput: outputTokens,
   };
@@ -610,13 +653,14 @@ export async function callAI(
 export async function callAIStream(
   modelId: string,
   messages: UnifiedMessage[],
-  onChunk: StreamCallback
+  onChunk: StreamCallback,
+  onThinking?: ThinkingCallback
 ): Promise<AIStreamResponse> {
   const provider = getProvider(modelId);
 
   switch (provider) {
     case "anthropic":
-      return callAnthropicStream(modelId, messages, onChunk);
+      return callAnthropicStream(modelId, messages, onChunk, onThinking);
     case "openai":
       return callOpenAIStream(modelId, messages, onChunk);
     case "google":

@@ -294,10 +294,18 @@ export async function POST(request: NextRequest) {
       const readableStream = new ReadableStream({
         async start(controller) {
           try {
-            const aiResponse = await callAIStream(model, fullMessages, (chunk) => {
-              const data = JSON.stringify({ type: "chunk", content: chunk });
-              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
-            });
+            const aiResponse = await callAIStream(
+              model,
+              fullMessages,
+              (chunk) => {
+                const data = JSON.stringify({ type: "chunk", content: chunk });
+                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+              },
+              (thinkingChunk) => {
+                const data = JSON.stringify({ type: "thinking", content: thinkingChunk });
+                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+              }
+            );
 
             // Calculate actual cost
             const actualCost = await calculateCostFromDBAdmin(
@@ -362,6 +370,7 @@ export async function POST(request: NextRequest) {
               tokensOutput: aiResponse.tokensOutput,
               cost: actualCost,
               co2Grams: co2Grams,
+              thinking: aiResponse.thinking,
               conversationId: streamConversationId,
               rateLimit: {
                 remaining: rateLimitResult.remaining,

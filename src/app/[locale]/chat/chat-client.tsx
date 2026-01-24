@@ -187,6 +187,8 @@ export function ChatClient({
         id: assistantMessageId,
         role: "assistant",
         content: "",
+        thinking: "",
+        isThinking: true,
         isStreaming: true,
       },
     ]);
@@ -238,7 +240,9 @@ export function ChatClient({
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let streamedContent = "";
+      let streamedThinking = "";
       let lastUpdateTime = 0;
+      let lastThinkingUpdateTime = 0;
       const UPDATE_INTERVAL = 50; // Update UI every 50ms max
 
       if (reader) {
@@ -259,7 +263,21 @@ export function ChatClient({
               try {
                 const data = JSON.parse(line.slice(6));
 
-                if (data.type === "chunk") {
+                if (data.type === "thinking") {
+                  streamedThinking += data.content;
+                  // Throttle thinking UI updates
+                  const now = Date.now();
+                  if (now - lastThinkingUpdateTime > UPDATE_INTERVAL) {
+                    lastThinkingUpdateTime = now;
+                    setMessages((prev) =>
+                      prev.map((m) =>
+                        m.id === assistantMessageId
+                          ? { ...m, thinking: streamedThinking, isThinking: true }
+                          : m
+                      )
+                    );
+                  }
+                } else if (data.type === "chunk") {
                   streamedContent += data.content;
                   // Throttle UI updates to prevent lag
                   const now = Date.now();
@@ -268,7 +286,7 @@ export function ChatClient({
                     setMessages((prev) =>
                       prev.map((m) =>
                         m.id === assistantMessageId
-                          ? { ...m, content: streamedContent }
+                          ? { ...m, content: streamedContent, isThinking: false }
                           : m
                       )
                     );
@@ -281,12 +299,14 @@ export function ChatClient({
                         ? {
                             ...m,
                             content: streamedContent,
+                            thinking: data.thinking || streamedThinking,
                             cost: data.cost,
                             co2Grams: data.co2Grams,
                             tokens: {
                               input: data.tokensInput,
                               output: data.tokensOutput,
                             },
+                            isThinking: false,
                             isStreaming: false,
                           }
                         : m

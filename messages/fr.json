@@ -333,7 +333,8 @@
       "assistant": "Assistant",
       "copied": "Copié !",
       "copy": "Copier",
-      "thinking": "Réflexion en cours..."
+      "thinking": "Réflexion en cours...",
+      "thinkingProcess": "Processus de réflexion"
     },
     "modelSelector": {
       "placeholder": "Choisir un modèle",
