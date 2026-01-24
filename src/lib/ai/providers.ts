@@ -349,8 +349,7 @@ async function callAnthropicStream(
 
   // Add thinking configuration for supported models
   if (supportsThinking && onThinking) {
-    // @ts-expect-error - thinking is a beta feature
-    requestOptions.thinking = {
+    (requestOptions as Record<string, unknown>).thinking = {
       type: "enabled",
       budget_tokens: 10000,
     };
@@ -361,7 +360,6 @@ async function callAnthropicStream(
   for await (const event of stream) {
     // Track which block type we're in
     if (event.type === "content_block_start") {
-      // @ts-expect-error - thinking block is beta
       if (event.content_block?.type === "thinking") {
         currentBlockType = "thinking";
       } else if (event.content_block?.type === "text") {
@@ -371,10 +369,8 @@ async function callAnthropicStream(
 
     // Handle content deltas
     if (event.type === "content_block_delta") {
-      // @ts-expect-error - thinking_delta is beta
       if (event.delta.type === "thinking_delta" && onThinking) {
-        // @ts-expect-error - thinking_delta is beta
-        const thinking = event.delta.thinking;
+        const thinking = (event.delta as { type: "thinking_delta"; thinking: string }).thinking;
         fullThinking += thinking;
         onThinking(thinking);
       } else if (event.delta.type === "text_delta") {
