@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getModelsForDisplay, type ModelConfig } from "@/lib/models";
+import { getAppSettingsAdmin } from "@/lib/pricing-db";
 
 // CORS headers for desktop app
 const corsHeaders = {
@@ -25,6 +26,9 @@ interface ExternalModel {
     images: boolean;
     pdf: boolean;
   };
+  // Pricing (per million tokens, in USD)
+  inputPrice: number;
+  outputPrice: number;
 }
 
 /**
@@ -63,8 +67,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Get all active models
-    const models = await getModelsForDisplay();
+    // Get all active models and pricing settings
+    const [models, pricingSettings] = await Promise.all([
+      getModelsForDisplay(),
+      getAppSettingsAdmin(),
+    ]);
 
     // Transform to external format
     const externalModels: ExternalModel[] = models.map((model: ModelConfig) => ({
@@ -78,6 +85,8 @@ export async function GET(request: NextRequest) {
         images: model.capabilities?.images ?? false,
         pdf: model.capabilities?.pdf ?? false,
       },
+      inputPrice: model.input_price,
+      outputPrice: model.output_price,
     }));
 
     // Group by provider for easier display
@@ -93,6 +102,7 @@ export async function GET(request: NextRequest) {
       models: externalModels,
       byProvider,
       defaultModel: models.find((m: ModelConfig) => m.is_recommended)?.id || models[0]?.id,
+      markupMultiplier: pricingSettings.markupMultiplier,
     }, { headers: corsHeaders });
   } catch (error) {
     console.error("Models API error:", error);
