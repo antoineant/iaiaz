@@ -40,6 +40,7 @@ interface ExternalChatRequest {
   messages?: Array<{ role: "user" | "assistant"; content: string }>;
   attachments?: ExternalAttachment[];
   stream?: boolean;
+  enableThinking?: boolean; // Enable Claude Extended Thinking or OpenAI Reasoning
 }
 
 /**
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body: ExternalChatRequest = await request.json();
-    const { message, model = "claude-sonnet-4-20250514" as ModelId, messages = [], attachments = [], stream = false } = body;
+    const { message, model = "claude-sonnet-4-20250514" as ModelId, messages = [], attachments = [], stream = false, enableThinking = false } = body;
 
     if (!message?.trim() && attachments.length === 0) {
       return NextResponse.json(
@@ -190,11 +191,29 @@ export async function POST(request: NextRequest) {
       const readableStream = new ReadableStream({
         async start(controller) {
           try {
-            const aiResponse = await callAIStream(model, fullMessages, (chunk) => {
-              // Send each chunk as SSE data
-              const data = JSON.stringify({ type: "chunk", content: chunk });
-              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
-            });
+            // Check if model supports thinking
+            const supportsThinking = model.includes("claude-3-7") ||
+                                     model.includes("claude-sonnet-4") ||
+                                     model.includes("claude-opus-4") ||
+                                     model.startsWith("o1") ||
+                                     model.startsWith("o3");
+
+            const aiResponse = await callAIStream(
+              model,
+              fullMessages,
+              (chunk) => {
+                // Send each chunk as SSE data
+                const data = JSON.stringify({ type: "chunk", content: chunk });
+                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+              },
+              // Thinking callback - only if enabled and model supports it
+              enableThinking && supportsThinking
+                ? (thinkingChunk) => {
+                    const data = JSON.stringify({ type: "thinking", content: thinkingChunk });
+                    controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+                  }
+                : undefined
+            );
 
             // Calculate actual cost
             const actualCost = await calculateCostFromDBAdmin(
@@ -236,6 +255,7 @@ export async function POST(request: NextRequest) {
               tokensOutput: aiResponse.tokensOutput,
               cost: actualCost,
               co2Grams: co2Grams,
+              thinking: aiResponse.thinking,
               credits: {
                 source: deductResult.source || userCredits.source,
                 remaining: deductResult.remaining ?? effectiveBalance - actualCost,
