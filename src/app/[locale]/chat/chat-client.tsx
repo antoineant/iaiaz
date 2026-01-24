@@ -84,10 +84,16 @@ export function ChatClient({
   const [classes, setClasses] = useState<StudentClass[]>([]);
   const [enableThinking, setEnableThinking] = useState(false);
 
-  // Check if current model supports extended thinking
-  const supportsThinking = model.includes("claude-3-7") ||
-                           model.includes("claude-sonnet-4") ||
-                           model.includes("claude-opus-4");
+  // Check if current model supports extended thinking (Claude - opt-in)
+  const claudeSupportsThinking = model.includes("claude-3-7") ||
+                                 model.includes("claude-sonnet-4") ||
+                                 model.includes("claude-opus-4");
+
+  // Check if model is OpenAI reasoning model (o1/o3 - always on)
+  const isOpenAIReasoning = model.startsWith("o1") || model.startsWith("o3");
+
+  // Combined: does model support thinking/reasoning?
+  const supportsThinking = claudeSupportsThinking || isOpenAIReasoning;
 
   // Fetch student classes on mount
   useEffect(() => {
@@ -187,7 +193,8 @@ export function ChatClient({
 
     // Add placeholder for assistant
     const assistantMessageId = crypto.randomUUID();
-    const thinkingEnabled = supportsThinking && enableThinking;
+    // Thinking enabled for Claude (opt-in) or OpenAI reasoning (always)
+    const thinkingEnabled = isOpenAIReasoning || (claudeSupportsThinking && enableThinking);
     setMessages((prev) => [
       ...prev,
       {
@@ -216,7 +223,8 @@ export function ChatClient({
           })),
           attachments: attachments?.map((a) => a.id) || [],
           stream: true,
-          enableThinking: supportsThinking && enableThinking,
+          // Enable thinking for Claude (opt-in) or OpenAI reasoning models (always)
+          enableThinking: isOpenAIReasoning || (claudeSupportsThinking && enableThinking),
         }),
       });
 
@@ -413,8 +421,8 @@ export function ChatClient({
               models={pricingData.models}
               markupMultiplier={pricingData.settings.markupMultiplier}
             />
-            {/* Extended Thinking Toggle */}
-            {supportsThinking && (
+            {/* Extended Thinking Toggle (Claude) */}
+            {claudeSupportsThinking && (
               <button
                 onClick={() => setEnableThinking(!enableThinking)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
@@ -428,10 +436,20 @@ export function ChatClient({
                 <span className="hidden sm:inline">{t("thinking.label")}</span>
               </button>
             )}
+            {/* Reasoning indicator (OpenAI o1/o3 - always on) */}
+            {isOpenAIReasoning && (
+              <div
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700"
+                title={t("thinking.reasoningTooltip")}
+              >
+                <Brain className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("thinking.reasoning")}</span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
-            {/* Cost warning when thinking enabled */}
-            {enableThinking && supportsThinking && (
+            {/* Cost warning when thinking enabled (Claude) */}
+            {enableThinking && claudeSupportsThinking && (
               <div className="hidden md:flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 <span>{t("thinking.costWarning")}</span>

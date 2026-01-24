@@ -344,7 +344,9 @@
     "thinking": {
       "label": "Réflexion",
       "tooltip": "Activer la réflexion étendue - L'IA montre son processus de raisonnement (coût supplémentaire)",
-      "costWarning": "~5x plus cher"
+      "costWarning": "~5x plus cher",
+      "reasoning": "Raisonnement",
+      "reasoningTooltip": "Ce modèle inclut automatiquement son processus de raisonnement"
     }
   },
   "dashboard": {

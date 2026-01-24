@@ -400,12 +400,16 @@ async function callAnthropicStream(
 async function callOpenAIStream(
   model: string,
   messages: UnifiedMessage[],
-  onChunk: StreamCallback
+  onChunk: StreamCallback,
+  onThinking?: ThinkingCallback
 ): Promise<AIStreamResponse> {
   const OpenAI = (await import("openai")).default;
   const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
+
+  // Check if this is a reasoning model (o1, o3)
+  const isReasoningModel = model.startsWith("o1") || model.startsWith("o3");
 
   // Transform messages (same as non-streaming)
   const openaiMessages = messages.map((m) => {
@@ -444,23 +448,37 @@ async function callOpenAIStream(
   });
 
   let fullContent = "";
+  let fullThinking = "";
   let inputTokens = 0;
   let outputTokens = 0;
 
   const stream = await client.chat.completions.create({
     model,
-    max_completion_tokens: 4096,
+    max_completion_tokens: isReasoningModel ? 16000 : 4096,
     messages: openaiMessages as Parameters<typeof client.chat.completions.create>[0]["messages"],
     stream: true,
     stream_options: { include_usage: true },
   });
 
   for await (const chunk of stream) {
-    const content = chunk.choices[0]?.delta?.content;
+    const delta = chunk.choices[0]?.delta;
+
+    // Handle reasoning content for o1/o3 models
+    if (isReasoningModel && onThinking) {
+      const reasoning = (delta as unknown as { reasoning_content?: string })?.reasoning_content;
+      if (reasoning) {
+        fullThinking += reasoning;
+        onThinking(reasoning);
+      }
+    }
+
+    // Handle regular content
+    const content = delta?.content;
     if (content) {
       fullContent += content;
       onChunk(content);
     }
+
     if (chunk.usage) {
       inputTokens = chunk.usage.prompt_tokens || 0;
       outputTokens = chunk.usage.completion_tokens || 0;
@@ -469,6 +487,7 @@ async function callOpenAIStream(
 
   return {
     content: fullContent,
+    thinking: fullThinking || undefined,
     tokensInput: inputTokens,
     tokensOutput: outputTokens,
   };
@@ -658,7 +677,7 @@ export async function callAIStream(
     case "anthropic":
       return callAnthropicStream(modelId, messages, onChunk, onThinking);
     case "openai":
-      return callOpenAIStream(modelId, messages, onChunk);
+      return callOpenAIStream(modelId, messages, onChunk, onThinking);
     case "google":
       return callGoogleStream(modelId, messages, onChunk);
     case "mistral":
