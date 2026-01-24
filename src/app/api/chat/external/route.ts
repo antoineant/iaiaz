@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { callAI } from "@/lib/ai/providers";
+import { callAI, callAIStream } from "@/lib/ai/providers";
 import { type ModelId } from "@/lib/pricing";
 import { type ContentPart, type MultimodalMessage } from "@/types";
 import {
@@ -39,6 +39,7 @@ interface ExternalChatRequest {
   model?: ModelId;
   messages?: Array<{ role: "user" | "assistant"; content: string }>;
   attachments?: ExternalAttachment[];
+  stream?: boolean;
 }
 
 /**
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body: ExternalChatRequest = await request.json();
-    const { message, model = "claude-sonnet-4-20250514" as ModelId, messages = [], attachments = [] } = body;
+    const { message, model = "claude-sonnet-4-20250514" as ModelId, messages = [], attachments = [], stream = false } = body;
 
     if (!message?.trim() && attachments.length === 0) {
       return NextResponse.json(
@@ -182,7 +183,89 @@ export async function POST(request: NextRequest) {
       { role: "user" as const, content: currentMessageContent },
     ];
 
-    // Call AI
+    // Handle streaming response
+    if (stream) {
+      const encoder = new TextEncoder();
+
+      const readableStream = new ReadableStream({
+        async start(controller) {
+          try {
+            const aiResponse = await callAIStream(model, fullMessages, (chunk) => {
+              // Send each chunk as SSE data
+              const data = JSON.stringify({ type: "chunk", content: chunk });
+              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+            });
+
+            // Calculate actual cost
+            const actualCost = await calculateCostFromDBAdmin(
+              model,
+              aiResponse.tokensInput,
+              aiResponse.tokensOutput
+            );
+
+            // Calculate CO2
+            const co2Rate = modelInfo.co2_per_1k_tokens ?? 0.15;
+            const co2Grams = calculateCO2(
+              aiResponse.tokensInput,
+              aiResponse.tokensOutput,
+              co2Rate
+            );
+
+            // Log usage
+            await adminClient.from("api_usage").insert({
+              user_id: userId,
+              provider: modelInfo.provider,
+              model,
+              tokens_input: aiResponse.tokensInput,
+              tokens_output: aiResponse.tokensOutput,
+              cost_eur: actualCost,
+              co2_grams: co2Grams,
+            });
+
+            // Deduct credits
+            const deductResult = await deductCredits(
+              userId,
+              actualCost,
+              `External API: ${modelInfo.name}`
+            );
+
+            // Send final message with metadata
+            const finalData = JSON.stringify({
+              type: "done",
+              tokensInput: aiResponse.tokensInput,
+              tokensOutput: aiResponse.tokensOutput,
+              cost: actualCost,
+              co2Grams: co2Grams,
+              credits: {
+                source: deductResult.source || userCredits.source,
+                remaining: deductResult.remaining ?? effectiveBalance - actualCost,
+                orgName: userCredits.orgName,
+              },
+            });
+            controller.enqueue(encoder.encode(`data: ${finalData}\n\n`));
+            controller.close();
+          } catch (error) {
+            const errorData = JSON.stringify({
+              type: "error",
+              error: error instanceof Error ? error.message : "Stream error",
+            });
+            controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(readableStream, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive",
+        },
+      });
+    }
+
+    // Non-streaming response (original behavior)
     const aiResponse = await callAI(model, fullMessages);
 
     // Calculate actual cost
