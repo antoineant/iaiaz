@@ -484,10 +484,16 @@ async function callMistralStream(
   });
 
   for await (const event of stream) {
-    const content = event.data.choices[0]?.delta?.content;
-    if (content) {
-      fullContent += content;
-      onChunk(content);
+    const rawContent = event.data.choices[0]?.delta?.content;
+    if (rawContent) {
+      // Content can be string or ContentChunk[] - extract text
+      const content = typeof rawContent === "string"
+        ? rawContent
+        : rawContent.map(c => "text" in c ? c.text : "").join("");
+      if (content) {
+        fullContent += content;
+        onChunk(content);
+      }
     }
     if (event.data.usage) {
       inputTokens = event.data.usage.promptTokens || 0;
