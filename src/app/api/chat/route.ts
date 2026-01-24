@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { callAI } from "@/lib/ai/providers";
+import { callAI, callAIStream } from "@/lib/ai/providers";
 import { type ModelId } from "@/lib/pricing";
 import {
   calculateCostFromDBAdmin,
@@ -31,6 +31,7 @@ interface ChatRequest {
   conversationId?: string;
   messages?: Array<{ role: "user" | "assistant"; content: string }>;
   attachments?: string[]; // Array of file IDs for current message
+  stream?: boolean;
 }
 
 // Build multimodal content from text and attachments
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: ChatRequest = await request.json();
-    const { message, model, conversationId, messages = [], attachments = [] } = body;
+    const { message, model, conversationId, messages = [], attachments = [], stream = false } = body;
 
     // Require either message or attachments
     if (!message?.trim() && attachments.length === 0) {
@@ -236,7 +237,167 @@ export async function POST(request: NextRequest) {
       ];
     }
 
-    // Call AI
+    // Handle streaming response
+    if (stream) {
+      const encoder = new TextEncoder();
+
+      // Create conversation early for streaming
+      let streamConversationId = conversationId;
+      if (!streamConversationId) {
+        const { data: newConv } = await adminClient
+          .from("conversations")
+          .insert({
+            user_id: user.id,
+            title: message.slice(0, 100) || "Image/Document",
+            model,
+          })
+          .select()
+          .single();
+        if (newConv) {
+          streamConversationId = newConv.id;
+        }
+      } else {
+        await adminClient
+          .from("conversations")
+          .update({ updated_at: new Date().toISOString() })
+          .eq("id", conversationId);
+      }
+
+      // Save user message early
+      let userMsgId: string | undefined;
+      if (streamConversationId) {
+        const { data: userMsg } = await adminClient
+          .from("messages")
+          .insert({
+            conversation_id: streamConversationId,
+            role: "user",
+            content: message,
+            tokens_input: 0,
+            tokens_output: 0,
+            cost: 0,
+            file_ids: attachments.length > 0 ? attachments : [],
+          })
+          .select()
+          .single();
+
+        if (userMsg) {
+          userMsgId = userMsg.id;
+          if (attachments.length > 0) {
+            await adminClient
+              .from("file_uploads")
+              .update({ message_id: userMsg.id })
+              .in("id", attachments);
+          }
+        }
+      }
+
+      const readableStream = new ReadableStream({
+        async start(controller) {
+          try {
+            const aiResponse = await callAIStream(model, fullMessages, (chunk) => {
+              const data = JSON.stringify({ type: "chunk", content: chunk });
+              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+            });
+
+            // Calculate actual cost
+            const actualCost = await calculateCostFromDBAdmin(
+              model,
+              aiResponse.tokensInput,
+              aiResponse.tokensOutput
+            );
+
+            // Calculate CO2
+            const co2Rate = modelInfo.co2_per_1k_tokens ?? 0.15;
+            const co2Grams = calculateCO2(
+              aiResponse.tokensInput,
+              aiResponse.tokensOutput,
+              co2Rate
+            );
+
+            // Save assistant message
+            if (streamConversationId) {
+              const { data: assistantMsg } = await adminClient
+                .from("messages")
+                .insert({
+                  conversation_id: streamConversationId,
+                  role: "assistant",
+                  content: aiResponse.content,
+                  tokens_input: aiResponse.tokensInput,
+                  tokens_output: aiResponse.tokensOutput,
+                  cost: actualCost,
+                  co2_grams: co2Grams,
+                })
+                .select()
+                .single();
+
+              if (assistantMsg) {
+                await adminClient.from("api_usage").insert({
+                  user_id: user.id,
+                  message_id: assistantMsg.id,
+                  provider: modelInfo.provider,
+                  model,
+                  tokens_input: aiResponse.tokensInput,
+                  tokens_output: aiResponse.tokensOutput,
+                  cost_eur: actualCost,
+                  co2_grams: co2Grams,
+                });
+              }
+            }
+
+            // Deduct credits
+            const deductResult = await deductCredits(
+              user.id,
+              actualCost,
+              `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`
+            );
+
+            // Get rate limit info
+            const tier = getModelTier(model);
+            const limits = getTierLimits(tier);
+
+            // Send final message with metadata
+            const finalData = JSON.stringify({
+              type: "done",
+              tokensInput: aiResponse.tokensInput,
+              tokensOutput: aiResponse.tokensOutput,
+              cost: actualCost,
+              co2Grams: co2Grams,
+              conversationId: streamConversationId,
+              rateLimit: {
+                remaining: rateLimitResult.remaining,
+                limit: limits.limit,
+                tier,
+              },
+              credits: {
+                source: deductResult.source || userCredits.source,
+                remaining: deductResult.remaining ?? effectiveBalance - actualCost,
+                orgName: userCredits.orgName,
+                limits: userCredits.limits,
+              },
+            });
+            controller.enqueue(encoder.encode(`data: ${finalData}\n\n`));
+            controller.close();
+          } catch (error) {
+            const errorData = JSON.stringify({
+              type: "error",
+              error: error instanceof Error ? error.message : "Stream error",
+            });
+            controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(readableStream, {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+        },
+      });
+    }
+
+    // Non-streaming response (original behavior)
     const aiResponse = await callAI(model, fullMessages);
 
     // Calculate actual cost using database pricing

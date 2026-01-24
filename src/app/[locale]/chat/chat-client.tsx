@@ -206,13 +206,13 @@ export function ChatClient({
             content: m.content,
           })),
           attachments: attachments?.map((a) => a.id) || [],
+          stream: true,
         }),
       });
 
-      const data = await response.json();
-
       // Handle rate limit error specially
       if (response.status === 429) {
+        const data = await response.json();
         // Remove the user message and placeholder
         setMessages((prev) => prev.filter((m) => m.id !== userMessage.id && m.id !== assistantMessageId));
 
@@ -230,55 +230,99 @@ export function ChatClient({
       }
 
       if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
         throw new Error(data.error || tErrors("sendError"));
       }
 
-      // Update rate limit from response
-      if (data.rateLimit) {
-        setRateLimit({
-          remaining: data.rateLimit.remaining,
-          limit: data.rateLimit.limit,
-          tier: data.rateLimit.tier,
-        });
-      }
+      // Read streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let streamedContent = "";
 
-      // Update assistant message with response
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantMessageId
-            ? {
-                ...m,
-                content: data.content,
-                cost: data.cost,
-                co2Grams: data.co2Grams,
-                tokens: {
-                  input: data.tokensInput,
-                  output: data.tokensOutput,
-                },
-                isStreaming: false,
+      if (reader) {
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          // Process complete SSE events
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              try {
+                const data = JSON.parse(line.slice(6));
+
+                if (data.type === "chunk") {
+                  streamedContent += data.content;
+                  setMessages((prev) =>
+                    prev.map((m) =>
+                      m.id === assistantMessageId
+                        ? { ...m, content: streamedContent }
+                        : m
+                    )
+                  );
+                } else if (data.type === "done") {
+                  // Update with final metadata
+                  setMessages((prev) =>
+                    prev.map((m) =>
+                      m.id === assistantMessageId
+                        ? {
+                            ...m,
+                            content: streamedContent,
+                            cost: data.cost,
+                            co2Grams: data.co2Grams,
+                            tokens: {
+                              input: data.tokensInput,
+                              output: data.tokensOutput,
+                            },
+                            isStreaming: false,
+                          }
+                        : m
+                    )
+                  );
+
+                  // Update rate limit from response
+                  if (data.rateLimit) {
+                    setRateLimit({
+                      remaining: data.rateLimit.remaining,
+                      limit: data.rateLimit.limit,
+                      tier: data.rateLimit.tier,
+                    });
+                  }
+
+                  // Update balance
+                  setBalance((prev) => prev - data.cost);
+
+                  // Update conversation ID if new
+                  if (data.conversationId && !currentConversationId) {
+                    setCurrentConversationId(data.conversationId);
+                    setConversations((prev) => [
+                      {
+                        id: data.conversationId,
+                        user_id: userId,
+                        title: content.slice(0, 50),
+                        model,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                      },
+                      ...prev,
+                    ]);
+                  }
+                } else if (data.type === "error") {
+                  throw new Error(data.error);
+                }
+              } catch (e) {
+                if (e instanceof SyntaxError) continue;
+                throw e;
               }
-            : m
-        )
-      );
-
-      // Update balance
-      setBalance((prev) => prev - data.cost);
-
-      // Update conversation ID if new
-      if (data.conversationId && !currentConversationId) {
-        setCurrentConversationId(data.conversationId);
-        // Add to conversations list
-        setConversations((prev) => [
-          {
-            id: data.conversationId,
-            user_id: userId,
-            title: content.slice(0, 50),
-            model,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-          ...prev,
-        ]);
+            }
+          }
+        }
       }
     } catch (error) {
       // Remove streaming message and show error
