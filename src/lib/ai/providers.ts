@@ -349,7 +349,7 @@ async function callAnthropicStream(
 
   // Add thinking configuration for supported models
   if (supportsThinking && onThinking) {
-    (requestOptions as Record<string, unknown>).thinking = {
+    (requestOptions as unknown as Record<string, unknown>).thinking = {
       type: "enabled",
       budget_tokens: 10000,
     };
