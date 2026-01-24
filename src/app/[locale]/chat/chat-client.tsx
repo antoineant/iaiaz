@@ -238,6 +238,8 @@ export function ChatClient({
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let streamedContent = "";
+      let lastUpdateTime = 0;
+      const UPDATE_INTERVAL = 50; // Update UI every 50ms max
 
       if (reader) {
         let buffer = "";
@@ -259,13 +261,18 @@ export function ChatClient({
 
                 if (data.type === "chunk") {
                   streamedContent += data.content;
-                  setMessages((prev) =>
-                    prev.map((m) =>
-                      m.id === assistantMessageId
-                        ? { ...m, content: streamedContent }
-                        : m
-                    )
-                  );
+                  // Throttle UI updates to prevent lag
+                  const now = Date.now();
+                  if (now - lastUpdateTime > UPDATE_INTERVAL) {
+                    lastUpdateTime = now;
+                    setMessages((prev) =>
+                      prev.map((m) =>
+                        m.id === assistantMessageId
+                          ? { ...m, content: streamedContent }
+                          : m
+                      )
+                    );
+                  }
                 } else if (data.type === "done") {
                   // Update with final metadata
                   setMessages((prev) =>
