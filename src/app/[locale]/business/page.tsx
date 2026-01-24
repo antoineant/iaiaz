@@ -253,7 +253,7 @@ export default async function BusinessPage({ params }: Props) {
                   </tr>
                   <tr className="border-b">
                     <td className="py-4 px-4 font-medium">{t("comparison.models")}</td>
-                    <td className="text-center py-4 px-4">GPT-4</td>
+                    <td className="text-center py-4 px-4">GPT-5</td>
                     <td className="text-center py-4 px-4">Claude</td>
                     <td className="text-center py-4 px-4 bg-primary-50 dark:bg-primary-900/20 font-medium text-primary-700 dark:text-primary-300">{t("comparison.allModels")}</td>
                   </tr>

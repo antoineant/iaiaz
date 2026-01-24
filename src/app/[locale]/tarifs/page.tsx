@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t("title"),
     description: t("description"),
     keywords: locale === "fr"
-      ? ["prix chatgpt", "tarif ia", "cout gpt-4", "prix claude", "ia pas cher"]
-      : ["chatgpt price", "ai pricing", "gpt-4 cost", "claude price", "cheap ai"],
+      ? ["prix chatgpt", "tarif ia", "cout gpt-5", "prix claude", "ia pas cher"]
+      : ["chatgpt price", "ai pricing", "gpt-5 cost", "claude price", "cheap ai"],
     alternates: {
       canonical: locale === "fr" ? "https://www.iaiaz.com/tarifs" : "https://www.iaiaz.com/en/pricing",
       languages: {

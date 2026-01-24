@@ -24,11 +24,12 @@ export interface RateLimitStatus {
 const FALLBACK_TIERS: Record<string, ModelTier> = {
   // Premium models (3 req/min)
   "claude-opus-4-5-20250514": "premium",
-  "gpt-5": "premium",
+  "gpt-5.2": "premium",
+  "gpt-5-pro": "premium",
   "gemini-2.5-pro-preview-06-05": "premium",
 
   // Economy models (20 req/min)
-  "gpt-4o-mini": "economy",
+  "gpt-5-nano": "economy",
   "gemini-2.0-flash": "economy",
   "gemini-1.5-flash": "economy",
   "mistral-small-latest": "economy",
@@ -36,8 +37,9 @@ const FALLBACK_TIERS: Record<string, ModelTier> = {
   // Standard models (10 req/min)
   "claude-sonnet-4-20250514": "standard",
   "claude-3-5-haiku-20241022": "standard",
-  "gpt-4.1": "standard",
-  "gpt-4o": "standard",
+  "gpt-5.1": "standard",
+  "gpt-5": "standard",
+  "gpt-5-mini": "standard",
   "gemini-1.5-pro": "standard",
   "mistral-large-latest": "standard",
   "mistral-medium-latest": "standard",

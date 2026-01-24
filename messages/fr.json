@@ -15,14 +15,14 @@
     "etudiants": {
       "title": "IA pour Étudiants - Alternative économique à ChatGPT",
       "description": "Accédez à GPT-5, Claude et Gemini sans abonnement. Solution idéale pour étudiants avec 1€ offert à l'inscription.",
-      "keywords": "ia pour étudiants, chatgpt étudiant, chatgpt étudiant gratuit, ia gratuit étudiant, aide devoirs ia, dissertation ia, révision ia, chatgpt université, claude étudiant, gpt-4 étudiant",
+      "keywords": "ia pour étudiants, chatgpt étudiant, chatgpt étudiant gratuit, ia gratuit étudiant, aide devoirs ia, dissertation ia, révision ia, chatgpt université, claude étudiant, gpt-5 étudiant",
       "ogTitle": "iaiaz pour Étudiants - L'IA accessible à tous",
       "ogDescription": "GPT-5, Claude, Gemini sans abonnement. Parfait pour le budget étudiant."
     },
     "etablissements": {
       "title": "iaiaz pour Établissements - IA pour Écoles et Universités",
       "description": "Offrez l'accès à GPT-5, Claude et Gemini à vos étudiants sans abonnement individuel. Maîtrisez votre budget, suivez l'utilisation.",
-      "keywords": "ia pour écoles, chatgpt université, ia établissement scolaire, gpt-4 éducation, claude éducation, ia formation, chatgpt école, licence groupe ia",
+      "keywords": "ia pour écoles, chatgpt université, ia établissement scolaire, gpt-5 éducation, claude éducation, ia formation, chatgpt école, licence groupe ia",
       "ogTitle": "iaiaz pour Établissements - L'IA accessible pour l'éducation",
       "ogDescription": "Équipez vos étudiants avec les meilleurs modèles d'IA. Sans abonnement par élève."
     },
@@ -36,7 +36,7 @@
     "tarifsEtudiants": {
       "title": "Tarifs Étudiants - IA à partir de 0.01€ par question",
       "description": "Tarifs IA adaptés au budget étudiant. Payez à l'usage sans abonnement. GPT-5, Claude, Gemini à partir de quelques centimes.",
-      "keywords": "tarifs ia étudiant, prix chatgpt étudiant, ia pas cher étudiant, prix gpt-4, tarif claude, cout ia par question",
+      "keywords": "tarifs ia étudiant, prix chatgpt étudiant, ia pas cher étudiant, prix gpt-5, tarif claude, cout ia par question",
       "ogTitle": "Tarifs iaiaz pour Étudiants - L'IA accessible",
       "ogDescription": "Accédez à GPT-5, Claude et Gemini à partir de 0.01€ par question. Parfait pour le budget étudiant."
     },
@@ -81,7 +81,7 @@
     },
     "business": {
       "title": "iaiaz Business - IA multi-modèles pour entreprises | Facturation à l'usage",
-      "description": "Tous les modèles IA (Claude, GPT-4, Gemini, Mistral) pour vos équipes. Facturation à la consommation, suivi détaillé, maîtrise des coûts. Essai gratuit 14 jours.",
+      "description": "Tous les modèles IA (Claude, GPT-5, Gemini, Mistral) pour vos équipes. Facturation à la consommation, suivi détaillé, maîtrise des coûts. Essai gratuit 14 jours.",
       "keywords": "ia entreprise, chatgpt team alternative, claude team alternative, ia multi-modèles, ia facturation usage, suivi ia entreprise",
       "ogTitle": "iaiaz Business - L'IA pour vos équipes sans gaspiller",
       "ogDescription": "Tous les modèles IA (Claude, GPT, Gemini, Mistral) avec facturation à l'usage et suivi détaillé. Gardez le contrôle sur vos coûts."
@@ -149,7 +149,7 @@
       "complexQuestions": "Questions complexes",
       "essays": "Dissertations",
       "claimOffer": "Récupérer mon euro offert",
-      "moreModels": "+ 12 autres modèles disponibles (Claude Opus, GPT-4o, Mistral, etc.)",
+      "moreModels": "+ 12 autres modèles disponibles (Claude Opus, GPT-5, Mistral, etc.)",
       "claudeDesc": "Anthropic • Excellent équilibre qualité/prix",
       "gptDesc": "OpenAI • Le plus récent et polyvalent",
       "geminiDesc": "Google • Parfait pour les tâches simples"
@@ -418,11 +418,11 @@
           "title": "Taux d'émission par catégorie de modèle",
           "economy": {
             "name": "Économique",
-            "models": "GPT-4o-mini, Gemini Flash, Mistral Small, Claude Haiku"
+            "models": "GPT-5 Nano, Gemini Flash, Mistral Small, Claude Haiku"
           },
           "standard": {
             "name": "Standard",
-            "models": "Claude Sonnet, GPT-4o, GPT-4.1, Gemini Pro, Mistral Large"
+            "models": "Claude Sonnet, GPT-5.1, GPT-5 Mini, Gemini Pro, Mistral Large"
           },
           "premium": {
             "name": "Premium",
@@ -580,7 +580,7 @@
       "submit": "Créer mon compte entreprise",
       "includes": "Inclus dans l'essai :",
       "benefit1": "10€ de crédits IA offerts",
-      "benefit2": "Tous les modèles (Claude, GPT-4, Gemini, Mistral)",
+      "benefit2": "Tous les modèles (Claude, GPT-5, Gemini, Mistral)",
       "benefit3": "Tableau de bord et gestion d'équipe",
       "notBusiness": "Pas une entreprise ?",
       "personalSignup": "Créer un compte personnel"
@@ -830,7 +830,7 @@
     "transparency": {
       "title": "Transparence totale sur les prix",
       "subtitle": "Contrairement aux abonnements, vous voyez exactement ce que coûte chaque message. Exemple avec 1€ de crédits :",
-      "gptMini": "messages avec GPT-4o Mini",
+      "gptMini": "messages avec GPT-5 Nano",
       "claudeSonnet": "messages avec Claude Sonnet",
       "gpt4": "messages avec GPT-5",
       "mistralSmall": "messages avec Mistral Small"
@@ -1359,7 +1359,7 @@
     "faq": {
       "title": "Questions fréquentes",
       "q1": "Combien coûte une question en moyenne ?",
-      "a1": "Entre 0,01€ et 0,05€ selon le modèle choisi. Claude Sonnet coûte environ 0,02€ par message, GPT-4o Mini environ 0,003€.",
+      "a1": "Entre 0,01€ et 0,05€ selon le modèle choisi. Claude Sonnet coûte environ 0,02€ par message, GPT-5 Nano environ 0,002€.",
       "q2": "Mes crédits expirent-ils ?",
       "a2": "Non, vos crédits n'expirent jamais. Achetez-les aujourd'hui, utilisez-les dans 6 mois.",
       "q3": "Puis-je me faire rembourser ?",
@@ -1789,7 +1789,7 @@
       },
       "models": {
         "question": "Quels modèles d'IA sont disponibles ?",
-        "answer": "iaiaz propose plus de 15 modèles : Claude Opus, Claude Sonnet et Claude Haiku (Anthropic), GPT-5, GPT-4o et GPT-4o Mini (OpenAI), Gemini 2.5 Pro et Gemini Flash (Google), Mistral Large, Medium et Small, et Codestral pour le code."
+        "answer": "iaiaz propose plus de 15 modèles : Claude Opus, Claude Sonnet et Claude Haiku (Anthropic), GPT-5.2, GPT-5.1, GPT-5 Mini et GPT-5 Nano (OpenAI), Gemini 2.5 Pro et Gemini Flash (Google), Mistral Large, Medium et Small, et Codestral pour le code."
       },
       "credits": {
         "question": "Comment fonctionne le système de crédits ?",
@@ -2583,7 +2583,7 @@
       "badge": "Offre Entreprises",
       "title": "L'IA pour vos équipes.",
       "titleHighlight": "Sans gaspiller en licences inutilisées.",
-      "subtitle": "Tous les modèles IA (Claude, GPT-4, Gemini, Mistral) sur une seule plateforme. Facturation à la consommation et suivi détaillé. Vos équipes ont l'outil qu'il leur faut, vous gardez le contrôle.",
+      "subtitle": "Tous les modèles IA (Claude, GPT-5, Gemini, Mistral) sur une seule plateforme. Facturation à la consommation et suivi détaillé. Vos équipes ont l'outil qu'il leur faut, vous gardez le contrôle.",
       "cta": "Essayer gratuitement",
       "ctaSecondary": "Demander une démo",
       "noPerSeat": "Fini les licences par poste",
@@ -2599,7 +2599,7 @@
       },
       "vendor": {
         "title": "Prisonnier d'un seul modèle",
-        "description": "Le juridique préfère Claude, les devs veulent GPT-4, le marketing utilise Gemini. Résultat : 3 abonnements, 3 factures, zéro vision d'ensemble."
+        "description": "Le juridique préfère Claude, les devs veulent GPT-5, le marketing utilise Gemini. Résultat : 3 abonnements, 3 factures, zéro vision d'ensemble."
       },
       "visibility": {
         "title": "Zéro visibilité",
@@ -2611,7 +2611,7 @@
       "subtitle": "Une solution pensée pour les vrais besoins des entreprises.",
       "multiModel": {
         "title": "Tous les modèles",
-        "description": "Claude, GPT-4, Gemini, Mistral... Chaque équipe choisit l'outil le plus adapté à sa mission. Un seul compte, une seule facture."
+        "description": "Claude, GPT-5, Gemini, Mistral... Chaque équipe choisit l'outil le plus adapté à sa mission. Un seul compte, une seule facture."
       },
       "payPerUse": {
         "title": "Facturation à l'usage",
@@ -2647,7 +2647,7 @@
       "tech": {
         "title": "Tech & Développement",
         "description": "Débogage, revue de code, rédaction de documentation, exploration de pistes techniques.",
-        "model": "Modèle conseillé : GPT-4"
+        "model": "Modèle conseillé : GPT-5"
       },
       "marketing": {
         "title": "Marketing & Communication",
@@ -2657,7 +2657,7 @@
       "finance": {
         "title": "Finance & Opérations",
         "description": "Analyse de données, synthèse de rapports, automatisation des tâches répétitives.",
-        "model": "Modèle conseillé : GPT-4 / Mistral"
+        "model": "Modèle conseillé : GPT-5 / Mistral"
       }
     },
     "pricing": {
@@ -2733,7 +2733,7 @@
       },
       "models": {
         "question": "Quels modèles sont disponibles ?",
-        "answer": "Claude (Haiku, Sonnet, Opus), GPT-4, GPT-4o, Gemini Pro, Gemini Flash, Mistral Large, et d'autres. De nouveaux modèles sont ajoutés régulièrement."
+        "answer": "Claude (Haiku, Sonnet, Opus), GPT-5.1, GPT-5, Gemini Pro, Gemini Flash, Mistral Large, et d'autres. De nouveaux modèles sont ajoutés régulièrement."
       },
       "onboarding": {
         "question": "Comment les collaborateurs accèdent-ils à la plateforme ?",
@@ -2924,7 +2924,7 @@
       },
       "platforms": {
         "question": "Sur quelles plateformes l'application est-elle disponible ?",
-        "answer": "L'application desktop est disponible sur Windows et macOS. Une version Linux est en développement. L'anonymisation fonctionne avec tous les modèles disponibles sur iaiaz (Claude, GPT-4, Gemini, Mistral)."
+        "answer": "L'application desktop est disponible sur Windows et macOS. Une version Linux est en développement. L'anonymisation fonctionne avec tous les modèles disponibles sur iaiaz (Claude, GPT-5, Gemini, Mistral)."
       },
       "offline": {
         "question": "L'application fonctionne-t-elle hors ligne ?",

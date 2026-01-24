@@ -15,14 +15,14 @@
     "etudiants": {
       "title": "AI for Students - Affordable ChatGPT Alternative",
       "description": "Access GPT-5, Claude and Gemini without subscription. Perfect solution for students with $1 free credit on signup.",
-      "keywords": "ai for students, chatgpt student, free ai student, homework ai help, essay ai, study ai, chatgpt university, claude student, gpt-4 student, affordable ai",
+      "keywords": "ai for students, chatgpt student, free ai student, homework ai help, essay ai, study ai, chatgpt university, claude student, gpt-5 student, affordable ai",
       "ogTitle": "iaiaz for Students - AI Accessible to All",
       "ogDescription": "GPT-5, Claude, Gemini without subscription. Perfect for student budgets."
     },
     "etablissements": {
       "title": "iaiaz for Schools - AI for Education",
       "description": "Provide GPT-5, Claude and Gemini access to your students without individual subscriptions. Control your budget, track usage.",
-      "keywords": "ai for schools, chatgpt university, ai education, gpt-4 education, claude education, ai training, chatgpt school, group ai license",
+      "keywords": "ai for schools, chatgpt university, ai education, gpt-5 education, claude education, ai training, chatgpt school, group ai license",
       "ogTitle": "iaiaz for Schools - AI Made Accessible for Education",
       "ogDescription": "Equip your students with the best AI models. No per-student subscription."
     },
@@ -36,7 +36,7 @@
     "tarifsEtudiants": {
       "title": "Student Pricing - AI from $0.01 per question",
       "description": "AI pricing for student budgets. Pay-as-you-go without subscription. GPT-5, Claude, Gemini from just cents per question.",
-      "keywords": "ai student pricing, chatgpt student price, cheap ai student, gpt-4 price, claude pricing, ai cost per question",
+      "keywords": "ai student pricing, chatgpt student price, cheap ai student, gpt-5 price, claude pricing, ai cost per question",
       "ogTitle": "iaiaz Student Pricing - Affordable AI",
       "ogDescription": "Access GPT-5, Claude and Gemini from $0.01 per question. Perfect for student budgets."
     },
@@ -81,7 +81,7 @@
     },
     "business": {
       "title": "iaiaz Business - Multi-model AI for Teams | Pay-per-use",
-      "description": "Access Claude, GPT-4, Gemini and Mistral for your teams. Pay-per-use, detailed analytics, cost control. 14-day free trial.",
+      "description": "Access Claude, GPT-5, Gemini and Mistral for your teams. Pay-per-use, detailed analytics, cost control. 14-day free trial.",
       "keywords": "enterprise ai, chatgpt team alternative, claude team alternative, multi-model ai, pay per use ai, enterprise ai analytics",
       "ogTitle": "iaiaz Business - AI for your teams without overpaying",
       "ogDescription": "Multi-model (Claude, GPT, Gemini, Mistral) with pay-per-use and detailed analytics. Control your costs."
@@ -149,7 +149,7 @@
       "complexQuestions": "Complex questions",
       "essays": "Essays",
       "claimOffer": "Claim my free credit",
-      "moreModels": "+ 12 more models available (Claude Opus, GPT-4o, Mistral, etc.)",
+      "moreModels": "+ 12 more models available (Claude Opus, GPT-5, Mistral, etc.)",
       "claudeDesc": "Anthropic • Excellent quality/price ratio",
       "gptDesc": "OpenAI • Latest and most versatile",
       "geminiDesc": "Google • Perfect for simple tasks"
@@ -418,11 +418,11 @@
           "title": "Emission rates by model category",
           "economy": {
             "name": "Economy",
-            "models": "GPT-4o-mini, Gemini Flash, Mistral Small, Claude Haiku"
+            "models": "GPT-5 Nano, Gemini Flash, Mistral Small, Claude Haiku"
           },
           "standard": {
             "name": "Standard",
-            "models": "Claude Sonnet, GPT-4o, GPT-4.1, Gemini Pro, Mistral Large"
+            "models": "Claude Sonnet, GPT-5.1, GPT-5 Mini, Gemini Pro, Mistral Large"
           },
           "premium": {
             "name": "Premium",
@@ -691,7 +691,7 @@
       "submit": "Create my business account",
       "includes": "Included in trial:",
       "benefit1": "€10 free AI credits",
-      "benefit2": "All models (Claude, GPT-4, Gemini, Mistral)",
+      "benefit2": "All models (Claude, GPT-5, Gemini, Mistral)",
       "benefit3": "Dashboard and team management",
       "notBusiness": "Not a business?",
       "personalSignup": "Create a personal account"
@@ -941,7 +941,7 @@
     "transparency": {
       "title": "Complete price transparency",
       "subtitle": "Unlike subscriptions, you see exactly what each message costs. Example with $1 in credits:",
-      "gptMini": "messages with GPT-4o Mini",
+      "gptMini": "messages with GPT-5 Nano",
       "claudeSonnet": "messages with Claude Sonnet",
       "gpt4": "messages with GPT-5",
       "mistralSmall": "messages with Mistral Small"
@@ -1470,7 +1470,7 @@
     "faq": {
       "title": "Frequently asked questions",
       "q1": "How much does a question cost on average?",
-      "a1": "Between $0.01 and $0.05 depending on the model. Claude Sonnet costs about $0.02 per message, GPT-4o Mini about $0.003.",
+      "a1": "Between $0.01 and $0.05 depending on the model. Claude Sonnet costs about $0.02 per message, GPT-5 Nano about $0.002.",
       "q2": "Do my credits expire?",
       "a2": "No, your credits never expire. Buy them today, use them in 6 months.",
       "q3": "Can I get a refund?",
@@ -1900,7 +1900,7 @@
       },
       "models": {
         "question": "Which AI models are available?",
-        "answer": "iaiaz offers over 15 models: Claude Opus, Claude Sonnet and Claude Haiku (Anthropic), GPT-5, GPT-4o and GPT-4o Mini (OpenAI), Gemini 2.5 Pro and Gemini Flash (Google), Mistral Large, Medium and Small, and Codestral for code."
+        "answer": "iaiaz offers over 15 models: Claude Opus, Claude Sonnet and Claude Haiku (Anthropic), GPT-5.2, GPT-5.1, GPT-5 Mini and GPT-5 Nano (OpenAI), Gemini 2.5 Pro and Gemini Flash (Google), Mistral Large, Medium and Small, and Codestral for code."
       },
       "credits": {
         "question": "How does the credit system work?",
@@ -2583,7 +2583,7 @@
       "badge": "For businesses",
       "title": "AI for your teams.",
       "titleHighlight": "Without overpaying for unused licenses.",
-      "subtitle": "Multi-model access (Claude, GPT-4, Gemini, Mistral) with pay-per-use and detailed analytics. Your teams use the AI they need. You control the costs.",
+      "subtitle": "Multi-model access (Claude, GPT-5, Gemini, Mistral) with pay-per-use and detailed analytics. Your teams use the AI they need. You control the costs.",
       "cta": "Start free trial",
       "ctaSecondary": "Request a demo",
       "noPerSeat": "No per-seat licensing",
@@ -2599,7 +2599,7 @@
       },
       "vendor": {
         "title": "You're locked into one model",
-        "description": "Legal prefers Claude, devs want GPT-4, marketing uses Gemini. Result: 3 subscriptions, 3 invoices, no visibility."
+        "description": "Legal prefers Claude, devs want GPT-5, marketing uses Gemini. Result: 3 subscriptions, 3 invoices, no visibility."
       },
       "visibility": {
         "title": "You have no visibility",
@@ -2611,7 +2611,7 @@
       "subtitle": "The solution designed for real business needs.",
       "multiModel": {
         "title": "Multi-model",
-        "description": "Claude, GPT-4, Gemini, Mistral... Your teams choose the best tool for each task. One account, one invoice."
+        "description": "Claude, GPT-5, Gemini, Mistral... Your teams choose the best tool for each task. One account, one invoice."
       },
       "payPerUse": {
         "title": "Pay-per-use",
@@ -2647,7 +2647,7 @@
       "tech": {
         "title": "Tech & Development",
         "description": "Debugging, code review, technical documentation, solution exploration.",
-        "model": "Recommended model: GPT-4"
+        "model": "Recommended model: GPT-5"
       },
       "marketing": {
         "title": "Marketing & Communications",
@@ -2657,7 +2657,7 @@
       "finance": {
         "title": "Finance & Operations",
         "description": "Data analysis, report summaries, task automation.",
-        "model": "Recommended model: GPT-4 / Mistral"
+        "model": "Recommended model: GPT-5 / Mistral"
       }
     },
     "pricing": {
@@ -2733,7 +2733,7 @@
       },
       "models": {
         "question": "What models are available?",
-        "answer": "Claude (Haiku, Sonnet, Opus), GPT-4, GPT-4o, Gemini Pro, Gemini Flash, Mistral Large, and more. We regularly add new models."
+        "answer": "Claude (Haiku, Sonnet, Opus), GPT-5.1, GPT-5, Gemini Pro, Gemini Flash, Mistral Large, and more. We regularly add new models."
       },
       "onboarding": {
         "question": "How do employees access the platform?",
@@ -2924,7 +2924,7 @@
       },
       "platforms": {
         "question": "What platforms is the app available on?",
-        "answer": "The desktop app is available on Windows and macOS. A Linux version is in development. Anonymization works with all models available on iaiaz (Claude, GPT-4, Gemini, Mistral)."
+        "answer": "The desktop app is available on Windows and macOS. A Linux version is in development. Anonymization works with all models available on iaiaz (Claude, GPT-5, Gemini, Mistral)."
       },
       "offline": {
         "question": "Does the app work offline?",

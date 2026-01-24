@@ -135,7 +135,7 @@ export async function getModelSettings(): Promise<ModelSettings> {
   const defaults: ModelSettings = {
     default_chat_model: { model_id: "claude-sonnet-4-20250514" },
     analytics_model: { model_id: "claude-sonnet-4-20250514" },
-    economy_model: { model_id: "gpt-4o-mini" },
+    economy_model: { model_id: "gpt-5-nano" },
   };
 
   if (error) {
