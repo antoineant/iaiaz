@@ -94,7 +94,13 @@ export async function POST(request: Request) {
     }
 
     // Get the economy model for cost-effective generation
-    const model = await getEconomyModel();
+    // Fall back to gpt-4o-mini if economy model isn't available
+    let model = await getEconomyModel();
+    // Map non-existent models to working ones
+    if (model === "gpt-5-nano") {
+      model = "gpt-4o-mini";
+    }
+    console.log("Using model for course structure generation:", model);
 
     // Build prompt with locale hint
     const localeHint = locale === "fr"
@@ -104,9 +110,19 @@ export async function POST(request: Request) {
     const fullPrompt = GENERATION_PROMPT + description.trim() + localeHint;
 
     // Call AI
-    const response = await callAI(model, [
-      { role: "user", content: fullPrompt }
-    ]);
+    let response;
+    try {
+      response = await callAI(model, [
+        { role: "user", content: fullPrompt }
+      ]);
+      console.log("AI response received, content length:", response.content?.length || 0);
+    } catch (aiError) {
+      console.error("AI call failed:", aiError);
+      return NextResponse.json(
+        { error: "AI service unavailable. Please try again." },
+        { status: 503 }
+      );
+    }
 
     // Parse response
     const jsonMatch = response.content.match(/\{[\s\S]*\}/);
