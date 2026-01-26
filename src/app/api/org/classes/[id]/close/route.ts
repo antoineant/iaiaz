@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { canManageClass } from "@/lib/org";
 
 type RouteParams = { params: Promise<{ id: string }> };
@@ -17,6 +18,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
     }
 
     const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Set closed_at to now
     const { data: classData, error } = await supabase
@@ -42,10 +44,22 @@ export async function POST(_request: Request, { params }: RouteParams) {
       );
     }
 
+    // Refund unused credits to organization pool
+    const { data: refundResult, error: refundError } = await adminClient.rpc(
+      "refund_class_credits",
+      { p_class_id: id }
+    );
+
+    if (refundError) {
+      console.error("Error refunding credits:", refundError);
+      // Don't fail the close operation, just log the error
+    }
+
     return NextResponse.json({
       success: true,
       class: classData,
       message: "Session closed successfully",
+      refund: refundResult || null,
     });
   } catch (error) {
     console.error("Class close error:", error);
