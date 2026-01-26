@@ -277,7 +277,8 @@
       "viewAllClasses": "Voir toutes les classes",
       "noClasses": "Aucune classe",
       "noManagedClasses": "Créer une classe",
-      "privateConversations": "Conversations privées"
+      "privateConversations": "Conversations privées",
+      "imageStudio": "Studio Image"
     },
     "privacy": {
       "title": "Confidentialité de vos conversations",
@@ -3033,6 +3034,42 @@
       "success": "Crédits ajustés avec succès",
       "error": "Erreur lors de l'ajustement",
       "reasonRequired": "La raison est obligatoire"
+    }
+  },
+  "imageStudio": {
+    "title": "Studio Image",
+    "subtitle": "Générez des images avec l'IA",
+    "backToChat": "Retour au chat",
+    "balance": "Solde",
+    "model": "Modèle",
+    "recommended": "Recommandé",
+    "prompt": "Description",
+    "promptPlaceholder": "Décrivez l'image que vous souhaitez créer...",
+    "size": "Taille",
+    "style": "Style",
+    "quality": "Qualité",
+    "estimatedCost": "Coût estimé",
+    "generate": "Générer",
+    "generating": "Génération...",
+    "gallery": "Vos créations",
+    "download": "Télécharger",
+    "openInNewTab": "Ouvrir dans un nouvel onglet",
+    "revisedPrompt": "Prompt révisé",
+    "styles": {
+      "natural": "Naturel",
+      "vivid": "Vif"
+    },
+    "qualities": {
+      "standard": "Standard",
+      "hd": "HD"
+    },
+    "emptyGallery": {
+      "title": "Aucune image",
+      "description": "Générez votre première image avec le formulaire à gauche"
+    },
+    "errors": {
+      "insufficientCredits": "Crédits insuffisants",
+      "generationFailed": "Échec de la génération"
     }
   }
 }

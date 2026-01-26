@@ -24,6 +24,7 @@ import {
   GraduationCap,
   Shield,
   Info,
+  Image as ImageIcon,
 } from "lucide-react";
 
 interface OrgContext {
@@ -186,11 +187,17 @@ export function Sidebar({
       </div>
 
       {/* New conversation */}
-      <div className="p-4">
+      <div className="p-4 space-y-2">
         <Button className="w-full" onClick={onNewConversation}>
           <Plus className="w-4 h-4 mr-2" />
           {t("newConversation")}
         </Button>
+        <NextLink href="/create/images" onClick={() => setIsOpen(false)}>
+          <Button variant="outline" className="w-full">
+            <ImageIcon className="w-4 h-4 mr-2" />
+            {t("imageStudio")}
+          </Button>
+        </NextLink>
       </div>
 
       {/* Conversations list */}

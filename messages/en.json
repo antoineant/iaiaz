@@ -277,7 +277,8 @@
       "viewAllClasses": "View all classes",
       "noClasses": "No classes",
       "noManagedClasses": "Create a class",
-      "privateConversations": "Private conversations"
+      "privateConversations": "Private conversations",
+      "imageStudio": "Image Studio"
     },
     "privacy": {
       "title": "Your conversation privacy",
@@ -3033,6 +3034,42 @@
       "success": "Credits adjusted successfully",
       "error": "Error adjusting credits",
       "reasonRequired": "Reason is required"
+    }
+  },
+  "imageStudio": {
+    "title": "Image Studio",
+    "subtitle": "Generate images with AI",
+    "backToChat": "Back to chat",
+    "balance": "Balance",
+    "model": "Model",
+    "recommended": "Recommended",
+    "prompt": "Prompt",
+    "promptPlaceholder": "Describe the image you want to create...",
+    "size": "Size",
+    "style": "Style",
+    "quality": "Quality",
+    "estimatedCost": "Estimated cost",
+    "generate": "Generate",
+    "generating": "Generating...",
+    "gallery": "Your creations",
+    "download": "Download",
+    "openInNewTab": "Open in new tab",
+    "revisedPrompt": "Revised prompt",
+    "styles": {
+      "natural": "Natural",
+      "vivid": "Vivid"
+    },
+    "qualities": {
+      "standard": "Standard",
+      "hd": "HD"
+    },
+    "emptyGallery": {
+      "title": "No images yet",
+      "description": "Generate your first image using the form on the left"
+    },
+    "errors": {
+      "insufficientCredits": "Insufficient credits",
+      "generationFailed": "Image generation failed"
     }
   }
 }
