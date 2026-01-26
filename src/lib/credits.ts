@@ -17,9 +17,13 @@ export interface CreditSource {
   memberId?: string;
   role?: string;
   isTrainer?: boolean;       // true for owner, admin, teacher
+  classId?: string;          // Student's class ID
+  className?: string;        // Student's class name
+  creditLimit?: number;      // Per-student limit in class (null = no limit)
+  creditUsed?: number;       // Total used by this member
   preference?: CreditPreference;
   personalBalance?: number;  // Always included for org members (to show both)
-  orgBalance?: number;       // Org balance when available
+  orgBalance?: number;       // Org pool balance
   limits?: {
     daily?: { used: number; limit: number; remaining: number };
     weekly?: { used: number; limit: number; remaining: number };
@@ -167,10 +171,19 @@ export async function getUserCredits(userId: string): Promise<CreditSource> {
     };
   }
 
-  // For trainers: orgBalance is org available pool (credit_balance - credit_allocated)
-  // For students: orgBalance is their allocation remaining (credit_allocated - credit_used)
-  // The database function get_user_organization already calculates this correctly as credit_remaining
-  const orgBalance = member.credit_remaining;
+  // Everyone now draws from org pool (credit_remaining = org credit_balance)
+  // For students with a class limit, effective balance is min(orgPool, limit - used)
+  const orgPool = member.credit_remaining;
+  const creditLimit = member.credit_limit;
+  const creditUsed = member.credit_used || 0;
+
+  // Calculate effective org balance
+  let orgBalance = orgPool;
+  if (!isTrainer && creditLimit !== null && creditLimit !== undefined) {
+    // Student with class limit - effective balance is min of org pool and remaining limit
+    const limitRemaining = Math.max(0, creditLimit - creditUsed);
+    orgBalance = Math.min(orgPool, limitRemaining);
+  }
 
   // Determine active source based on effective preference (trainers always use org)
   const useOrgFirst = effectivePreference === "auto" || effectivePreference === "org_first";
@@ -212,9 +225,13 @@ export async function getUserCredits(userId: string): Promise<CreditSource> {
     memberId: member.id,
     role: member.role,
     isTrainer,
+    classId: member.class_id,
+    className: member.class_name,
+    creditLimit: creditLimit,
+    creditUsed: creditUsed,
     preference: effectivePreference,
     personalBalance,
-    orgBalance,
+    orgBalance: orgPool,  // Show full org pool
     limits: Object.keys(limits).length > 0 ? limits : undefined,
   };
 }

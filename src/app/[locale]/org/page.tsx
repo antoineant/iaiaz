@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BulkAllocateModal } from "@/components/org/bulk-allocate-modal";
+// BulkAllocateModal removed - credits now draw directly from org pool
 import {
   Users,
   CreditCard,
@@ -14,14 +14,13 @@ import {
   UserPlus,
   Loader2,
   Wallet,
-  Send,
   AlertTriangle,
 } from "lucide-react";
 
 interface OrgStats {
   organization_name: string;
   credit_balance: number;
-  total_allocated: number;
+  total_used: number;
   total_members: number;
   students_count: number;
   teachers_count: number;
@@ -44,7 +43,6 @@ export default function OrgDashboardPage() {
   const [stats, setStats] = useState<OrgStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -79,18 +77,18 @@ export default function OrgDashboardPage() {
         .eq("organization_id", orgId)
         .eq("status", "active");
 
-      // Count by role
+      // Count by role and sum usage
       const roleCounts = {
         student: 0,
         teacher: 0,
         admin: 0,
         owner: 0,
       };
-      let totalAllocated = 0;
+      let totalUsed = 0;
 
       members?.forEach((m) => {
         roleCounts[m.role as keyof typeof roleCounts]++;
-        totalAllocated += m.credit_allocated || 0;
+        totalUsed += m.credit_used || 0;
       });
 
       // Get usage this month
@@ -119,7 +117,7 @@ export default function OrgDashboardPage() {
       setStats({
         organization_name: org?.name || "",
         credit_balance: org?.credit_balance || 0,
-        total_allocated: totalAllocated,
+        total_used: totalUsed,
         total_members: members?.length || 0,
         students_count: roleCounts.student,
         teachers_count: roleCounts.teacher,
@@ -173,57 +171,43 @@ export default function OrgDashboardPage() {
     );
   }
 
-  const availableCredits = (stats?.credit_balance || 0) - (stats?.total_allocated || 0);
-  const isOverallocated = availableCredits < 0;
-
-  const handleAllocateSuccess = () => {
-    // Refresh stats after successful allocation
-    window.location.reload();
-  };
+  // Credits are now drawn directly from the pool - no allocation needed
+  const creditBalance = stats?.credit_balance || 0;
+  const totalUsed = stats?.total_used || 0;
 
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
 
       {/* Quick Actions Card */}
-      <Card className={`mb-6 ${isOverallocated ? "border-orange-300 dark:border-orange-700 bg-gradient-to-r from-orange-50 to-white dark:from-orange-950/30 dark:to-[var(--background)]" : "border-primary-200 dark:border-primary-800 bg-gradient-to-r from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)]"}`}>
+      <Card className="mb-6 border-primary-200 dark:border-primary-800 bg-gradient-to-r from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)]">
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                {isOverallocated ? (
-                  <AlertTriangle className="w-5 h-5 text-orange-600" />
-                ) : (
-                  <Wallet className="w-5 h-5 text-primary-600" />
-                )}
+                <Wallet className="w-5 h-5 text-primary-600" />
                 <h2 className="font-semibold">{t("quickActions")}</h2>
               </div>
-              {isOverallocated && (
-                <div className="mb-3 p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-sm">
-                  <p className="font-medium">{t("overallocatedWarning")}</p>
-                  <p className="text-xs mt-1">{t("overallocatedExplanation")}</p>
-                </div>
-              )}
               <div className="flex items-center gap-4 text-sm">
                 <span>
                   <span className="text-[var(--muted-foreground)]">
-                    {t("availableCredits")}:
+                    {t("creditPool")}:
                   </span>{" "}
-                  <span className={`font-medium ${isOverallocated ? "text-orange-600 dark:text-orange-400" : "text-green-600 dark:text-green-400"}`}>
-                    {availableCredits.toFixed(2)}€
+                  <span className="font-medium text-green-600 dark:text-green-400">
+                    {creditBalance.toFixed(2)}€
                   </span>
                 </span>
                 <span>
                   <span className="text-[var(--muted-foreground)]">
-                    {t("allocatedCredits")}:
+                    {t("totalUsed")}:
                   </span>{" "}
                   <span className="font-medium text-primary-600 dark:text-primary-400">
-                    {stats?.total_allocated.toFixed(2)}€
+                    {totalUsed.toFixed(2)}€
                   </span>
                 </span>
               </div>
               <p className="text-xs text-[var(--muted-foreground)] mt-2">
-                {t("creditExplanation")}
+                {t("creditExplanationSimple")}
               </p>
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -234,10 +218,13 @@ export default function OrgDashboardPage() {
                 <CreditCard className="w-4 h-4 mr-2" />
                 {t("buyCredits")}
               </Link>
-              <Button onClick={() => setIsAllocateModalOpen(true)}>
-                <Send className="w-4 h-4 mr-2" />
-                {t("allocateToStudents")}
-              </Button>
+              <Link
+                href="/org/classes"
+                className="inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                {t("manageClasses")}
+              </Link>
             </div>
           </div>
         </CardContent>
@@ -254,10 +241,10 @@ export default function OrgDashboardPage() {
                   {t("creditPool")}
                 </p>
                 <p className="text-2xl font-bold mt-1">
-                  {stats?.credit_balance.toFixed(2)}€
+                  {creditBalance.toFixed(2)}€
                 </p>
-                <p className={`text-xs mt-1 ${isOverallocated ? "text-orange-600 dark:text-orange-400" : "text-[var(--muted-foreground)]"}`}>
-                  {t("readyToAllocate")}: {availableCredits.toFixed(2)}€
+                <p className="text-xs mt-1 text-[var(--muted-foreground)]">
+                  {t("totalUsed")}: {totalUsed.toFixed(2)}€
                 </p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -327,23 +314,23 @@ export default function OrgDashboardPage() {
         </Card>
       </div>
 
-      {/* Credit Breakdown */}
+      {/* Credit Usage */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
-            <h2 className="font-semibold">{t("creditDistribution")}</h2>
+            <h2 className="font-semibold">{t("creditUsage")}</h2>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="flex items-center gap-2">
-                    {t("reservedForStudents")}
+                    {t("totalUsed")}
                     <span className="text-xs text-[var(--muted-foreground)]">
-                      ({t("reservedCount", { count: stats?.students_count || 0 })})
+                      ({t("studentCount", { count: stats?.students_count || 0 })})
                     </span>
                   </span>
-                  <span className="font-medium">{stats?.total_allocated.toFixed(2)}€</span>
+                  <span className="font-medium">{totalUsed.toFixed(2)}€</span>
                 </div>
                 <div className="h-3 bg-[var(--muted)] rounded-full overflow-hidden">
                   <div
@@ -351,9 +338,7 @@ export default function OrgDashboardPage() {
                     style={{
                       width: `${Math.min(
                         100,
-                        ((stats?.total_allocated || 0) /
-                          (stats?.credit_balance || 1)) *
-                          100
+                        (totalUsed / (creditBalance + totalUsed || 1)) * 100
                       )}%`,
                     }}
                   />
@@ -361,25 +346,21 @@ export default function OrgDashboardPage() {
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>{t("readyToAllocate")}</span>
-                  <span className={`font-medium ${isOverallocated ? "text-orange-600 dark:text-orange-400" : ""}`}>
-                    {availableCredits.toFixed(2)}€
+                  <span>{t("remaining")}</span>
+                  <span className="font-medium text-green-600 dark:text-green-400">
+                    {creditBalance.toFixed(2)}€
                   </span>
                 </div>
                 <div className="h-3 bg-[var(--muted)] rounded-full overflow-hidden">
-                  {isOverallocated ? (
-                    <div className="h-full bg-orange-500 rounded-full w-full" />
-                  ) : (
-                    <div
-                      className="h-full bg-green-500 rounded-full"
-                      style={{
-                        width: `${Math.min(
-                          100,
-                          Math.max(0, (availableCredits / (stats?.credit_balance || 1)) * 100)
-                        )}%`,
-                      }}
-                    />
-                  )}
+                  <div
+                    className="h-full bg-green-500 rounded-full"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (creditBalance / (creditBalance + totalUsed || 1)) * 100
+                      )}%`,
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -429,13 +410,6 @@ export default function OrgDashboardPage() {
         </Card>
       </div>
 
-      {/* Bulk Allocate Modal */}
-      <BulkAllocateModal
-        isOpen={isAllocateModalOpen}
-        onClose={() => setIsAllocateModalOpen(false)}
-        availableCredits={availableCredits}
-        onSuccess={handleAllocateSuccess}
-      />
     </div>
   );
 }
