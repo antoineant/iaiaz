@@ -19,9 +19,9 @@ interface ClassData {
   status: string;
   starts_at: string | null;
   ends_at: string | null;
+  credit_limit: number | null;
   settings: {
     allowed_models: string[] | null;
-    default_credit_per_student: number | null;
     daily_limit_per_student: number | null;
     allow_personal_fallback: boolean;
   };
@@ -56,7 +56,7 @@ export default function ClassSettingsPage() {
     description: "",
     starts_at: "",
     ends_at: "",
-    default_credit_per_student: "",
+    credit_limit: "",
     daily_limit_per_student: "",
     allow_personal_fallback: true,
   });
@@ -92,7 +92,7 @@ export default function ClassSettingsPage() {
           description: data.description || "",
           starts_at: formatDate(data.starts_at),
           ends_at: formatDate(data.ends_at),
-          default_credit_per_student: data.settings?.default_credit_per_student?.toString() || "",
+          credit_limit: data.credit_limit?.toString() || "",
           daily_limit_per_student: data.settings?.daily_limit_per_student?.toString() || "",
           allow_personal_fallback: data.settings?.allow_personal_fallback ?? true,
         });
@@ -125,12 +125,12 @@ export default function ClassSettingsPage() {
         description: formData.description || null,
         starts_at: formData.starts_at ? new Date(formData.starts_at).toISOString() : null,
         ends_at: formData.ends_at ? new Date(formData.ends_at).toISOString() : null,
+        credit_limit: formData.credit_limit
+          ? parseFloat(formData.credit_limit)
+          : null,
         settings: {
           ...classData?.settings,
           allowed_models: restrictModels && selectedModels.length > 0 ? selectedModels : null,
-          default_credit_per_student: formData.default_credit_per_student
-            ? parseFloat(formData.default_credit_per_student)
-            : null,
           daily_limit_per_student: formData.daily_limit_per_student
             ? parseFloat(formData.daily_limit_per_student)
             : null,
@@ -282,24 +282,24 @@ export default function ClassSettingsPage() {
           <CardContent className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                {t("form.defaultCredit")}
+                {t("form.creditLimit")}
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
                   step="0.01"
                   min="0"
-                  value={formData.default_credit_per_student}
+                  value={formData.credit_limit}
                   onChange={(e) =>
-                    setFormData({ ...formData, default_credit_per_student: e.target.value })
+                    setFormData({ ...formData, credit_limit: e.target.value })
                   }
                   className="w-32 p-2 border border-[var(--border)] rounded-lg bg-[var(--background)] text-[var(--foreground)]"
-                  placeholder="5.00"
+                  placeholder={t("form.noLimit")}
                 />
                 <span className="text-[var(--muted-foreground)]">€</span>
               </div>
               <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                {t("form.defaultCreditHint")}
+                {t("form.creditLimitHint")}
               </p>
             </div>
 

@@ -31,6 +31,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
         starts_at,
         ends_at,
         closed_at,
+        credit_limit,
         created_by,
         created_at,
         updated_at
@@ -85,10 +86,21 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     const supabase = await createClient();
     const body = await request.json();
 
-    const { name, description, settings, status, starts_at, ends_at } = body;
+    const { name, description, settings, status, starts_at, ends_at, credit_limit } = body;
 
     // Build update object
     const updates: Record<string, unknown> = {};
+
+    if (credit_limit !== undefined) {
+      // null means no limit, otherwise must be a positive number
+      if (credit_limit !== null && (typeof credit_limit !== "number" || credit_limit < 0)) {
+        return NextResponse.json(
+          { error: "Credit limit must be a positive number or null" },
+          { status: 400 }
+        );
+      }
+      updates.credit_limit = credit_limit;
+    }
 
     if (name !== undefined) {
       if (typeof name !== "string" || name.trim().length === 0) {
