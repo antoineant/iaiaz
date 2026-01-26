@@ -7,7 +7,6 @@ import { Link } from "@/i18n/navigation";
 import NextLink from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BulkAllocateModal } from "@/components/org/bulk-allocate-modal";
 import {
   ArrowLeft,
   Users,
@@ -23,7 +22,6 @@ import {
   CheckCircle2,
   XCircle,
   BarChart3,
-  Send,
 } from "lucide-react";
 
 interface ClassData {
@@ -36,16 +34,16 @@ interface ClassData {
   ends_at: string | null;
   closed_at: string | null;
   created_at: string;
+  credit_limit: number | null;
   settings: {
     allowed_models: string[] | null;
-    default_credit_per_student: number | null;
+    credit_limit: number | null;
     daily_limit_per_student: number | null;
     allow_personal_fallback: boolean;
   };
   stats: {
     total_students: number;
     active_today: number;
-    total_credit_allocated: number;
     total_credit_used: number;
     usage_today: number;
     usage_this_week: number;
@@ -58,9 +56,7 @@ interface Student {
   display_name: string | null;
   email: string | null;
   avatar_url: string | null;
-  credit_allocated: number;
   credit_used: number;
-  credit_remaining: number;
   status: string;
   joined_at: string;
   last_activity: string | null;
@@ -81,15 +77,12 @@ export default function ClassDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
-  const [availableCredits, setAvailableCredits] = useState(0);
 
   const loadData = async () => {
     try {
-      const [classRes, studentsRes, orgStatsRes] = await Promise.all([
+      const [classRes, studentsRes] = await Promise.all([
         fetch(`/api/org/classes/${classId}`),
         fetch(`/api/org/classes/${classId}/students`),
-        fetch("/api/org/stats"),
       ]);
 
       if (!classRes.ok) {
@@ -106,19 +99,10 @@ export default function ClassDashboardPage() {
         console.error("Failed to load students:", studentsRes.status, await studentsRes.text());
       }
 
-      // Get available credits from org stats
-      if (orgStatsRes.ok) {
-        const orgStats = await orgStatsRes.json();
-        const balance = orgStats.credit_balance || 0;
-        const allocated = orgStats.credit_allocated || 0;
-        setAvailableCredits(balance - allocated);
-      }
-
       // Ensure stats has default values to prevent toFixed errors
       const stats = {
         total_students: 0,
         active_today: 0,
-        total_credit_allocated: 0,
         total_credit_used: 0,
         usage_today: 0,
         usage_this_week: 0,
@@ -233,10 +217,6 @@ export default function ClassDashboardPage() {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={() => setIsAllocateModalOpen(true)}>
-              <Send className="w-4 h-4 mr-2" />
-              {t("allocateCredits")}
-            </Button>
             <NextLink href={`/org/classes/${classId}/analytics`}>
               <Button variant="outline">
                 <BarChart3 className="w-4 h-4 mr-2" />
@@ -305,13 +285,15 @@ export default function ClassDashboardPage() {
           <CardContent className="pt-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-[var(--muted-foreground)]">{t("stats.credits")}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">{t("stats.totalUsed")}</p>
                 <p className="text-2xl font-bold mt-1">
-                  {classData.stats.total_credit_allocated.toFixed(2)}€
+                  {classData.stats.total_credit_used.toFixed(2)}€
                 </p>
-                <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                  {classData.stats.total_credit_used.toFixed(2)}€ {t("stats.used")}
-                </p>
+                {classData.credit_limit && (
+                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                    {t("stats.limitPerStudent")}: {classData.credit_limit.toFixed(2)}€
+                  </p>
+                )}
               </div>
               <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -467,14 +449,9 @@ export default function ClassDashboardPage() {
                           )}
                         </td>
                         <td className="py-3">
-                          <div>
-                            <p className="font-mono text-sm">
-                              {student.credit_remaining.toFixed(2)}€
-                            </p>
-                            <p className="text-xs text-[var(--muted-foreground)]">
-                              / {student.credit_allocated.toFixed(2)}€
-                            </p>
-                          </div>
+                          <p className="font-mono text-sm">
+                            {student.credit_used.toFixed(2)}€
+                          </p>
                         </td>
                         <td className="py-3 text-sm text-[var(--muted-foreground)]">
                           {student.last_activity
@@ -510,15 +487,6 @@ export default function ClassDashboardPage() {
           )}
         </CardContent>
       </Card>
-
-      {/* Bulk Allocate Modal */}
-      <BulkAllocateModal
-        isOpen={isAllocateModalOpen}
-        onClose={() => setIsAllocateModalOpen(false)}
-        availableCredits={availableCredits}
-        preselectedClassId={classId}
-        onSuccess={loadData}
-      />
     </div>
   );
 }

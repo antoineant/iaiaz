@@ -2216,8 +2216,8 @@
       "stats": {
         "students": "Étudiants",
         "activeToday": "actifs aujourd'hui",
-        "credits": "Crédits alloués",
-        "used": "utilisés",
+        "totalUsed": "Total utilisé",
+        "limitPerStudent": "Limite par étudiant",
         "usageToday": "Usage aujourd'hui",
         "usageWeek": "Usage cette semaine"
       },

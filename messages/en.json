@@ -2327,8 +2327,8 @@
       "stats": {
         "students": "Students",
         "activeToday": "active today",
-        "credits": "Credits Allocated",
-        "used": "used",
+        "totalUsed": "Total Used",
+        "limitPerStudent": "Limit per student",
         "usageToday": "Usage Today",
         "usageWeek": "Usage This Week"
       },
