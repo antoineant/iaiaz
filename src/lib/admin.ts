@@ -33,3 +33,11 @@ export async function getAdminUserId(): Promise<string | null> {
   } = await supabase.auth.getUser();
   return user?.id || null;
 }
+
+export async function getCurrentAdminUser() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+}

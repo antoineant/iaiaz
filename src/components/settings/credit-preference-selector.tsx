@@ -15,6 +15,9 @@ interface CreditPreferenceSelectorProps {
   onPreferenceChange: (preference: CreditPreference) => void;
 }
 
+// Simplified to 2 options for easier user understanding
+// "auto" covers the common case (org first, personal as fallback)
+// "personal_only" for users who want to keep credits separate
 const PREFERENCE_OPTIONS: {
   value: CreditPreference;
   labelKey: string;
@@ -28,19 +31,9 @@ const PREFERENCE_OPTIONS: {
     recommended: true,
   },
   {
-    value: "org_only",
-    labelKey: "options.orgOnly",
-    descriptionKey: "options.orgOnlyDescription",
-  },
-  {
     value: "personal_only",
     labelKey: "options.personalOnly",
     descriptionKey: "options.personalOnlyDescription",
-  },
-  {
-    value: "personal_first",
-    labelKey: "options.personalFirst",
-    descriptionKey: "options.personalFirstDescription",
   },
 ];
 

@@ -2006,7 +2006,25 @@
       "allocated": "Allocated",
       "recentActivity": "Recent Activity",
       "noActivity": "No recent activity",
-      "unknownMember": "Unknown member"
+      "unknownMember": "Unknown member",
+      "quickActions": "Credit Management",
+      "buyCredits": "Buy credits",
+      "allocateToStudents": "Allocate to students",
+      "availableCredits": "Available",
+      "allocatedCredits": "Allocated"
+    },
+    "bulkAllocate": {
+      "title": "Allocate credits to class",
+      "selectClass": "Select a class",
+      "amountPerStudent": "Amount per student",
+      "applyToNewStudents": "Also apply to new students",
+      "preview": "{count} students × ${amount} = ${total}",
+      "confirm": "Confirm allocation",
+      "success": "Credits allocated successfully",
+      "error": "Error allocating credits",
+      "insufficientCredits": "Insufficient credits in pool",
+      "noClasses": "No classes available",
+      "noStudents": "No students in this class"
     },
     "members": {
       "title": "Members",
@@ -2256,6 +2274,7 @@
       "backToDashboard": "Back to dashboard",
       "closeSession": "Close Session",
       "reopenSession": "Reopen Session",
+      "allocateCredits": "Allocate Credits",
       "joinLink": "Join Link",
       "copyLink": "Copy Link",
       "studentsList": "Student List",
@@ -2954,6 +2973,34 @@
       "home": "Home",
       "business": "Business",
       "anonymisation": "Anonymization"
+    }
+  },
+  "admin": {
+    "organizations": {
+      "title": "Organizations",
+      "subtitle": "Manage organizations and their credits",
+      "search": "Search for an organization...",
+      "creditPool": "Credits",
+      "allocated": "Allocated",
+      "available": "Available",
+      "members": "Members",
+      "adjustCredits": "Adjust credits",
+      "noOrganizations": "No organizations",
+      "owner": "Owner"
+    },
+    "creditAdjustment": {
+      "title": "Adjust credits",
+      "personalCredits": "Personal credits",
+      "orgCredits": "Organization credits",
+      "amount": "Amount (+ add, - remove)",
+      "reason": "Reason (required)",
+      "reasonPlaceholder": "E.g., Compensation for technical issue",
+      "currentBalance": "Current balance",
+      "newBalance": "New balance",
+      "confirm": "Confirm adjustment",
+      "success": "Credits adjusted successfully",
+      "error": "Error adjusting credits",
+      "reasonRequired": "Reason is required"
     }
   }
 }

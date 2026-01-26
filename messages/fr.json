@@ -1895,7 +1895,25 @@
       "allocated": "Alloués",
       "recentActivity": "Activité récente",
       "noActivity": "Aucune activité récente",
-      "unknownMember": "Membre inconnu"
+      "unknownMember": "Membre inconnu",
+      "quickActions": "Gestion des crédits",
+      "buyCredits": "Acheter des crédits",
+      "allocateToStudents": "Allouer aux élèves",
+      "availableCredits": "Disponibles",
+      "allocatedCredits": "Alloués"
+    },
+    "bulkAllocate": {
+      "title": "Allouer des crédits à la classe",
+      "selectClass": "Sélectionner une classe",
+      "amountPerStudent": "Montant par élève",
+      "applyToNewStudents": "Appliquer aussi aux nouveaux élèves",
+      "preview": "{count} élèves × {amount}€ = {total}€",
+      "confirm": "Confirmer l'allocation",
+      "success": "Crédits alloués avec succès",
+      "error": "Erreur lors de l'allocation",
+      "insufficientCredits": "Crédits insuffisants dans le pool",
+      "noClasses": "Aucune classe disponible",
+      "noStudents": "Aucun élève dans cette classe"
     },
     "members": {
       "title": "Membres",
@@ -2145,6 +2163,7 @@
       "backToDashboard": "Retour au tableau de bord",
       "closeSession": "Fermer la session",
       "reopenSession": "Rouvrir la session",
+      "allocateCredits": "Allouer des crédits",
       "joinLink": "Lien d'inscription",
       "copyLink": "Copier le lien",
       "studentsList": "Liste des étudiants",
@@ -2954,6 +2973,34 @@
       "home": "Accueil",
       "business": "Entreprises",
       "anonymisation": "Anonymisation"
+    }
+  },
+  "admin": {
+    "organizations": {
+      "title": "Organisations",
+      "subtitle": "Gérer les organisations et leurs crédits",
+      "search": "Rechercher une organisation...",
+      "creditPool": "Crédits",
+      "allocated": "Alloués",
+      "available": "Disponibles",
+      "members": "Membres",
+      "adjustCredits": "Ajuster crédits",
+      "noOrganizations": "Aucune organisation",
+      "owner": "Propriétaire"
+    },
+    "creditAdjustment": {
+      "title": "Ajuster les crédits",
+      "personalCredits": "Crédits personnels",
+      "orgCredits": "Crédits organisation",
+      "amount": "Montant (+ ajouter, - retirer)",
+      "reason": "Raison (obligatoire)",
+      "reasonPlaceholder": "Ex: Compensation pour problème technique",
+      "currentBalance": "Solde actuel",
+      "newBalance": "Nouveau solde",
+      "confirm": "Confirmer l'ajustement",
+      "success": "Crédits ajustés avec succès",
+      "error": "Erreur lors de l'ajustement",
+      "reasonRequired": "La raison est obligatoire"
     }
   }
 }

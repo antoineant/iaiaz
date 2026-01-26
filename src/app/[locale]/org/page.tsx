@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BulkAllocateModal } from "@/components/org/bulk-allocate-modal";
 import {
   Users,
   CreditCard,
   TrendingUp,
   UserPlus,
   Loader2,
+  Wallet,
+  Send,
 } from "lucide-react";
 
 interface OrgStats {
@@ -38,6 +43,7 @@ export default function OrgDashboardPage() {
   const [stats, setStats] = useState<OrgStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -168,9 +174,59 @@ export default function OrgDashboardPage() {
 
   const availableCredits = (stats?.credit_balance || 0) - (stats?.total_allocated || 0);
 
+  const handleAllocateSuccess = () => {
+    // Refresh stats after successful allocation
+    window.location.reload();
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
+
+      {/* Quick Actions Card */}
+      <Card className="mb-6 border-primary-200 dark:border-primary-800 bg-gradient-to-r from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)]">
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Wallet className="w-5 h-5 text-primary-600" />
+                <h2 className="font-semibold">{t("quickActions")}</h2>
+              </div>
+              <div className="flex items-center gap-4 text-sm">
+                <span>
+                  <span className="text-[var(--muted-foreground)]">
+                    {t("availableCredits")}:
+                  </span>{" "}
+                  <span className="font-medium text-green-600 dark:text-green-400">
+                    {availableCredits.toFixed(2)}€
+                  </span>
+                </span>
+                <span>
+                  <span className="text-[var(--muted-foreground)]">
+                    {t("allocatedCredits")}:
+                  </span>{" "}
+                  <span className="font-medium">
+                    {stats?.total_allocated.toFixed(2)}€
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Link
+                href="/org/credits"
+                className="inline-flex items-center justify-center px-4 py-2 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--muted)] transition-colors"
+              >
+                <CreditCard className="w-4 h-4 mr-2" />
+                {t("buyCredits")}
+              </Link>
+              <Button onClick={() => setIsAllocateModalOpen(true)}>
+                <Send className="w-4 h-4 mr-2" />
+                {t("allocateToStudents")}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -346,6 +402,14 @@ export default function OrgDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Bulk Allocate Modal */}
+      <BulkAllocateModal
+        isOpen={isAllocateModalOpen}
+        onClose={() => setIsAllocateModalOpen(false)}
+        availableCredits={availableCredits}
+        onSuccess={handleAllocateSuccess}
+      />
     </div>
   );
 }

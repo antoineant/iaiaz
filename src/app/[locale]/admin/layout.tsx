@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Euro,
   Server,
+  Building2,
 } from "lucide-react";
 
 interface Profile {
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/admin/providers", label: "Fournisseurs IA", icon: Server },
   { href: "/admin/models", label: "Modèles", icon: Bot },
   { href: "/admin/users", label: "Utilisateurs", icon: Users },
+  { href: "/admin/organizations", label: "Organisations", icon: Building2 },
   { href: "/admin/settings", label: "Paramètres", icon: Settings },
 ];
 

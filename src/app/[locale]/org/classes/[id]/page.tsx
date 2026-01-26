@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import NextLink from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { BulkAllocateModal } from "@/components/org/bulk-allocate-modal";
 import {
   ArrowLeft,
   Users,
@@ -22,6 +23,7 @@ import {
   CheckCircle2,
   XCircle,
   BarChart3,
+  Send,
 } from "lucide-react";
 
 interface ClassData {
@@ -79,12 +81,15 @@ export default function ClassDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
+  const [availableCredits, setAvailableCredits] = useState(0);
 
   const loadData = async () => {
     try {
-      const [classRes, studentsRes] = await Promise.all([
+      const [classRes, studentsRes, orgStatsRes] = await Promise.all([
         fetch(`/api/org/classes/${classId}`),
         fetch(`/api/org/classes/${classId}/students`),
+        fetch("/api/org/stats"),
       ]);
 
       if (!classRes.ok) {
@@ -99,6 +104,14 @@ export default function ClassDashboardPage() {
         studentsJson = await studentsRes.json();
       } else {
         console.error("Failed to load students:", studentsRes.status, await studentsRes.text());
+      }
+
+      // Get available credits from org stats
+      if (orgStatsRes.ok) {
+        const orgStats = await orgStatsRes.json();
+        const balance = orgStats.credit_balance || 0;
+        const allocated = orgStats.credit_allocated || 0;
+        setAvailableCredits(balance - allocated);
       }
 
       // Ensure stats has default values to prevent toFixed errors
@@ -220,6 +233,10 @@ export default function ClassDashboardPage() {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <Button onClick={() => setIsAllocateModalOpen(true)}>
+              <Send className="w-4 h-4 mr-2" />
+              {t("allocateCredits")}
+            </Button>
             <NextLink href={`/org/classes/${classId}/analytics`}>
               <Button variant="outline">
                 <BarChart3 className="w-4 h-4 mr-2" />
@@ -493,6 +510,15 @@ export default function ClassDashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Bulk Allocate Modal */}
+      <BulkAllocateModal
+        isOpen={isAllocateModalOpen}
+        onClose={() => setIsAllocateModalOpen(false)}
+        availableCredits={availableCredits}
+        preselectedClassId={classId}
+        onSuccess={loadData}
+      />
     </div>
   );
 }
