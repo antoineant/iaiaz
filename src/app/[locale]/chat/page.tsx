@@ -57,6 +57,7 @@ export default async function ChatPage() {
       userId={user.id}
       initialBalance={credits.balance}
       personalBalance={credits.personalBalance}
+      isTrainer={credits.isTrainer}
       initialConversations={conversationsResult.data || []}
       pricingData={pricingData}
       orgContext={orgContext}

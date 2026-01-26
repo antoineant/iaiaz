@@ -271,6 +271,8 @@
       "dashboard": "Dashboard",
       "logout": "Log out",
       "orgCredits": "Organization",
+      "trainerOrgCredits": "Org Pool",
+      "classCredits": "Class Credits",
       "personalCredits": "Personal",
       "classes": "My Classes",
       "managedClasses": "My Classes",

@@ -64,6 +64,7 @@ interface SidebarProps {
   currentConversationId?: string;
   balance: number;
   personalBalance?: number;
+  isTrainer?: boolean;
   onNewConversation: () => void;
   onDeleteConversation: (id: string) => void;
   orgContext?: OrgContext;
@@ -77,6 +78,7 @@ export function Sidebar({
   currentConversationId,
   balance,
   personalBalance,
+  isTrainer,
   onNewConversation,
   onDeleteConversation,
   orgContext,
@@ -127,13 +129,16 @@ export function Sidebar({
               <Building2 className="w-4 h-4 text-primary-600 dark:text-primary-400" />
               <span className="text-sm font-medium truncate">{orgContext?.orgName}</span>
             </div>
-            {/* Both balances */}
+            {/* Credit display - different for trainers vs students */}
             <div className="space-y-1.5 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-[var(--muted-foreground)]">{t("orgCredits")}</span>
+                <span className="text-[var(--muted-foreground)]">
+                  {isTrainer ? t("trainerOrgCredits") : t("classCredits")}
+                </span>
                 <span className="font-semibold">{formatCurrency(balance)}</span>
               </div>
-              {personalBalance !== undefined && (
+              {/* Only show personal balance for students */}
+              {!isTrainer && personalBalance !== undefined && (
                 <div className="flex items-center justify-between">
                   <span className="text-[var(--muted-foreground)]">{t("personalCredits")}</span>
                   <span className="font-medium text-[var(--muted-foreground)]">{formatCurrency(personalBalance)}</span>

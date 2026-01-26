@@ -7,7 +7,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BulkAllocateModal } from "@/components/org/bulk-allocate-modal";
-import { TransferCreditsModal } from "@/components/org/transfer-credits-modal";
 import {
   Users,
   CreditCard,
@@ -16,7 +15,6 @@ import {
   Loader2,
   Wallet,
   Send,
-  ArrowLeftRight,
 } from "lucide-react";
 
 interface OrgStats {
@@ -46,7 +44,6 @@ export default function OrgDashboardPage() {
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -225,10 +222,6 @@ export default function OrgDashboardPage() {
                 <CreditCard className="w-4 h-4 mr-2" />
                 {t("buyCredits")}
               </Link>
-              <Button variant="outline" onClick={() => setIsTransferModalOpen(true)}>
-                <ArrowLeftRight className="w-4 h-4 mr-2" />
-                {t("transferCredits")}
-              </Button>
               <Button onClick={() => setIsAllocateModalOpen(true)}>
                 <Send className="w-4 h-4 mr-2" />
                 {t("allocateToStudents")}
@@ -423,13 +416,6 @@ export default function OrgDashboardPage() {
         isOpen={isAllocateModalOpen}
         onClose={() => setIsAllocateModalOpen(false)}
         availableCredits={availableCredits}
-        onSuccess={handleAllocateSuccess}
-      />
-
-      {/* Transfer Credits Modal */}
-      <TransferCreditsModal
-        isOpen={isTransferModalOpen}
-        onClose={() => setIsTransferModalOpen(false)}
         onSuccess={handleAllocateSuccess}
       />
     </div>

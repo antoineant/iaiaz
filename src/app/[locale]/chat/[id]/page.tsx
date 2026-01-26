@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import { ChatClient } from "../chat-client";
 import { getPricingData } from "@/lib/pricing-db";
+import { getUserCredits } from "@/lib/credits";
 import type { ChatMessage } from "@/types";
 
 interface ChatConversationPageProps {
@@ -46,12 +47,8 @@ export default async function ChatConversationPage({
   }
 
   // Fetch all data in parallel
-  const [profileResult, conversationsResult, messagesResult, pricingData] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("credits_balance")
-      .eq("id", user.id)
-      .single(),
+  const [credits, conversationsResult, messagesResult, pricingData, profileResult] = await Promise.all([
+    getUserCredits(user.id),
     supabase
       .from("conversations")
       .select("*")
@@ -64,7 +61,26 @@ export default async function ChatConversationPage({
       .eq("conversation_id", id)
       .order("created_at", { ascending: true }),
     getPricingData(),
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("id", user.id)
+      .single(),
   ]);
+
+  // Build org context if user is org member
+  const orgContext = credits.source === "organization" ? {
+    orgName: credits.orgName!,
+    role: credits.role!,
+    limits: credits.limits,
+  } : undefined;
+
+  // Build user info
+  const userInfo = {
+    displayName: profileResult.data?.display_name,
+    email: user.email || "",
+    avatarUrl: profileResult.data?.avatar_url,
+  };
 
   // Transform messages to ChatMessage format
   const initialMessages: ChatMessage[] = (messagesResult.data || []).map((msg) => ({
@@ -83,11 +99,15 @@ export default async function ChatConversationPage({
   return (
     <ChatClient
       userId={user.id}
-      initialBalance={profileResult.data?.credits_balance || 0}
+      initialBalance={credits.balance}
+      personalBalance={credits.personalBalance}
+      isTrainer={credits.isTrainer}
       initialConversations={conversationsResult.data || []}
       conversationId={id}
       initialMessages={initialMessages}
       pricingData={pricingData}
+      orgContext={orgContext}
+      userInfo={userInfo}
     />
   );
 }

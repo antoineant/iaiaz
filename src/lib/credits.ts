@@ -16,6 +16,7 @@ export interface CreditSource {
   orgName?: string;
   memberId?: string;
   role?: string;
+  isTrainer?: boolean;       // true for owner, admin, teacher
   preference?: CreditPreference;
   personalBalance?: number;  // Always included for org members (to show both)
   orgBalance?: number;       // Org balance when available
@@ -82,6 +83,13 @@ export async function getUserCredits(userId: string): Promise<CreditSource> {
   }
 
   const member = orgMember[0];
+
+  // Detect if user is a trainer (owner, admin, teacher)
+  const isTrainer = member.is_trainer === true;
+
+  // For trainers: always use org credits, skip preference check
+  // Effective preference for trainers is always "org_only"
+  const effectivePreference = isTrainer ? "org_only" : preference;
 
   // Get organization settings for limits
   const { data: org } = await adminClient
@@ -159,12 +167,15 @@ export async function getUserCredits(userId: string): Promise<CreditSource> {
     };
   }
 
+  // For trainers: orgBalance is org available pool (credit_balance - credit_allocated)
+  // For students: orgBalance is their allocation remaining (credit_allocated - credit_used)
+  // The database function get_user_organization already calculates this correctly as credit_remaining
   const orgBalance = member.credit_remaining;
 
-  // Determine active source based on preference
-  const useOrgFirst = preference === "auto" || preference === "org_first";
-  const usePersonalFirst = preference === "personal_first";
-  const orgOnly = preference === "org_only";
+  // Determine active source based on effective preference (trainers always use org)
+  const useOrgFirst = effectivePreference === "auto" || effectivePreference === "org_first";
+  const usePersonalFirst = effectivePreference === "personal_first";
+  const orgOnly = effectivePreference === "org_only";
 
   // Determine which source to use
   let activeSource: "organization" | "personal";
@@ -200,7 +211,8 @@ export async function getUserCredits(userId: string): Promise<CreditSource> {
     orgName: member.organization_name,
     memberId: member.id,
     role: member.role,
-    preference,
+    isTrainer,
+    preference: effectivePreference,
     personalBalance,
     orgBalance,
     limits: Object.keys(limits).length > 0 ? limits : undefined,
@@ -216,7 +228,7 @@ export async function checkCanSpend(
 ): Promise<SpendCheckResult> {
   const adminClient = createAdminClient();
 
-  // Get user's preference
+  // Get user's preference and personal balance
   const { data: profile } = await adminClient
     .from("profiles")
     .select("credits_balance, credit_preference")
@@ -226,19 +238,7 @@ export async function checkCanSpend(
   const personalBalance = profile?.credits_balance || 0;
   const preference = (profile?.credit_preference as CreditPreference) || "auto";
 
-  // Personal only - skip org check
-  if (preference === "personal_only") {
-    if (personalBalance >= amount) {
-      return { allowed: true, source: "personal" };
-    }
-    return {
-      allowed: false,
-      reason: "insufficient_credits",
-      source: "personal",
-    };
-  }
-
-  // Check organization limits
+  // Check organization limits (always check to detect trainers)
   const { data: limitCheck } = await adminClient.rpc(
     "check_org_member_limits",
     {
@@ -249,6 +249,32 @@ export async function checkCanSpend(
 
   const isOrgMember = limitCheck && limitCheck.reason !== "not_member";
   const orgAllowed = limitCheck?.allowed === true;
+  const isTrainer = limitCheck?.is_trainer === true;
+
+  // Trainers always use org credits (no preference choice)
+  if (isTrainer) {
+    if (orgAllowed) {
+      return { allowed: true, source: "organization" };
+    }
+    return {
+      allowed: false,
+      reason: limitCheck.reason,
+      resetAt: limitCheck.resets_at,
+      source: "organization",
+    };
+  }
+
+  // Personal only - skip org (students only)
+  if (preference === "personal_only") {
+    if (personalBalance >= amount) {
+      return { allowed: true, source: "personal" };
+    }
+    return {
+      allowed: false,
+      reason: "insufficient_credits",
+      source: "personal",
+    };
+  }
 
   // Org only - must use org
   if (preference === "org_only") {
@@ -326,6 +352,7 @@ export async function checkCanSpend(
 
 /**
  * Deduct credits from appropriate source - respects preference
+ * Trainers always use org credits (no personal fallback)
  */
 export async function deductCredits(
   userId: string,
@@ -375,8 +402,8 @@ export async function deductCredits(
     };
   };
 
-  // Helper to deduct from org
-  const deductOrg = async (): Promise<DeductResult> => {
+  // Helper to deduct from org (returns is_trainer on failure)
+  const deductOrg = async (): Promise<DeductResult & { isTrainer?: boolean }> => {
     const { data: orgResult } = await adminClient.rpc("record_org_member_usage", {
       p_user_id: userId,
       p_amount: amount,
@@ -393,36 +420,14 @@ export async function deductCredits(
     return {
       success: false,
       error: orgResult?.reason || "Organization deduction failed",
+      isTrainer: orgResult?.is_trainer === true,
     };
   };
 
-  // Personal only
-  if (preference === "personal_only") {
-    return deductPersonal();
-  }
+  // Try org first for everyone (trainers must use org, others may fall back)
+  const orgResult = await deductOrg();
 
-  // Org only
-  if (preference === "org_only") {
-    return deductOrg();
-  }
-
-  // Personal first
-  if (preference === "personal_first") {
-    const personalResult = await deductPersonal();
-    if (personalResult.success) {
-      return personalResult;
-    }
-    // Fallback to org
-    return deductOrg();
-  }
-
-  // Auto / org_first (default) - try org first
-  const { data: orgResult } = await adminClient.rpc("record_org_member_usage", {
-    p_user_id: userId,
-    p_amount: amount,
-  });
-
-  if (orgResult?.success) {
+  if (orgResult.success) {
     return {
       success: true,
       remaining: orgResult.remaining,
@@ -430,21 +435,40 @@ export async function deductCredits(
     };
   }
 
-  // If not org member or org failed, try personal fallback
-  if (!orgResult || orgResult.reason === "not_member") {
+  // If trainer, no personal fallback allowed
+  if (orgResult.isTrainer) {
+    return {
+      success: false,
+      error: orgResult.error || "Insufficient organization credits",
+    };
+  }
+
+  // Not a trainer - check if not an org member (use personal)
+  if (orgResult.error === "not_member") {
     return deductPersonal();
   }
 
-  // Org deduction failed for another reason (limit exceeded, etc.)
-  // Try personal as fallback
-  const personalFallback = await deductPersonal();
-  if (personalFallback.success) {
-    return personalFallback;
+  // Student with preference-based fallback logic
+  if (preference === "personal_only") {
+    return deductPersonal();
+  }
+
+  if (preference === "org_only") {
+    return {
+      success: false,
+      error: orgResult.error || "Insufficient organization credits",
+    };
+  }
+
+  // Auto, org_first, personal_first - try personal as fallback
+  const personalResult = await deductPersonal();
+  if (personalResult.success) {
+    return personalResult;
   }
 
   return {
     success: false,
-    error: orgResult.reason || "Credit deduction failed",
+    error: orgResult.error || "Credit deduction failed",
   };
 }
 

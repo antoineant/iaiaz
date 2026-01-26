@@ -271,6 +271,8 @@
       "dashboard": "Tableau de bord",
       "logout": "Se déconnecter",
       "orgCredits": "Établissement",
+      "trainerOrgCredits": "Pool Org",
+      "classCredits": "Crédits classe",
       "personalCredits": "Personnel",
       "classes": "Mes classes",
       "managedClasses": "Mes classes",

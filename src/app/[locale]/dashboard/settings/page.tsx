@@ -47,6 +47,7 @@ interface Credits {
   orgId?: string;
   orgName?: string;
   role?: string;
+  isTrainer?: boolean;
   preference?: CreditPreference;
   personalBalance?: number;
   orgBalance?: number;
@@ -433,8 +434,8 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Credit Preferences (only for org members) */}
-          {isOrgMember && (
+          {/* Credit Preferences (only for org members who are students - trainers always use org) */}
+          {isOrgMember && !credits?.isTrainer && (
             <Card>
               <CardHeader>
                 <CardTitle>{t("creditPreference.title")}</CardTitle>

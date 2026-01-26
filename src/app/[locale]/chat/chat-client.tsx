@@ -48,6 +48,7 @@ interface ChatClientProps {
   userId: string;
   initialBalance: number;
   personalBalance?: number;
+  isTrainer?: boolean;
   initialConversations: Conversation[];
   conversationId?: string;
   initialMessages?: ChatMessage[];
@@ -60,6 +61,7 @@ export function ChatClient({
   userId,
   initialBalance,
   personalBalance,
+  isTrainer,
   initialConversations,
   conversationId,
   initialMessages = [],
@@ -416,6 +418,7 @@ export function ChatClient({
         currentConversationId={currentConversationId}
         balance={balance}
         personalBalance={personalBalance}
+        isTrainer={isTrainer}
         onNewConversation={handleNewConversation}
         onDeleteConversation={handleDeleteConversation}
         orgContext={orgContext ? {
