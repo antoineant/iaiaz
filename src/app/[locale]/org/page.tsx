@@ -15,6 +15,7 @@ import {
   Loader2,
   Wallet,
   Send,
+  AlertTriangle,
 } from "lucide-react";
 
 interface OrgStats {
@@ -173,6 +174,7 @@ export default function OrgDashboardPage() {
   }
 
   const availableCredits = (stats?.credit_balance || 0) - (stats?.total_allocated || 0);
+  const isOverallocated = availableCredits < 0;
 
   const handleAllocateSuccess = () => {
     // Refresh stats after successful allocation
@@ -184,20 +186,30 @@ export default function OrgDashboardPage() {
       <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
 
       {/* Quick Actions Card */}
-      <Card className="mb-6 border-primary-200 dark:border-primary-800 bg-gradient-to-r from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)]">
+      <Card className={`mb-6 ${isOverallocated ? "border-orange-300 dark:border-orange-700 bg-gradient-to-r from-orange-50 to-white dark:from-orange-950/30 dark:to-[var(--background)]" : "border-primary-200 dark:border-primary-800 bg-gradient-to-r from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)]"}`}>
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Wallet className="w-5 h-5 text-primary-600" />
+                {isOverallocated ? (
+                  <AlertTriangle className="w-5 h-5 text-orange-600" />
+                ) : (
+                  <Wallet className="w-5 h-5 text-primary-600" />
+                )}
                 <h2 className="font-semibold">{t("quickActions")}</h2>
               </div>
+              {isOverallocated && (
+                <div className="mb-3 p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-sm">
+                  <p className="font-medium">{t("overallocatedWarning")}</p>
+                  <p className="text-xs mt-1">{t("overallocatedExplanation")}</p>
+                </div>
+              )}
               <div className="flex items-center gap-4 text-sm">
                 <span>
                   <span className="text-[var(--muted-foreground)]">
                     {t("availableCredits")}:
                   </span>{" "}
-                  <span className="font-medium text-green-600 dark:text-green-400">
+                  <span className={`font-medium ${isOverallocated ? "text-orange-600 dark:text-orange-400" : "text-green-600 dark:text-green-400"}`}>
                     {availableCredits.toFixed(2)}€
                   </span>
                 </span>
@@ -244,7 +256,7 @@ export default function OrgDashboardPage() {
                 <p className="text-2xl font-bold mt-1">
                   {stats?.credit_balance.toFixed(2)}€
                 </p>
-                <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                <p className={`text-xs mt-1 ${isOverallocated ? "text-orange-600 dark:text-orange-400" : "text-[var(--muted-foreground)]"}`}>
                   {t("readyToAllocate")}: {availableCredits.toFixed(2)}€
                 </p>
               </div>
@@ -350,18 +362,24 @@ export default function OrgDashboardPage() {
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span>{t("readyToAllocate")}</span>
-                  <span className="font-medium">{availableCredits.toFixed(2)}€</span>
+                  <span className={`font-medium ${isOverallocated ? "text-orange-600 dark:text-orange-400" : ""}`}>
+                    {availableCredits.toFixed(2)}€
+                  </span>
                 </div>
                 <div className="h-3 bg-[var(--muted)] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-green-500 rounded-full"
-                    style={{
-                      width: `${Math.min(
-                        100,
-                        (availableCredits / (stats?.credit_balance || 1)) * 100
-                      )}%`,
-                    }}
-                  />
+                  {isOverallocated ? (
+                    <div className="h-full bg-orange-500 rounded-full w-full" />
+                  ) : (
+                    <div
+                      className="h-full bg-green-500 rounded-full"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          Math.max(0, (availableCredits / (stats?.credit_balance || 1)) * 100)
+                        )}%`,
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -1910,7 +1910,9 @@
       "transferCredits": "Transférer",
       "availableCredits": "Prêts à allouer",
       "allocatedCredits": "Réservés aux élèves",
-      "creditExplanation": "Les élèves utilisent les crédits réservés. Les crédits non utilisés reviennent à la fermeture des classes."
+      "creditExplanation": "Les élèves utilisent les crédits réservés. Les crédits non utilisés reviennent à la fermeture des classes.",
+      "overallocatedWarning": "Crédits sur-alloués",
+      "overallocatedExplanation": "Plus de crédits sont alloués aux élèves que disponibles dans le pool. Achetez plus de crédits pour couvrir le déficit."
     },
     "bulkAllocate": {
       "title": "Allouer des crédits à la classe",

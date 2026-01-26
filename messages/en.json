@@ -2021,7 +2021,9 @@
       "transferCredits": "Transfer",
       "availableCredits": "Ready to allocate",
       "allocatedCredits": "Reserved for students",
-      "creditExplanation": "Students use credits from their reserved amount. Unused credits return when classes close."
+      "creditExplanation": "Students use credits from their reserved amount. Unused credits return when classes close.",
+      "overallocatedWarning": "Credits overallocated",
+      "overallocatedExplanation": "More credits are allocated to students than available in the pool. Buy more credits to cover the deficit."
     },
     "bulkAllocate": {
       "title": "Allocate credits to class",
