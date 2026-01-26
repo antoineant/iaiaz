@@ -329,7 +329,7 @@ function ClassSignupContent() {
               <p className="text-sm text-[var(--muted-foreground)]">
                 {t("alreadyHaveAccount")}{" "}
                 <NextLink
-                  href={`/auth/login?redirect=/join/class?token=${token}`}
+                  href={`/auth/login?redirect=${encodeURIComponent(`/join/class?token=${token}`)}`}
                   className="text-primary-600 dark:text-primary-400 hover:underline"
                 >
                   {t("login")}

@@ -267,10 +267,10 @@ function JoinPageContent() {
               </p>
 
               <div className="space-y-3">
-                <NextLink href={`/auth/login?redirect=/join?token=${token}`}>
+                <NextLink href={`/auth/login?redirect=${encodeURIComponent(`/join?token=${token}`)}`}>
                   <Button className="w-full">{t("login")}</Button>
                 </NextLink>
-                <NextLink href={`/auth/signup?redirect=/join?token=${token}`}>
+                <NextLink href={`/auth/signup?redirect=${encodeURIComponent(`/join?token=${token}`)}`}>
                   <Button variant="outline" className="w-full">
                     {t("signup")}
                   </Button>
