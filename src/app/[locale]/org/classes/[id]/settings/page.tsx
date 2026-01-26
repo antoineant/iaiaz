@@ -19,9 +19,10 @@ interface ClassData {
   status: string;
   starts_at: string | null;
   ends_at: string | null;
-  credit_limit: number | null;
+  credit_limit: number | null;  // Extracted from settings by API
   settings: {
     allowed_models: string[] | null;
+    credit_limit: number | null;
     daily_limit_per_student: number | null;
     allow_personal_fallback: boolean;
   };

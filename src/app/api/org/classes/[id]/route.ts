@@ -31,7 +31,6 @@ export async function GET(_request: Request, { params }: RouteParams) {
         starts_at,
         ends_at,
         closed_at,
-        credit_limit,
         created_by,
         created_at,
         updated_at
@@ -58,8 +57,13 @@ export async function GET(_request: Request, { params }: RouteParams) {
       p_class_id: id,
     });
 
+    // Extract credit_limit from settings for convenience
+    const settings = classData.settings as Record<string, unknown> | null;
+    const creditLimit = settings?.credit_limit ?? null;
+
     return NextResponse.json({
       ...classData,
+      credit_limit: creditLimit,
       stats: stats || {},
     });
   } catch (error) {
@@ -91,6 +95,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     // Build update object
     const updates: Record<string, unknown> = {};
 
+    // credit_limit is stored in settings JSON
     if (credit_limit !== undefined) {
       // null means no limit, otherwise must be a positive number
       if (credit_limit !== null && (typeof credit_limit !== "number" || credit_limit < 0)) {
@@ -99,7 +104,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
           { status: 400 }
         );
       }
-      updates.credit_limit = credit_limit;
+      // Will be merged into settings below
     }
 
     if (name !== undefined) {
@@ -116,8 +121,13 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       updates.description = description?.trim() || null;
     }
 
-    if (settings !== undefined) {
-      updates.settings = settings;
+    if (settings !== undefined || credit_limit !== undefined) {
+      // Merge credit_limit into settings
+      const newSettings = { ...(settings || {}) };
+      if (credit_limit !== undefined) {
+        newSettings.credit_limit = credit_limit;
+      }
+      updates.settings = newSettings;
     }
 
     if (status !== undefined) {
