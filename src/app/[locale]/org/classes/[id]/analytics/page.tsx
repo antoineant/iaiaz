@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StudentMatrix } from "@/components/analytics/student-matrix";
 import { PromptQualitySection } from "@/components/analytics/prompt-quality";
+import { LearningProgressSection } from "@/components/analytics/learning-progress";
 import type { QuadrantSummary } from "@/lib/analytics/student-metrics";
 import {
   ArrowLeft,
@@ -87,6 +88,41 @@ interface PromptQualityData {
   totalMessages: number;
 }
 
+interface TopicCoverage {
+  topic_id: string;
+  topic_title: string;
+  parent_id: string | null;
+  message_count: number;
+  percentage: number;
+  avg_bloom_level: string | null;
+  avg_topic_confidence: number | null;
+}
+
+interface BloomDistribution {
+  remember: number;
+  understand: number;
+  apply: number;
+  analyze: number;
+  evaluate: number;
+  create: number;
+}
+
+interface ProgressOverTime {
+  date: string;
+  topics_covered: number;
+  avg_bloom_level: string | null;
+  message_count: number;
+}
+
+interface LearningAnalyticsData {
+  topicCoverage: TopicCoverage[];
+  bloomDistribution: BloomDistribution;
+  uncoveredTopics: Array<{ id: string; title: string }>;
+  progressOverTime: ProgressOverTime[];
+  totalAnalyzedMessages: number;
+  hasStructure: boolean;
+}
+
 export default function ClassAnalyticsPage() {
   const t = useTranslations("org.classes.analytics");
   const locale = useLocale();
@@ -96,6 +132,7 @@ export default function ClassAnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [matrixData, setMatrixData] = useState<StudentMatrixData | null>(null);
   const [promptQualityData, setPromptQualityData] = useState<PromptQualityData | null>(null);
+  const [learningData, setLearningData] = useState<LearningAnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshingPromptQuality, setIsRefreshingPromptQuality] = useState(false);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
@@ -112,11 +149,12 @@ export default function ClassAnalyticsPage() {
 
     try {
       // Load all cached data in parallel (no NLP analysis triggered)
-      const [analyticsResponse, matrixResponse, insightsResponse, promptQualityResponse] = await Promise.all([
+      const [analyticsResponse, matrixResponse, insightsResponse, promptQualityResponse, learningResponse] = await Promise.all([
         fetch(`/api/org/classes/${classId}/analytics?period=${period}`),
         fetch(`/api/org/classes/${classId}/analytics/students?period=${period}&nlp=false`),
         fetch(`/api/org/classes/${classId}/analytics/insights?period=${period}&locale=${locale}`),
         fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
+        fetch(`/api/org/classes/${classId}/analytics/learning?period=${period}`),
       ]);
 
       if (!analyticsResponse.ok) throw new Error("Failed to load analytics");
@@ -140,6 +178,11 @@ export default function ClassAnalyticsPage() {
       if (promptQualityResponse.ok) {
         const promptQualityDataResponse = await promptQualityResponse.json();
         setPromptQualityData(promptQualityDataResponse);
+      }
+
+      if (learningResponse.ok) {
+        const learningDataResponse = await learningResponse.json();
+        setLearningData(learningDataResponse);
       }
 
       setIsLoading(false);
@@ -303,6 +346,20 @@ export default function ClassAnalyticsPage() {
             totalMessages={promptQualityData.totalMessages}
             onRefresh={refreshPromptQualityAnalysis}
             isRefreshing={isRefreshingPromptQuality}
+          />
+        </div>
+      )}
+
+      {/* Learning Progress Section */}
+      {learningData && (
+        <div className="mb-6">
+          <LearningProgressSection
+            topicCoverage={learningData.topicCoverage}
+            bloomDistribution={learningData.bloomDistribution}
+            uncoveredTopics={learningData.uncoveredTopics}
+            progressOverTime={learningData.progressOverTime}
+            totalAnalyzedMessages={learningData.totalAnalyzedMessages}
+            hasStructure={learningData.hasStructure}
           />
         </div>
       )}

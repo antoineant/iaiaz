@@ -18,11 +18,24 @@ export interface PromptAnalysisResult {
   actionability: number;
   overall: number;
   topic?: string;
+  // New learning analytics fields
+  matchedTopicId?: string;
+  bloomLevel?: BloomLevel;
+  topicConfidence?: number;
 }
+
+export type BloomLevel = 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create';
 
 interface PromptToAnalyze {
   id: string;
   content: string;
+}
+
+interface ClassTopic {
+  id: string;
+  title: string;
+  description?: string;
+  keywords?: string[];
 }
 
 interface LLMAnalysisResponse {
@@ -32,6 +45,10 @@ interface LLMAnalysisResponse {
   sophistication: number;
   actionability: number;
   topic?: string;
+  // New fields for course-aware analysis
+  matched_topic?: string; // topic ID
+  topic_confidence?: number;
+  bloom_level?: BloomLevel;
 }
 
 const BATCH_SIZE = 20;
@@ -54,13 +71,74 @@ Example response:
 Prompts to analyze:
 `;
 
+/**
+ * Build enhanced analysis prompt with course topics and Bloom's taxonomy
+ */
+function buildCourseAwarePrompt(topics: ClassTopic[]): string {
+  const topicsDescription = topics
+    .map(t => `- [ID: ${t.id}] ${t.title}${t.description ? `: ${t.description}` : ''}${t.keywords?.length ? ` (keywords: ${t.keywords.join(', ')})` : ''}`)
+    .join('\n');
+
+  return `You are analyzing student prompts for a course with the following topics:
+${topicsDescription}
+
+For each prompt, provide:
+1. Quality scores (clarity, context, sophistication, actionability) - 0 to 100
+2. topic: The general topic/subject (e.g., "marketing", "economics")
+3. matched_topic: The topic ID from the list above that best matches this prompt (or null if none)
+4. topic_confidence: How confident you are in the topic match (0.0 to 1.0)
+5. bloom_level: The cognitive level based on Bloom's Taxonomy
+
+Bloom's Taxonomy Guide:
+- remember: Recalling facts ("What is X?", "Define X", "List the...")
+- understand: Explaining concepts ("How does X work?", "Explain why...")
+- apply: Using knowledge ("Help me do X", "Use X to solve...")
+- analyze: Breaking down, comparing ("Compare X and Y", "Why does X happen?")
+- evaluate: Judging, critiquing ("Is X effective?", "What are the pros/cons?")
+- create: Producing new work ("Design X", "Build X", "Write a...")
+
+IMPORTANT: Return ONLY a valid JSON array. Each object must have:
+- id, clarity, context, sophistication, actionability (numbers 0-100)
+- topic (string, optional)
+- matched_topic (topic ID string or null)
+- topic_confidence (number 0.0-1.0)
+- bloom_level (one of: remember, understand, apply, analyze, evaluate, create)
+
+Example response:
+[{"id":"abc123","clarity":75,"context":60,"sophistication":80,"actionability":70,"topic":"marketing","matched_topic":"topic-uuid-here","topic_confidence":0.85,"bloom_level":"analyze"}]
+
+Prompts to analyze:
+`;
+}
+
+
+/**
+ * Get topics for a class
+ */
+async function getClassTopics(classId: string): Promise<ClassTopic[]> {
+  const adminClient = createAdminClient();
+
+  const { data, error } = await adminClient
+    .from("class_topics")
+    .select("id, title, description, keywords")
+    .eq("class_id", classId)
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching class topics:", error);
+    return [];
+  }
+
+  return data || [];
+}
 
 /**
  * Analyze a batch of prompts using LLM
  */
 async function analyzePromptBatch(
   prompts: PromptToAnalyze[],
-  model: string
+  model: string,
+  classTopics?: ClassTopic[]
 ): Promise<{ results: PromptAnalysisResult[]; tokensUsed: number }> {
   if (prompts.length === 0) {
     return { results: [], tokensUsed: 0 };
@@ -71,7 +149,12 @@ async function analyzePromptBatch(
     .map((p, i) => `${i + 1}. [id: ${p.id}] "${p.content.slice(0, 500)}"`)
     .join("\n");
 
-  const fullPrompt = ANALYSIS_PROMPT + promptList;
+  // Use course-aware prompt if topics are provided
+  const basePrompt = classTopics && classTopics.length > 0
+    ? buildCourseAwarePrompt(classTopics)
+    : ANALYSIS_PROMPT;
+
+  const fullPrompt = basePrompt + promptList;
 
   try {
     const response = await callAI(model, [
@@ -87,6 +170,9 @@ async function analyzePromptBatch(
 
     const analysisResults: LLMAnalysisResponse[] = JSON.parse(jsonMatch[0]);
 
+    // Validate bloom levels
+    const validBloomLevels = new Set(['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']);
+
     // Convert to our format with overall score
     const results: PromptAnalysisResult[] = analysisResults.map((r) => ({
       messageId: r.id,
@@ -98,6 +184,10 @@ async function analyzePromptBatch(
         (r.clarity + r.context + r.sophistication + r.actionability) / 4
       ),
       topic: r.topic,
+      // New fields
+      matchedTopicId: r.matched_topic || undefined,
+      bloomLevel: r.bloom_level && validBloomLevels.has(r.bloom_level) ? r.bloom_level : undefined,
+      topicConfidence: typeof r.topic_confidence === 'number' ? Math.max(0, Math.min(1, r.topic_confidence)) : undefined,
     }));
 
     return {
@@ -133,6 +223,10 @@ async function storeAnalysisResults(
     topic: r.topic || null,
     model_used: model,
     tokens_used: tokensPerResult,
+    // New learning analytics fields
+    matched_topic_id: r.matchedTopicId || null,
+    bloom_level: r.bloomLevel || null,
+    topic_confidence: r.topicConfidence ?? null,
   }));
 
   const { error } = await adminClient
@@ -177,6 +271,10 @@ export async function getExistingAnalysis(
       actionability: row.actionability_score,
       overall: row.overall_score,
       topic: row.topic,
+      // New learning analytics fields
+      matchedTopicId: row.matched_topic_id || undefined,
+      bloomLevel: row.bloom_level || undefined,
+      topicConfidence: row.topic_confidence ?? undefined,
     });
   }
 
@@ -186,9 +284,12 @@ export async function getExistingAnalysis(
 /**
  * Analyze prompts - fetches existing analysis and only processes new ones
  * Returns a map of messageId -> analysis
+ * @param prompts - Array of prompts to analyze
+ * @param classId - Optional class ID to enable course-aware analysis with topics
  */
 export async function analyzePrompts(
-  prompts: PromptToAnalyze[]
+  prompts: PromptToAnalyze[],
+  classId?: string
 ): Promise<Map<string, PromptAnalysisResult>> {
   if (prompts.length === 0) {
     return new Map();
@@ -215,13 +316,19 @@ export async function analyzePrompts(
   // Use the economy model from centralized config (designed for cost-sensitive operations)
   const model = await getEconomyModel();
 
+  // Get class topics if classId is provided
+  const classTopics = classId ? await getClassTopics(classId) : undefined;
+  if (classTopics && classTopics.length > 0) {
+    console.log(`Using ${classTopics.length} class topics for course-aware analysis`);
+  }
+
   // Process in batches
   const allResults = new Map(existingAnalysis);
 
   for (let i = 0; i < unanalyzedPrompts.length; i += BATCH_SIZE) {
     const batch = unanalyzedPrompts.slice(i, i + BATCH_SIZE);
 
-    const { results, tokensUsed } = await analyzePromptBatch(batch, model);
+    const { results, tokensUsed } = await analyzePromptBatch(batch, model, classTopics);
 
     // Store in database
     await storeAnalysisResults(results, model, tokensUsed);
@@ -233,6 +340,16 @@ export async function analyzePrompts(
   }
 
   return allResults;
+}
+
+/**
+ * Analyze prompts for a specific class (with course-aware topics and Bloom classification)
+ */
+export async function analyzeClassPrompts(
+  classId: string,
+  prompts: PromptToAnalyze[]
+): Promise<Map<string, PromptAnalysisResult>> {
+  return analyzePrompts(prompts, classId);
 }
 
 /**

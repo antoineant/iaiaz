@@ -7,6 +7,9 @@ import { Link } from "@/i18n/navigation";
 import NextLink from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { CourseStructureEditor } from "@/components/org/course-structure-editor";
+import { AitelierImportModal } from "@/components/org/aitelier-import-modal";
+import type { ParsedCourseStructure } from "@/lib/aitelier-parser";
 import { ArrowLeft, Loader2, AlertCircle, Trash2, Info, Check } from "lucide-react";
 
 interface ClassData {
@@ -46,6 +49,7 @@ export default function ClassSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -194,7 +198,7 @@ export default function ClassSettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-4xl">
       <div className="mb-6">
         <NextLink
           href={`/org/classes/${classId}`}
@@ -456,6 +460,30 @@ export default function ClassSettingsPage() {
           </div>
         </div>
       </form>
+
+      {/* Course Structure Section - outside the form */}
+      <div className="mt-8 pt-8 border-t border-[var(--border)]">
+        <CourseStructureEditor
+          classId={classId}
+          onImportClick={() => setIsImportModalOpen(true)}
+        />
+      </div>
+
+      {/* Aitelier Import Modal */}
+      <AitelierImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={(structure: ParsedCourseStructure) => {
+          // Use the global function to import data
+          const importFn = (window as unknown as Record<string, unknown>).__importCourseStructure as
+            | ((objectives: ParsedCourseStructure["objectives"], topics: ParsedCourseStructure["topics"]) => void)
+            | undefined;
+          if (importFn) {
+            importFn(structure.objectives, structure.topics);
+          }
+          setIsImportModalOpen(false);
+        }}
+      />
     </div>
   );
 }
