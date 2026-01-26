@@ -272,6 +272,7 @@ export default function IncomeDashboard() {
       label: formatDateLabel(p.period_start, groupBy),
       values: {
         "Vraie marge": Number(p.true_margin) || 0,
+        "Réserve": Number(p.credits_outstanding) || 0,
       },
     })) || [];
 
@@ -449,8 +450,8 @@ export default function IncomeDashboard() {
           {marginChartData.length > 0 ? (
             <LineChart
               data={marginChartData}
-              keys={["Vraie marge"]}
-              colors={{ "Vraie marge": "#10b981" }}
+              keys={["Vraie marge", "Réserve"]}
+              colors={{ "Vraie marge": "#10b981", "Réserve": "#3b82f6" }}
               formatValue={(v) => `${v.toFixed(2)} €`}
             />
           ) : (
@@ -497,21 +498,21 @@ export default function IncomeDashboard() {
                       </td>
                       <td
                         className={`text-right py-2 px-2 font-medium ${
-                          Number(p.true_margin) >= 0
+                          (Number(p.true_margin) || 0) >= 0
                             ? "text-green-600 dark:text-green-400"
                             : "text-red-600 dark:text-red-400"
                         }`}
                       >
-                        {Number(p.true_margin).toFixed(2)} €
+                        {(Number(p.true_margin) || 0).toFixed(2)} €
                       </td>
                       <td
                         className={`text-right py-2 px-2 ${
-                          Number(p.credits_outstanding) >= 0
+                          (Number(p.credits_outstanding) || 0) >= 0
                             ? "text-blue-600 dark:text-blue-400"
                             : "text-orange-600 dark:text-orange-400"
                         }`}
                       >
-                        {Number(p.credits_outstanding).toFixed(2)} €
+                        {(Number(p.credits_outstanding) || 0).toFixed(2)} €
                       </td>
                     </tr>
                   ))}
