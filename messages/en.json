@@ -2545,7 +2545,50 @@
         "noObjectivesFound": "No objectives found",
         "noTopicsFound": "No topics found",
         "cancel": "Cancel",
-        "importConfirm": "Import Structure"
+        "importConfirm": "Import Structure",
+        "ai": {
+          "title": "AI Assistant",
+          "subtitle": "Describe your course and let AI create the structure",
+          "descriptionLabel": "Describe your course",
+          "descriptionPlaceholder": "E.g., A 3-hour workshop on prompt engineering for marketing professionals. Students should learn to write effective prompts for content creation, understand AI limitations, and apply techniques to their daily work...",
+          "descriptionHint": "Include the topic, target audience, duration, and what students should learn",
+          "descriptionTooShort": "Please provide a more detailed description (at least 20 characters)",
+          "generateButton": "Generate Structure",
+          "generating": "Generating...",
+          "previewReady": "Structure Generated!",
+          "regenerate": "Regenerate",
+          "objectives": "Learning Objectives",
+          "topics": "Topics",
+          "editDescription": "Edit Description",
+          "useStructure": "Use This Structure"
+        }
+      },
+      "setup": {
+        "title": "Set Up Course Structure",
+        "subtitle": "Define learning objectives and topics for {className}",
+        "backToDashboard": "Go to Dashboard",
+        "step1": "Class Created",
+        "step2": "Course Structure",
+        "aiOption": {
+          "title": "Generate with AI",
+          "description": "Describe what you want to teach and let AI create objectives and topics for you. You can review and edit before saving.",
+          "cta": "Recommended"
+        },
+        "manualOption": {
+          "title": "Create Manually",
+          "description": "Define your own learning objectives and topics from scratch using our editor.",
+          "cta": "Start from scratch"
+        },
+        "skipForNow": "Skip for now, I'll set this up later",
+        "back": "Back",
+        "backToAI": "Back to AI Generator",
+        "finishSetup": "Finish Setup",
+        "previewTitle": "Review Your Course Structure",
+        "previewSubtitle": "This structure will help classify student prompts and track learning progress",
+        "objectivesTitle": "Learning Objectives",
+        "topicsTitle": "Topics",
+        "regenerate": "Try Again",
+        "saveAndContinue": "Save & Continue"
       }
     },
     "teams": {

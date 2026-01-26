@@ -2434,7 +2434,50 @@
         "noObjectivesFound": "Aucun objectif trouvé",
         "noTopicsFound": "Aucun thème trouvé",
         "cancel": "Annuler",
-        "importConfirm": "Importer la structure"
+        "importConfirm": "Importer la structure",
+        "ai": {
+          "title": "Assistant IA",
+          "subtitle": "Décrivez votre cours et laissez l'IA créer la structure",
+          "descriptionLabel": "Décrivez votre cours",
+          "descriptionPlaceholder": "Ex : Un atelier de 3 heures sur le prompt engineering pour les professionnels du marketing. Les participants devront apprendre à rédiger des prompts efficaces pour la création de contenu, comprendre les limites de l'IA et appliquer les techniques à leur travail quotidien...",
+          "descriptionHint": "Incluez le sujet, le public cible, la durée et ce que les étudiants doivent apprendre",
+          "descriptionTooShort": "Veuillez fournir une description plus détaillée (au moins 20 caractères)",
+          "generateButton": "Générer la structure",
+          "generating": "Génération en cours...",
+          "previewReady": "Structure générée !",
+          "regenerate": "Régénérer",
+          "objectives": "Objectifs pédagogiques",
+          "topics": "Thèmes",
+          "editDescription": "Modifier la description",
+          "useStructure": "Utiliser cette structure"
+        }
+      },
+      "setup": {
+        "title": "Configurer la structure du cours",
+        "subtitle": "Définissez les objectifs pédagogiques et les thèmes pour {className}",
+        "backToDashboard": "Aller au tableau de bord",
+        "step1": "Classe créée",
+        "step2": "Structure du cours",
+        "aiOption": {
+          "title": "Générer avec l'IA",
+          "description": "Décrivez ce que vous voulez enseigner et laissez l'IA créer les objectifs et thèmes pour vous. Vous pourrez les réviser et modifier avant de sauvegarder.",
+          "cta": "Recommandé"
+        },
+        "manualOption": {
+          "title": "Créer manuellement",
+          "description": "Définissez vos propres objectifs pédagogiques et thèmes à partir de zéro avec notre éditeur.",
+          "cta": "Partir de zéro"
+        },
+        "skipForNow": "Passer pour l'instant, je configurerai plus tard",
+        "back": "Retour",
+        "backToAI": "Retour au générateur IA",
+        "finishSetup": "Terminer la configuration",
+        "previewTitle": "Vérifiez la structure de votre cours",
+        "previewSubtitle": "Cette structure aidera à classifier les prompts des étudiants et suivre leur progression",
+        "objectivesTitle": "Objectifs pédagogiques",
+        "topicsTitle": "Thèmes",
+        "regenerate": "Réessayer",
+        "saveAndContinue": "Enregistrer et continuer"
       }
     },
     "teams": {

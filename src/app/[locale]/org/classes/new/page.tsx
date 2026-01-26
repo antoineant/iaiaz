@@ -51,8 +51,8 @@ export default function NewClassPage() {
         throw new Error(data.error || "Failed to create class");
       }
 
-      // Redirect to the new class dashboard
-      router.push(`/org/classes/${data.id}`);
+      // Redirect to the setup page for course structure
+      router.push(`/org/classes/${data.id}/setup`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create class");
       setIsLoading(false);
