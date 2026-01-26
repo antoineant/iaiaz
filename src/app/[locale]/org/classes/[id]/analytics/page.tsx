@@ -97,7 +97,7 @@ export default function ClassAnalyticsPage() {
   const [matrixData, setMatrixData] = useState<StudentMatrixData | null>(null);
   const [promptQualityData, setPromptQualityData] = useState<PromptQualityData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingNLP, setIsLoadingNLP] = useState(false);
+  const [isRefreshingPromptQuality, setIsRefreshingPromptQuality] = useState(false);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [period, setPeriod] = useState(30);
@@ -111,11 +111,12 @@ export default function ClassAnalyticsPage() {
     setError(null);
 
     try {
-      // PHASE 1: Load basic analytics quickly (no NLP) + cached insights
-      const [analyticsResponse, matrixResponse, insightsResponse] = await Promise.all([
+      // Load all cached data in parallel (no NLP analysis triggered)
+      const [analyticsResponse, matrixResponse, insightsResponse, promptQualityResponse] = await Promise.all([
         fetch(`/api/org/classes/${classId}/analytics?period=${period}`),
         fetch(`/api/org/classes/${classId}/analytics/students?period=${period}&nlp=false`),
         fetch(`/api/org/classes/${classId}/analytics/insights?period=${period}&locale=${locale}`),
+        fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
       ]);
 
       if (!analyticsResponse.ok) throw new Error("Failed to load analytics");
@@ -136,31 +137,45 @@ export default function ClassAnalyticsPage() {
         setMatrixData(matrixDataResponse);
       }
 
+      if (promptQualityResponse.ok) {
+        const promptQualityDataResponse = await promptQualityResponse.json();
+        setPromptQualityData(promptQualityDataResponse);
+      }
+
       setIsLoading(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load analytics");
+      setIsLoading(false);
+    }
+  };
 
-      // PHASE 2: Load NLP data in background (slower, optional enhancement)
-      setIsLoadingNLP(true);
+  const refreshPromptQualityAnalysis = async () => {
+    setIsRefreshingPromptQuality(true);
 
-      const [nlpMatrixResponse, promptQualityResponse] = await Promise.all([
-        fetch(`/api/org/classes/${classId}/analytics/students?period=${period}&nlp=true`),
-        fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
-      ]);
+    try {
+      // Trigger NLP analysis for student matrix
+      const nlpMatrixResponse = await fetch(
+        `/api/org/classes/${classId}/analytics/students?period=${period}&nlp=true&refresh=true`
+      );
 
       if (nlpMatrixResponse.ok) {
         const nlpMatrixData = await nlpMatrixResponse.json();
         setMatrixData(nlpMatrixData);
       }
 
+      // Refresh prompt quality data (which reads from the updated analysis)
+      const promptQualityResponse = await fetch(
+        `/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`
+      );
+
       if (promptQualityResponse.ok) {
         const promptQualityDataResponse = await promptQualityResponse.json();
         setPromptQualityData(promptQualityDataResponse);
       }
-
-      setIsLoadingNLP(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load analytics");
-      setIsLoading(false);
-      setIsLoadingNLP(false);
+      console.error("Failed to refresh prompt quality:", err);
+    } finally {
+      setIsRefreshingPromptQuality(false);
     }
   };
 
@@ -266,15 +281,6 @@ export default function ClassAnalyticsPage() {
         />
       </div>
 
-      {/* NLP Loading Indicator */}
-      {isLoadingNLP && (
-        <div className="mb-6 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 flex items-center gap-3">
-          <Loader2 className="w-4 h-4 animate-spin text-blue-600 dark:text-blue-400" />
-          <span className="text-sm text-blue-700 dark:text-blue-400">
-            {t("loadingNLP")}
-          </span>
-        </div>
-      )}
 
       {/* Student Matrix - AI Literacy vs Domain Knowledge */}
       {matrixData && matrixData.totalStudents > 0 && (
@@ -295,6 +301,8 @@ export default function ClassAnalyticsPage() {
             examples={promptQualityData.examples}
             analyzedCount={promptQualityData.analyzedCount}
             totalMessages={promptQualityData.totalMessages}
+            onRefresh={refreshPromptQualityAnalysis}
+            isRefreshing={isRefreshingPromptQuality}
           />
         </div>
       )}

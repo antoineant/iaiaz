@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Target, BookOpen, Brain, Zap, AlertCircle, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Target, BookOpen, Brain, Zap, AlertCircle, CheckCircle, RefreshCw, Loader2 } from "lucide-react";
 
 // Types matching the API response
 interface NLPBreakdown {
@@ -289,6 +290,8 @@ interface PromptQualitySectionProps {
   examples: ExamplesByTier;
   analyzedCount: number;
   totalMessages: number;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 export function PromptQualitySection({
@@ -296,15 +299,81 @@ export function PromptQualitySection({
   examples,
   analyzedCount,
   totalMessages,
+  onRefresh,
+  isRefreshing,
 }: PromptQualitySectionProps) {
+  const t = useTranslations("org.classes.analytics.promptQuality");
+  const hasData = breakdown !== null || analyzedCount > 0;
+  const hasNewMessages = totalMessages > analyzedCount;
+
+  // Show empty state with option to start analysis
+  if (!hasData && totalMessages > 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold">{t("sectionTitle")}</h2>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <Brain className="w-12 h-12 mx-auto mb-4 text-[var(--muted-foreground)] opacity-50" />
+            <p className="text-[var(--muted-foreground)] mb-4">
+              {t("noAnalysisYet", { count: totalMessages })}
+            </p>
+            {onRefresh && (
+              <Button onClick={onRefresh} disabled={isRefreshing}>
+                {isRefreshing ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                )}
+                {t("startAnalysis")}
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <PromptQualityBreakdown
-        breakdown={breakdown}
-        analyzedCount={analyzedCount}
-        totalMessages={totalMessages}
-      />
-      <ExamplePromptsByTier examples={examples} />
+    <div className="space-y-4">
+      {/* Header with refresh button */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">{t("sectionTitle")}</h2>
+        {onRefresh && (
+          <Button variant="outline" size="sm" onClick={onRefresh} disabled={isRefreshing}>
+            {isRefreshing ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4 mr-2" />
+            )}
+            {hasNewMessages
+              ? t("analyzeNew", { count: totalMessages - analyzedCount })
+              : t("refresh")}
+          </Button>
+        )}
+      </div>
+
+      {/* Analysis running indicator */}
+      {isRefreshing && (
+        <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 flex items-center gap-3">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600 dark:text-blue-400" />
+          <span className="text-sm text-blue-700 dark:text-blue-400">
+            {t("analyzing")}
+          </span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PromptQualityBreakdown
+          breakdown={breakdown}
+          analyzedCount={analyzedCount}
+          totalMessages={totalMessages}
+        />
+        <ExamplePromptsByTier examples={examples} />
+      </div>
     </div>
   );
 }

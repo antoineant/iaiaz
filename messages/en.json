@@ -2453,11 +2453,17 @@
           }
         },
         "promptQuality": {
+          "sectionTitle": "Prompt Quality Analysis",
           "breakdownTitle": "Prompt Quality",
           "breakdownSubtitle": "Analysis of the quality of questions asked by students",
           "overallScore": "Overall Score",
           "analyzed": "{count} analyzed out of {total} messages",
           "noData": "No analysis data available",
+          "noAnalysisYet": "{count} messages to analyze",
+          "startAnalysis": "Start Analysis",
+          "refresh": "Refresh",
+          "analyzeNew": "Analyze {count} new",
+          "analyzing": "Analyzing prompts...",
           "dimensions": {
             "clarity": "Clarity",
             "context": "Context",
