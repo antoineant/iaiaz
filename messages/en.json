@@ -336,7 +336,9 @@
       "copied": "Copied!",
       "copy": "Copy",
       "thinking": "Thinking...",
-      "thinkingProcess": "Thinking process"
+      "thinkingProcess": "Thinking process",
+      "showPreview": "Preview",
+      "showCode": "Code"
     },
     "modelSelector": {
       "placeholder": "Choose a model",

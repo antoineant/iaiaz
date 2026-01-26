@@ -22,6 +22,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { formatFileSize } from "@/lib/files";
+import { CodePreview, isPreviewableLanguage } from "./code-preview";
 
 interface MessageProps {
   message: ChatMessage;
@@ -71,39 +72,94 @@ function CodeBlock({
   children,
   copiedLabel,
   copyLabel,
+  showPreviewLabel,
+  showCodeLabel,
 }: {
   language: string | undefined;
   children: string;
   copiedLabel: string;
   copyLabel: string;
+  showPreviewLabel: string;
+  showCodeLabel: string;
 }) {
+  const [showCode, setShowCode] = useState(false);
+  const isPreviewable = isPreviewableLanguage(language);
+
   return (
-    <div className="relative group my-4">
-      <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <CopyButton
-          text={children}
-          className="bg-[var(--background)]/80 backdrop-blur-sm"
-          copiedLabel={copiedLabel}
-          copyLabel={copyLabel}
-        />
-      </div>
-      {language ? (
-        <SyntaxHighlighter
-          style={oneDark}
+    <div className="my-4">
+      {/* Preview for SVG, Mermaid, HTML */}
+      {isPreviewable && language && (
+        <CodePreview
+          code={children}
           language={language}
-          PreTag="div"
-          customStyle={{
-            margin: 0,
-            borderRadius: "0.5rem",
-            fontSize: "0.875rem",
-          }}
-        >
-          {children}
-        </SyntaxHighlighter>
+          showPreviewLabel={showPreviewLabel}
+          showCodeLabel={showCodeLabel}
+        />
+      )}
+
+      {/* Code block - always shown for non-previewable, toggleable for previewable */}
+      {isPreviewable ? (
+        <div>
+          <button
+            onClick={() => setShowCode(!showCode)}
+            className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] mb-2"
+          >
+            {showCode ? "▼ Hide code" : "▶ Show code"}
+          </button>
+          {showCode && (
+            <div className="relative group">
+              <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <CopyButton
+                  text={children}
+                  className="bg-[var(--background)]/80 backdrop-blur-sm"
+                  copiedLabel={copiedLabel}
+                  copyLabel={copyLabel}
+                />
+              </div>
+              <SyntaxHighlighter
+                style={oneDark}
+                language={language}
+                PreTag="div"
+                customStyle={{
+                  margin: 0,
+                  borderRadius: "0.5rem",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {children}
+              </SyntaxHighlighter>
+            </div>
+          )}
+        </div>
       ) : (
-        <pre className="bg-[#282c34] text-[#abb2bf] p-4 rounded-lg overflow-x-auto text-sm">
-          <code>{children}</code>
-        </pre>
+        <div className="relative group">
+          <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <CopyButton
+              text={children}
+              className="bg-[var(--background)]/80 backdrop-blur-sm"
+              copiedLabel={copiedLabel}
+              copyLabel={copyLabel}
+            />
+          </div>
+          {language ? (
+            <SyntaxHighlighter
+              style={oneDark}
+              language={language}
+              PreTag="div"
+              customStyle={{
+                margin: 0,
+                borderRadius: "0.5rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              {children}
+            </SyntaxHighlighter>
+          ) : (
+            <pre className="bg-[#282c34] text-[#abb2bf] p-4 rounded-lg overflow-x-auto text-sm">
+              <code>{children}</code>
+            </pre>
+          )}
+        </div>
       )}
     </div>
   );
@@ -282,6 +338,8 @@ export function Message({ message }: MessageProps) {
                         language={match?.[1]}
                         copiedLabel={t("copied")}
                         copyLabel={t("copy")}
+                        showPreviewLabel={t("showPreview")}
+                        showCodeLabel={t("showCode")}
                       >
                         {String(children).replace(/\n$/, "")}
                       </CodeBlock>
