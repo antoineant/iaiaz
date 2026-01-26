@@ -72,10 +72,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user is a trainer
+    // Check if user is a trainer and get admin status
     const { data: profile } = await supabase
       .from("profiles")
-      .select("account_type")
+      .select("account_type, is_admin")
       .eq("id", user.id)
       .single();
 
@@ -83,8 +83,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Trainer access required" }, { status: 403 });
     }
 
+    const isAdmin = profile.is_admin === true || profile.account_type === "admin";
+
     const body = await request.json();
-    const { description, locale = "fr" } = body;
+    const { description, locale = "fr", modelId } = body;
 
     if (!description || typeof description !== "string" || description.trim().length < 20) {
       return NextResponse.json(
@@ -93,14 +95,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get the economy model for cost-effective generation
-    // Fall back to gpt-4o-mini if economy model isn't available
-    let model = await getEconomyModel();
-    // Map non-existent models to working ones
-    if (model === "gpt-5-nano") {
-      model = "gpt-4o-mini";
+    // Get the model to use
+    // Admins can specify a model, others use the economy model
+    let model: string;
+    if (isAdmin && modelId && typeof modelId === "string") {
+      model = modelId;
+      console.log("Admin using custom model:", model);
+    } else {
+      model = await getEconomyModel();
+      // Map non-existent models to working ones
+      if (model === "gpt-5-nano") {
+        model = "gpt-4o-mini";
+      }
+      console.log("Using economy model for course structure generation:", model);
     }
-    console.log("Using model for course structure generation:", model);
 
     // Build prompt with locale hint
     const localeHint = locale === "fr"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   AlertCircle,
   Check,
   RefreshCw,
+  Settings2,
 } from "lucide-react";
 
 export interface GeneratedObjective {
@@ -30,11 +31,19 @@ export interface GeneratedTopic {
   sort_order: number;
 }
 
+interface AIModel {
+  id: string;
+  name: string;
+  provider: string;
+  description?: string;
+}
+
 interface AIStructureGeneratorProps {
   onGenerated: (objectives: GeneratedObjective[], topics: GeneratedTopic[]) => void;
   onSuggestedName?: (name: string) => void;
   onSuggestedDescription?: (description: string) => void;
   initialDescription?: string;
+  isAdmin?: boolean;
 }
 
 export function AIStructureGenerator({
@@ -42,6 +51,7 @@ export function AIStructureGenerator({
   onSuggestedName,
   onSuggestedDescription,
   initialDescription = "",
+  isAdmin = false,
 }: AIStructureGeneratorProps) {
   const t = useTranslations("org.classes.courseStructure.ai");
   const locale = useLocale();
@@ -54,6 +64,31 @@ export function AIStructureGenerator({
     topics: GeneratedTopic[];
   } | null>(null);
 
+  // Admin-only: model selection
+  const [models, setModels] = useState<AIModel[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [showModelSelector, setShowModelSelector] = useState(false);
+
+  // Fetch models for admin
+  useEffect(() => {
+    if (isAdmin) {
+      fetch("/api/models/allowed")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.models) {
+            setModels(data.models);
+            // Default to recommended or first model
+            const defaultModel = data.models.find((m: AIModel) => m.id === data.defaultModel)
+              || data.models[0];
+            if (defaultModel) {
+              setSelectedModel(defaultModel.id);
+            }
+          }
+        })
+        .catch(console.error);
+    }
+  }, [isAdmin]);
+
   const handleGenerate = async () => {
     if (description.trim().length < 20) {
       setError(t("descriptionTooShort"));
@@ -65,10 +100,20 @@ export function AIStructureGenerator({
     setPreview(null);
 
     try {
+      const body: Record<string, string> = {
+        description: description.trim(),
+        locale
+      };
+
+      // Admin can override the model
+      if (isAdmin && selectedModel) {
+        body.modelId = selectedModel;
+      }
+
       const response = await fetch("/api/ai/generate-course-structure", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: description.trim(), locale }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -112,6 +157,15 @@ export function AIStructureGenerator({
   const getSubtopics = (parentId: string) =>
     preview?.topics.filter(t => t.parent_id === parentId) || [];
 
+  // Group models by provider for the selector
+  const modelsByProvider = models.reduce((acc, model) => {
+    if (!acc[model.provider]) {
+      acc[model.provider] = [];
+    }
+    acc[model.provider].push(model);
+    return acc;
+  }, {} as Record<string, AIModel[]>);
+
   return (
     <Card className="border-primary-200 dark:border-primary-800 bg-gradient-to-br from-primary-50/50 to-transparent dark:from-primary-950/20">
       <CardHeader className="pb-3">
@@ -119,16 +173,55 @@ export function AIStructureGenerator({
           <div className="p-2 rounded-lg bg-primary-100 dark:bg-primary-900/50">
             <Sparkles className="w-5 h-5 text-primary-600 dark:text-primary-400" />
           </div>
-          <div>
+          <div className="flex-1">
             <h3 className="font-semibold">{t("title")}</h3>
             <p className="text-sm text-[var(--muted-foreground)]">
               {t("subtitle")}
             </p>
           </div>
+          {/* Admin: Model settings toggle */}
+          {isAdmin && models.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowModelSelector(!showModelSelector)}
+              className="text-[var(--muted-foreground)]"
+            >
+              <Settings2 className="w-4 h-4" />
+            </Button>
+          )}
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* Admin: Model selector */}
+        {isAdmin && showModelSelector && models.length > 0 && (
+          <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+            <label className="block text-xs font-medium text-amber-800 dark:text-amber-200 mb-2">
+              Admin: Select AI Model
+            </label>
+            <select
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              className="w-full p-2 text-sm border border-amber-300 dark:border-amber-700 rounded-lg bg-white dark:bg-amber-950/50"
+              disabled={isGenerating}
+            >
+              {Object.entries(modelsByProvider).map(([provider, providerModels]) => (
+                <optgroup key={provider} label={provider}>
+                  {providerModels.map((model) => (
+                    <option key={model.id} value={model.id}>
+                      {model.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+              Selected: {models.find(m => m.id === selectedModel)?.name || "Default"}
+            </p>
+          </div>
+        )}
+
         {/* Description input */}
         {!preview && (
           <>
