@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditAdjustmentModal } from "@/components/admin/credit-adjustment-modal";
+import { OrgMembersModal } from "@/components/admin/org-members-modal";
 import {
   Search,
   Building2,
@@ -12,6 +13,7 @@ import {
   Loader2,
   CreditCard,
   Settings2,
+  UserCog,
 } from "lucide-react";
 
 interface Organization {
@@ -37,6 +39,7 @@ export default function AdminOrganizationsPage() {
   const [success, setSuccess] = useState("");
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
+  const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
 
   const fetchOrganizations = async () => {
     try {
@@ -73,6 +76,11 @@ export default function AdminOrganizationsPage() {
   const handleAdjustCredits = (org: Organization) => {
     setSelectedOrg(org);
     setIsAdjustModalOpen(true);
+  };
+
+  const handleManageMembers = (org: Organization) => {
+    setSelectedOrg(org);
+    setIsMembersModalOpen(true);
   };
 
   const handleAdjustSuccess = () => {
@@ -261,14 +269,26 @@ export default function AdminOrganizationsPage() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleAdjustCredits(org)}
-                        >
-                          <Settings2 className="w-4 h-4 mr-1" />
-                          {t("adjustCredits")}
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleAdjustCredits(org)}
+                          >
+                            <Settings2 className="w-4 h-4 mr-1" />
+                            {t("adjustCredits")}
+                          </Button>
+                          {org.type !== "training_center" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleManageMembers(org)}
+                            >
+                              <UserCog className="w-4 h-4 mr-1" />
+                              {t("manageMembers")}
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -291,6 +311,19 @@ export default function AdminOrganizationsPage() {
           organizationName={selectedOrg.name}
           organizationBalance={selectedOrg.credit_balance}
           onSuccess={handleAdjustSuccess}
+        />
+      )}
+
+      {/* Members Modal */}
+      {selectedOrg && (
+        <OrgMembersModal
+          isOpen={isMembersModalOpen}
+          onClose={() => {
+            setIsMembersModalOpen(false);
+            setSelectedOrg(null);
+          }}
+          organizationId={selectedOrg.id}
+          organizationName={selectedOrg.name}
         />
       )}
     </div>

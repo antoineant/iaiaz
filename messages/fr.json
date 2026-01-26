@@ -1899,6 +1899,7 @@
       "quickActions": "Gestion des crédits",
       "buyCredits": "Acheter des crédits",
       "allocateToStudents": "Allouer aux élèves",
+      "transferCredits": "Transférer",
       "availableCredits": "Disponibles",
       "allocatedCredits": "Alloués"
     },
@@ -1914,6 +1915,24 @@
       "insufficientCredits": "Crédits insuffisants dans le pool",
       "noClasses": "Aucune classe disponible",
       "noStudents": "Aucun élève dans cette classe"
+    },
+    "transferCredits": {
+      "title": "Transférer des crédits",
+      "personal": "Crédits personnels",
+      "organization": "Organisation",
+      "available": "disponibles",
+      "amount": "Montant à transférer",
+      "maxAvailable": "Maximum disponible",
+      "toOrgDescription": "Transférer de vos crédits personnels vers l'organisation",
+      "toPersonalDescription": "Transférer des crédits de l'organisation vers vos crédits personnels",
+      "afterTransfer": "Après le transfert",
+      "confirm": "Confirmer le transfert",
+      "cancel": "Annuler",
+      "success": "Transfert effectué avec succès",
+      "error": "Erreur lors du transfert",
+      "noPermission": "Vous n'avez pas la permission de transférer des crédits. Contactez votre administrateur.",
+      "insufficientPersonal": "Crédits personnels insuffisants",
+      "insufficientOrg": "Crédits organisation insuffisants"
     },
     "members": {
       "title": "Membres",
@@ -2985,8 +3004,17 @@
       "available": "Disponibles",
       "members": "Membres",
       "adjustCredits": "Ajuster crédits",
+      "manageMembers": "Gérer membres",
       "noOrganizations": "Aucune organisation",
-      "owner": "Propriétaire"
+      "owner": "Propriétaire",
+      "creditPermission": "Autorisation de gestion des crédits",
+      "creditPermissionDescription": "Les formateurs avec cette autorisation peuvent transférer des crédits entre leur compte personnel et l'organisation.",
+      "authorized": "Autorisé",
+      "notAuthorized": "Non autorisé",
+      "alwaysAuthorized": "Toujours autorisé",
+      "noTeachers": "Aucun formateur dans cette organisation",
+      "otherMembers": "Autres membres",
+      "close": "Fermer"
     },
     "creditAdjustment": {
       "title": "Ajuster les crédits",

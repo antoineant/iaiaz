@@ -2010,6 +2010,7 @@
       "quickActions": "Credit Management",
       "buyCredits": "Buy credits",
       "allocateToStudents": "Allocate to students",
+      "transferCredits": "Transfer",
       "availableCredits": "Available",
       "allocatedCredits": "Allocated"
     },
@@ -2025,6 +2026,24 @@
       "insufficientCredits": "Insufficient credits in pool",
       "noClasses": "No classes available",
       "noStudents": "No students in this class"
+    },
+    "transferCredits": {
+      "title": "Transfer Credits",
+      "personal": "Personal credits",
+      "organization": "Organization",
+      "available": "available",
+      "amount": "Amount to transfer",
+      "maxAvailable": "Maximum available",
+      "toOrgDescription": "Transfer from your personal credits to the organization",
+      "toPersonalDescription": "Transfer from organization credits to your personal credits",
+      "afterTransfer": "After transfer",
+      "confirm": "Confirm transfer",
+      "cancel": "Cancel",
+      "success": "Transfer completed successfully",
+      "error": "Error during transfer",
+      "noPermission": "You don't have permission to transfer credits. Contact your administrator.",
+      "insufficientPersonal": "Insufficient personal credits",
+      "insufficientOrg": "Insufficient organization credits"
     },
     "members": {
       "title": "Members",
@@ -2985,8 +3004,17 @@
       "available": "Available",
       "members": "Members",
       "adjustCredits": "Adjust credits",
+      "manageMembers": "Manage members",
       "noOrganizations": "No organizations",
-      "owner": "Owner"
+      "owner": "Owner",
+      "creditPermission": "Credit management authorization",
+      "creditPermissionDescription": "Trainers with this authorization can transfer credits between their personal account and the organization.",
+      "authorized": "Authorized",
+      "notAuthorized": "Not authorized",
+      "alwaysAuthorized": "Always authorized",
+      "noTeachers": "No trainers in this organization",
+      "otherMembers": "Other members",
+      "close": "Close"
     },
     "creditAdjustment": {
       "title": "Adjust credits",
