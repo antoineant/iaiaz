@@ -36,6 +36,14 @@ interface StudentClass {
   credits_remaining: number;
 }
 
+interface ManagedClass {
+  id: string;
+  name: string;
+  status: string;
+  is_active: boolean;
+  student_count: number;
+}
+
 interface ChatClientProps {
   userId: string;
   initialBalance: number;
@@ -82,7 +90,11 @@ export function ChatClient({
   const [rateLimit, setRateLimit] = useState<RateLimitInfo | null>(null);
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
   const [classes, setClasses] = useState<StudentClass[]>([]);
+  const [managedClasses, setManagedClasses] = useState<ManagedClass[]>([]);
   const [enableThinking, setEnableThinking] = useState(false);
+
+  // Check if user can manage org (owner/admin/teacher)
+  const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
 
   // Check if current model supports extended thinking (Claude - opt-in)
   const claudeSupportsThinking = model.includes("claude-3-7") ||
@@ -95,22 +107,31 @@ export function ChatClient({
   // Combined: does model support thinking/reasoning?
   const supportsThinking = claudeSupportsThinking || isOpenAIReasoning;
 
-  // Fetch student classes on mount
+  // Fetch classes on mount - managed classes for trainers, student classes for students
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch("/api/student/classes");
-        if (response.ok) {
-          const data = await response.json();
-          // Only show active classes in the sidebar
-          setClasses(data.active_classes || []);
+        if (canManageOrg) {
+          // Trainers see their managed classes
+          const response = await fetch("/api/org/classes");
+          if (response.ok) {
+            const data = await response.json();
+            setManagedClasses(data || []);
+          }
+        } else {
+          // Students see classes they're enrolled in
+          const response = await fetch("/api/student/classes");
+          if (response.ok) {
+            const data = await response.json();
+            setClasses(data.active_classes || []);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch classes:", error);
       }
     };
     fetchClasses();
-  }, []);
+  }, [canManageOrg]);
 
   // Fetch rate limit status when model changes
   const fetchRateLimitStatus = useCallback(async () => {
@@ -408,6 +429,7 @@ export function ChatClient({
         } : undefined}
         userInfo={userInfo}
         classes={classes}
+        managedClasses={managedClasses}
       />
 
       <main className="flex-1 flex flex-col min-w-0">

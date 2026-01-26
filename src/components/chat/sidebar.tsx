@@ -50,6 +50,14 @@ interface StudentClass {
   credits_remaining: number;
 }
 
+interface ManagedClass {
+  id: string;
+  name: string;
+  status: string;
+  is_active: boolean;
+  student_count: number;
+}
+
 interface SidebarProps {
   conversations: Conversation[];
   currentConversationId?: string;
@@ -60,6 +68,7 @@ interface SidebarProps {
   orgContext?: OrgContext;
   userInfo?: UserInfo;
   classes?: StudentClass[];
+  managedClasses?: ManagedClass[];
 }
 
 export function Sidebar({
@@ -72,6 +81,7 @@ export function Sidebar({
   orgContext,
   userInfo,
   classes,
+  managedClasses,
 }: SidebarProps) {
   const router = useRouter();
   const t = useTranslations("chat.sidebar");
@@ -230,47 +240,93 @@ export function Sidebar({
       {/* Classes section */}
       <div className="px-2 py-2 border-t border-[var(--border)]">
         <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
-          {t("classes")}
+          {canManageOrg ? t("managedClasses") : t("classes")}
         </div>
-        {classes && classes.length > 0 ? (
-          <>
-            <ul className="space-y-1">
-              {classes.slice(0, 3).map((cls) => (
-                <li key={cls.class_id}>
-                  <Link
-                    href={{ pathname: "/class/[classId]", params: { classId: cls.class_id } }}
-                    className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <span className={cn(
-                      "w-2 h-2 rounded-full flex-shrink-0",
-                      cls.is_accessible ? "bg-green-500" : "bg-gray-400"
-                    )} />
-                    <GraduationCap className="w-4 h-4 flex-shrink-0 text-[var(--muted-foreground)]" />
-                    <span className="flex-1 truncate">{cls.class_name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/dashboard/classes"
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs text-primary-600 dark:text-primary-400 hover:underline"
+        {canManageOrg ? (
+          // Trainer view: show managed classes
+          managedClasses && managedClasses.length > 0 ? (
+            <>
+              <ul className="space-y-1">
+                {managedClasses.slice(0, 3).map((cls) => (
+                  <li key={cls.id}>
+                    <NextLink
+                      href={`/org/classes/${cls.id}`}
+                      className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <span className={cn(
+                        "w-2 h-2 rounded-full flex-shrink-0",
+                        cls.is_active ? "bg-green-500" : "bg-gray-400"
+                      )} />
+                      <GraduationCap className="w-4 h-4 flex-shrink-0 text-[var(--muted-foreground)]" />
+                      <span className="flex-1 truncate">{cls.name}</span>
+                      <span className="text-xs text-[var(--muted-foreground)]">{cls.student_count}</span>
+                    </NextLink>
+                  </li>
+                ))}
+              </ul>
+              <NextLink
+                href="/org/classes"
+                className="flex items-center justify-center gap-1 px-2 py-2 text-xs text-primary-600 dark:text-primary-400 hover:underline"
+                onClick={() => setIsOpen(false)}
+              >
+                {t("viewAllClasses")}
+                <ChevronRight className="w-3 h-3" />
+              </NextLink>
+            </>
+          ) : (
+            <NextLink
+              href="/org/classes"
+              className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:bg-[var(--muted)] transition-colors"
               onClick={() => setIsOpen(false)}
             >
-              {t("viewAllClasses")}
-              <ChevronRight className="w-3 h-3" />
-            </Link>
-          </>
+              <GraduationCap className="w-4 h-4 flex-shrink-0" />
+              <span className="flex-1">{t("noManagedClasses")}</span>
+              <ChevronRight className="w-4 h-4" />
+            </NextLink>
+          )
         ) : (
-          <Link
-            href="/dashboard/classes"
-            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:bg-[var(--muted)] transition-colors"
-            onClick={() => setIsOpen(false)}
-          >
-            <GraduationCap className="w-4 h-4 flex-shrink-0" />
-            <span className="flex-1">{t("noClasses")}</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
+          // Student view: show enrolled classes
+          classes && classes.length > 0 ? (
+            <>
+              <ul className="space-y-1">
+                {classes.slice(0, 3).map((cls) => (
+                  <li key={cls.class_id}>
+                    <Link
+                      href={{ pathname: "/class/[classId]", params: { classId: cls.class_id } }}
+                      className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <span className={cn(
+                        "w-2 h-2 rounded-full flex-shrink-0",
+                        cls.is_accessible ? "bg-green-500" : "bg-gray-400"
+                      )} />
+                      <GraduationCap className="w-4 h-4 flex-shrink-0 text-[var(--muted-foreground)]" />
+                      <span className="flex-1 truncate">{cls.class_name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/dashboard/classes"
+                className="flex items-center justify-center gap-1 px-2 py-2 text-xs text-primary-600 dark:text-primary-400 hover:underline"
+                onClick={() => setIsOpen(false)}
+              >
+                {t("viewAllClasses")}
+                <ChevronRight className="w-3 h-3" />
+              </Link>
+            </>
+          ) : (
+            <Link
+              href="/dashboard/classes"
+              className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:bg-[var(--muted)] transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <GraduationCap className="w-4 h-4 flex-shrink-0" />
+              <span className="flex-1">{t("noClasses")}</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          )
         )}
       </div>
 

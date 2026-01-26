@@ -273,8 +273,10 @@
       "orgCredits": "Organization",
       "personalCredits": "Personal",
       "classes": "My Classes",
+      "managedClasses": "My Classes",
       "viewAllClasses": "View all classes",
       "noClasses": "No classes",
+      "noManagedClasses": "Create a class",
       "privateConversations": "Private conversations"
     },
     "privacy": {

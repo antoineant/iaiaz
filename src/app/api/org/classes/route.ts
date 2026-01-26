@@ -65,11 +65,21 @@ export async function GET() {
       }
     }
 
-    // Add student count to each class
-    const classesWithCounts = classes?.map((c) => ({
-      ...c,
-      student_count: studentCounts[c.id] || 0,
-    }));
+    // Add student count and is_active flag to each class
+    const now = new Date();
+    const classesWithCounts = classes?.map((c) => {
+      const isActive =
+        c.status === "active" &&
+        !c.closed_at &&
+        (!c.starts_at || new Date(c.starts_at) <= now) &&
+        (!c.ends_at || new Date(c.ends_at) > now);
+
+      return {
+        ...c,
+        student_count: studentCounts[c.id] || 0,
+        is_active: isActive,
+      };
+    });
 
     return NextResponse.json(classesWithCounts);
   } catch (error) {
