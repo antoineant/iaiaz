@@ -144,16 +144,22 @@ export default function SettingsPage() {
     fetchData();
   }, []);
 
-  const saveSetting = async (key: string, value: object) => {
+  const saveSetting = async (key: string, value: object, description?: string) => {
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
+    // Use upsert to handle both insert and update
     const { error } = await supabase
       .from("app_settings")
-      .update({ value, updated_at: new Date().toISOString(), updated_by: user?.id })
-      .eq("key", key);
+      .upsert({
+        key,
+        value,
+        description: description || key,
+        updated_at: new Date().toISOString(),
+        updated_by: user?.id,
+      }, { onConflict: "key" });
 
     return error;
   };
@@ -212,10 +218,16 @@ export default function SettingsPage() {
           .eq("id", economyModel);
       }
 
-      if (courseStructureModel) {
-        err = await saveSetting("course_structure_model", { model_id: courseStructureModel });
-        if (err) throw new Error("Erreur lors de la sauvegarde du modèle structure de cours");
-      }
+      // Always save course_structure_model (even if empty to clear it)
+      err = await saveSetting(
+        "course_structure_model",
+        { model_id: courseStructureModel },
+        "Model for AI course structure generation"
+      );
+      if (err) throw new Error("Erreur lors de la sauvegarde du modèle structure de cours");
+
+      // Invalidate server-side model cache by calling the API
+      await fetch("/api/admin/invalidate-cache", { method: "POST" }).catch(() => {});
 
       setSuccess("Paramètres sauvegardés avec succès");
       fetchData();
