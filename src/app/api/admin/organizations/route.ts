@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdmin } from "@/lib/admin";
 
@@ -9,7 +8,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createClient();
   const adminClient = createAdminClient();
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search") || "";
@@ -17,8 +15,8 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get("limit") || "50");
   const offset = (page - 1) * limit;
 
-  // Build query
-  let query = supabase
+  // Build query - use adminClient to bypass RLS
+  let query = adminClient
     .from("organizations")
     .select(
       "id, name, owner_id, credit_balance, credit_allocated, type, created_at, updated_at",
@@ -63,7 +61,7 @@ export async function GET(request: NextRequest) {
   let memberCounts: Record<string, number> = {};
 
   if (orgIds.length > 0) {
-    const { data: members } = await supabase
+    const { data: members } = await adminClient
       .from("organization_members")
       .select("organization_id")
       .in("organization_id", orgIds)
