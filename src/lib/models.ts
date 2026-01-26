@@ -37,6 +37,7 @@ export interface ModelSettings {
   default_chat_model: { model_id: string };
   analytics_model: { model_id: string };
   economy_model: { model_id: string };
+  course_structure_model: { model_id: string };
 }
 
 export type ModelId = string;
@@ -130,12 +131,13 @@ export async function getModelSettings(): Promise<ModelSettings> {
   const { data, error } = await adminClient
     .from("app_settings")
     .select("key, value")
-    .in("key", ["default_chat_model", "analytics_model", "economy_model"]);
+    .in("key", ["default_chat_model", "analytics_model", "economy_model", "course_structure_model"]);
 
   const defaults: ModelSettings = {
     default_chat_model: { model_id: "claude-sonnet-4-20250514" },
     analytics_model: { model_id: "claude-sonnet-4-20250514" },
     economy_model: { model_id: "gpt-5-nano" },
+    course_structure_model: { model_id: "" }, // Empty means use economy_model
   };
 
   if (error) {
@@ -196,6 +198,19 @@ export async function getAnalyticsModel(): Promise<string> {
  */
 export async function getEconomyModel(): Promise<string> {
   const settings = await getModelSettings();
+  return settings.economy_model.model_id;
+}
+
+/**
+ * Get the course structure generation model ID
+ * Falls back to economy model if not configured
+ */
+export async function getCourseStructureModel(): Promise<string> {
+  const settings = await getModelSettings();
+  // If course_structure_model is set, use it; otherwise fall back to economy_model
+  if (settings.course_structure_model.model_id) {
+    return settings.course_structure_model.model_id;
+  }
   return settings.economy_model.model_id;
 }
 

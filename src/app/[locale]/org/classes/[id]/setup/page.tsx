@@ -34,37 +34,23 @@ export default function ClassSetupPage() {
     objectives: GeneratedObjective[];
     topics: GeneratedTopic[];
   } | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Load class info and user profile
+  // Load class info
   useEffect(() => {
-    const loadData = async () => {
+    const loadClass = async () => {
       try {
-        // Fetch class info and user profile in parallel
-        const [classResponse, profileResponse] = await Promise.all([
-          fetch(`/api/org/classes/${classId}`),
-          fetch("/api/profile"),
-        ]);
-
-        if (classResponse.ok) {
-          const data = await classResponse.json();
+        const response = await fetch(`/api/org/classes/${classId}`);
+        if (response.ok) {
+          const data = await response.json();
           setClassName(data.name);
         }
-
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          setIsAdmin(
-            profileData.profile?.is_admin === true ||
-            profileData.profile?.account_type === "admin"
-          );
-        }
       } catch (error) {
-        console.error("Failed to load data:", error);
+        console.error("Failed to load class:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    loadData();
+    loadClass();
   }, [classId]);
 
   // Handle AI generation complete
@@ -222,7 +208,7 @@ export default function ClassSetupPage() {
             {t("back")}
           </Button>
 
-          <AIStructureGenerator onGenerated={handleAIGenerated} isAdmin={isAdmin} />
+          <AIStructureGenerator onGenerated={handleAIGenerated} />
         </div>
       )}
 

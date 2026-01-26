@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { callAI } from "@/lib/ai/providers";
-import { getEconomyModel } from "@/lib/models";
+import { getCourseStructureModel } from "@/lib/models";
 
 interface GeneratedObjective {
   title: string;
@@ -72,10 +72,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user is a trainer and get admin status
+    // Check if user is a trainer
     const { data: profile } = await supabase
       .from("profiles")
-      .select("account_type, is_admin")
+      .select("account_type")
       .eq("id", user.id)
       .single();
 
@@ -83,10 +83,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Trainer access required" }, { status: 403 });
     }
 
-    const isAdmin = profile.is_admin === true || profile.account_type === "admin";
-
     const body = await request.json();
-    const { description, locale = "fr", modelId } = body;
+    const { description, locale = "fr" } = body;
 
     if (!description || typeof description !== "string" || description.trim().length < 20) {
       return NextResponse.json(
@@ -95,20 +93,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get the model to use
-    // Admins can specify a model, others use the economy model
-    let model: string;
-    if (isAdmin && modelId && typeof modelId === "string") {
-      model = modelId;
-      console.log("Admin using custom model:", model);
-    } else {
-      model = await getEconomyModel();
-      // Map non-existent models to working ones
-      if (model === "gpt-5-nano") {
-        model = "gpt-4o-mini";
-      }
-      console.log("Using economy model for course structure generation:", model);
-    }
+    // Get the model configured for course structure generation
+    const model = await getCourseStructureModel();
+    console.log("Using model for course structure generation:", model);
 
     // Build prompt with locale hint
     const localeHint = locale === "fr"

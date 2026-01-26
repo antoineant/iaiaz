@@ -85,6 +85,7 @@ export default function SettingsPage() {
   const [defaultChatModel, setDefaultChatModel] = useState("");
   const [analyticsModel, setAnalyticsModel] = useState("");
   const [economyModel, setEconomyModel] = useState("");
+  const [courseStructureModel, setCourseStructureModel] = useState("");
 
   const fetchData = async () => {
     const supabase = createClient();
@@ -117,6 +118,9 @@ export default function SettingsPage() {
         }
         if (setting.key === "economy_model" && setting.value.model_id) {
           setEconomyModel(setting.value.model_id);
+        }
+        if (setting.key === "course_structure_model" && setting.value.model_id) {
+          setCourseStructureModel(setting.value.model_id);
         }
       });
     }
@@ -206,6 +210,11 @@ export default function SettingsPage() {
           .from("ai_models")
           .update({ system_role: "economy_fallback" })
           .eq("id", economyModel);
+      }
+
+      if (courseStructureModel) {
+        err = await saveSetting("course_structure_model", { model_id: courseStructureModel });
+        if (err) throw new Error("Erreur lors de la sauvegarde du modèle structure de cours");
       }
 
       setSuccess("Paramètres sauvegardés avec succès");
@@ -620,6 +629,27 @@ export default function SettingsPage() {
               </select>
               <p className="text-xs text-[var(--muted-foreground)] mt-1">
                 Modèle utilisé pour les tâches de fond (économique)
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                Modèle génération structure de cours
+              </label>
+              <select
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--background)]"
+                value={courseStructureModel}
+                onChange={(e) => setCourseStructureModel(e.target.value)}
+              >
+                <option value="">-- Utiliser modèle économique --</option>
+                {models.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name} ({m.provider})
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                Modèle utilisé pour générer les objectifs et thèmes de cours via IA
               </p>
             </div>
           </CardContent>
