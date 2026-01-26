@@ -1889,15 +1889,16 @@
     },
     "dashboard": {
       "title": "Tableau de bord",
-      "creditPool": "Pool de crédits",
-      "available": "Disponible",
+      "creditPool": "Crédits organisation",
+      "readyToAllocate": "Prêts à allouer",
       "members": "Membres",
       "students": "étudiants",
       "teachers": "enseignants",
       "usageThisMonth": "Utilisation ce mois",
       "pendingInvites": "Invitations en attente",
-      "creditDistribution": "Distribution des crédits",
-      "allocated": "Alloués",
+      "creditDistribution": "Répartition des crédits",
+      "reservedForStudents": "Réservés aux élèves",
+      "reservedCount": "attribués à {count} élèves",
       "recentActivity": "Activité récente",
       "noActivity": "Aucune activité récente",
       "unknownMember": "Membre inconnu",
@@ -1905,8 +1906,9 @@
       "buyCredits": "Acheter des crédits",
       "allocateToStudents": "Allouer aux élèves",
       "transferCredits": "Transférer",
-      "availableCredits": "Disponibles",
-      "allocatedCredits": "Alloués"
+      "availableCredits": "Prêts à allouer",
+      "allocatedCredits": "Réservés aux élèves",
+      "creditExplanation": "Les élèves utilisent les crédits réservés. Les crédits non utilisés reviennent à la fermeture des classes."
     },
     "bulkAllocate": {
       "title": "Allouer des crédits à la classe",

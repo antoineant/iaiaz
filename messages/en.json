@@ -2000,15 +2000,16 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "creditPool": "Credit Pool",
-      "available": "Available",
+      "creditPool": "Organization Credits",
+      "readyToAllocate": "Ready to allocate",
       "members": "Members",
       "students": "students",
       "teachers": "teachers",
       "usageThisMonth": "Usage this month",
       "pendingInvites": "Pending invitations",
-      "creditDistribution": "Credit Distribution",
-      "allocated": "Allocated",
+      "creditDistribution": "Credit Breakdown",
+      "reservedForStudents": "Reserved for students",
+      "reservedCount": "assigned to {count} students",
       "recentActivity": "Recent Activity",
       "noActivity": "No recent activity",
       "unknownMember": "Unknown member",
@@ -2016,8 +2017,9 @@
       "buyCredits": "Buy credits",
       "allocateToStudents": "Allocate to students",
       "transferCredits": "Transfer",
-      "availableCredits": "Available",
-      "allocatedCredits": "Allocated"
+      "availableCredits": "Ready to allocate",
+      "allocatedCredits": "Reserved for students",
+      "creditExplanation": "Students use credits from their reserved amount. Unused credits return when classes close."
     },
     "bulkAllocate": {
       "title": "Allocate credits to class",

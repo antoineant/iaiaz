@@ -208,11 +208,14 @@ export default function OrgDashboardPage() {
                   <span className="text-[var(--muted-foreground)]">
                     {t("allocatedCredits")}:
                   </span>{" "}
-                  <span className="font-medium">
+                  <span className="font-medium text-primary-600 dark:text-primary-400">
                     {stats?.total_allocated.toFixed(2)}€
                   </span>
                 </span>
               </div>
+              <p className="text-xs text-[var(--muted-foreground)] mt-2">
+                {t("creditExplanation")}
+              </p>
             </div>
             <div className="flex gap-2 flex-wrap">
               <Link
@@ -249,7 +252,7 @@ export default function OrgDashboardPage() {
                   {stats?.credit_balance.toFixed(2)}€
                 </p>
                 <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                  {t("available")}: {availableCredits.toFixed(2)}€
+                  {t("readyToAllocate")}: {availableCredits.toFixed(2)}€
                 </p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -319,7 +322,7 @@ export default function OrgDashboardPage() {
         </Card>
       </div>
 
-      {/* Allocated vs Available chart */}
+      {/* Credit Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
@@ -329,8 +332,13 @@ export default function OrgDashboardPage() {
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>{t("allocated")}</span>
-                  <span>{stats?.total_allocated.toFixed(2)}€</span>
+                  <span className="flex items-center gap-2">
+                    {t("reservedForStudents")}
+                    <span className="text-xs text-[var(--muted-foreground)]">
+                      ({t("reservedCount", { count: stats?.students_count || 0 })})
+                    </span>
+                  </span>
+                  <span className="font-medium">{stats?.total_allocated.toFixed(2)}€</span>
                 </div>
                 <div className="h-3 bg-[var(--muted)] rounded-full overflow-hidden">
                   <div
@@ -348,8 +356,8 @@ export default function OrgDashboardPage() {
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span>{t("available")}</span>
-                  <span>{availableCredits.toFixed(2)}€</span>
+                  <span>{t("readyToAllocate")}</span>
+                  <span className="font-medium">{availableCredits.toFixed(2)}€</span>
                 </div>
                 <div className="h-3 bg-[var(--muted)] rounded-full overflow-hidden">
                   <div
