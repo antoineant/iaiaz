@@ -38,8 +38,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     const creditAmount = parseFloat(amount);
 
-    // Get current organization
-    const { data: org, error: orgError } = await supabase
+    // Get current organization (use adminClient to bypass RLS)
+    const { data: org, error: orgError } = await adminClient
       .from("organizations")
       .select("id, name, credit_balance")
       .eq("id", orgId)
