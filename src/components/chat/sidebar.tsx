@@ -25,6 +25,7 @@ import {
   Shield,
   Info,
   Image as ImageIcon,
+  User,
 } from "lucide-react";
 
 interface OrgContext {
@@ -192,13 +193,13 @@ export function Sidebar({
       </div>
 
       {/* New conversation */}
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-3">
         <Button className="w-full" onClick={onNewConversation}>
           <Plus className="w-4 h-4 mr-2" />
           {t("newConversation")}
         </Button>
         <NextLink href="/create/images" onClick={() => setIsOpen(false)}>
-          <Button variant="outline" className="w-full">
+          <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
             <ImageIcon className="w-4 h-4 mr-2" />
             {t("imageStudio")}
           </Button>
@@ -349,8 +350,8 @@ export function Sidebar({
           className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
           onClick={() => setIsOpen(false)}
         >
-          <Settings className="w-4 h-4" />
-          {t("dashboard")}
+          <User className="w-4 h-4" />
+          {t("myAccount")}
         </Link>
         <button
           onClick={handleLogout}
