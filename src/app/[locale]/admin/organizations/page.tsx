@@ -19,7 +19,6 @@ import {
 interface Organization {
   id: string;
   name: string;
-  owner_id: string;
   owner_email: string | null;
   credit_balance: number;
   credit_allocated: number;
