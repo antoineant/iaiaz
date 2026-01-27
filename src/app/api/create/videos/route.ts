@@ -454,6 +454,9 @@ async function generateVeoVideo(
   // Map resolution to aspect ratio
   const aspectRatio = mapVeoResolution(resolution);
 
+  // Veo only supports duration between 4-8 seconds
+  const veoDuration = Math.max(4, Math.min(8, durationSeconds));
+
   // Build request body using the correct Gemini API format
   // See: https://ai.google.dev/gemini-api/docs/video
   const instance: Record<string, unknown> = {
@@ -469,7 +472,7 @@ async function generateVeoVideo(
     instances: [instance],
     parameters: {
       aspectRatio,
-      durationSeconds,
+      durationSeconds: veoDuration,
       sampleCount: 1,
     },
   };
