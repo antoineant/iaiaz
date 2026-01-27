@@ -18,27 +18,32 @@ ALTER TABLE image_generations ADD COLUMN IF NOT EXISTS reference_image_url text;
 UPDATE image_models SET is_active = false, is_recommended = false WHERE id IN ('dall-e-3', 'dall-e-2');
 
 -- Insert new GPT image models
+-- Pricing based on OpenAI token rates (per 1M tokens):
+-- gpt-image-1: $10 input / $40 output (premium)
+-- gpt-image-1.5: $8 input / $32 output (balanced)
+-- gpt-image-1-mini: $2.50 input / $8 output (budget)
+-- Estimates assume ~500 input tokens, ~5000 output tokens standard, ~10000 HD
 INSERT INTO image_models (id, name, provider, description, price_standard, price_hd, sizes, styles, supports_hd, supports_reference_image, is_active, is_recommended) VALUES
   (
     'gpt-image-1',
     'GPT Image 1',
     'openai',
-    'OpenAI''s flagship image model. Excellent quality, supports reference images for style inspiration.',
-    0.04,
-    0.08,
+    'OpenAI''s premium image model. Highest quality, supports reference images for style inspiration.',
+    0.20,
+    0.40,
     ARRAY['1024x1024', '1024x1536', '1536x1024', 'auto'],
     ARRAY['natural', 'vivid'],
     true,
     true,
     true,
-    true
+    false
   ),
   (
     'gpt-image-1-mini',
     'GPT Image 1 Mini',
     'openai',
-    'Faster and more affordable. Great for quick iterations.',
-    0.02,
+    'Fast and affordable. Great for quick iterations and drafts.',
+    0.04,
     NULL,
     ARRAY['1024x1024', '512x512'],
     ARRAY['natural'],
@@ -51,15 +56,15 @@ INSERT INTO image_models (id, name, provider, description, price_standard, price
     'gpt-image-1.5',
     'GPT Image 1.5',
     'openai',
-    'Latest version with improved quality and creativity. Best for professional use.',
-    0.05,
-    0.10,
+    'Best balance of quality and cost. Recommended for most use cases.',
+    0.16,
+    0.32,
     ARRAY['1024x1024', '1024x1536', '1536x1024', '1536x1536', 'auto'],
     ARRAY['natural', 'vivid', 'artistic'],
     true,
     true,
     true,
-    false
+    true
   )
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
