@@ -2557,6 +2557,29 @@
             "create": "Create"
           },
           "bloomExplanation": "Higher-order thinking (analyze, evaluate, create) indicates deeper learning. Encourage students to move beyond simple recall."
+        },
+        "learningOutcomes": {
+          "title": "Learning Outcomes Matrix",
+          "subtitle": "{students} students × {topics} topics",
+          "noStructure": "No course structure defined. Set up topics to see the learning outcomes matrix.",
+          "noStudents": "No students in this class yet.",
+          "student": "Student",
+          "overall": "Overall",
+          "legend": "Legend",
+          "legendTitle": "How to read this matrix",
+          "legendDescription": "Each cell shows the student's score for a topic based on message count and cognitive depth (Bloom's level). Colors indicate performance relative to class average.",
+          "classAverage": "Class Average",
+          "status": {
+            "strong": "Strong (above average)",
+            "onTrack": "On Track (at average)",
+            "needsAttention": "Needs Attention (below average)",
+            "noData": "No Data"
+          },
+          "messages": "Messages",
+          "avgBloom": "Avg. Bloom Level",
+          "score": "Score",
+          "classAvg": "Class Avg",
+          "vsAvg": "vs. Average"
         }
       },
       "courseStructure": {

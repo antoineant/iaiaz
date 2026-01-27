@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { StudentMatrix } from "@/components/analytics/student-matrix";
 import { PromptQualitySection } from "@/components/analytics/prompt-quality";
 import { LearningProgressSection } from "@/components/analytics/learning-progress";
+import { LearningOutcomesMatrix } from "@/components/analytics/learning-outcomes-matrix";
 import type { QuadrantSummary } from "@/lib/analytics/student-metrics";
 import {
   ArrowLeft,
@@ -123,6 +124,42 @@ interface LearningAnalyticsData {
   hasStructure: boolean;
 }
 
+// Learning Outcomes Matrix types
+interface StudentTopicScore {
+  topic_id: string;
+  message_count: number;
+  avg_bloom: number;
+  score: number;
+  status: 'strong' | 'on_track' | 'needs_attention' | 'no_data';
+}
+
+interface StudentOutcome {
+  id: string;
+  name: string;
+  email: string;
+  topics: StudentTopicScore[];
+  overall_score: number;
+}
+
+interface TopicInfo {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
+interface ClassAverage {
+  topic_id: string;
+  avg_score: number;
+  std_dev: number;
+}
+
+interface LearningOutcomesData {
+  students: StudentOutcome[];
+  topics: TopicInfo[];
+  class_averages: ClassAverage[];
+  has_structure: boolean;
+}
+
 export default function ClassAnalyticsPage() {
   const t = useTranslations("org.classes.analytics");
   const locale = useLocale();
@@ -133,6 +170,7 @@ export default function ClassAnalyticsPage() {
   const [matrixData, setMatrixData] = useState<StudentMatrixData | null>(null);
   const [promptQualityData, setPromptQualityData] = useState<PromptQualityData | null>(null);
   const [learningData, setLearningData] = useState<LearningAnalyticsData | null>(null);
+  const [learningOutcomesData, setLearningOutcomesData] = useState<LearningOutcomesData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshingPromptQuality, setIsRefreshingPromptQuality] = useState(false);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
@@ -149,12 +187,13 @@ export default function ClassAnalyticsPage() {
 
     try {
       // Load all cached data in parallel (no NLP analysis triggered)
-      const [analyticsResponse, matrixResponse, insightsResponse, promptQualityResponse, learningResponse] = await Promise.all([
+      const [analyticsResponse, matrixResponse, insightsResponse, promptQualityResponse, learningResponse, learningOutcomesResponse] = await Promise.all([
         fetch(`/api/org/classes/${classId}/analytics?period=${period}`),
         fetch(`/api/org/classes/${classId}/analytics/students?period=${period}&nlp=false`),
         fetch(`/api/org/classes/${classId}/analytics/insights?period=${period}&locale=${locale}`),
         fetch(`/api/org/classes/${classId}/analytics/prompt-quality?period=${period}`),
         fetch(`/api/org/classes/${classId}/analytics/learning?period=${period}`),
+        fetch(`/api/org/classes/${classId}/analytics/learning-outcomes?period=${period}`),
       ]);
 
       if (!analyticsResponse.ok) throw new Error("Failed to load analytics");
@@ -183,6 +222,11 @@ export default function ClassAnalyticsPage() {
       if (learningResponse.ok) {
         const learningDataResponse = await learningResponse.json();
         setLearningData(learningDataResponse);
+      }
+
+      if (learningOutcomesResponse.ok) {
+        const learningOutcomesDataResponse = await learningOutcomesResponse.json();
+        setLearningOutcomesData(learningOutcomesDataResponse);
       }
 
       setIsLoading(false);
@@ -360,6 +404,18 @@ export default function ClassAnalyticsPage() {
             progressOverTime={learningData.progressOverTime}
             totalAnalyzedMessages={learningData.totalAnalyzedMessages}
             hasStructure={learningData.hasStructure}
+          />
+        </div>
+      )}
+
+      {/* Learning Outcomes Matrix */}
+      {learningOutcomesData && (
+        <div className="mb-6">
+          <LearningOutcomesMatrix
+            students={learningOutcomesData.students}
+            topics={learningOutcomesData.topics}
+            classAverages={learningOutcomesData.class_averages}
+            hasStructure={learningOutcomesData.has_structure}
           />
         </div>
       )}

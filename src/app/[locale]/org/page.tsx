@@ -200,7 +200,7 @@ export default function OrgDashboardPage() {
                 <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
                   {t("seatLimitWarning.description", {
                     current: stats.total_members,
-                    limit: stats.seat_count,
+                    limit: stats.seat_count ?? 0,
                   })}
                 </p>
                 <Link

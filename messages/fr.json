@@ -2436,6 +2436,29 @@
             "create": "Créer"
           },
           "bloomExplanation": "La pensée de haut niveau (analyser, évaluer, créer) indique un apprentissage plus profond. Encouragez les étudiants à dépasser la simple mémorisation."
+        },
+        "learningOutcomes": {
+          "title": "Matrice des Objectifs",
+          "subtitle": "{students} étudiants × {topics} thèmes",
+          "noStructure": "Aucune structure de cours définie. Configurez les thèmes pour voir la matrice des objectifs.",
+          "noStudents": "Aucun étudiant dans cette classe pour le moment.",
+          "student": "Étudiant",
+          "overall": "Global",
+          "legend": "Légende",
+          "legendTitle": "Comment lire cette matrice",
+          "legendDescription": "Chaque cellule montre le score de l'étudiant pour un thème basé sur le nombre de messages et la profondeur cognitive (niveau de Bloom). Les couleurs indiquent la performance par rapport à la moyenne de la classe.",
+          "classAverage": "Moyenne de la classe",
+          "status": {
+            "strong": "Acquis (au-dessus de la moyenne)",
+            "onTrack": "En cours (dans la moyenne)",
+            "needsAttention": "À renforcer (en dessous de la moyenne)",
+            "noData": "Pas de données"
+          },
+          "messages": "Messages",
+          "avgBloom": "Niveau Bloom moyen",
+          "score": "Score",
+          "classAvg": "Moy. classe",
+          "vsAvg": "vs. Moyenne"
         }
       },
       "courseStructure": {
