@@ -55,7 +55,15 @@ export default async function ImageStudioPage() {
         .single(),
     ]);
 
-  const effectiveBalance = getEffectiveBalance(credits);
+  // For students in orgs, use personal balance only (image gen uses personal credits)
+  const isTrainer = credits.isTrainer === true;
+  const isInOrg = !!credits.orgId;
+  const isStudent = isInOrg && !isTrainer;
+
+  // Students use personal balance for image generation
+  const effectiveBalance = isStudent
+    ? (credits.personalBalance ?? 0)
+    : getEffectiveBalance(credits);
   const markupPercentage = markupResult.data?.value?.percentage || 50;
 
   return (
@@ -64,6 +72,8 @@ export default async function ImageStudioPage() {
       initialModels={modelsResult.data || []}
       initialGenerations={generationsResult.data || []}
       markupPercentage={markupPercentage}
+      isStudent={isStudent}
+      className={credits.className}
     />
   );
 }

@@ -60,6 +60,8 @@ interface ImageStudioClientProps {
   initialModels: ImageModel[];
   initialGenerations: Generation[];
   markupPercentage: number;
+  isStudent?: boolean;
+  className?: string;
 }
 
 export function ImageStudioClient({
@@ -67,6 +69,8 @@ export function ImageStudioClient({
   initialModels,
   initialGenerations,
   markupPercentage,
+  isStudent = false,
+  className: orgClassName,
 }: ImageStudioClientProps) {
   const t = useTranslations("imageStudio");
   const [models] = useState<ImageModel[]>(initialModels);
@@ -292,6 +296,26 @@ export function ImageStudioClient({
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Student Warning Banner */}
+        {isStudent && (
+          <div className="mb-6 p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-700 dark:text-amber-400 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium">{t("studentWarning.title")}</p>
+              <p className="mt-1 text-amber-600 dark:text-amber-500">
+                {t("studentWarning.description")}
+              </p>
+              <Link
+                href="/profile?tab=credits"
+                className="inline-flex items-center gap-1 mt-2 text-amber-700 dark:text-amber-400 hover:underline font-medium"
+              >
+                {t("studentWarning.topUp")}
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Generation Form */}
           <div className="lg:col-span-1">
@@ -483,17 +507,36 @@ export function ImageStudioClient({
                   <span className="font-medium">{formatCurrency(estimatedCost)}</span>
                 </div>
                 {balance < estimatedCost && (
-                  <p className="mt-2 text-xs text-red-500">
-                    {t("errors.insufficientCredits")}
-                  </p>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-xs text-red-500">
+                      {t("errors.insufficientCredits")}
+                    </span>
+                    <Link
+                      href="/profile?tab=credits"
+                      className="text-xs text-primary-600 hover:underline font-medium"
+                    >
+                      {t("topUp")}
+                    </Link>
+                  </div>
                 )}
               </div>
 
               {/* Error */}
               {error && (
-                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  {error}
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    {error}
+                  </div>
+                  {error === t("errors.insufficientCredits") && (
+                    <Link
+                      href="/profile?tab=credits"
+                      className="inline-flex items-center gap-1 mt-2 text-primary-600 hover:underline font-medium text-xs"
+                    >
+                      {t("topUp")}
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  )}
                 </div>
               )}
 

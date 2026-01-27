@@ -129,19 +129,34 @@ export async function POST(request: NextRequest) {
     const markupPercentage = markupSetting?.value?.percentage ?? 50;
     const cost = baseCost * (1 + markupPercentage / 100);
 
-    // Check if user can spend this amount (supports org credits)
-    const spendCheck = await checkCanSpend(user.id, cost);
+    // Get user credits to check if trainer or student
+    const credits = await getUserCredits(user.id);
+    const isTrainer = credits.isTrainer === true;
+    const isInOrg = !!credits.orgId;
 
-    if (!spendCheck.allowed) {
-      // Get current balance for error message
-      const credits = await getUserCredits(user.id);
+    // Image generation credit policy:
+    // - Trainers (owner/admin/teacher): use org credits
+    // - Students: personal credits only (org credits reserved for chat/learning)
+    let canSpend = false;
+    let usePersonalCredits = !isTrainer; // Students always use personal
+
+    if (isTrainer) {
+      // Trainers use org credits via standard check
+      const spendCheck = await checkCanSpend(user.id, cost);
+      canSpend = spendCheck.allowed;
+    } else {
+      // Students use personal credits only
+      canSpend = (credits.personalBalance ?? 0) >= cost;
+    }
+
+    if (!canSpend) {
       return NextResponse.json(
         {
           error: "Crédits insuffisants",
           required: cost,
-          available: credits.balance,
-          source: spendCheck.source,
-          reason: spendCheck.reason,
+          available: usePersonalCredits ? (credits.personalBalance ?? 0) : credits.balance,
+          source: usePersonalCredits ? "personal" : credits.source,
+          isStudent: !isTrainer && isInOrg,
         },
         { status: 402 }
       );
@@ -195,16 +210,46 @@ export async function POST(request: NextRequest) {
         throw new Error(`Provider ${model.provider} not implemented`);
       }
 
-      // Deduct credits after successful generation (supports org credits)
-      const deductResult = await deductCredits(
-        user.id,
-        cost,
-        `Image generation: ${model.name}`
-      );
+      // Deduct credits after successful generation
+      // Trainers: use org credits, Students: use personal credits only
+      let deductResult: { success: boolean; remaining?: number; source?: string };
+
+      if (usePersonalCredits) {
+        // Students: deduct from personal credits only
+        const { data: personalDeduct } = await adminClient.rpc("deduct_credits", {
+          p_user_id: user.id,
+          p_amount: cost,
+          p_description: `Image generation: ${model.name}`,
+        });
+
+        if (personalDeduct === false) {
+          console.error("Personal credit deduction failed after generation");
+          deductResult = { success: false };
+        } else {
+          // Get updated balance
+          const { data: updatedProfile } = await adminClient
+            .from("profiles")
+            .select("credits_balance")
+            .eq("id", user.id)
+            .single();
+          deductResult = {
+            success: true,
+            remaining: updatedProfile?.credits_balance ?? 0,
+            source: "personal"
+          };
+        }
+      } else {
+        // Trainers: use org credits via standard deduction
+        deductResult = await deductCredits(
+          user.id,
+          cost,
+          `Image generation: ${model.name}`
+        );
+      }
 
       if (!deductResult.success) {
         // This shouldn't happen since we checked earlier, but handle it
-        console.error("Credit deduction failed after generation:", deductResult.error);
+        console.error("Credit deduction failed after generation");
       }
 
       // Update generation record with result

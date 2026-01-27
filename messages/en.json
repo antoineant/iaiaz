@@ -3191,6 +3191,12 @@
       "generationFailed": "Image generation failed",
       "invalidFileType": "Please upload an image file (PNG, JPG, GIF, WebP)",
       "fileTooLarge": "Image must be less than 4MB"
+    },
+    "topUp": "Top up credits",
+    "studentWarning": {
+      "title": "Personal credits only",
+      "description": "Image generation uses your personal credits, not your class credits. Your class credits are reserved for chat conversations.",
+      "topUp": "Top up personal credits"
     }
   }
 }

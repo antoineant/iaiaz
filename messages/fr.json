@@ -3191,6 +3191,12 @@
       "generationFailed": "Échec de la génération",
       "invalidFileType": "Veuillez télécharger un fichier image (PNG, JPG, GIF, WebP)",
       "fileTooLarge": "L'image doit faire moins de 4 Mo"
+    },
+    "topUp": "Recharger",
+    "studentWarning": {
+      "title": "Crédits personnels uniquement",
+      "description": "La génération d'images utilise vos crédits personnels, pas vos crédits de classe. Vos crédits de classe sont réservés aux conversations.",
+      "topUp": "Recharger mes crédits"
     }
   }
 }
