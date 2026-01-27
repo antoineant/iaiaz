@@ -6,9 +6,10 @@ import { createClient } from "@/lib/supabase/client";
 
 interface GoogleButtonProps {
   mode: "login" | "signup";
+  accountType?: "student" | "trainer" | "school";
 }
 
-export function GoogleButton({ mode }: GoogleButtonProps) {
+export function GoogleButton({ mode, accountType }: GoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("auth.google");
 
@@ -16,10 +17,16 @@ export function GoogleButton({ mode }: GoogleButtonProps) {
     setIsLoading(true);
     const supabase = createClient();
 
+    // Build redirect URL with account type for signup
+    let redirectTo = `${window.location.origin}/auth/callback`;
+    if (mode === "signup" && accountType) {
+      redirectTo += `?account_type=${accountType}`;
+    }
+
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo,
       },
     });
   };

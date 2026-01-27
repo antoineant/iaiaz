@@ -211,7 +211,7 @@ function SignupForm() {
             <h1 className="text-xl font-semibold">{t("title")}</h1>
           </CardHeader>
           <CardContent>
-            <GoogleButton mode="signup" />
+            <GoogleButton mode="signup" accountType={accountType} />
 
             <Divider />
 

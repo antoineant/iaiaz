@@ -7,12 +7,14 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const error_description = searchParams.get("error_description");
   const next = searchParams.get("next") ?? "/chat";
+  const accountType = searchParams.get("account_type"); // For Google OAuth signup
 
   console.log("[auth/callback] Starting callback", {
     hasCode: !!code,
     error_description,
     next,
     origin,
+    accountType,
   });
 
   // Handle OAuth errors from provider
@@ -39,15 +41,73 @@ export async function GET(request: Request) {
       const adminClient = createAdminClient();
       const { data: profile, error: profileError } = await adminClient
         .from("profiles")
-        .select("terms_accepted_at")
+        .select("id, account_type, terms_accepted_at")
         .eq("id", data.user.id)
         .single();
 
       console.log("[auth/callback] Profile lookup:", {
         hasProfile: !!profile,
         termsAccepted: !!profile?.terms_accepted_at,
+        currentAccountType: profile?.account_type,
+        requestedAccountType: accountType,
         error: profileError?.message,
       });
+
+      // If user signed up via Google with a specific account type (trainer/school),
+      // update their profile since the DB trigger defaults to 'student'
+      if (
+        accountType &&
+        ["trainer", "school"].includes(accountType) &&
+        profile &&
+        profile.account_type === "student"
+      ) {
+        console.log("[auth/callback] Upgrading account type from student to:", accountType);
+
+        // Update profile account type
+        const { error: updateError } = await adminClient
+          .from("profiles")
+          .update({ account_type: accountType })
+          .eq("id", data.user.id);
+
+        if (updateError) {
+          console.error("[auth/callback] Failed to update account type:", updateError);
+        } else {
+          // Create organization for trainer/school (mimics DB trigger behavior)
+          const orgType = accountType === "school" ? "training_center" : "individual";
+          const initialCredits = accountType === "school" ? 10 : 0; // Schools get 10€
+
+          const { data: newOrg, error: orgError } = await adminClient
+            .from("organizations")
+            .insert({
+              name: data.user.user_metadata?.full_name || data.user.email?.split("@")[0] || "Mon organisation",
+              type: orgType,
+              owner_id: data.user.id,
+              credit_balance: initialCredits,
+            })
+            .select("id")
+            .single();
+
+          if (orgError) {
+            console.error("[auth/callback] Failed to create organization:", orgError);
+          } else if (newOrg) {
+            // Add user as owner of the organization
+            const { error: memberError } = await adminClient
+              .from("organization_members")
+              .insert({
+                organization_id: newOrg.id,
+                user_id: data.user.id,
+                role: "owner",
+                display_name: data.user.user_metadata?.full_name || data.user.email?.split("@")[0],
+              });
+
+            if (memberError) {
+              console.error("[auth/callback] Failed to add owner to organization:", memberError);
+            } else {
+              console.log("[auth/callback] Created organization and added owner:", newOrg.id);
+            }
+          }
+        }
+      }
 
       // Determine final redirect: URL param > user_metadata > default
       let finalRedirect = next;
