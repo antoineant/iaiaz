@@ -3190,13 +3190,24 @@
       "insufficientCredits": "Insufficient credits",
       "generationFailed": "Image generation failed",
       "invalidFileType": "Please upload an image file (PNG, JPG, GIF, WebP)",
-      "fileTooLarge": "Image must be less than 4MB"
+      "fileTooLarge": "Image must be less than 4MB",
+      "deleteFailed": "Failed to delete image"
     },
     "topUp": "Top up credits",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this image?",
     "studentWarning": {
       "title": "Personal credits only",
       "description": "Image generation uses your personal credits, not your class credits. Your class credits are reserved for chat conversations.",
       "topUp": "Top up personal credits"
+    },
+    "promptTips": {
+      "title": "Prompting tips",
+      "tip1": "Be specific: describe subjects, setting, lighting, colors, and mood",
+      "tip2": "Mention art style: photorealistic, watercolor, oil painting, 3D render, etc.",
+      "tip3": "Include camera details: wide angle, close-up, aerial view, macro shot",
+      "tip4": "Add atmosphere: dramatic lighting, golden hour, misty, cinematic",
+      "tip5": "Specify quality: highly detailed, 4K, professional photography"
     }
   }
 }

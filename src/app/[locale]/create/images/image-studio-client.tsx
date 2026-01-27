@@ -17,6 +17,8 @@ import {
   Upload,
   X,
   ImagePlus,
+  Trash2,
+  HelpCircle,
 } from "lucide-react";
 
 interface ImageModel {
@@ -87,6 +89,8 @@ export function ImageStudioClient({
   const [quality, setQuality] = useState("standard");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showPromptTips, setShowPromptTips] = useState(false);
 
   // Reference image state
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
@@ -263,6 +267,29 @@ export function ImageStudioClient({
     }
   };
 
+  const handleDelete = async (generationId: string) => {
+    if (!confirm(t("deleteConfirm"))) return;
+
+    setDeletingId(generationId);
+    try {
+      const response = await fetch(`/api/create/images/${generationId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setGenerations((prev) => prev.filter((g) => g.id !== generationId));
+      } else {
+        const data = await response.json();
+        setError(data.error || t("errors.deleteFailed"));
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      setError(t("errors.deleteFailed"));
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--background)]">
       {/* Header */}
@@ -400,9 +427,56 @@ export function ImageStudioClient({
 
               {/* Prompt */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  {t("prompt")}
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium">
+                    {t("prompt")}
+                  </label>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowPromptTips(!showPromptTips)}
+                      className="p-1 rounded-full hover:bg-[var(--muted)] transition-colors text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                      title={t("promptTips.title")}
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                    </button>
+                    {showPromptTips && (
+                      <div className="absolute right-0 top-8 z-50 w-72 p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] shadow-lg text-sm">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium">{t("promptTips.title")}</h4>
+                          <button
+                            onClick={() => setShowPromptTips(false)}
+                            className="p-1 rounded hover:bg-[var(--muted)]"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <ul className="space-y-2 text-xs text-[var(--muted-foreground)]">
+                          <li className="flex gap-2">
+                            <span className="text-primary-500">•</span>
+                            {t("promptTips.tip1")}
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="text-primary-500">•</span>
+                            {t("promptTips.tip2")}
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="text-primary-500">•</span>
+                            {t("promptTips.tip3")}
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="text-primary-500">•</span>
+                            {t("promptTips.tip4")}
+                          </li>
+                          <li className="flex gap-2">
+                            <span className="text-primary-500">•</span>
+                            {t("promptTips.tip5")}
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
@@ -616,6 +690,18 @@ export function ImageStudioClient({
                           >
                             <ExternalLink className="w-5 h-5 text-white" />
                           </a>
+                          <button
+                            onClick={() => handleDelete(gen.id)}
+                            disabled={deletingId === gen.id}
+                            className="p-2 rounded-lg bg-red-500/80 hover:bg-red-500 transition-colors"
+                            title={t("delete")}
+                          >
+                            {deletingId === gen.id ? (
+                              <Loader2 className="w-5 h-5 text-white animate-spin" />
+                            ) : (
+                              <Trash2 className="w-5 h-5 text-white" />
+                            )}
+                          </button>
                         </div>
                         {/* Reference image indicator */}
                         {gen.reference_image_url && (
@@ -629,13 +715,26 @@ export function ImageStudioClient({
                         <Loader2 className="w-8 h-8 animate-spin text-[var(--muted-foreground)]" />
                       </div>
                     ) : (
-                      <div className="w-full aspect-square bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+                      <div className="w-full aspect-square bg-red-50 dark:bg-red-900/20 flex items-center justify-center relative group">
                         <div className="text-center p-4">
                           <AlertCircle className="w-8 h-8 mx-auto text-red-500 mb-2" />
                           <p className="text-sm text-red-600 dark:text-red-400">
                             {gen.error_message || t("errors.generationFailed")}
                           </p>
                         </div>
+                        {/* Delete button for failed generations */}
+                        <button
+                          onClick={() => handleDelete(gen.id)}
+                          disabled={deletingId === gen.id}
+                          className="absolute top-2 right-2 p-2 rounded-lg bg-red-500/80 hover:bg-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                          title={t("delete")}
+                        >
+                          {deletingId === gen.id ? (
+                            <Loader2 className="w-4 h-4 text-white animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4 text-white" />
+                          )}
+                        </button>
                       </div>
                     )}
                     <div className="p-4">
