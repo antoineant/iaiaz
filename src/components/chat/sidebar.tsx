@@ -193,12 +193,12 @@ export function Sidebar({
       </div>
 
       {/* New conversation */}
-      <div className="p-4 space-y-3">
+      <div className="p-4">
         <Button className="w-full" onClick={onNewConversation}>
           <Plus className="w-4 h-4 mr-2" />
           {t("newConversation")}
         </Button>
-        <NextLink href="/create/images" onClick={() => setIsOpen(false)}>
+        <NextLink href="/create/images" onClick={() => setIsOpen(false)} className="block mt-4">
           <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
             <ImageIcon className="w-4 h-4 mr-2" />
             {t("imageStudio")}
