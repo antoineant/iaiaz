@@ -502,7 +502,13 @@ async function generateVeoVideo(
   const data = await response.json() as {
     name?: string;
     done?: boolean;
-    response?: { predictions?: Array<{ videoUri?: string }> };
+    response?: {
+      generateVideoResponse?: {
+        generatedSamples?: Array<{
+          video?: { uri?: string };
+        }>;
+      };
+    };
     error?: { message?: string };
   };
 
@@ -530,7 +536,13 @@ async function generateVeoVideo(
 
       const statusData = await statusResponse.json() as {
         done?: boolean;
-        response?: { predictions?: Array<{ videoUri?: string }> };
+        response?: {
+          generateVideoResponse?: {
+            generatedSamples?: Array<{
+              video?: { uri?: string };
+            }>;
+          };
+        };
         error?: { message?: string };
       };
 
@@ -539,10 +551,16 @@ async function generateVeoVideo(
           throw new Error(statusData.error.message || "Veo generation failed");
         }
 
-        const videoUri = statusData.response?.predictions?.[0]?.videoUri;
+        // Extract video URI from the correct path
+        // Path: response.generateVideoResponse.generatedSamples[0].video.uri
+        const videoUri = statusData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+
         if (videoUri) {
           return { videoUrl: videoUri };
         }
+
+        // Log what we got to debug
+        console.error("Veo response missing video URL. Full response:", JSON.stringify(statusData, null, 2));
         throw new Error("No video URL in response");
       }
 
@@ -557,7 +575,7 @@ async function generateVeoVideo(
     throw new Error(data.error.message || "Veo generation failed");
   }
 
-  const videoUri = data.response?.predictions?.[0]?.videoUri;
+  const videoUri = data.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
   if (!videoUri) {
     throw new Error("No video URL returned from Veo API");
   }
