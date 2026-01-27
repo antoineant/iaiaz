@@ -2245,6 +2245,21 @@
       "studentsList": "Liste des étudiants",
       "noStudents": "Aucun étudiant inscrit",
       "shareQrCode": "Partagez le QR code pour que les étudiants rejoignent cette classe.",
+      "addStudent": {
+        "button": "Ajouter un étudiant",
+        "title": "Ajouter un étudiant",
+        "description": "Entrez l'adresse email d'un utilisateur existant pour l'ajouter à cette classe.",
+        "emailPlaceholder": "email@exemple.com",
+        "cancel": "Annuler",
+        "submit": "Ajouter",
+        "success": "Étudiant ajouté avec succès ({credits}€ de crédits alloués)",
+        "errors": {
+          "userNotFound": "Aucun utilisateur trouvé avec cette adresse email. L'utilisateur doit d'abord créer un compte.",
+          "alreadyInClass": "Cet étudiant est déjà dans cette classe.",
+          "notAStudent": "Cet utilisateur n'est pas un étudiant et ne peut pas être ajouté à une classe.",
+          "generic": "Une erreur est survenue. Veuillez réessayer."
+        }
+      },
       "anonymous": "Anonyme",
       "never": "Jamais",
       "confirmArchive": "Êtes-vous sûr de vouloir archiver cette classe ? Les étudiants ne pourront plus y accéder.",

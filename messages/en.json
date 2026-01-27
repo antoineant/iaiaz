@@ -2352,6 +2352,21 @@
       "studentsList": "Student List",
       "noStudents": "No students enrolled",
       "shareQrCode": "Share the QR code for students to join this class.",
+      "addStudent": {
+        "button": "Add student",
+        "title": "Add a student",
+        "description": "Enter the email address of an existing user to add them to this class.",
+        "emailPlaceholder": "email@example.com",
+        "cancel": "Cancel",
+        "submit": "Add",
+        "success": "Student added successfully ({credits}€ credits allocated)",
+        "errors": {
+          "userNotFound": "No user found with this email address. The user must create an account first.",
+          "alreadyInClass": "This student is already in this class.",
+          "notAStudent": "This user is not a student and cannot be added to a class.",
+          "generic": "An error occurred. Please try again."
+        }
+      },
       "anonymous": "Anonymous",
       "never": "Never",
       "confirmArchive": "Are you sure you want to archive this class? Students will no longer be able to access it.",

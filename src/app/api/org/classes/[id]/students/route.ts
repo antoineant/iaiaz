@@ -1,8 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canManageClass } from "@/lib/org";
 
 type RouteParams = { params: Promise<{ id: string }> };
+
+interface AddStudentRequest {
+  email: string;
+  credit_amount?: number;
+}
 
 // GET /api/org/classes/[id]/students - List students in a class
 export async function GET(_request: Request, { params }: RouteParams) {
@@ -151,6 +156,196 @@ export async function GET(_request: Request, { params }: RouteParams) {
     return NextResponse.json(formattedStudents);
   } catch (error) {
     console.error("Students fetch error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/org/classes/[id]/students - Add existing member to class by email
+export async function POST(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { id: classId } = await params;
+
+    if (!await canManageClass(classId)) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const body: AddStudentRequest = await request.json();
+    const { email, credit_amount } = body;
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email is required", code: "EMAIL_REQUIRED" },
+        { status: 400 }
+      );
+    }
+
+    const adminClient = createAdminClient();
+
+    // Get the class to find the organization
+    const { data: classData, error: classError } = await adminClient
+      .from("organization_classes")
+      .select("id, organization_id, settings")
+      .eq("id", classId)
+      .single();
+
+    if (classError || !classData) {
+      return NextResponse.json(
+        { error: "Class not found", code: "CLASS_NOT_FOUND" },
+        { status: 404 }
+      );
+    }
+
+    // Find the user by email
+    const { data: profile, error: profileError } = await adminClient
+      .from("profiles")
+      .select("id, email, display_name")
+      .eq("email", email.toLowerCase())
+      .single();
+
+    if (profileError || !profile) {
+      return NextResponse.json(
+        { error: "User not found with this email", code: "USER_NOT_FOUND" },
+        { status: 404 }
+      );
+    }
+
+    // Check if user is already a member of the organization
+    const { data: existingMember, error: memberError } = await adminClient
+      .from("organization_members")
+      .select("id, class_id, status, role")
+      .eq("organization_id", classData.organization_id)
+      .eq("user_id", profile.id)
+      .single();
+
+    // Determine credit amount
+    let creditToAllocate = credit_amount ?? 0;
+    if (creditToAllocate === 0) {
+      // Use class default or org default
+      const classSettings = classData.settings as { default_credit_per_student?: number } | null;
+      if (classSettings?.default_credit_per_student) {
+        creditToAllocate = classSettings.default_credit_per_student;
+      } else {
+        // Get org default
+        const { data: org } = await adminClient
+          .from("organizations")
+          .select("settings")
+          .eq("id", classData.organization_id)
+          .single();
+        const orgSettings = org?.settings as { default_credit_per_student?: number } | null;
+        creditToAllocate = orgSettings?.default_credit_per_student ?? 5;
+      }
+    }
+
+    if (existingMember) {
+      // User is already in the organization
+      if (existingMember.class_id === classId) {
+        return NextResponse.json(
+          { error: "Student is already in this class", code: "ALREADY_IN_CLASS" },
+          { status: 400 }
+        );
+      }
+
+      if (existingMember.role !== "student") {
+        return NextResponse.json(
+          { error: "Cannot add non-student members to a class", code: "NOT_A_STUDENT" },
+          { status: 400 }
+        );
+      }
+
+      // Update existing member to move them to this class
+      const { error: updateError } = await adminClient
+        .from("organization_members")
+        .update({
+          class_id: classId,
+          status: "active",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existingMember.id);
+
+      if (updateError) {
+        console.error("Error updating member:", updateError);
+        return NextResponse.json(
+          { error: "Failed to add student to class" },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        member_id: existingMember.id,
+        message: "Student moved to this class",
+        credit_allocated: 0, // No additional credit for existing members
+      });
+    }
+
+    // User is not in the organization - create new membership
+    // Check if org has enough balance
+    const { data: org } = await adminClient
+      .from("organizations")
+      .select("credit_balance, credit_allocated")
+      .eq("id", classData.organization_id)
+      .single();
+
+    const availableCredit = (org?.credit_balance ?? 0) - (org?.credit_allocated ?? 0);
+    if (creditToAllocate > availableCredit) {
+      creditToAllocate = Math.max(0, availableCredit); // Allocate what's available, or 0
+    }
+
+    const { data: newMember, error: insertError } = await adminClient
+      .from("organization_members")
+      .insert({
+        organization_id: classData.organization_id,
+        user_id: profile.id,
+        class_id: classId,
+        role: "student",
+        display_name: profile.display_name,
+        credit_allocated: creditToAllocate,
+        status: "active",
+      })
+      .select("id")
+      .single();
+
+    if (insertError) {
+      console.error("Error creating member:", insertError);
+      return NextResponse.json(
+        { error: "Failed to add student to class" },
+        { status: 500 }
+      );
+    }
+
+    // Update org credit_allocated if credits were allocated
+    if (creditToAllocate > 0) {
+      await adminClient
+        .from("organizations")
+        .update({
+          credit_allocated: (org?.credit_allocated ?? 0) + creditToAllocate,
+        })
+        .eq("id", classData.organization_id);
+
+      // Log transaction
+      await adminClient.from("organization_transactions").insert({
+        organization_id: classData.organization_id,
+        member_id: newMember.id,
+        type: "allocation",
+        amount: creditToAllocate,
+        description: "Credit allocation from class invitation",
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      member_id: newMember.id,
+      message: "Student added to class",
+      credit_allocated: creditToAllocate,
+    });
+  } catch (error) {
+    console.error("Add student error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -22,7 +22,10 @@ import {
   CheckCircle2,
   XCircle,
   BarChart3,
+  UserPlus,
+  X,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface ClassData {
   id: string;
@@ -77,6 +80,13 @@ export default function ClassDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Add student modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addEmail, setAddEmail] = useState("");
+  const [addLoading, setAddLoading] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [addSuccess, setAddSuccess] = useState<string | null>(null);
 
   const loadData = async () => {
     try {
@@ -147,6 +157,52 @@ export default function ClassDashboardPage() {
       }
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleAddStudent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addEmail.trim()) return;
+
+    setAddLoading(true);
+    setAddError(null);
+    setAddSuccess(null);
+
+    try {
+      const response = await fetch(`/api/org/classes/${classId}/students`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: addEmail.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.code === "USER_NOT_FOUND") {
+          setAddError(t("addStudent.errors.userNotFound"));
+        } else if (data.code === "ALREADY_IN_CLASS") {
+          setAddError(t("addStudent.errors.alreadyInClass"));
+        } else if (data.code === "NOT_A_STUDENT") {
+          setAddError(t("addStudent.errors.notAStudent"));
+        } else {
+          setAddError(data.error || t("addStudent.errors.generic"));
+        }
+        return;
+      }
+
+      setAddSuccess(t("addStudent.success", { credits: data.credit_allocated?.toFixed(2) || "0" }));
+      setAddEmail("");
+      await loadData(); // Refresh the students list
+
+      // Close modal after brief success message
+      setTimeout(() => {
+        setShowAddModal(false);
+        setAddSuccess(null);
+      }, 1500);
+    } catch {
+      setAddError(t("addStudent.errors.generic"));
+    } finally {
+      setAddLoading(false);
     }
   };
 
@@ -357,8 +413,21 @@ export default function ClassDashboardPage() {
 
       {/* Students List */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <h2 className="font-semibold">{t("studentsList")}</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setShowAddModal(true);
+              setAddError(null);
+              setAddSuccess(null);
+              setAddEmail("");
+            }}
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            {t("addStudent.button")}
+          </Button>
         </CardHeader>
         <CardContent>
           {students.length === 0 ? (
@@ -487,6 +556,73 @@ export default function ClassDashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Add Student Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowAddModal(false)}
+          />
+          <div className="relative bg-[var(--background)] rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-4 right-4 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-lg font-semibold mb-2">{t("addStudent.title")}</h3>
+            <p className="text-sm text-[var(--muted-foreground)] mb-4">
+              {t("addStudent.description")}
+            </p>
+
+            <form onSubmit={handleAddStudent}>
+              <Input
+                type="email"
+                placeholder={t("addStudent.emailPlaceholder")}
+                value={addEmail}
+                onChange={(e) => setAddEmail(e.target.value)}
+                disabled={addLoading}
+                autoFocus
+              />
+
+              {addError && (
+                <div className="mt-3 p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 rounded-lg text-sm">
+                  {addError}
+                </div>
+              )}
+
+              {addSuccess && (
+                <div className="mt-3 p-3 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 rounded-lg text-sm flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" />
+                  {addSuccess}
+                </div>
+              )}
+
+              <div className="flex gap-3 mt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAddModal(false)}
+                  className="flex-1"
+                  disabled={addLoading}
+                >
+                  {t("addStudent.cancel")}
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={addLoading || !addEmail.trim()}
+                >
+                  {addLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {t("addStudent.submit")}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
