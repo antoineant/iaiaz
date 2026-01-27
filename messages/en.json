@@ -305,7 +305,8 @@
       "noClasses": "No classes",
       "noManagedClasses": "Create a class",
       "privateConversations": "Private conversations",
-      "imageStudio": "Image Studio"
+      "imageStudio": "Image Studio",
+      "videoStudio": "Video Studio"
     },
     "privacy": {
       "title": "Your conversation privacy",
@@ -3293,6 +3294,65 @@
       "tip3": "Include camera details: wide angle, close-up, aerial view, macro shot",
       "tip4": "Add atmosphere: dramatic lighting, golden hour, misty, cinematic",
       "tip5": "Specify quality: highly detailed, 4K, professional photography"
+    }
+  },
+  "videoStudio": {
+    "title": "Video Studio",
+    "subtitle": "Generate videos with AI",
+    "backToChat": "Back to chat",
+    "balance": "Balance",
+    "model": "Model",
+    "recommended": "Recommended",
+    "prompt": "Prompt",
+    "promptPlaceholder": "Describe the video you want to create...",
+    "duration": "Duration",
+    "resolution": "Resolution",
+    "quality": "Quality",
+    "estimatedCost": "Estimated cost",
+    "perSecond": "Per second",
+    "generate": "Generate",
+    "generating": "Generating...",
+    "generatingVideo": "Generating video...",
+    "gallery": "Your creations",
+    "download": "Download",
+    "openInNewTab": "Open in new tab",
+    "revisedPrompt": "Revised prompt",
+    "referenceImage": "Reference Image",
+    "optional": "optional",
+    "uploadReference": "Upload reference image",
+    "referenceHint": "Use as starting frame",
+    "removeReference": "Remove",
+    "hasReference": "Has reference image",
+    "qualities": {
+      "standard": "Standard",
+      "premium": "Premium"
+    },
+    "emptyGallery": {
+      "title": "No videos yet",
+      "description": "Generate your first video using the form on the left"
+    },
+    "errors": {
+      "insufficientCredits": "Insufficient credits",
+      "generationFailed": "Video generation failed",
+      "invalidFileType": "Please upload an image file (PNG, JPG, GIF, WebP)",
+      "fileTooLarge": "Image must be less than 4MB",
+      "deleteFailed": "Failed to delete video"
+    },
+    "topUp": "Top up credits",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this video?",
+    "studentWarning": {
+      "title": "Personal credits only",
+      "description": "Video generation uses your personal credits, not your class credits. Your class credits are reserved for chat conversations.",
+      "topUp": "Top up personal credits"
+    },
+    "promptTips": {
+      "title": "Video prompting tips",
+      "tip1": "Describe the action: what happens, how things move, camera motion",
+      "tip2": "Specify the mood: cinematic, documentary, commercial, artistic",
+      "tip3": "Include timing: slow motion, fast paced, time-lapse effect",
+      "tip4": "Add visual style: film grain, color grading, lighting style",
+      "tip5": "Mention camera work: tracking shot, pan, zoom, static"
     }
   }
 }

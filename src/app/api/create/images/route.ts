@@ -205,6 +205,14 @@ export async function POST(request: NextRequest) {
         );
         imageUrl = result.imageUrl;
         revisedPrompt = result.revisedPrompt;
+      } else if (model.provider === "google") {
+        const result = await generateGoogleImage(
+          modelId,
+          prompt,
+          size,
+          quality
+        );
+        imageUrl = result.imageUrl;
       } else {
         // For future providers (Stability, Replicate, etc.)
         throw new Error(`Provider ${model.provider} not implemented`);
@@ -492,4 +500,118 @@ function mapSize(size: string, model: string): "256x256" | "512x512" | "1024x102
   }
 
   return "1024x1024";
+}
+
+// Generate image using Google Imagen via REST API
+async function generateGoogleImage(
+  model: string,
+  prompt: string,
+  size: string,
+  quality: string
+): Promise<{ imageUrl: string }> {
+  const apiKey = process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("Google AI API key not configured");
+  }
+
+  // Map model ID to API model name
+  const modelName = model === "imagen-3-fast"
+    ? "imagen-3.0-fast-generate-001"
+    : "imagen-3.0-generate-002";
+
+  // Map size to aspect ratio
+  const aspectRatio = mapImagenAspectRatio(size);
+
+  // Build request body
+  const requestBody = {
+    instances: [
+      {
+        prompt,
+      },
+    ],
+    parameters: {
+      sampleCount: 1,
+      aspectRatio,
+      personGeneration: "allow_adult",
+      ...(quality === "hd" && { outputOptions: { quality: "high" } }),
+    },
+  };
+
+  // Call Imagen API
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:predict?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = (errorData as { error?: { message?: string } })?.error?.message;
+    throw new Error(errorMessage || `Imagen API error: ${response.status}`);
+  }
+
+  const data = await response.json() as {
+    predictions?: Array<{
+      bytesBase64Encoded?: string;
+      mimeType?: string;
+    }>;
+  };
+
+  const imageBase64 = data.predictions?.[0]?.bytesBase64Encoded;
+  if (!imageBase64) {
+    throw new Error("No image returned from Imagen API");
+  }
+
+  // Upload base64 image to Supabase storage and return public URL
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminClient = createAdminClient();
+
+  const fileName = `imagen_${Date.now()}_${Math.random().toString(36).slice(2)}.png`;
+  const imageBuffer = Buffer.from(imageBase64, "base64");
+
+  const { data: uploadData, error: uploadError } = await adminClient.storage
+    .from("generated-images")
+    .upload(fileName, imageBuffer, {
+      contentType: "image/png",
+      upsert: true,
+    });
+
+  if (uploadError) {
+    console.error("Error uploading generated image:", uploadError);
+    throw new Error("Failed to save generated image");
+  }
+
+  const { data: urlData } = adminClient.storage
+    .from("generated-images")
+    .getPublicUrl(uploadData.path);
+
+  return {
+    imageUrl: urlData.publicUrl,
+  };
+}
+
+// Map size to Imagen aspect ratio
+function mapImagenAspectRatio(size: string): string {
+  switch (size) {
+    case "1024x1024":
+      return "1:1";
+    case "1536x1024":
+    case "1792x1024":
+      return "3:2";
+    case "1024x1536":
+    case "1024x1792":
+      return "2:3";
+    case "16:9":
+      return "16:9";
+    case "9:16":
+      return "9:16";
+    default:
+      return "1:1";
+  }
 }

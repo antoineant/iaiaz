@@ -25,6 +25,7 @@ import {
   Shield,
   Info,
   Image as ImageIcon,
+  Video,
   User,
 } from "lucide-react";
 
@@ -202,6 +203,12 @@ export function Sidebar({
           <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
             <ImageIcon className="w-4 h-4 mr-2" />
             {t("imageStudio")}
+          </Button>
+        </NextLink>
+        <NextLink href="/create/videos" onClick={() => setIsOpen(false)} className="block mt-2">
+          <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+            <Video className="w-4 h-4 mr-2" />
+            {t("videoStudio")}
           </Button>
         </NextLink>
       </div>

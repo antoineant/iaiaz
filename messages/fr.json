@@ -319,7 +319,8 @@
       "noClasses": "Aucune classe",
       "noManagedClasses": "Créer une classe",
       "privateConversations": "Conversations privées",
-      "imageStudio": "Studio Image"
+      "imageStudio": "Studio Image",
+      "videoStudio": "Studio Vidéo"
     },
     "privacy": {
       "title": "Confidentialité de vos conversations",
@@ -3307,6 +3308,65 @@
       "tip3": "Incluez des détails de caméra : grand angle, gros plan, vue aérienne, macro",
       "tip4": "Ajoutez de l'atmosphère : éclairage dramatique, heure dorée, brumeux, cinématique",
       "tip5": "Spécifiez la qualité : très détaillé, 4K, photographie professionnelle"
+    }
+  },
+  "videoStudio": {
+    "title": "Studio Vidéo",
+    "subtitle": "Générez des vidéos avec l'IA",
+    "backToChat": "Retour au chat",
+    "balance": "Solde",
+    "model": "Modèle",
+    "recommended": "Recommandé",
+    "prompt": "Description",
+    "promptPlaceholder": "Décrivez la vidéo que vous souhaitez créer...",
+    "duration": "Durée",
+    "resolution": "Résolution",
+    "quality": "Qualité",
+    "estimatedCost": "Coût estimé",
+    "perSecond": "Par seconde",
+    "generate": "Générer",
+    "generating": "Génération...",
+    "generatingVideo": "Génération de la vidéo...",
+    "gallery": "Vos créations",
+    "download": "Télécharger",
+    "openInNewTab": "Ouvrir dans un nouvel onglet",
+    "revisedPrompt": "Prompt révisé",
+    "referenceImage": "Image de référence",
+    "optional": "optionnel",
+    "uploadReference": "Télécharger une image de référence",
+    "referenceHint": "Utiliser comme première image",
+    "removeReference": "Supprimer",
+    "hasReference": "Avec image de référence",
+    "qualities": {
+      "standard": "Standard",
+      "premium": "Premium"
+    },
+    "emptyGallery": {
+      "title": "Aucune vidéo",
+      "description": "Générez votre première vidéo avec le formulaire à gauche"
+    },
+    "errors": {
+      "insufficientCredits": "Crédits insuffisants",
+      "generationFailed": "Échec de la génération",
+      "invalidFileType": "Veuillez télécharger un fichier image (PNG, JPG, GIF, WebP)",
+      "fileTooLarge": "L'image doit faire moins de 4 Mo",
+      "deleteFailed": "Échec de la suppression de la vidéo"
+    },
+    "topUp": "Recharger",
+    "delete": "Supprimer",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette vidéo ?",
+    "studentWarning": {
+      "title": "Crédits personnels uniquement",
+      "description": "La génération de vidéos utilise vos crédits personnels, pas vos crédits de classe. Vos crédits de classe sont réservés aux conversations.",
+      "topUp": "Recharger mes crédits"
+    },
+    "promptTips": {
+      "title": "Conseils pour les vidéos",
+      "tip1": "Décrivez l'action : ce qui se passe, comment les choses bougent, les mouvements de caméra",
+      "tip2": "Précisez l'ambiance : cinématique, documentaire, publicitaire, artistique",
+      "tip3": "Incluez le timing : ralenti, rythme rapide, effet timelapse",
+      "tip4": "Ajoutez le style visuel : grain de film, étalonnage des couleurs, style d'éclairage",
+      "tip5": "Mentionnez le travail de caméra : travelling, panoramique, zoom, plan fixe"
     }
   },
   "alternativeChatgpt": {
