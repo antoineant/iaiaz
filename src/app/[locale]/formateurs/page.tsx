@@ -115,7 +115,7 @@ export default async function FormateursPage({ params }: Props) {
                 {t("hero.cta")}
               </Button>
             </a>
-            <Link href="/etablissements">
+            <Link href="/tarifs/formateurs">
               <Button variant="outline" size="lg">
                 {t("hero.ctaSecondary")}
               </Button>
