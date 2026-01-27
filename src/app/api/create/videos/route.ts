@@ -441,34 +441,47 @@ async function generateVeoVideo(
   }
 
   // Determine model ID for the API
-  const veoModel = model === "veo-3.1-fast"
-    ? "veo-3.1-fast-generate-preview"
-    : "veo-3.1-generate-preview";
+  // Available models: veo-3.1-generate-preview, veo-3.1-fast-generate-preview, veo-2.0-generate-001
+  let veoModel: string;
+  if (model === "veo-3.1-fast") {
+    veoModel = "veo-3.1-fast-generate-preview";
+  } else if (model === "veo-2") {
+    veoModel = "veo-2.0-generate-001";
+  } else {
+    veoModel = "veo-3.1-generate-preview";
+  }
 
   // Map resolution to aspect ratio
   const aspectRatio = mapVeoResolution(resolution);
 
-  // Build request body
-  const requestBody: Record<string, unknown> = {
+  // Build request body using the correct Gemini API format
+  // See: https://ai.google.dev/gemini-api/docs/video
+  const instance: Record<string, unknown> = {
     prompt,
-    config: {
-      numberOfVideos: 1,
-      durationSeconds,
+  };
+
+  // Add optional parameters
+  if (referenceImageUrl) {
+    instance.image = { gcsUri: referenceImageUrl };
+  }
+
+  const requestBody = {
+    instances: [instance],
+    parameters: {
       aspectRatio,
+      durationSeconds,
+      sampleCount: 1,
     },
   };
 
-  if (referenceImageUrl) {
-    requestBody.referenceImage = { uri: referenceImageUrl };
-  }
-
-  // Start video generation
+  // Start video generation using predictLongRunning endpoint
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${veoModel}:generateVideo?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${veoModel}:predictLongRunning`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
       },
       body: JSON.stringify(requestBody),
     }
@@ -476,25 +489,36 @@ async function generateVeoVideo(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    console.error("Veo API error response:", errorData);
     throw new Error(
       (errorData as { error?: { message?: string } })?.error?.message ||
       `Veo API error: ${response.status}`
     );
   }
 
-  const data = await response.json() as { name?: string; done?: boolean; response?: { generatedVideos?: Array<{ uri?: string }> } };
+  const data = await response.json() as {
+    name?: string;
+    done?: boolean;
+    response?: { predictions?: Array<{ videoUri?: string }> };
+    error?: { message?: string };
+  };
 
-  // If operation is async, poll for completion
-  if (data.name && !data.done) {
+  // Video generation is always async - poll for completion
+  if (data.name) {
     const operationName = data.name;
     let attempts = 0;
-    const maxAttempts = 60; // 5 minutes max
+    const maxAttempts = 120; // 10 minutes max (video gen can take a while)
 
     while (attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 5000));
 
       const statusResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${apiKey}`
+        `https://generativelanguage.googleapis.com/v1beta/${operationName}`,
+        {
+          headers: {
+            "x-goog-api-key": apiKey,
+          },
+        }
       );
 
       if (!statusResponse.ok) {
@@ -503,7 +527,7 @@ async function generateVeoVideo(
 
       const statusData = await statusResponse.json() as {
         done?: boolean;
-        response?: { generatedVideos?: Array<{ uri?: string }> };
+        response?: { predictions?: Array<{ videoUri?: string }> };
         error?: { message?: string };
       };
 
@@ -512,7 +536,7 @@ async function generateVeoVideo(
           throw new Error(statusData.error.message || "Veo generation failed");
         }
 
-        const videoUri = statusData.response?.generatedVideos?.[0]?.uri;
+        const videoUri = statusData.response?.predictions?.[0]?.videoUri;
         if (videoUri) {
           return { videoUrl: videoUri };
         }
@@ -525,8 +549,12 @@ async function generateVeoVideo(
     throw new Error("Video generation timed out");
   }
 
-  // Synchronous response
-  const videoUri = data.response?.generatedVideos?.[0]?.uri;
+  // Immediate response (unlikely for video)
+  if (data.error) {
+    throw new Error(data.error.message || "Veo generation failed");
+  }
+
+  const videoUri = data.response?.predictions?.[0]?.videoUri;
   if (!videoUri) {
     throw new Error("No video URL returned from Veo API");
   }
