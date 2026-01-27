@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdmin } from "@/lib/admin";
 
@@ -14,12 +13,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 
   const { id: orgId } = await params;
-  const supabase = await createClient();
   const adminClient = createAdminClient();
 
   try {
-    // Get organization info
-    const { data: org, error: orgError } = await supabase
+    // Get organization info (use adminClient to bypass RLS)
+    const { data: org, error: orgError } = await adminClient
       .from("organizations")
       .select("id, name, type")
       .eq("id", orgId)
