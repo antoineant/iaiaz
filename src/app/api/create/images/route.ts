@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkCanSpend, deductCredits, getUserCredits } from "@/lib/credits";
 
 interface ImageModel {
   id: string;
@@ -96,62 +97,82 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Record generation and deduct credits via database function
-    const { data: recordResult, error: recordError } = await adminClient.rpc(
-      "record_image_generation",
-      {
-        p_user_id: user.id,
-        p_model_id: modelId,
-        p_prompt: prompt,
-        p_size: size,
-        p_style: style,
-        p_quality: quality,
-        p_reference_image_url: referenceImageUrl,
-      }
-    );
-
-    if (recordError) {
-      console.error("Error recording generation:", recordError);
-      return NextResponse.json(
-        { error: "Erreur lors de l'enregistrement" },
-        { status: 500 }
-      );
-    }
-
-    if (!recordResult?.success) {
-      const errorCode = recordResult?.error;
-      if (errorCode === "model_not_found") {
-        return NextResponse.json(
-          { error: "Modèle invalide ou désactivé" },
-          { status: 400 }
-        );
-      }
-      if (errorCode === "insufficient_credits") {
-        return NextResponse.json(
-          {
-            error: "Crédits insuffisants",
-            required: recordResult.required,
-            available: recordResult.available,
-          },
-          { status: 402 }
-        );
-      }
-      return NextResponse.json(
-        { error: "Erreur lors de l'enregistrement" },
-        { status: 500 }
-      );
-    }
-
-    const generationId = recordResult.generation_id;
-
-    // Get model info for provider
-    const { data: modelData } = await adminClient
+    // Get model info first to calculate cost
+    const { data: modelData, error: modelError } = await adminClient
       .from("image_models")
       .select("*")
       .eq("id", modelId)
+      .eq("is_active", true)
       .single();
 
+    if (modelError || !modelData) {
+      return NextResponse.json(
+        { error: "Modèle invalide ou désactivé" },
+        { status: 400 }
+      );
+    }
+
     const model = modelData as ImageModel;
+
+    // Calculate cost based on quality
+    let baseCost = quality === "hd" && model.supports_hd && model.price_hd
+      ? model.price_hd
+      : model.price_standard;
+
+    // Apply markup from settings
+    const { data: markupSetting } = await adminClient
+      .from("app_settings")
+      .select("value")
+      .eq("key", "markup")
+      .single();
+
+    const markupPercentage = markupSetting?.value?.percentage ?? 50;
+    const cost = baseCost * (1 + markupPercentage / 100);
+
+    // Check if user can spend this amount (supports org credits)
+    const spendCheck = await checkCanSpend(user.id, cost);
+
+    if (!spendCheck.allowed) {
+      // Get current balance for error message
+      const credits = await getUserCredits(user.id);
+      return NextResponse.json(
+        {
+          error: "Crédits insuffisants",
+          required: cost,
+          available: credits.balance,
+          source: spendCheck.source,
+          reason: spendCheck.reason,
+        },
+        { status: 402 }
+      );
+    }
+
+    // Create generation record (without deducting credits yet)
+    const { data: generation, error: genError } = await adminClient
+      .from("image_generations")
+      .insert({
+        user_id: user.id,
+        model_id: modelId,
+        prompt,
+        size,
+        style,
+        quality,
+        reference_image_url: referenceImageUrl,
+        cost,
+        status: "generating",
+      })
+      .select("id")
+      .single();
+
+    if (genError || !generation) {
+      console.error("Error creating generation record:", genError);
+      return NextResponse.json(
+        { error: "Erreur lors de l'enregistrement" },
+        { status: 500 }
+      );
+    }
+
+    const generationId = generation.id;
 
     try {
       // Generate image based on provider
@@ -174,30 +195,49 @@ export async function POST(request: NextRequest) {
         throw new Error(`Provider ${model.provider} not implemented`);
       }
 
-      // Complete generation
-      await adminClient.rpc("complete_image_generation", {
-        p_generation_id: generationId,
-        p_image_url: imageUrl,
-        p_revised_prompt: revisedPrompt,
-      });
+      // Deduct credits after successful generation (supports org credits)
+      const deductResult = await deductCredits(
+        user.id,
+        cost,
+        `Image generation: ${model.name}`
+      );
+
+      if (!deductResult.success) {
+        // This shouldn't happen since we checked earlier, but handle it
+        console.error("Credit deduction failed after generation:", deductResult.error);
+      }
+
+      // Update generation record with result
+      await adminClient
+        .from("image_generations")
+        .update({
+          image_url: imageUrl,
+          revised_prompt: revisedPrompt,
+          status: "completed",
+        })
+        .eq("id", generationId);
 
       return NextResponse.json({
         success: true,
         generation_id: generationId,
         image_url: imageUrl,
         revised_prompt: revisedPrompt,
-        cost: recordResult.cost,
-        remaining_balance: recordResult.remaining_balance,
+        cost,
+        remaining_balance: deductResult.remaining ?? 0,
+        source: deductResult.source,
       });
     } catch (genError) {
-      // Generation failed - refund credits
+      // Generation failed - don't deduct credits
       console.error("Image generation error:", genError);
 
-      await adminClient.rpc("fail_image_generation", {
-        p_generation_id: generationId,
-        p_error_message:
-          genError instanceof Error ? genError.message : "Generation failed",
-      });
+      // Update generation record with failure
+      await adminClient
+        .from("image_generations")
+        .update({
+          status: "failed",
+          error_message: genError instanceof Error ? genError.message : "Generation failed",
+        })
+        .eq("id", generationId);
 
       return NextResponse.json(
         {
