@@ -85,7 +85,7 @@ export async function GET(request: Request) {
             initialCredits = 10; // Businesses get 10€
           } else {
             orgType = "individual";
-            initialCredits = 0; // Trainers get 0€
+            initialCredits = 5; // Trainers get 5€
           }
 
           const { data: newOrg, error: orgError } = await adminClient
