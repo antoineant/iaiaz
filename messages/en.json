@@ -2056,7 +2056,12 @@
       "buyCredits": "Buy Credits",
       "manageClasses": "Manage Classes",
       "remaining": "Remaining",
-      "creditExplanationSimple": "All members draw from this pool. Set limits per class to control spending."
+      "creditExplanationSimple": "All members draw from this pool. Set limits per class to control spending.",
+      "seatLimitWarning": {
+        "title": "Seat limit exceeded",
+        "description": "You have {current} active members but your subscription only includes {limit} seats. Update your subscription to avoid interruption.",
+        "upgradeLink": "Update my subscription"
+      }
     },
     "bulkAllocate": {
       "title": "Allocate credits to class",
@@ -2200,6 +2205,10 @@
         "renewsAt": "Renews on {date}",
         "cancelsAt": "Ends on {date}",
         "cancelWarning": "Your subscription will be canceled at the end of the period. You can reactivate it anytime."
+      },
+      "seatUsage": {
+        "title": "Seat Usage",
+        "overLimit": "{over} member(s) over your limit. Consider upgrading your subscription."
       },
       "seatCount": {
         "title": "Number of students",

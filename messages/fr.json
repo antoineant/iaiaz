@@ -1935,7 +1935,12 @@
       "buyCredits": "Acheter des crédits",
       "manageClasses": "Gérer les classes",
       "remaining": "Restant",
-      "creditExplanationSimple": "Tous les membres utilisent ce pool. Définissez des limites par classe pour contrôler les dépenses."
+      "creditExplanationSimple": "Tous les membres utilisent ce pool. Définissez des limites par classe pour contrôler les dépenses.",
+      "seatLimitWarning": {
+        "title": "Limite de places dépassée",
+        "description": "Vous avez {current} membres actifs mais votre abonnement inclut seulement {limit} places. Mettez à jour votre abonnement pour éviter toute interruption.",
+        "upgradeLink": "Mettre à jour mon abonnement"
+      }
     },
     "bulkAllocate": {
       "title": "Allouer des crédits à la classe",
@@ -2079,6 +2084,10 @@
         "renewsAt": "Renouvellement le {date}",
         "cancelsAt": "Prend fin le {date}",
         "cancelWarning": "Votre abonnement sera annulé à la fin de la période. Vous pouvez le réactiver à tout moment."
+      },
+      "seatUsage": {
+        "title": "Utilisation des places",
+        "overLimit": "{over} membre(s) au-delà de votre limite. Pensez à augmenter votre abonnement."
       },
       "seatCount": {
         "title": "Nombre d'étudiants",

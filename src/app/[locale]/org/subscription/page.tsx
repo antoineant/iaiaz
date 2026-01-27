@@ -31,6 +31,7 @@ interface OrgInfo {
   subscription_current_period_end: string | null;
   subscription_cancel_at_period_end: boolean;
   subscription_trial_end: string | null;
+  seat_count: number | null;
 }
 
 interface MemberCount {
@@ -59,7 +60,7 @@ export default function OrgSubscriptionPage() {
 
       if (!user) return;
 
-      // Get user's organization
+      // Get user's organization (including seat_count for usage display)
       const { data: membership } = await supabase
         .from("organization_members")
         .select(`
@@ -71,7 +72,8 @@ export default function OrgSubscriptionPage() {
             subscription_status,
             subscription_current_period_end,
             subscription_cancel_at_period_end,
-            subscription_trial_end
+            subscription_trial_end,
+            seat_count
           )
         `)
         .eq("user_id", user.id)
@@ -237,6 +239,40 @@ export default function OrgSubscriptionPage() {
               <div className="mt-4 p-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 {t("status.cancelWarning")}
+              </div>
+            )}
+
+            {/* Seat Usage */}
+            {orgInfo.seat_count !== null && (
+              <div className="mt-4 p-4 rounded-lg bg-[var(--muted)]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-[var(--muted-foreground)]" />
+                    <span className="text-sm font-medium">{t("seatUsage.title")}</span>
+                  </div>
+                  <span className={`text-sm font-medium ${
+                    memberCount.total > orgInfo.seat_count
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-green-600 dark:text-green-400"
+                  }`}>
+                    {memberCount.total} / {orgInfo.seat_count}
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-[var(--border)] rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      memberCount.total > orgInfo.seat_count
+                        ? "bg-amber-500"
+                        : "bg-green-500"
+                    }`}
+                    style={{ width: `${Math.min((memberCount.total / orgInfo.seat_count) * 100, 100)}%` }}
+                  />
+                </div>
+                {memberCount.total > orgInfo.seat_count && (
+                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                    {t("seatUsage.overLimit", { over: memberCount.total - orgInfo.seat_count })}
+                  </p>
+                )}
               </div>
             )}
           </CardContent>

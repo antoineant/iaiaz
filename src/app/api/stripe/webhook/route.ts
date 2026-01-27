@@ -257,7 +257,7 @@ async function handleSubscriptionUpdate(
 
   const status = statusMap[subscription.status] || "none";
 
-  // Update organization subscription
+  // Update organization subscription (including seat_count for soft limit enforcement)
   const { error } = await adminClient
     .from("organizations")
     .update({
@@ -270,6 +270,7 @@ async function handleSubscriptionUpdate(
       subscription_trial_end: subscription.trial_end
         ? new Date(subscription.trial_end * 1000).toISOString()
         : null,
+      seat_count: seatCount ? parseInt(seatCount, 10) : null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", organizationId);

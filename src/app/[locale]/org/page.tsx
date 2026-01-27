@@ -27,6 +27,8 @@ interface OrgStats {
   admins_count: number;
   usage_this_month: number;
   pending_invites: number;
+  seat_count: number | null;
+  is_over_seat_limit: boolean;
 }
 
 interface RecentActivity {
@@ -63,10 +65,10 @@ export default function OrgDashboardPage() {
 
       const orgId = orgMember[0].organization_id;
 
-      // Get organization details
+      // Get organization details (including seat_count for soft limit warning)
       const { data: org } = await supabase
         .from("organizations")
-        .select("name, credit_balance")
+        .select("name, credit_balance, seat_count")
         .eq("id", orgId)
         .single();
 
@@ -114,16 +116,22 @@ export default function OrgDashboardPage() {
         .eq("status", "pending")
         .gte("expires_at", new Date().toISOString());
 
+      const totalMembers = members?.length || 0;
+      const seatCount = org?.seat_count ?? null;
+      const isOverSeatLimit = seatCount !== null && totalMembers > seatCount;
+
       setStats({
         organization_name: org?.name || "",
         credit_balance: org?.credit_balance || 0,
         total_used: totalUsed,
-        total_members: members?.length || 0,
+        total_members: totalMembers,
         students_count: roleCounts.student,
         teachers_count: roleCounts.teacher,
         admins_count: roleCounts.admin + roleCounts.owner,
         usage_this_month: usageThisMonth,
         pending_invites: pendingInvites || 0,
+        seat_count: seatCount,
+        is_over_seat_limit: isOverSeatLimit,
       });
 
       // Get recent activity
@@ -178,6 +186,34 @@ export default function OrgDashboardPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
+
+      {/* Seat Limit Warning */}
+      {stats?.is_over_seat_limit && (
+        <Card className="mb-6 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30">
+          <CardContent className="pt-4 pb-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-medium text-amber-800 dark:text-amber-200">
+                  {t("seatLimitWarning.title")}
+                </p>
+                <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                  {t("seatLimitWarning.description", {
+                    current: stats.total_members,
+                    limit: stats.seat_count,
+                  })}
+                </p>
+                <Link
+                  href="/org/subscription"
+                  className="inline-flex items-center text-sm font-medium text-amber-800 dark:text-amber-200 hover:underline mt-2"
+                >
+                  {t("seatLimitWarning.upgradeLink")} →
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Quick Actions Card */}
       <Card className="mb-6 border-primary-200 dark:border-primary-800 bg-gradient-to-r from-primary-50 to-white dark:from-primary-950 dark:to-[var(--background)]">
