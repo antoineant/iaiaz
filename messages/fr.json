@@ -110,7 +110,7 @@
       "chat": "Chat"
     },
     "buttons": {
-      "startFree": "Créer un compte gratuit",
+      "startFree": "Essayez pour 0€",
       "recharge": "Recharger",
       "learnMore": "En savoir plus",
       "send": "Envoyer",
@@ -134,7 +134,7 @@
       "title": "L'IA premium,",
       "titleHighlight": "sans l'abonnement.",
       "subtitle": "Accédez à Claude, GPT-5, Gemini et Mistral. Payez uniquement ce que vous utilisez. Parfait pour les étudiants.",
-      "cta": "Créer un compte gratuit",
+      "cta": "Essayez pour 0€",
       "ctaSecondary": "Comment ça marche ?",
       "freeCredit": "1€ de crédits offerts à l'inscription"
     },
@@ -784,7 +784,7 @@
     "cta": {
       "title": "Prêt à commencer ?",
       "subtitle": "Créez votre compte et profitez d'1€ de crédits offerts pour essayer tous les modèles.",
-      "button": "Créer mon compte gratuit",
+      "button": "Essayez pour 0€",
       "compare": "Voir le comparatif"
     },
     "breadcrumb": {
@@ -881,7 +881,7 @@
     "cta": {
       "title": "Prêt à faire des économies ?",
       "subtitle": "Créez votre compte gratuitement et profitez d'1€ de crédits offerts. Sans carte bancaire, sans engagement.",
-      "button": "Commencer gratuitement"
+      "button": "Essayez pour 0€"
     },
     "faq": {
       "mainDifference": {
@@ -976,7 +976,7 @@
     "cta": {
       "title": "Prêt à booster tes études ?",
       "subtitle": "Inscris-toi en 30 secondes et profite d'1€ de crédits offerts. Largement de quoi tester tous les modèles !",
-      "button": "Créer mon compte gratuit",
+      "button": "Essayez pour 0€",
       "note": "Sans carte bancaire • Sans engagement • Crédits sans expiration"
     },
     "faq": {
@@ -1413,7 +1413,7 @@
     "cta": {
       "title": "Prêt à économiser ?",
       "subtitle": "Créez votre compte et profitez d'1€ de crédits offerts pour tester.",
-      "button": "Créer mon compte gratuit",
+      "button": "Essayez pour 0€",
       "compare": "Voir le comparatif"
     },
     "breadcrumb": {
@@ -1656,7 +1656,7 @@
     "cta": {
       "title": "Prêt à économiser ?",
       "subtitle": "Créez votre compte et profitez d'1€ de crédits offerts.",
-      "button": "Commencer gratuitement",
+      "button": "Essayez pour 0€",
       "pricing": "Voir les tarifs"
     },
     "breadcrumb": {
