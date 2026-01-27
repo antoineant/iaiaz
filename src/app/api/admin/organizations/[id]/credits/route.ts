@@ -76,10 +76,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Get admin user ID for audit trail
     const adminUser = await getCurrentAdminUser();
 
-    // Log the transaction
+    // Log the transaction (type must be one of: purchase, allocation, usage, refund, adjustment)
     await adminClient.from("organization_transactions").insert({
       organization_id: orgId,
-      type: "admin_adjustment",
+      type: "adjustment",
       amount: creditAmount,
       description: `Admin adjustment: ${reason.trim()}`,
       metadata: {
