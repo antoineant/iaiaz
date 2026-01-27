@@ -143,6 +143,9 @@ export default async function EtablissementsPage({ params }: Props) {
             <span className="flex items-center gap-2">
               <Check className="w-4 h-4 text-green-500" /> {t("hero.allModels")}
             </span>
+            <span className="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-medium">
+              <Sparkles className="w-4 h-4" /> {t("hero.bonus")}
+            </span>
           </div>
         </section>
 
