@@ -5,26 +5,26 @@
       "description": "Accédez aux meilleurs modèles d'IA (Claude, GPT-5, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez. 1€ offert à l'inscription."
     },
     "tarifs": {
-      "title": "Tarifs - Prix par modèle IA",
-      "description": "Tarifs transparents pour GPT-5, Claude, Gemini et Mistral. Payez à l'usage sans abonnement. Comparez les prix et choisissez le meilleur modèle."
+      "title": "Tarifs IA - Dès 0.01€/question | Sans abonnement | iaiaz",
+      "description": "GPT-5, Claude, Gemini à partir de 0.01€. Pas d'abonnement, payez uniquement ce que vous utilisez. 1€ offert à l'inscription."
     },
     "comparatif": {
       "title": "Comparatif - iaiaz vs ChatGPT Plus vs Claude Pro",
       "description": "Comparez iaiaz avec les abonnements ChatGPT Plus et Claude Pro. Économisez jusqu'à 90% avec le paiement à l'usage."
     },
     "etudiants": {
-      "title": "IA pour Étudiants - Alternative économique à ChatGPT",
-      "description": "Accédez à GPT-5, Claude et Gemini sans abonnement. Solution idéale pour étudiants avec 1€ offert à l'inscription.",
+      "title": "IA Étudiants - GPT-5, Claude dès 0.01€ | 1€ offert | iaiaz",
+      "description": "ChatGPT trop cher ? Accédez à GPT-5, Claude et Gemini sans abonnement. 1€ offert à l'inscription = 100 questions gratuites.",
       "keywords": "ia pour étudiants, chatgpt étudiant, chatgpt étudiant gratuit, ia gratuit étudiant, aide devoirs ia, dissertation ia, révision ia, chatgpt université, claude étudiant, gpt-5 étudiant",
-      "ogTitle": "iaiaz pour Étudiants - L'IA accessible à tous",
-      "ogDescription": "GPT-5, Claude, Gemini sans abonnement. Parfait pour le budget étudiant."
+      "ogTitle": "iaiaz pour Étudiants - 1€ offert à l'inscription",
+      "ogDescription": "GPT-5, Claude, Gemini dès 0.01€/question. Sans abonnement, parfait pour le budget étudiant."
     },
     "etablissements": {
-      "title": "iaiaz pour Établissements - IA pour Écoles et Universités",
-      "description": "Offrez l'accès à GPT-5, Claude et Gemini à vos étudiants sans abonnement individuel. Maîtrisez votre budget, suivez l'utilisation.",
+      "title": "IA pour Écoles - 1€/élève/mois | 23x moins cher que ChatGPT Team",
+      "description": "Équipez TOUS vos étudiants en IA pour 1€/mois. GPT-5, Claude, Gemini inclus. Budget maîtrisé, analytics pédagogique inclus.",
       "keywords": "ia pour écoles, chatgpt université, ia établissement scolaire, gpt-5 éducation, claude éducation, ia formation, chatgpt école, licence groupe ia",
-      "ogTitle": "iaiaz pour Établissements - L'IA accessible pour l'éducation",
-      "ogDescription": "Équipez vos étudiants avec les meilleurs modèles d'IA. Sans abonnement par élève."
+      "ogTitle": "iaiaz pour Écoles - 1€/élève/mois, 23x moins cher",
+      "ogDescription": "Équipez tous vos étudiants en IA. GPT-5, Claude, Gemini à 1€/élève. Budget maîtrisé."
     },
     "formateurs": {
       "title": "Analytics Pédagogique - Comprenez comment vos étudiants utilisent l'IA",
