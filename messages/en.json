@@ -3167,9 +3167,16 @@
     "download": "Download",
     "openInNewTab": "Open in new tab",
     "revisedPrompt": "Revised prompt",
+    "referenceImage": "Reference Image",
+    "optional": "optional",
+    "uploadReference": "Upload reference image",
+    "referenceHint": "Use as style inspiration",
+    "removeReference": "Remove",
+    "hasReference": "Has reference image",
     "styles": {
       "natural": "Natural",
-      "vivid": "Vivid"
+      "vivid": "Vivid",
+      "artistic": "Artistic"
     },
     "qualities": {
       "standard": "Standard",
@@ -3181,7 +3188,9 @@
     },
     "errors": {
       "insufficientCredits": "Insufficient credits",
-      "generationFailed": "Image generation failed"
+      "generationFailed": "Image generation failed",
+      "invalidFileType": "Please upload an image file (PNG, JPG, GIF, WebP)",
+      "fileTooLarge": "Image must be less than 4MB"
     }
   }
 }

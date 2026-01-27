@@ -3167,9 +3167,16 @@
     "download": "Télécharger",
     "openInNewTab": "Ouvrir dans un nouvel onglet",
     "revisedPrompt": "Prompt révisé",
+    "referenceImage": "Image de référence",
+    "optional": "optionnel",
+    "uploadReference": "Télécharger une image de référence",
+    "referenceHint": "Utiliser comme inspiration de style",
+    "removeReference": "Supprimer",
+    "hasReference": "Avec image de référence",
     "styles": {
       "natural": "Naturel",
-      "vivid": "Vif"
+      "vivid": "Vif",
+      "artistic": "Artistique"
     },
     "qualities": {
       "standard": "Standard",
@@ -3181,7 +3188,9 @@
     },
     "errors": {
       "insufficientCredits": "Crédits insuffisants",
-      "generationFailed": "Échec de la génération"
+      "generationFailed": "Échec de la génération",
+      "invalidFileType": "Veuillez télécharger un fichier image (PNG, JPG, GIF, WebP)",
+      "fileTooLarge": "L'image doit faire moins de 4 Mo"
     }
   }
 }

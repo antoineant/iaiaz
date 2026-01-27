@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
@@ -14,7 +14,9 @@ import {
   Sparkles,
   ArrowLeft,
   AlertCircle,
-  RefreshCw,
+  Upload,
+  X,
+  ImagePlus,
 } from "lucide-react";
 
 interface ImageModel {
@@ -27,6 +29,7 @@ interface ImageModel {
   sizes: string[];
   styles: string[];
   supports_hd: boolean;
+  supports_reference_image: boolean;
   max_prompt_length: number;
   is_recommended: boolean;
 }
@@ -39,6 +42,7 @@ interface Generation {
   quality: string;
   image_url: string | null;
   revised_prompt: string | null;
+  reference_image_url: string | null;
   cost: number;
   status: string;
   error_message: string | null;
@@ -47,6 +51,7 @@ interface Generation {
     id: string;
     name: string;
     provider: string;
+    supports_reference_image: boolean;
   };
 }
 
@@ -70,7 +75,7 @@ export function ImageStudioClient({
 
   // Form state
   const [selectedModel, setSelectedModel] = useState<string>(
-    models.find((m) => m.is_recommended)?.id || models[0]?.id || "dall-e-3"
+    models.find((m) => m.is_recommended)?.id || models[0]?.id || "gpt-image-1"
   );
   const [prompt, setPrompt] = useState("");
   const [size, setSize] = useState("1024x1024");
@@ -78,6 +83,11 @@ export function ImageStudioClient({
   const [quality, setQuality] = useState("standard");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Reference image state
+  const [referenceImage, setReferenceImage] = useState<File | null>(null);
+  const [referencePreview, setReferencePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Get current model info
   const currentModel = models.find((m) => m.id === selectedModel);
@@ -101,8 +111,49 @@ export function ImageStudioClient({
       if (!currentModel.supports_hd && quality === "hd") {
         setQuality("standard");
       }
+      // Clear reference image if model doesn't support it
+      if (!currentModel.supports_reference_image && referenceImage) {
+        setReferenceImage(null);
+        setReferencePreview(null);
+      }
     }
-  }, [selectedModel, currentModel, size, style, quality]);
+  }, [selectedModel, currentModel, size, style, quality, referenceImage]);
+
+  // Handle file selection
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        setError(t("errors.invalidFileType"));
+        return;
+      }
+      // Validate file size (max 4MB)
+      if (file.size > 4 * 1024 * 1024) {
+        setError(t("errors.fileTooLarge"));
+        return;
+      }
+
+      setReferenceImage(file);
+      setError(null);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReferencePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Clear reference image
+  const clearReferenceImage = () => {
+    setReferenceImage(null);
+    setReferencePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleGenerate = async () => {
     if (!prompt.trim() || !selectedModel) return;
@@ -111,17 +162,36 @@ export function ImageStudioClient({
     setError(null);
 
     try {
-      const response = await fetch("/api/create/images", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: selectedModel,
-          prompt: prompt.trim(),
-          size,
-          style,
-          quality,
-        }),
-      });
+      let response: Response;
+
+      if (referenceImage) {
+        // Use FormData for file upload
+        const formData = new FormData();
+        formData.append("model", selectedModel);
+        formData.append("prompt", prompt.trim());
+        formData.append("size", size);
+        formData.append("style", style);
+        formData.append("quality", quality);
+        formData.append("referenceImage", referenceImage);
+
+        response = await fetch("/api/create/images", {
+          method: "POST",
+          body: formData,
+        });
+      } else {
+        // Use JSON for text-only
+        response = await fetch("/api/create/images", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: selectedModel,
+            prompt: prompt.trim(),
+            size,
+            style,
+            quality,
+          }),
+        });
+      }
 
       const data = await response.json();
 
@@ -148,6 +218,7 @@ export function ImageStudioClient({
         quality,
         image_url: data.image_url,
         revised_prompt: data.revised_prompt,
+        reference_image_url: referencePreview,
         cost: data.cost,
         status: "completed",
         error_message: null,
@@ -156,11 +227,13 @@ export function ImageStudioClient({
           id: selectedModel,
           name: currentModel?.name || selectedModel,
           provider: currentModel?.provider || "openai",
+          supports_reference_image: currentModel?.supports_reference_image || false,
         },
       };
 
       setGenerations((prev) => [newGeneration, ...prev]);
       setPrompt("");
+      clearReferenceImage();
     } catch (err) {
       console.error("Generation error:", err);
       setError(t("errors.generationFailed"));
@@ -249,6 +322,57 @@ export function ImageStudioClient({
                   </p>
                 )}
               </div>
+
+              {/* Reference Image Upload */}
+              {currentModel?.supports_reference_image && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("referenceImage")}
+                    <span className="text-[var(--muted-foreground)] font-normal ml-1">
+                      ({t("optional")})
+                    </span>
+                  </label>
+
+                  {referencePreview ? (
+                    <div className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={referencePreview}
+                        alt="Reference"
+                        className="w-full h-32 object-cover rounded-lg border border-[var(--border)]"
+                      />
+                      <button
+                        onClick={clearReferenceImage}
+                        className="absolute top-2 right-2 p-1 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
+                        title={t("removeReference")}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full p-4 border-2 border-dashed border-[var(--border)] rounded-lg hover:border-primary-500 hover:bg-primary-500/5 transition-colors flex flex-col items-center gap-2"
+                    >
+                      <ImagePlus className="w-6 h-6 text-[var(--muted-foreground)]" />
+                      <span className="text-sm text-[var(--muted-foreground)]">
+                        {t("uploadReference")}
+                      </span>
+                      <span className="text-xs text-[var(--muted-foreground)]">
+                        {t("referenceHint")}
+                      </span>
+                    </button>
+                  )}
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                </div>
+              )}
 
               {/* Prompt */}
               <div>
@@ -450,6 +574,12 @@ export function ImageStudioClient({
                             <ExternalLink className="w-5 h-5 text-white" />
                           </a>
                         </div>
+                        {/* Reference image indicator */}
+                        {gen.reference_image_url && (
+                          <div className="absolute top-2 left-2 p-1.5 rounded-lg bg-black/50 text-white" title={t("hasReference")}>
+                            <ImagePlus className="w-4 h-4" />
+                          </div>
+                        )}
                       </div>
                     ) : gen.status === "generating" ? (
                       <div className="w-full aspect-square bg-[var(--muted)] flex items-center justify-center">

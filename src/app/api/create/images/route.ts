@@ -2,14 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-interface GenerateRequest {
-  model: string;
-  prompt: string;
-  size?: string;
-  style?: string;
-  quality?: string;
-}
-
 interface ImageModel {
   id: string;
   name: string;
@@ -19,6 +11,7 @@ interface ImageModel {
   sizes: string[];
   styles: string[];
   supports_hd: boolean;
+  supports_reference_image: boolean;
   max_prompt_length: number;
   is_active: boolean;
 }
@@ -38,15 +31,62 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    // Parse request
-    const body: GenerateRequest = await request.json();
-    const {
-      model: modelId,
-      prompt,
-      size = "1024x1024",
-      style = "natural",
-      quality = "standard",
-    } = body;
+    // Check content type to determine how to parse
+    const contentType = request.headers.get("content-type") || "";
+
+    let modelId: string;
+    let prompt: string;
+    let size = "1024x1024";
+    let style = "natural";
+    let quality = "standard";
+    let referenceImageUrl: string | null = null;
+
+    if (contentType.includes("multipart/form-data")) {
+      // Parse FormData for file uploads
+      const formData = await request.formData();
+      modelId = formData.get("model") as string;
+      prompt = formData.get("prompt") as string;
+      size = (formData.get("size") as string) || "1024x1024";
+      style = (formData.get("style") as string) || "natural";
+      quality = (formData.get("quality") as string) || "standard";
+
+      const referenceImage = formData.get("referenceImage") as File | null;
+
+      if (referenceImage && referenceImage.size > 0) {
+        // Upload reference image to Supabase storage
+        const fileName = `ref_${user.id}_${Date.now()}.png`;
+        const { data: uploadData, error: uploadError } = await adminClient.storage
+          .from("image-references")
+          .upload(fileName, referenceImage, {
+            contentType: referenceImage.type,
+            upsert: true,
+          });
+
+        if (uploadError) {
+          console.error("Error uploading reference image:", uploadError);
+          return NextResponse.json(
+            { error: "Erreur lors de l'upload de l'image de référence" },
+            { status: 500 }
+          );
+        }
+
+        // Get public URL
+        const { data: urlData } = adminClient.storage
+          .from("image-references")
+          .getPublicUrl(uploadData.path);
+
+        referenceImageUrl = urlData.publicUrl;
+      }
+    } else {
+      // Parse JSON
+      const body = await request.json();
+      modelId = body.model;
+      prompt = body.prompt;
+      size = body.size || "1024x1024";
+      style = body.style || "natural";
+      quality = body.quality || "standard";
+      referenceImageUrl = body.referenceImageUrl || null;
+    }
 
     // Validate prompt
     if (!prompt?.trim()) {
@@ -66,6 +106,7 @@ export async function POST(request: NextRequest) {
         p_size: size,
         p_style: style,
         p_quality: quality,
+        p_reference_image_url: referenceImageUrl,
       }
     );
 
@@ -118,12 +159,13 @@ export async function POST(request: NextRequest) {
       let revisedPrompt: string | undefined;
 
       if (model.provider === "openai") {
-        const result = await generateDallE(
+        const result = await generateOpenAIImage(
           modelId,
           prompt,
           size,
           style,
-          quality
+          quality,
+          referenceImageUrl
         );
         imageUrl = result.imageUrl;
         revisedPrompt = result.revisedPrompt;
@@ -202,7 +244,7 @@ export async function GET(request: NextRequest) {
       .select(
         `
         *,
-        model:image_models(id, name, provider)
+        model:image_models(id, name, provider, supports_reference_image)
       `
       )
       .eq("user_id", user.id)
@@ -238,29 +280,89 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Generate image using OpenAI DALL-E
-async function generateDallE(
+// Generate image using OpenAI (DALL-E or GPT Image models)
+async function generateOpenAIImage(
   model: string,
   prompt: string,
   size: string,
   style: string,
-  quality: string
+  quality: string,
+  referenceImageUrl: string | null
 ): Promise<{ imageUrl: string; revisedPrompt?: string }> {
   const OpenAI = (await import("openai")).default;
   const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
 
-  // Map our parameters to DALL-E API
-  const response = await client.images.generate({
-    model: model, // dall-e-3 or dall-e-2
-    prompt: prompt,
+  // Check if this is a new GPT image model or legacy DALL-E
+  const isGptImageModel = model.startsWith("gpt-image");
+  const isDallE3 = model === "dall-e-3";
+  const isDallE2 = model === "dall-e-2";
+
+  // Handle reference image with edit endpoint if provided
+  if (referenceImageUrl && !isDallE2) {
+    // Download reference image and convert to buffer
+    const imageResponse = await fetch(referenceImageUrl);
+    const imageBuffer = await imageResponse.arrayBuffer();
+
+    // Create a File object from the buffer for the API
+    const imageFile = new File([imageBuffer], "reference.png", { type: "image/png" });
+
+    // Use images.edit for reference-based generation
+    // Note: OpenAI's edit endpoint modifies existing images
+    // For style inspiration, we include reference info in the prompt
+    const enhancedPrompt = `${prompt}\n\n[Style reference: Use the uploaded image as style and composition inspiration]`;
+
+    try {
+      // Try using the edit endpoint with the reference image
+      const response = await client.images.edit({
+        model: isDallE3 || isGptImageModel ? "dall-e-2" : model, // Edit only works with dall-e-2 currently
+        image: imageFile,
+        prompt: enhancedPrompt,
+        n: 1,
+        size: size === "auto" ? "1024x1024" : size as "256x256" | "512x512" | "1024x1024",
+      });
+
+      if (!response.data || response.data.length === 0 || !response.data[0]?.url) {
+        throw new Error("No image returned from edit API");
+      }
+
+      return {
+        imageUrl: response.data[0].url,
+        revisedPrompt: undefined,
+      };
+    } catch (editError) {
+      console.warn("Edit endpoint failed, falling back to generate:", editError);
+      // Fall through to standard generation with enhanced prompt
+    }
+  }
+
+  // Standard image generation
+  const generateParams: {
+    model: string;
+    prompt: string;
+    n: number;
+    size: "256x256" | "512x512" | "1024x1024" | "1024x1792" | "1792x1024";
+    style?: "natural" | "vivid";
+    quality?: "standard" | "hd";
+    response_format: "url";
+  } = {
+    model: isGptImageModel ? "dall-e-3" : model, // Map GPT image models to DALL-E 3 for now
+    prompt: referenceImageUrl
+      ? `${prompt}\n\n[Note: Generate in a style inspired by the reference image at: ${referenceImageUrl}]`
+      : prompt,
     n: 1,
-    size: size as "256x256" | "512x512" | "1024x1024" | "1024x1792" | "1792x1024",
-    style: model === "dall-e-3" ? (style as "natural" | "vivid") : undefined,
-    quality: model === "dall-e-3" ? (quality as "standard" | "hd") : undefined,
+    size: mapSize(size, model),
     response_format: "url",
-  });
+  };
+
+  // Add style and quality for DALL-E 3 and GPT image models
+  if (isDallE3 || isGptImageModel) {
+    generateParams.style = style as "natural" | "vivid";
+    generateParams.quality = quality as "standard" | "hd";
+  }
+
+  const response = await client.images.generate(generateParams);
 
   if (!response.data || response.data.length === 0) {
     throw new Error("No image returned from API");
@@ -276,4 +378,33 @@ async function generateDallE(
     imageUrl: imageData.url,
     revisedPrompt: imageData.revised_prompt,
   };
+}
+
+// Map size string to valid API size
+function mapSize(size: string, model: string): "256x256" | "512x512" | "1024x1024" | "1024x1792" | "1792x1024" {
+  const isDallE2 = model === "dall-e-2";
+
+  if (size === "auto") {
+    return "1024x1024";
+  }
+
+  // DALL-E 2 only supports these sizes
+  if (isDallE2) {
+    if (size === "256x256" || size === "512x512" || size === "1024x1024") {
+      return size;
+    }
+    return "1024x1024";
+  }
+
+  // DALL-E 3 and GPT image models
+  if (size === "1024x1024" || size === "1024x1792" || size === "1792x1024") {
+    return size;
+  }
+
+  // Map other sizes to closest valid size
+  if (size === "1024x1536" || size === "1536x1024") {
+    return size.includes("1536x1024") ? "1792x1024" : "1024x1792";
+  }
+
+  return "1024x1024";
 }
