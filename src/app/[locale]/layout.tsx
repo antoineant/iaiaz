@@ -118,7 +118,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
       ],
     },
-    manifest: `${baseUrl}/site.webmanifest`,
+    manifest: "/site.webmanifest",
   };
 }
 
