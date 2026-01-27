@@ -92,6 +92,20 @@
       "keywords": "anonymisation ia, chatgpt rgpd, ia données confidentielles, protection données ia, chatgpt entreprise sécurisé, ia confidentiel, anonymisation locale, rgpd ia entreprise",
       "ogTitle": "Anonymisation IA - Utilisez ChatGPT et Claude sans risque",
       "ogDescription": "Notre application anonymise vos données localement avant envoi à l'IA. Zéro fuite de données personnelles ou secrets d'affaires."
+    },
+    "alternativeChatgpt": {
+      "title": "Alternative ChatGPT - GPT-5 + Claude + Gemini sans abonnement | iaiaz",
+      "description": "Pourquoi payer 20€/mois pour ChatGPT ? Accédez à GPT-5, Claude et Gemini sans abonnement. Payez à l'usage dès 0.01€. 1€ offert.",
+      "keywords": "alternative chatgpt, chatgpt pas cher, chatgpt gratuit alternative, alternative chatgpt plus, chatgpt sans abonnement, ia pas cher",
+      "ogTitle": "Alternative ChatGPT - Économisez jusqu'à 90%",
+      "ogDescription": "GPT-5 + Claude + Gemini sans abonnement. Payez uniquement ce que vous utilisez. 1€ offert à l'inscription."
+    },
+    "chatgptVsClaude": {
+      "title": "ChatGPT vs Claude - Comparatif Complet 2026 | Lequel choisir ?",
+      "description": "Comparatif détaillé ChatGPT (GPT-5) vs Claude en 2026. Forces, faiblesses, cas d'usage, prix. Découvrez lequel choisir selon vos besoins.",
+      "keywords": "chatgpt vs claude, comparatif chatgpt claude, gpt-5 vs claude, claude vs gpt, meilleure ia 2026, chatgpt ou claude",
+      "ogTitle": "ChatGPT vs Claude 2026 - Le Comparatif Définitif",
+      "ogDescription": "GPT-5 ou Claude ? Comparez performances, prix et cas d'usage. Notre verdict + solution pour utiliser les deux."
     }
   },
   "common": {
@@ -3278,6 +3292,188 @@
       "tip3": "Incluez des détails de caméra : grand angle, gros plan, vue aérienne, macro",
       "tip4": "Ajoutez de l'atmosphère : éclairage dramatique, heure dorée, brumeux, cinématique",
       "tip5": "Spécifiez la qualité : très détaillé, 4K, photographie professionnelle"
+    }
+  },
+  "alternativeChatgpt": {
+    "hero": {
+      "badge": "Alternative ChatGPT",
+      "title": "Arrêtez de payer 20€/mois",
+      "titleHighlight": "pour utiliser l'IA",
+      "subtitle": "Accédez à GPT-5, Claude, Gemini et Mistral sans abonnement. Payez uniquement ce que vous utilisez. 1€ offert à l'inscription.",
+      "cta": "Essayer gratuitement",
+      "ctaSecondary": "Voir les tarifs"
+    },
+    "comparison": {
+      "title": "ChatGPT Plus vs iaiaz",
+      "payPerUse": "Paiement à l'usage",
+      "rows": {
+        "gpt5": "Accès GPT-5",
+        "claude": "Accès Claude",
+        "gemini": "Accès Gemini",
+        "subscription": "Abonnement mensuel",
+        "lowUsageCost": "Coût usage léger",
+        "freeCredit": "Crédit gratuit"
+      },
+      "required": "Obligatoire",
+      "none": "Aucun",
+      "offered": "offert"
+    },
+    "calculator": {
+      "title": "Combien coûte vraiment l'IA ?",
+      "subtitle": "Comparez votre consommation réelle vs l'abonnement ChatGPT",
+      "light": {
+        "label": "Usage léger",
+        "desc": "~50 questions/mois"
+      },
+      "moderate": {
+        "label": "Usage modéré",
+        "desc": "~200 questions/mois"
+      },
+      "heavy": {
+        "label": "Usage intensif",
+        "desc": "~500 questions/mois"
+      },
+      "savings": "Économie de {amount}€ vs ChatGPT Plus"
+    },
+    "whySwitch": {
+      "title": "Pourquoi changer ?",
+      "reason1": {
+        "title": "Pas d'abonnement",
+        "desc": "Pas de prélèvement mensuel. Rechargez quand vous voulez."
+      },
+      "reason2": {
+        "title": "Tous les modèles",
+        "desc": "GPT-5 + Claude + Gemini + Mistral. Choisissez le meilleur pour chaque tâche."
+      },
+      "reason3": {
+        "title": "Vos données protégées",
+        "desc": "Pas de stockage, pas d'entraînement. RGPD compliant."
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "Est-ce vraiment moins cher que ChatGPT Plus ?",
+        "answer": "Oui, pour 90% des utilisateurs. ChatGPT Plus coûte 20€/mois fixe. Avec iaiaz, vous payez à l'usage : une question GPT-5 coûte ~0.02€. Même avec 500 questions/mois, vous dépensez moins de 15€."
+      },
+      "q2": {
+        "question": "Les modèles sont-ils identiques à ChatGPT ?",
+        "answer": "Oui, nous utilisons les mêmes modèles via les API officielles d'OpenAI, Anthropic, Google et Mistral. GPT-5 sur iaiaz = GPT-5 sur ChatGPT."
+      },
+      "q3": {
+        "question": "Pourquoi proposer plusieurs modèles IA ?",
+        "answer": "Chaque IA a ses forces. Claude excelle en rédaction longue, GPT-5 en polyvalence, Gemini pour les recherches web, Mistral pour le français. Avec iaiaz, vous choisissez le meilleur outil pour chaque tâche."
+      },
+      "q4": {
+        "question": "Mes crédits expirent-ils ?",
+        "answer": "Non, vos crédits n'expirent jamais. Pas de gaspillage si vous n'utilisez pas l'IA pendant un mois."
+      }
+    },
+    "cta": {
+      "title": "Prêt à économiser ?",
+      "subtitle": "Inscrivez-vous en 30 secondes et recevez 1€ de crédit gratuit pour tester.",
+      "button": "Créer mon compte",
+      "note": "Sans engagement • Sans carte bancaire"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "alternative": "Alternative ChatGPT"
+    }
+  },
+  "chatgptVsClaude": {
+    "hero": {
+      "badge": "Comparatif 2026",
+      "title": "ChatGPT vs Claude",
+      "subtitle": "Quel assistant IA choisir en 2026 ? Comparaison détaillée des performances, cas d'usage et tarifs. Notre verdict après des mois de test.",
+      "updated": "Mis à jour en janvier 2026"
+    },
+    "summary": {
+      "title": "En résumé",
+      "gpt": {
+        "desc": "Le plus polyvalent. Excellent en général, interface familière, écosystème riche.",
+        "pro1": "Polyvalent et fiable",
+        "pro2": "Plugins et intégrations",
+        "con1": "Abonnement obligatoire (20€/mois)"
+      },
+      "claude": {
+        "desc": "Le meilleur en rédaction. Textes plus naturels, meilleure compréhension du contexte.",
+        "pro1": "Rédaction supérieure",
+        "pro2": "Contexte plus long (200k tokens)",
+        "con1": "Moins de fonctionnalités annexes"
+      }
+    },
+    "detailed": {
+      "title": "Comparaison par cas d'usage",
+      "winner": "Gagnant",
+      "writing": {
+        "title": "Rédaction et création de contenu",
+        "intro": "Pour les dissertations, articles, emails, et textes créatifs.",
+        "gpt": "Bon en rédaction générale, parfois trop formel ou générique. Peut manquer de naturel.",
+        "claude": "Excelle en rédaction. Textes plus fluides, naturels, avec un meilleur style. Comprend mieux les nuances.",
+        "winner": "Claude - Textes plus naturels et engageants"
+      },
+      "coding": {
+        "title": "Programmation et code",
+        "intro": "Pour l'écriture, le débogage et l'explication de code.",
+        "gpt": "Très performant, supporte de nombreux langages. Bon pour le debugging et les explications.",
+        "claude": "Excellent également, parfois plus rigoureux dans les explications. Très bon pour les revues de code.",
+        "winner": "Égalité - Les deux sont excellents"
+      },
+      "analysis": {
+        "title": "Analyse et recherche",
+        "intro": "Pour analyser des documents, synthétiser des informations.",
+        "gpt": "Bonne analyse, mais fenêtre de contexte plus limitée. Peut perdre le fil sur les très longs documents.",
+        "claude": "Fenêtre de contexte de 200k tokens. Idéal pour les documents longs. Synthèses plus structurées.",
+        "winner": "Claude - Contexte plus long, meilleures synthèses"
+      },
+      "conversation": {
+        "title": "Conversation et assistant",
+        "intro": "Pour le chat quotidien, questions-réponses, brainstorming.",
+        "gpt": "Interface intuitive, répond vite. Parfois trop verbeux ou évasif.",
+        "claude": "Plus direct et honnête dans ses réponses. Reconnaît mieux ses limites.",
+        "winner": "Claude - Plus naturel et direct"
+      }
+    },
+    "pricing": {
+      "title": "Comparatif des prix",
+      "service": "Service",
+      "price": "Prix",
+      "models": "Modèles inclus",
+      "payPerUse": "Dès 0.01€/question"
+    },
+    "verdict": {
+      "title": "Notre verdict",
+      "intro": "Après des mois de test intensif, voici notre conclusion :",
+      "point1": "Claude est meilleur pour la rédaction, l'analyse de documents longs et les conversations naturelles",
+      "point2": "GPT-5 est plus polyvalent et dispose d'un écosystème plus riche (plugins, intégrations)",
+      "point3": "Le choix idéal dépend de vos usages principaux",
+      "conclusion": "La vraie question n'est pas \"lequel choisir\" mais \"pourquoi se limiter à un seul ?\". Avec iaiaz, utilisez les deux selon vos besoins, sans double abonnement."
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "Peut-on utiliser ChatGPT et Claude gratuitement ?",
+        "answer": "ChatGPT propose une version gratuite limitée (GPT-3.5). Claude aussi avec des restrictions. Pour GPT-5 ou Claude Sonnet/Opus, un abonnement à 20€/mois est nécessaire chez OpenAI/Anthropic. Avec iaiaz, vous payez à l'usage sans abonnement."
+      },
+      "q2": {
+        "question": "Lequel est le plus récent ?",
+        "answer": "En 2026, GPT-5 et Claude 3.5 sont les dernières versions. Les deux sont régulièrement mis à jour. Sur iaiaz, vous accédez toujours aux dernières versions."
+      },
+      "q3": {
+        "question": "Lequel respecte le mieux ma vie privée ?",
+        "answer": "Anthropic (Claude) a une politique plus stricte sur l'utilisation des données pour l'entraînement. Sur iaiaz, nous ne stockons pas vos conversations et aucune donnée n'est utilisée pour entraîner les modèles."
+      }
+    },
+    "cta": {
+      "title": "Pourquoi choisir quand on peut avoir les deux ?",
+      "subtitle": "Avec iaiaz, accédez à GPT-5 ET Claude sans double abonnement. Payez uniquement ce que vous utilisez.",
+      "button": "Essayer gratuitement",
+      "note": "1€ offert • Sans engagement"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "blog": "Blog",
+      "article": "ChatGPT vs Claude"
     }
   }
 }
