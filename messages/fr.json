@@ -253,6 +253,31 @@
       "title": "Bienvenue sur iaiaz",
       "description": "Commencez une conversation avec l'IA de votre choix. Vous pouvez changer de modèle à tout moment."
     },
+    "modelPicker": {
+      "title": "Que souhaitez-vous faire ?",
+      "subtitle": "Choisissez un modèle ou démarrez rapidement avec celui par défaut",
+      "quickChat": "Chat Rapide",
+      "browseModels": "Parcourir les modèles",
+      "browseModelsHint": "Voir toutes les options",
+      "orChooseFor": "ou choisir pour",
+      "dontShowAgain": "Ne plus afficher",
+      "quick": {
+        "title": "Rapide & Économique",
+        "description": "Réponses rapides, faible coût"
+      },
+      "smart": {
+        "title": "Le Plus Performant",
+        "description": "Raisonnement complexe"
+      },
+      "code": {
+        "title": "Idéal pour le Code",
+        "description": "Tâches de programmation"
+      },
+      "creative": {
+        "title": "Écriture Créative",
+        "description": "Histoires & contenus"
+      }
+    },
     "suggestions": {
       "python": "Explique-moi les bases de Python",
       "email": "Aide-moi à rédiger un email professionnel",

@@ -11,13 +11,31 @@ interface ModelSelectorProps {
   onChange: (model: string) => void;
   models: DBModel[];
   markupMultiplier: number;
+  externalOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function ModelSelector({ value, onChange, models, markupMultiplier }: ModelSelectorProps) {
+export function ModelSelector({
+  value,
+  onChange,
+  models,
+  markupMultiplier,
+  externalOpen,
+  onOpenChange,
+}: ModelSelectorProps) {
   const t = useTranslations("chat.modelSelector");
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const selectedModel = models.find((m) => m.id === value);
+
+  // Use external open state if provided, otherwise use internal
+  const isOpen = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setIsOpen = (open: boolean) => {
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+    setInternalOpen(open);
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

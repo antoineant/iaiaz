@@ -11,6 +11,11 @@ import { ChatInput, type RateLimitInfo } from "@/components/chat/chat-input";
 import type { Conversation, ChatMessage, FileAttachment } from "@/types";
 import type { PricingData } from "@/lib/pricing-db";
 import { Sparkles, Brain, AlertTriangle } from "lucide-react";
+import {
+  ModelPickerOverlay,
+  shouldShowModelPicker,
+  getPreferredModel,
+} from "@/components/chat/model-picker-overlay";
 
 interface OrgContext {
   orgName: string;
@@ -94,6 +99,21 @@ export function ChatClient({
   const [classes, setClasses] = useState<StudentClass[]>([]);
   const [managedClasses, setManagedClasses] = useState<ManagedClass[]>([]);
   const [enableThinking, setEnableThinking] = useState(false);
+  const [showModelPicker, setShowModelPicker] = useState(false);
+  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+
+  // Initialize model picker state and preferred model
+  useEffect(() => {
+    // Check if we should show the model picker
+    if (!conversationId && messages.length === 0) {
+      setShowModelPicker(shouldShowModelPicker());
+    }
+    // Load preferred model if set
+    const preferred = getPreferredModel();
+    if (preferred && pricingData.models.find((m) => m.id === preferred && m.is_active)) {
+      setModel(preferred);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Check if user can manage org (owner/admin/teacher)
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
@@ -445,6 +465,8 @@ export function ChatClient({
               onChange={setModel}
               models={pricingData.models}
               markupMultiplier={pricingData.settings.markupMultiplier}
+              externalOpen={modelSelectorOpen}
+              onOpenChange={setModelSelectorOpen}
             />
             {/* Extended Thinking Toggle (Claude) */}
             {claudeSupportsThinking && (
@@ -489,33 +511,49 @@ export function ChatClient({
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
-                <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+            showModelPicker ? (
+              <ModelPickerOverlay
+                pricingData={pricingData}
+                currentModel={model}
+                onSelectModel={(modelId) => {
+                  setModel(modelId);
+                  setShowModelPicker(false);
+                }}
+                onClose={() => setShowModelPicker(false)}
+                onBrowseModels={() => {
+                  setShowModelPicker(false);
+                  setModelSelectorOpen(true);
+                }}
+              />
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+                  <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                </div>
+                <h1 className="text-2xl font-bold mb-2">
+                  {t("welcome.title")}
+                </h1>
+                <p className="text-[var(--muted-foreground)] max-w-md mb-6">
+                  {t("welcome.description")}
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                  {[
+                    { key: "python", text: t("suggestions.python") },
+                    { key: "email", text: t("suggestions.email") },
+                    { key: "summary", text: t("suggestions.summary") },
+                    { key: "ideas", text: t("suggestions.ideas") },
+                  ].map((suggestion) => (
+                    <button
+                      key={suggestion.key}
+                      onClick={() => handleSendMessage(suggestion.text)}
+                      className="px-3 py-2 rounded-lg border border-[var(--border)] text-sm hover:bg-[var(--muted)] transition-colors"
+                    >
+                      {suggestion.text}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <h1 className="text-2xl font-bold mb-2">
-                {t("welcome.title")}
-              </h1>
-              <p className="text-[var(--muted-foreground)] max-w-md mb-6">
-                {t("welcome.description")}
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-                {[
-                  { key: "python", text: t("suggestions.python") },
-                  { key: "email", text: t("suggestions.email") },
-                  { key: "summary", text: t("suggestions.summary") },
-                  { key: "ideas", text: t("suggestions.ideas") },
-                ].map((suggestion) => (
-                  <button
-                    key={suggestion.key}
-                    onClick={() => handleSendMessage(suggestion.text)}
-                    className="px-3 py-2 rounded-lg border border-[var(--border)] text-sm hover:bg-[var(--muted)] transition-colors"
-                  >
-                    {suggestion.text}
-                  </button>
-                ))}
-              </div>
-            </div>
+            )
           ) : (
             <div className="max-w-3xl mx-auto">
               {messages.map((message) => (
@@ -532,7 +570,7 @@ export function ChatClient({
           model={model}
           balance={balance}
           isLoading={isLoading}
-          disabled={balance <= 0}
+          disabled={balance <= 0 || showModelPicker}
           rateLimit={rateLimit}
           rateLimitError={rateLimitError}
           conversationId={currentConversationId}
