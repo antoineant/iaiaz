@@ -95,10 +95,10 @@ BEGIN
     om.role IN ('owner', 'admin', 'teacher') as is_trainer,
     om.id,
     o.seat_count,
-    (SELECT COUNT(*)::integer FROM organization_members WHERE organization_id = o.id AND status = 'active') as member_count,
+    (SELECT COUNT(*)::integer FROM organization_members om2 WHERE om2.organization_id = o.id AND om2.status = 'active') as member_count,
     CASE
       WHEN o.seat_count IS NULL THEN false
-      WHEN (SELECT COUNT(*) FROM organization_members WHERE organization_id = o.id AND status = 'active') > o.seat_count THEN true
+      WHEN (SELECT COUNT(*) FROM organization_members om3 WHERE om3.organization_id = o.id AND om3.status = 'active') > o.seat_count THEN true
       ELSE false
     END as is_over_seat_limit
   FROM organization_members om
