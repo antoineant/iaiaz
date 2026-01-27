@@ -621,3 +621,90 @@ L'équipe iaiaz
   // Default fallback
   return { success: false, error: "Unknown event type" };
 }
+
+/**
+ * Send notification email when a student is added to a class by a trainer
+ */
+export async function sendClassInviteEmail(
+  to: string,
+  studentName: string,
+  className: string,
+  organizationName: string,
+  trainerName: string,
+  creditAmount: number
+): Promise<EmailResult> {
+  const formattedCredits = creditAmount.toFixed(2);
+  const greeting = studentName || "Bonjour";
+
+  return sendEmail({
+    to,
+    subject: `iaiaz - Vous avez été ajouté à la classe "${className}"`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; color: #7c3aed; margin: 0;">iaiaz</h1>
+  </div>
+
+  <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">${greeting}, vous avez été ajouté à une classe !</h2>
+
+  <div style="background: #f3f4f6; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+    <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Classe</p>
+    <p style="margin: 0 0 16px 0; font-size: 20px; font-weight: 700; color: #1f2937;">${className}</p>
+    <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Organisation</p>
+    <p style="margin: 0 0 16px 0; font-weight: 600; color: #1f2937;">${organizationName}</p>
+    <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Ajouté par</p>
+    <p style="margin: 0; color: #1f2937;">${trainerName}</p>
+  </div>
+
+  ${creditAmount > 0 ? `
+  <p style="margin-bottom: 16px;">
+    Vous disposez de <strong style="color: #10b981;">${formattedCredits}€ de crédits</strong> pour utiliser les modèles d'IA dans le cadre de cette classe.
+  </p>
+  ` : `
+  <p style="margin-bottom: 16px;">
+    Vous pouvez maintenant utiliser les modèles d'IA dans le cadre de cette classe.
+  </p>
+  `}
+
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="https://www.iaiaz.com/chat" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+      Commencer à utiliser l'IA
+    </a>
+  </div>
+
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
+    Bonne session !<br>
+    L'équipe iaiaz
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+
+  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+    BAJURIAN SAS - 135 Avenue des Pyrénées, 31830 Plaisance du Touch<br>
+    <a href="https://www.iaiaz.com/legal/cgu" style="color: #9ca3af;">CGU</a> ·
+    <a href="https://www.iaiaz.com/legal/privacy" style="color: #9ca3af;">Confidentialité</a>
+  </p>
+</body>
+</html>
+    `,
+    text: `${greeting}, vous avez été ajouté à une classe !
+
+Classe : ${className}
+Organisation : ${organizationName}
+Ajouté par : ${trainerName}
+
+${creditAmount > 0 ? `Vous disposez de ${formattedCredits}€ de crédits pour utiliser les modèles d'IA.` : "Vous pouvez maintenant utiliser les modèles d'IA dans le cadre de cette classe."}
+
+Commencer à utiliser l'IA : https://www.iaiaz.com/chat
+
+Bonne session !
+L'équipe iaiaz
+`,
+  });
+}

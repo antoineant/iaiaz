@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { canManageClass } from "@/lib/org";
+import { sendClassInviteEmail } from "@/lib/email";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
@@ -186,11 +188,24 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const adminClient = createAdminClient();
+    const supabase = await createClient();
 
-    // Get the class to find the organization
+    // Get current user (trainer) info
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    let trainerName = "Votre formateur";
+    if (currentUser) {
+      const { data: trainerProfile } = await adminClient
+        .from("profiles")
+        .select("display_name, email")
+        .eq("id", currentUser.id)
+        .single();
+      trainerName = trainerProfile?.display_name || trainerProfile?.email || trainerName;
+    }
+
+    // Get the class to find the organization (with names for email)
     const { data: classData, error: classError } = await adminClient
       .from("organization_classes")
-      .select("id, organization_id, settings")
+      .select("id, name, organization_id, settings, organizations(name)")
       .eq("id", classId)
       .single();
 
@@ -200,6 +215,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         { status: 404 }
       );
     }
+
+    const className = classData.name;
+    const orgData = classData.organizations as unknown as { name: string } | null;
+    const organizationName = orgData?.name || "Organisation";
 
     // Find the user by email
     const { data: profile, error: profileError } = await adminClient
@@ -276,6 +295,20 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         );
       }
 
+      // Send notification email (don't block on failure)
+      sendClassInviteEmail(
+        profile.email,
+        profile.display_name || "",
+        className,
+        organizationName,
+        trainerName,
+        0 // No additional credits for existing members
+      ).then((result) => {
+        if (!result.success) {
+          console.error("Failed to send class invite email:", result.error);
+        }
+      });
+
       return NextResponse.json({
         success: true,
         member_id: existingMember.id,
@@ -337,6 +370,20 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         description: "Credit allocation from class invitation",
       });
     }
+
+    // Send notification email (don't block on failure)
+    sendClassInviteEmail(
+      profile.email,
+      profile.display_name || "",
+      className,
+      organizationName,
+      trainerName,
+      creditToAllocate
+    ).then((result) => {
+      if (!result.success) {
+        console.error("Failed to send class invite email:", result.error);
+      }
+    });
 
     return NextResponse.json({
       success: true,
