@@ -53,11 +53,11 @@ export async function GET(request: Request) {
         error: profileError?.message,
       });
 
-      // If user signed up via Google with a specific account type (trainer/school),
+      // If user signed up via Google with a specific account type (trainer/school/business),
       // update their profile since the DB trigger defaults to 'student'
       if (
         accountType &&
-        ["trainer", "school"].includes(accountType) &&
+        ["trainer", "school", "business"].includes(accountType) &&
         profile &&
         profile.account_type === "student"
       ) {
@@ -72,9 +72,21 @@ export async function GET(request: Request) {
         if (updateError) {
           console.error("[auth/callback] Failed to update account type:", updateError);
         } else {
-          // Create organization for trainer/school (mimics DB trigger behavior)
-          const orgType = accountType === "school" ? "training_center" : "individual";
-          const initialCredits = accountType === "school" ? 10 : 0; // Schools get 10€
+          // Create organization for trainer/school/business (mimics DB trigger behavior)
+          // Organization types: individual (trainer), training_center (school), business
+          let orgType: string;
+          let initialCredits: number;
+
+          if (accountType === "school") {
+            orgType = "training_center";
+            initialCredits = 10; // Schools get 10€
+          } else if (accountType === "business") {
+            orgType = "business";
+            initialCredits = 10; // Businesses get 10€
+          } else {
+            orgType = "individual";
+            initialCredits = 0; // Trainers get 0€
+          }
 
           const { data: newOrg, error: orgError } = await adminClient
             .from("organizations")

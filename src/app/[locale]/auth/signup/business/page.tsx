@@ -203,7 +203,7 @@ export default function BusinessSignupPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <GoogleButton mode="signup" />
+            <GoogleButton mode="signup" accountType="business" />
 
             <Divider />
 

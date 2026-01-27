@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 
 interface GoogleButtonProps {
   mode: "login" | "signup";
-  accountType?: "student" | "trainer" | "school";
+  accountType?: "student" | "trainer" | "school" | "business";
 }
 
 export function GoogleButton({ mode, accountType }: GoogleButtonProps) {
