@@ -371,7 +371,10 @@
     "modelSelector": {
       "placeholder": "Choisir un modèle",
       "recommended": "Recommandé",
-      "price": "{price}€ / 1K tokens entrée"
+      "price": "{price}€ / 1K tokens entrée",
+      "setAsDefault": "Définir par défaut",
+      "isDefault": "C'est votre modèle par défaut",
+      "default": "Par défaut"
     },
     "thinking": {
       "label": "Réflexion",
@@ -2705,6 +2708,16 @@
       "generate": "Générer une clé API",
       "regenerate": "Régénérer la clé",
       "regenerateWarning": "Attention : régénérer la clé invalidera l'ancienne. Les applications utilisant l'ancienne clé devront être mises à jour."
+    },
+    "chatPreferences": {
+      "title": "Préférences de chat",
+      "defaultModel": {
+        "title": "Modèle IA par défaut",
+        "description": "Choisissez le modèle qui sera sélectionné par défaut lorsque vous démarrez une nouvelle conversation.",
+        "systemDefault": "Par défaut système (recommandé)",
+        "recommended": "Recommandé",
+        "currentDefault": "Votre défaut : {model}"
+      }
     },
     "creditPreference": {
       "title": "Préférences de crédits",

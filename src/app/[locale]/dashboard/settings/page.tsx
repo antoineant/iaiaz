@@ -25,8 +25,13 @@ import {
   RefreshCw,
   Eye,
   EyeOff,
+  MessageSquare,
+  Star,
 } from "lucide-react";
 import type { CreditPreference } from "@/lib/credits";
+import type { PricingData } from "@/app/api/pricing/route";
+
+const PREFERRED_MODEL_KEY = "iaia_preferred_model";
 
 type RetentionDays = null | 7 | 30 | 90 | 365;
 
@@ -84,6 +89,11 @@ export default function SettingsPage() {
   const [isRegeneratingApiKey, setIsRegeneratingApiKey] = useState(false);
   const [apiKeyCopied, setApiKeyCopied] = useState(false);
 
+  // Default model states
+  const [pricingData, setPricingData] = useState<PricingData | null>(null);
+  const [defaultModel, setDefaultModel] = useState<string | null>(null);
+  const [defaultModelSuccess, setDefaultModelSuccess] = useState(false);
+
   // Load profile data
   useEffect(() => {
     async function loadProfile() {
@@ -105,6 +115,42 @@ export default function SettingsPage() {
     }
     loadProfile();
   }, []);
+
+  // Load pricing data and default model preference
+  useEffect(() => {
+    async function loadPricingData() {
+      try {
+        const response = await fetch("/api/pricing");
+        if (response.ok) {
+          const data = await response.json();
+          setPricingData(data);
+        }
+      } catch (error) {
+        console.error("Failed to load pricing data:", error);
+      }
+    }
+    loadPricingData();
+
+    // Load preferred model from localStorage
+    const stored = localStorage.getItem(PREFERRED_MODEL_KEY);
+    if (stored) {
+      setDefaultModel(stored);
+    }
+  }, []);
+
+  const handleDefaultModelChange = (modelId: string) => {
+    localStorage.setItem(PREFERRED_MODEL_KEY, modelId);
+    setDefaultModel(modelId);
+    setDefaultModelSuccess(true);
+    setTimeout(() => setDefaultModelSuccess(false), 3000);
+  };
+
+  const handleClearDefaultModel = () => {
+    localStorage.removeItem(PREFERRED_MODEL_KEY);
+    setDefaultModel(null);
+    setDefaultModelSuccess(true);
+    setTimeout(() => setDefaultModelSuccess(false), 3000);
+  };
 
   const handleSaveDisplayName = async () => {
     if (!profile) return;
@@ -358,6 +404,72 @@ export default function SettingsPage() {
               <PasswordForm />
               <div className="border-t border-[var(--border)] pt-6">
                 <EmailForm currentEmail={profile?.email || ""} />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Chat Preferences Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5" />
+                {t("chatPreferences.title")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="mb-2 block">{t("chatPreferences.defaultModel.title")}</Label>
+                <p className="text-sm text-[var(--muted-foreground)] mb-3">
+                  {t("chatPreferences.defaultModel.description")}
+                </p>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={defaultModel || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value) {
+                        handleDefaultModelChange(value);
+                      } else {
+                        handleClearDefaultModel();
+                      }
+                    }}
+                    className="flex h-10 w-full max-w-xs rounded-md border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  >
+                    <option value="">{t("chatPreferences.defaultModel.systemDefault")}</option>
+                    {pricingData?.models
+                      .filter((m) => m.is_recommended || defaultModel === m.id)
+                      .sort((a, b) => {
+                        // Show recommended models first
+                        if (a.is_recommended && !b.is_recommended) return -1;
+                        if (!a.is_recommended && b.is_recommended) return 1;
+                        return a.name.localeCompare(b.name);
+                      })
+                      .map((model) => (
+                        <option key={model.id} value={model.id}>
+                          {model.name} {model.is_recommended ? `(${t("chatPreferences.defaultModel.recommended")})` : ""}
+                        </option>
+                      ))}
+                    <optgroup label="──────────">
+                      {pricingData?.models
+                        .filter((m) => !m.is_recommended && defaultModel !== m.id)
+                        .sort((a, b) => a.provider.localeCompare(b.provider) || a.name.localeCompare(b.name))
+                        .map((model) => (
+                          <option key={model.id} value={model.id}>
+                            {model.provider} - {model.name}
+                          </option>
+                        ))}
+                    </optgroup>
+                  </select>
+                  {defaultModelSuccess && (
+                    <Check className="w-4 h-4 text-green-600" />
+                  )}
+                </div>
+                {defaultModel && (
+                  <p className="text-xs text-[var(--muted-foreground)] mt-2 flex items-center gap-1">
+                    <Star className="w-3 h-3 text-amber-500 fill-current" />
+                    {t("chatPreferences.defaultModel.currentDefault", { model: pricingData?.models.find(m => m.id === defaultModel)?.name || defaultModel })}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

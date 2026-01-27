@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { ChevronDown, Check, Sparkles } from "lucide-react";
+import { ChevronDown, Check, Sparkles, Star } from "lucide-react";
 import type { DBModel } from "@/lib/pricing-db";
+
+const PREFERRED_MODEL_KEY = "iaia_preferred_model";
 
 interface ModelSelectorProps {
   value: string;
@@ -13,6 +15,8 @@ interface ModelSelectorProps {
   markupMultiplier: number;
   externalOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  defaultModel?: string;
+  onDefaultChange?: (modelId: string) => void;
 }
 
 export function ModelSelector({
@@ -22,11 +26,25 @@ export function ModelSelector({
   markupMultiplier,
   externalOpen,
   onOpenChange,
+  defaultModel: externalDefault,
+  onDefaultChange,
 }: ModelSelectorProps) {
   const t = useTranslations("chat.modelSelector");
   const [internalOpen, setInternalOpen] = useState(false);
+  const [userDefault, setUserDefault] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const selectedModel = models.find((m) => m.id === value);
+
+  // Load user's default model from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(PREFERRED_MODEL_KEY);
+    if (stored) {
+      setUserDefault(stored);
+    }
+  }, []);
+
+  // Determine the effective default (user's choice or external/system default)
+  const effectiveDefault = userDefault || externalDefault;
 
   // Use external open state if provided, otherwise use internal
   const isOpen = externalOpen !== undefined ? externalOpen : internalOpen;
@@ -35,6 +53,15 @@ export function ModelSelector({
       onOpenChange(open);
     }
     setInternalOpen(open);
+  };
+
+  const handleSetDefault = (modelId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Don't trigger model selection
+    localStorage.setItem(PREFERRED_MODEL_KEY, modelId);
+    setUserDefault(modelId);
+    if (onDefaultChange) {
+      onDefaultChange(modelId);
+    }
   };
 
   useEffect(() => {
@@ -90,41 +117,66 @@ export function ModelSelector({
                 <div className="px-3 py-2 text-xs font-semibold text-[var(--muted-foreground)] bg-[var(--muted)] sticky top-0">
                   {provider}
                 </div>
-                {providerModels.map((model) => (
-                  <button
-                    key={model.id}
-                    type="button"
-                    onClick={() => {
-                      onChange(model.id);
-                      setIsOpen(false);
-                    }}
-                    className={cn(
-                      "w-full px-3 py-3 text-left hover:bg-[var(--muted)] transition-colors",
-                      "flex items-start gap-3",
-                      value === model.id && "bg-primary-50 dark:bg-primary-950/30"
-                    )}
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm">{model.name}</span>
-                        {model.is_recommended && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300">
-                            {t("recommended")}
-                          </span>
+                {providerModels.map((model) => {
+                  const isDefault = effectiveDefault === model.id;
+                  return (
+                    <div
+                      key={model.id}
+                      className={cn(
+                        "w-full px-3 py-3 hover:bg-[var(--muted)] transition-colors",
+                        "flex items-start gap-3",
+                        value === model.id && "bg-primary-50 dark:bg-primary-950/30"
+                      )}
+                    >
+                      {/* Star button for setting default */}
+                      <button
+                        type="button"
+                        onClick={(e) => handleSetDefault(model.id, e)}
+                        className={cn(
+                          "p-1 rounded hover:bg-[var(--muted)] transition-colors flex-shrink-0 mt-0.5",
+                          isDefault ? "text-amber-500" : "text-[var(--muted-foreground)] hover:text-amber-500"
                         )}
-                      </div>
-                      <p className="text-xs text-[var(--muted-foreground)] mt-0.5 line-clamp-1">
-                        {model.description}
-                      </p>
-                      <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                        {t("price", { price: ((model.input_price * markupMultiplier) / 1000).toFixed(4) })}
-                      </p>
+                        title={isDefault ? t("isDefault") : t("setAsDefault")}
+                      >
+                        <Star
+                          className={cn("w-4 h-4", isDefault && "fill-current")}
+                        />
+                      </button>
+                      {/* Model info - clickable to select */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onChange(model.id);
+                          setIsOpen(false);
+                        }}
+                        className="flex-1 min-w-0 text-left"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-sm">{model.name}</span>
+                          {model.is_recommended && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300">
+                              {t("recommended")}
+                            </span>
+                          )}
+                          {isDefault && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">
+                              {t("default")}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5 line-clamp-1">
+                          {model.description}
+                        </p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                          {t("price", { price: ((model.input_price * markupMultiplier) / 1000).toFixed(4) })}
+                        </p>
+                      </button>
+                      {value === model.id && (
+                        <Check className="w-4 h-4 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
+                      )}
                     </div>
-                    {value === model.id && (
-                      <Check className="w-4 h-4 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
-                    )}
-                  </button>
-                ))}
+                  );
+                })}
               </div>
             ))}
           </div>

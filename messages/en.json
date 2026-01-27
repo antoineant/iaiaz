@@ -371,7 +371,10 @@
     "modelSelector": {
       "placeholder": "Choose a model",
       "recommended": "Recommended",
-      "price": "${price} / 1K input tokens"
+      "price": "${price} / 1K input tokens",
+      "setAsDefault": "Set as default",
+      "isDefault": "This is your default model",
+      "default": "Default"
     },
     "thinking": {
       "label": "Thinking",
@@ -568,6 +571,16 @@
       "generate": "Generate API key",
       "regenerate": "Regenerate key",
       "regenerateWarning": "Warning: regenerating the key will invalidate the old one. Applications using the old key will need to be updated."
+    },
+    "chatPreferences": {
+      "title": "Chat Preferences",
+      "defaultModel": {
+        "title": "Default AI Model",
+        "description": "Choose the model that will be selected by default when you start a new conversation.",
+        "systemDefault": "System default (recommended)",
+        "recommended": "Recommended",
+        "currentDefault": "Your default: {model}"
+      }
     },
     "creditPreference": {
       "title": "Credit preferences",

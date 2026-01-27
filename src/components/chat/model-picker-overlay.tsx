@@ -115,7 +115,7 @@ export function ModelPickerOverlay({
   // Get current model info for Quick Chat
   const currentModelInfo = pricingData.models.find((m) => m.id === currentModel);
   const currentTier = currentModelInfo
-    ? getPriceTier(currentModelInfo.input_price_per_million)
+    ? getPriceTier(currentModelInfo.input_price)
     : { tier: "€€", label: "standard" };
 
   return (
@@ -173,7 +173,7 @@ export function ModelPickerOverlay({
             const model = findAvailableModel(rec.modelIds);
             if (!model) return null;
 
-            const tier = getPriceTier(model.input_price_per_million);
+            const tier = getPriceTier(model.input_price);
             const Icon = rec.icon;
 
             return (
