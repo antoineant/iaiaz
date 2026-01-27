@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { FileText, LogOut } from "lucide-react";
 
-export default function AcceptTermsPage() {
+function AcceptTermsForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations("auth.acceptTerms");
+  const redirectUrl = searchParams.get("redirect") || "/chat";
 
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +51,8 @@ export default function AcceptTermsPage() {
         return;
       }
 
-      // Redirect to chat
-      router.push("/chat");
+      // Redirect to intended destination
+      router.push(redirectUrl);
     } catch {
       setError(t("errors.generic"));
       setIsLoading(false);
@@ -146,5 +148,13 @@ export default function AcceptTermsPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function AcceptTermsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <AcceptTermsForm />
+    </Suspense>
   );
 }

@@ -49,13 +49,29 @@ export async function GET(request: Request) {
         error: profileError?.message,
       });
 
-      // If terms not accepted, redirect to accept-terms page
+      // Determine final redirect: URL param > user_metadata > default
+      let finalRedirect = next;
+      if (next === "/chat" && data.user.user_metadata?.redirect_after_confirm) {
+        finalRedirect = data.user.user_metadata.redirect_after_confirm;
+        console.log("[auth/callback] Using redirect from user_metadata:", finalRedirect);
+
+        // Clear the redirect from metadata (one-time use)
+        await adminClient.auth.admin.updateUserById(data.user.id, {
+          user_metadata: { redirect_after_confirm: null },
+        });
+      }
+
+      // If terms not accepted, redirect to accept-terms page (with final redirect stored)
       if (!profile?.terms_accepted_at) {
-        return NextResponse.redirect(`${origin}/auth/accept-terms`);
+        // Pass the final redirect to accept-terms so it can redirect after
+        const acceptTermsUrl = finalRedirect !== "/chat"
+          ? `${origin}/auth/accept-terms?redirect=${encodeURIComponent(finalRedirect)}`
+          : `${origin}/auth/accept-terms`;
+        return NextResponse.redirect(acceptTermsUrl);
       }
 
       // Terms already accepted, proceed to destination
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${origin}${finalRedirect}`);
     }
 
     console.error("[auth/callback] Failed to exchange code:", error?.message);

@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -163,12 +164,12 @@ function LoginForm() {
 
         <div className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
           {t("noAccount")}{" "}
-          <Link
-            href="/auth/signup"
+          <NextLink
+            href={redirect !== "/chat" ? `/auth/signup?redirect=${encodeURIComponent(redirect)}` : "/auth/signup"}
             className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
           >
             {t("createAccount")}
-          </Link>
+          </NextLink>
         </div>
       </CardContent>
     </Card>

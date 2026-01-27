@@ -15,6 +15,7 @@ interface SignupRequest {
   accountType?: "student" | "trainer" | "school" | "business";
   displayName?: string;
   marketingConsent?: boolean;
+  redirectUrl?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: SignupRequest = await request.json();
-    const { email, password, accountType, displayName, marketingConsent } = body;
+    const { email, password, accountType, displayName, marketingConsent, redirectUrl } = body;
 
     console.log("[signup] Email:", email?.substring(0, 5) + "...", "AccountType:", accountType);
 
@@ -169,6 +170,7 @@ export async function POST(request: NextRequest) {
           account_type: accountType || "student",
           display_name: displayName || undefined,
           marketing_consent: marketingConsent || false,
+          redirect_after_confirm: redirectUrl || undefined,
         },
       });
     console.log("[signup] User creation result:", { success: !!authData?.user, error: authError?.message });

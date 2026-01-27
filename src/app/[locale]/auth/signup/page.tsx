@@ -17,8 +17,9 @@ function SignupForm() {
   const t = useTranslations("auth.signup");
   const searchParams = useSearchParams();
 
-  // Read initial account type from URL param
+  // Read initial account type and redirect from URL params
   const initialType = searchParams.get("type") as AccountType | null;
+  const redirectUrl = searchParams.get("redirect");
   const [accountType, setAccountType] = useState<AccountType>(
     initialType && ["student", "trainer", "school"].includes(initialType)
       ? initialType
@@ -96,6 +97,7 @@ function SignupForm() {
           accountType,
           displayName: displayName.trim() || undefined,
           marketingConsent,
+          redirectUrl: redirectUrl || undefined,
         }),
       });
 
