@@ -556,7 +556,9 @@ async function generateVeoVideo(
         const videoUri = statusData.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
 
         if (videoUri) {
-          return { videoUrl: videoUri };
+          // Download video from Google and upload to our storage
+          const publicUrl = await downloadAndStoreVideo(videoUri, apiKey);
+          return { videoUrl: publicUrl };
         }
 
         // Log what we got to debug
@@ -580,10 +582,59 @@ async function generateVeoVideo(
     throw new Error("No video URL returned from Veo API");
   }
 
+  // Download video from Google and upload to our storage
+  const publicUrl = await downloadAndStoreVideo(videoUri, apiKey);
   return {
-    videoUrl: videoUri,
+    videoUrl: publicUrl,
     thumbnailUrl: undefined,
   };
+}
+
+// Download video from Google's temporary URL and store in Supabase
+async function downloadAndStoreVideo(googleVideoUri: string, apiKey: string): Promise<string> {
+  // Download the video using the API key for authentication
+  const videoResponse = await fetch(googleVideoUri, {
+    headers: {
+      "x-goog-api-key": apiKey,
+    },
+  });
+
+  if (!videoResponse.ok) {
+    throw new Error(`Failed to download video: ${videoResponse.status}`);
+  }
+
+  const videoBuffer = await videoResponse.arrayBuffer();
+  const contentType = videoResponse.headers.get("content-type") || "video/mp4";
+
+  // Determine file extension from content type
+  let extension = "mp4";
+  if (contentType.includes("webm")) {
+    extension = "webm";
+  } else if (contentType.includes("mov")) {
+    extension = "mov";
+  }
+
+  // Upload to Supabase storage
+  const adminClient = createAdminClient();
+  const fileName = `veo_${Date.now()}_${Math.random().toString(36).slice(2)}.${extension}`;
+
+  const { data: uploadData, error: uploadError } = await adminClient.storage
+    .from("generated-videos")
+    .upload(fileName, videoBuffer, {
+      contentType,
+      upsert: true,
+    });
+
+  if (uploadError) {
+    console.error("Error uploading generated video:", uploadError);
+    throw new Error("Failed to save generated video");
+  }
+
+  const { data: urlData } = adminClient.storage
+    .from("generated-videos")
+    .getPublicUrl(uploadData.path);
+
+  return urlData.publicUrl;
 }
 
 // Map resolution string to Sora format
