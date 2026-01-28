@@ -46,13 +46,14 @@ export default async function ChatConversationPage({
     notFound();
   }
 
-  // Fetch all data in parallel
+  // Fetch all data in parallel - only personal conversations (class_id IS NULL)
   const [credits, conversationsResult, messagesResult, pricingData, profileResult] = await Promise.all([
     getUserCredits(user.id),
     supabase
       .from("conversations")
       .select("*")
       .eq("user_id", user.id)
+      .is("class_id", null) // Only personal conversations
       .order("updated_at", { ascending: false })
       .limit(50),
     supabase

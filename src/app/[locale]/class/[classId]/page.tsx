@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -236,12 +237,12 @@ export default function ClassInfoPage() {
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-3">
               {classInfo.is_accessible ? (
-                <Link href="/chat" className="flex-1">
+                <NextLink href={`/class/${classId}/chat`} className="flex-1">
                   <Button className="w-full">
                     {t("goToChat")}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
-                </Link>
+                </NextLink>
               ) : (
                 <Button className="flex-1" disabled>
                   <XCircle className="w-4 h-4 mr-2" />

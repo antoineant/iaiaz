@@ -216,7 +216,7 @@ export function Sidebar({
       {/* Conversations list */}
       <div className="flex-1 overflow-y-auto px-2">
         <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
-          {t("recentConversations")}
+          {t("personalConversations")}
         </div>
         {conversations.length === 0 ? (
           <p className="text-sm text-[var(--muted-foreground)] px-2 py-4 text-center">
@@ -306,14 +306,17 @@ export function Sidebar({
             </NextLink>
           )
         ) : (
-          // Student view: show enrolled classes
+          // Student view: show enrolled classes with link to class chat
           classes && classes.length > 0 ? (
             <>
               <ul className="space-y-1">
                 {classes.slice(0, 3).map((cls) => (
                   <li key={cls.class_id}>
-                    <Link
-                      href={{ pathname: "/class/[classId]", params: { classId: cls.class_id } }}
+                    <NextLink
+                      href={cls.is_accessible
+                        ? `/class/${cls.class_id}/chat`
+                        : `/class/${cls.class_id}`
+                      }
                       className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
@@ -323,7 +326,10 @@ export function Sidebar({
                       )} />
                       <GraduationCap className="w-4 h-4 flex-shrink-0 text-[var(--muted-foreground)]" />
                       <span className="flex-1 truncate">{cls.class_name}</span>
-                    </Link>
+                      <span className="text-xs text-[var(--muted-foreground)]">
+                        {formatCurrency(cls.credits_remaining)}
+                      </span>
+                    </NextLink>
                   </li>
                 ))}
               </ul>

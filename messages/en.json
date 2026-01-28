@@ -292,6 +292,7 @@
       "manageOrg": "Trainer Area",
       "newConversation": "New conversation",
       "recentConversations": "Recent conversations",
+      "personalConversations": "Personal Conversations",
       "noConversations": "No conversations",
       "myAccount": "My Account",
       "logout": "Log out",
@@ -308,6 +309,8 @@
       "imageStudio": "Image Studio",
       "videoStudio": "Video Studio"
     },
+    "usingPersonalCredits": "Using personal credits",
+    "usingOrgCredits": "Using org credits",
     "privacy": {
       "title": "Your conversation privacy",
       "intro": "Your conversations with AI are private and protected.",
@@ -2827,6 +2830,19 @@
     "joinedOn": "Joined on {date}",
     "goToChat": "Go to chat",
     "classClosed": "Class closed"
+  },
+  "classChat": {
+    "welcome": {
+      "title": "Class Chat",
+      "description": "Start a conversation using your class credits for"
+    },
+    "classCredits": "Class credits",
+    "newClassChat": "New class chat",
+    "classConversations": "Class conversations",
+    "usingClassCredits": "Using class credits",
+    "backToClass": "Back to class",
+    "personalChat": "Personal chat",
+    "insufficientClassCredits": "Insufficient class credits"
   },
   "business": {
     "hero": {

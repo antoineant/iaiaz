@@ -22,6 +22,9 @@ import {
   checkCanSpend,
   deductCredits,
   getEffectiveBalance,
+  checkCanSpendWithContext,
+  deductCreditsWithContext,
+  type CreditContext,
 } from "@/lib/credits";
 import { isModelAllowedForUser } from "@/lib/org";
 
@@ -33,6 +36,7 @@ interface ChatRequest {
   attachments?: string[]; // Array of file IDs for current message
   stream?: boolean;
   enableThinking?: boolean; // Enable Claude Extended Thinking (costs more tokens)
+  classId?: string; // Class context for class conversations (uses org credits only)
 }
 
 // Build multimodal content from text and attachments
@@ -90,7 +94,27 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: ChatRequest = await request.json();
-    const { message, model, conversationId, messages = [], attachments = [], stream = false, enableThinking = false } = body;
+    const { message, model, conversationId, messages = [], attachments = [], stream = false, enableThinking = false, classId } = body;
+
+    // If classId provided, validate class membership
+    let validatedClassId: string | null = null;
+    if (classId) {
+      const { data: membership } = await adminClient
+        .from("organization_members")
+        .select("id, status, class_id")
+        .eq("user_id", user.id)
+        .eq("class_id", classId)
+        .eq("status", "active")
+        .single();
+
+      if (!membership) {
+        return NextResponse.json(
+          { error: "Vous n'êtes pas membre de cette classe", code: "NOT_CLASS_MEMBER" },
+          { status: 403 }
+        );
+      }
+      validatedClassId = classId;
+    }
 
     // Require either message or attachments
     if (!message?.trim() && attachments.length === 0) {
@@ -191,8 +215,13 @@ export async function POST(request: NextRequest) {
       (estimatedInputTokens * modelInfo.input_price + 500 * modelInfo.output_price) / 1_000_000;
     const estimatedCost = estimatedBaseCost * pricingSettings.markupMultiplier;
 
-    // Check if user can spend estimated cost
-    const canSpendCheck = await checkCanSpend(user.id, estimatedCost);
+    // Determine credit context based on classId
+    const creditContext: CreditContext = validatedClassId
+      ? { type: "class", classId: validatedClassId }
+      : { type: "auto" };
+
+    // Check if user can spend estimated cost (context-aware)
+    const canSpendCheck = await checkCanSpendWithContext(user.id, estimatedCost, creditContext);
     if (!canSpendCheck.allowed) {
       const errorMessage = canSpendCheck.reason === "daily_limit_exceeded"
         ? "Limite journalière atteinte. Réessayez demain."
@@ -202,6 +231,10 @@ export async function POST(request: NextRequest) {
         ? "Limite mensuelle atteinte."
         : canSpendCheck.reason === "allocation_exceeded"
         ? "Allocation épuisée. Contactez votre établissement."
+        : canSpendCheck.reason === "insufficient_class_credits"
+        ? "Crédits de classe insuffisants."
+        : canSpendCheck.reason === "not_class_member"
+        ? "Vous n'êtes pas membre de cette classe."
         : canSpendCheck.source === "organization"
         ? "Crédits établissement insuffisants."
         : "Crédits insuffisants. Veuillez recharger votre compte.";
@@ -251,6 +284,7 @@ export async function POST(request: NextRequest) {
             user_id: user.id,
             title: message.slice(0, 100) || "Image/Document",
             model,
+            class_id: validatedClassId, // Set class context if provided
           })
           .select()
           .single();
@@ -355,11 +389,12 @@ export async function POST(request: NextRequest) {
               }
             }
 
-            // Deduct credits
-            const deductResult = await deductCredits(
+            // Deduct credits (context-aware)
+            const deductResult = await deductCreditsWithContext(
               user.id,
               actualCost,
-              `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`
+              `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`,
+              creditContext
             );
 
             // Get rate limit info
@@ -375,16 +410,18 @@ export async function POST(request: NextRequest) {
               co2Grams: co2Grams,
               thinking: aiResponse.thinking,
               conversationId: streamConversationId,
+              classId: validatedClassId, // Include class context in response
               rateLimit: {
                 remaining: rateLimitResult.remaining,
                 limit: limits.limit,
                 tier,
               },
               credits: {
-                source: deductResult.source || userCredits.source,
+                source: deductResult.source || (validatedClassId ? "organization" : userCredits.source),
                 remaining: deductResult.remaining ?? effectiveBalance - actualCost,
                 orgName: userCredits.orgName,
                 limits: userCredits.limits,
+                isClassContext: !!validatedClassId,
               },
             });
             controller.enqueue(encoder.encode(`data: ${finalData}\n\n`));
@@ -438,6 +475,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           title: message.slice(0, 100) || "Image/Document",
           model,
+          class_id: validatedClassId, // Set class context if provided
         })
         .select()
         .single();
@@ -510,11 +548,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Deduct credits from appropriate source (org or personal)
-    const deductResult = await deductCredits(
+    // Deduct credits from appropriate source (context-aware)
+    const deductResult = await deductCreditsWithContext(
       user.id,
       actualCost,
-      `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`
+      `${modelInfo.name}: ${aiResponse.tokensInput} tokens entrée, ${aiResponse.tokensOutput} tokens sortie`,
+      creditContext
     );
 
     if (!deductResult.success) {
@@ -533,16 +572,18 @@ export async function POST(request: NextRequest) {
         cost: actualCost,
         co2Grams: co2Grams,
         conversationId: finalConversationId,
+        classId: validatedClassId, // Include class context in response
         rateLimit: {
           remaining: rateLimitResult.remaining,
           limit: limits.limit,
           tier,
         },
         credits: {
-          source: deductResult.source || userCredits.source,
+          source: deductResult.source || (validatedClassId ? "organization" : userCredits.source),
           remaining: deductResult.remaining ?? effectiveBalance - actualCost,
           orgName: userCredits.orgName,
           limits: userCredits.limits,
+          isClassContext: !!validatedClassId,
         },
       },
       {

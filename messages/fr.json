@@ -306,6 +306,7 @@
       "manageOrg": "Espace formateur",
       "newConversation": "Nouvelle conversation",
       "recentConversations": "Conversations récentes",
+      "personalConversations": "Conversations personnelles",
       "noConversations": "Aucune conversation",
       "myAccount": "Mon compte",
       "logout": "Se déconnecter",
@@ -322,6 +323,8 @@
       "imageStudio": "Studio Image",
       "videoStudio": "Studio Vidéo"
     },
+    "usingPersonalCredits": "Crédits personnels",
+    "usingOrgCredits": "Crédits établissement",
     "privacy": {
       "title": "Confidentialité de vos conversations",
       "intro": "Vos conversations avec l'IA sont privées et protégées.",
@@ -2720,6 +2723,19 @@
     "joinedOn": "Rejoint le {date}",
     "goToChat": "Accéder au chat",
     "classClosed": "Classe fermée"
+  },
+  "classChat": {
+    "welcome": {
+      "title": "Chat de classe",
+      "description": "Démarrez une conversation avec vos crédits de classe pour"
+    },
+    "classCredits": "Crédits de classe",
+    "newClassChat": "Nouveau chat de classe",
+    "classConversations": "Conversations de classe",
+    "usingClassCredits": "Crédits de classe",
+    "backToClass": "Retour à la classe",
+    "personalChat": "Chat personnel",
+    "insufficientClassCredits": "Crédits de classe insuffisants"
   },
   "settings": {
     "title": "Paramètres",

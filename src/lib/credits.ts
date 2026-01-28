@@ -1,6 +1,13 @@
 // Dual credit system - Organization credits with personal fallback
 // Supports user preference for credit source selection
+// Also supports class context for strict org-only credit usage
 import { createAdminClient } from "@/lib/supabase/admin";
+
+// Credit context - determines which credits to use
+export type CreditContext =
+  | { type: "personal" }  // Personal credits only (no class)
+  | { type: "class"; classId: string }  // Class credits only (org pool, no fallback)
+  | { type: "auto" };  // Auto-detect (existing behavior)
 
 export type CreditPreference =
   | "auto"           // Org first, personal fallback (default)
@@ -532,4 +539,185 @@ function getWeekStart(): Date {
   const weekStart = new Date(now.setDate(diff));
   weekStart.setHours(0, 0, 0, 0);
   return weekStart;
+}
+
+/**
+ * Context-aware check if user can spend - enforces credit source based on context
+ * For class context: org credits only, no personal fallback
+ * For personal context: personal credits only
+ * For auto context: existing behavior (preference-based with fallback)
+ */
+export async function checkCanSpendWithContext(
+  userId: string,
+  amount: number,
+  context: CreditContext
+): Promise<SpendCheckResult> {
+  const adminClient = createAdminClient();
+
+  // For auto context, use existing behavior
+  if (context.type === "auto") {
+    return checkCanSpend(userId, amount);
+  }
+
+  // For personal context, only check personal credits
+  if (context.type === "personal") {
+    const { data: profile } = await adminClient
+      .from("profiles")
+      .select("credits_balance")
+      .eq("id", userId)
+      .single();
+
+    const personalBalance = profile?.credits_balance || 0;
+
+    if (personalBalance >= amount) {
+      return { allowed: true, source: "personal" };
+    }
+    return {
+      allowed: false,
+      reason: "insufficient_credits",
+      source: "personal",
+    };
+  }
+
+  // For class context, only check org credits (no fallback)
+  // Verify user is member of the class
+  const { data: membership } = await adminClient
+    .from("organization_members")
+    .select("id, organization_id")
+    .eq("user_id", userId)
+    .eq("class_id", context.classId)
+    .eq("status", "active")
+    .single();
+
+  if (!membership) {
+    return {
+      allowed: false,
+      reason: "not_class_member",
+      source: "organization",
+    };
+  }
+
+  // Check org limits using existing function
+  const { data: limitCheck } = await adminClient.rpc(
+    "check_org_member_limits",
+    {
+      p_user_id: userId,
+      p_amount: amount,
+    }
+  );
+
+  if (limitCheck?.allowed === true) {
+    return { allowed: true, source: "organization" };
+  }
+
+  // Org credits insufficient - NO fallback for class context
+  return {
+    allowed: false,
+    reason: limitCheck?.reason || "insufficient_class_credits",
+    resetAt: limitCheck?.resets_at,
+    source: "organization",
+  };
+}
+
+/**
+ * Context-aware credit deduction - enforces credit source based on context
+ * For class context: org credits only, fails if insufficient (no fallback)
+ * For personal context: personal credits only
+ * For auto context: existing behavior (preference-based with fallback)
+ */
+export async function deductCreditsWithContext(
+  userId: string,
+  amount: number,
+  description: string,
+  context: CreditContext
+): Promise<DeductResult> {
+  const adminClient = createAdminClient();
+
+  // For auto context, use existing behavior
+  if (context.type === "auto") {
+    return deductCredits(userId, amount, description);
+  }
+
+  // For personal context, only deduct from personal credits
+  if (context.type === "personal") {
+    const { data: deductResult, error } = await adminClient.rpc(
+      "deduct_credits",
+      {
+        p_user_id: userId,
+        p_amount: amount,
+        p_description: description,
+      }
+    );
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    if (deductResult === false) {
+      return { success: false, error: "Insufficient personal credits" };
+    }
+
+    const { data: updatedProfile } = await adminClient
+      .from("profiles")
+      .select("credits_balance")
+      .eq("id", userId)
+      .single();
+
+    return {
+      success: true,
+      remaining: updatedProfile?.credits_balance || 0,
+      source: "personal",
+    };
+  }
+
+  // For class context, only deduct from org credits (no fallback)
+  const { data: orgResult } = await adminClient.rpc("record_org_member_usage", {
+    p_user_id: userId,
+    p_amount: amount,
+  });
+
+  if (orgResult?.success) {
+    return {
+      success: true,
+      remaining: orgResult.remaining,
+      source: "organization",
+    };
+  }
+
+  // Org deduction failed - NO fallback for class context
+  return {
+    success: false,
+    error: orgResult?.reason || "Crédits de classe insuffisants",
+  };
+}
+
+/**
+ * Get credits for a specific context (for display purposes)
+ */
+export async function getCreditsForContext(
+  userId: string,
+  context: CreditContext
+): Promise<CreditSource> {
+  const credits = await getUserCredits(userId);
+
+  if (context.type === "auto") {
+    return credits;
+  }
+
+  if (context.type === "personal") {
+    return {
+      source: "personal",
+      balance: credits.personalBalance || 0,
+      personalBalance: credits.personalBalance,
+    };
+  }
+
+  // Class context - return org credits with class info
+  return {
+    ...credits,
+    source: "organization",
+    balance: credits.orgBalance || 0,
+    // Override preference to indicate strict org-only
+    preference: "org_only",
+  };
 }

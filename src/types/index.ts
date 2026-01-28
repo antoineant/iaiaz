@@ -12,6 +12,8 @@ export interface Conversation {
   model: string;
   created_at: string;
   updated_at: string;
+  class_id?: string | null;  // If set, this is a class conversation
+  organization_id?: string | null;  // If set, this is an org conversation (trainer)
 }
 
 export interface Message {

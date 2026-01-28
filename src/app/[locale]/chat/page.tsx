@@ -26,13 +26,14 @@ export default async function ChatPage() {
     redirect("/auth/accept-terms");
   }
 
-  // Fetch user credits (org or personal), conversations, and pricing data in parallel
+  // Fetch user credits (org or personal), personal conversations (class_id IS NULL), and pricing data in parallel
   const [credits, conversationsResult, pricingData] = await Promise.all([
     getUserCredits(user.id),
     supabase
       .from("conversations")
       .select("*")
       .eq("user_id", user.id)
+      .is("class_id", null) // Only personal conversations
       .order("updated_at", { ascending: false })
       .limit(50),
     getPricingData(),

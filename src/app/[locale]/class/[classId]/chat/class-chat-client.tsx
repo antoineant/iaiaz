@@ -3,29 +3,35 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { Sidebar } from "@/components/chat/sidebar";
 import { ModelSelector } from "@/components/chat/model-selector";
 import { Message } from "@/components/chat/message";
 import { ChatInput, type RateLimitInfo } from "@/components/chat/chat-input";
 import type { Conversation, ChatMessage, FileAttachment } from "@/types";
 import type { PricingData } from "@/lib/pricing-db";
-import { Sparkles, Brain, AlertTriangle, MessageSquare, Building2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import {
-  ModelPickerOverlay,
-  shouldShowModelPicker,
-  getPreferredModel,
-} from "@/components/chat/model-picker-overlay";
+  Sparkles,
+  Brain,
+  AlertTriangle,
+  GraduationCap,
+  ArrowLeft,
+  Plus,
+  MessageSquare,
+  Trash2,
+  Building2,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
-interface OrgContext {
+interface ClassContext {
+  classId: string;
+  className: string;
+  orgId: string;
   orgName: string;
-  role: string;
-  limits?: {
-    daily?: { used: number; limit: number; remaining: number };
-    weekly?: { used: number; limit: number; remaining: number };
-    monthly?: { used: number; limit: number; remaining: number };
-  };
+  orgCredits: number;
 }
 
 interface UserInfo {
@@ -34,129 +40,68 @@ interface UserInfo {
   avatarUrl?: string | null;
 }
 
-interface StudentClass {
-  class_id: string;
-  class_name: string;
-  organization_name: string;
-  is_accessible: boolean;
-  credits_remaining: number;
-}
-
-interface ManagedClass {
-  id: string;
-  name: string;
-  status: string;
-  is_active: boolean;
-  student_count: number;
-}
-
-interface ChatClientProps {
+interface ClassChatClientProps {
   userId: string;
   initialBalance: number;
-  personalBalance?: number;
-  isTrainer?: boolean;
   initialConversations: Conversation[];
   conversationId?: string;
   initialMessages?: ChatMessage[];
   pricingData: PricingData;
-  orgContext?: OrgContext;
+  classContext: ClassContext;
   userInfo?: UserInfo;
+  limits?: {
+    daily?: { used: number; limit: number; remaining: number };
+    weekly?: { used: number; limit: number; remaining: number };
+    monthly?: { used: number; limit: number; remaining: number };
+  };
 }
 
-export function ChatClient({
+export function ClassChatClient({
   userId,
   initialBalance,
-  personalBalance,
-  isTrainer,
   initialConversations,
   conversationId,
   initialMessages = [],
   pricingData,
-  orgContext,
+  classContext,
   userInfo,
-}: ChatClientProps) {
+  limits,
+}: ClassChatClientProps) {
   const router = useRouter();
   const t = useTranslations("chat");
+  const tClass = useTranslations("classChat");
   const tErrors = useTranslations("chat.errors");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
-  // Get default model from settings, falling back to recommended or first available
-  const defaultModel = pricingData.defaultModel ||
-                       pricingData.models.find((m) => m.is_recommended)?.id ||
-                       pricingData.models[0]?.id ||
-                       "claude-sonnet-4-20250514";
+  // Get default model
+  const defaultModel =
+    pricingData.defaultModel ||
+    pricingData.models.find((m) => m.is_recommended)?.id ||
+    pricingData.models[0]?.id ||
+    "claude-sonnet-4-20250514";
 
   const [balance, setBalance] = useState(initialBalance);
   const [conversations, setConversations] = useState(initialConversations);
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [model, setModel] = useState(defaultModel);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentConversationId, setCurrentConversationId] = useState<
-    string | undefined
-  >(conversationId);
+  const [currentConversationId, setCurrentConversationId] = useState<string | undefined>(conversationId);
   const [rateLimit, setRateLimit] = useState<RateLimitInfo | null>(null);
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
-  const [classes, setClasses] = useState<StudentClass[]>([]);
-  const [managedClasses, setManagedClasses] = useState<ManagedClass[]>([]);
   const [enableThinking, setEnableThinking] = useState(false);
-  const [showModelPicker, setShowModelPicker] = useState(false);
-  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Initialize model picker state and preferred model
-  useEffect(() => {
-    // Check if we should show the model picker
-    if (!conversationId && messages.length === 0) {
-      setShowModelPicker(shouldShowModelPicker());
-    }
-    // Load preferred model if set
-    const preferred = getPreferredModel();
-    if (preferred && pricingData.models.find((m) => m.id === preferred && m.is_active)) {
-      setModel(preferred);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Check if user can manage org (owner/admin/teacher)
-  const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
-
-  // Check if current model supports extended thinking (Claude - opt-in)
-  const claudeSupportsThinking = model.includes("claude-3-7") ||
-                                 model.includes("claude-sonnet-4") ||
-                                 model.includes("claude-opus-4");
-
-  // Check if model is OpenAI reasoning model (o1/o3 - always on)
+  // Check if current model supports extended thinking
+  const claudeSupportsThinking =
+    model.includes("claude-3-7") ||
+    model.includes("claude-sonnet-4") ||
+    model.includes("claude-opus-4");
   const isOpenAIReasoning = model.startsWith("o1") || model.startsWith("o3");
-
-  // Combined: does model support thinking/reasoning?
   const supportsThinking = claudeSupportsThinking || isOpenAIReasoning;
 
-  // Fetch classes on mount - managed classes for trainers, student classes for students
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        if (canManageOrg) {
-          // Trainers see their managed classes
-          const response = await fetch("/api/org/classes");
-          if (response.ok) {
-            const data = await response.json();
-            setManagedClasses(data || []);
-          }
-        } else {
-          // Students see classes they're enrolled in
-          const response = await fetch("/api/student/classes");
-          if (response.ok) {
-            const data = await response.json();
-            setClasses(data.active_classes || []);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch classes:", error);
-      }
-    };
-    fetchClasses();
-  }, [canManageOrg]);
-
-  // Fetch rate limit status when model changes
+  // Fetch rate limit status
   const fetchRateLimitStatus = useCallback(async () => {
     try {
       const response = await fetch(`/api/rate-limit?model=${model}`);
@@ -168,7 +113,6 @@ export function ChatClient({
           tier: data.tier,
           resetAt: data.reset_at,
         });
-        // Clear error if limit is restored
         if (data.remaining > 0) {
           setRateLimitError(null);
         }
@@ -178,25 +122,9 @@ export function ChatClient({
     }
   }, [model]);
 
-  // Fetch rate limit on mount and when model changes
   useEffect(() => {
     fetchRateLimitStatus();
   }, [fetchRateLimitStatus]);
-
-  // Auto-refresh rate limit status when rate limited
-  useEffect(() => {
-    if (rateLimit?.remaining === 0 && rateLimit?.resetAt) {
-      const resetTime = new Date(rateLimit.resetAt).getTime();
-      const now = Date.now();
-      const delay = Math.max(0, resetTime - now + 1000); // Add 1 second buffer
-
-      const timeout = setTimeout(() => {
-        fetchRateLimitStatus();
-      }, delay);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [rateLimit, fetchRateLimitStatus]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -206,27 +134,24 @@ export function ChatClient({
   const handleNewConversation = () => {
     setMessages([]);
     setCurrentConversationId(undefined);
-    router.push("/chat");
+    router.push(`/class/${classContext.classId}/chat`);
   };
 
   const handleDeleteConversation = async (id: string) => {
+    setDeletingId(id);
     await supabase.from("conversations").delete().eq("id", id);
     setConversations((prev) => prev.filter((c) => c.id !== id));
     if (currentConversationId === id) {
       handleNewConversation();
     }
+    setDeletingId(null);
   };
 
-  const handleSendMessage = async (
-    content: string,
-    attachments?: FileAttachment[]
-  ) => {
+  const handleSendMessage = async (content: string, attachments?: FileAttachment[]) => {
     if (isLoading) return;
 
-    // Clear any previous rate limit error
     setRateLimitError(null);
 
-    // Add user message immediately (with attachments if any)
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -235,9 +160,7 @@ export function ChatClient({
     };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Add placeholder for assistant
     const assistantMessageId = crypto.randomUUID();
-    // Thinking enabled for Claude (opt-in) or OpenAI reasoning (always)
     const thinkingEnabled = isOpenAIReasoning || (claudeSupportsThinking && enableThinking);
     setMessages((prev) => [
       ...prev,
@@ -267,18 +190,16 @@ export function ChatClient({
           })),
           attachments: attachments?.map((a) => a.id) || [],
           stream: true,
-          // Enable thinking for Claude (opt-in) or OpenAI reasoning models (always)
           enableThinking: isOpenAIReasoning || (claudeSupportsThinking && enableThinking),
+          classId: classContext.classId, // Pass class context!
         }),
       });
 
-      // Handle rate limit error specially
       if (response.status === 429) {
         const data = await response.json();
-        // Remove the user message and placeholder
-        setMessages((prev) => prev.filter((m) => m.id !== userMessage.id && m.id !== assistantMessageId));
-
-        // Update rate limit state
+        setMessages((prev) =>
+          prev.filter((m) => m.id !== userMessage.id && m.id !== assistantMessageId)
+        );
         if (data.rateLimit) {
           setRateLimit({
             remaining: 0,
@@ -303,7 +224,7 @@ export function ChatClient({
       let streamedThinking = "";
       let lastUpdateTime = 0;
       let lastThinkingUpdateTime = 0;
-      const UPDATE_INTERVAL = 50; // Update UI every 50ms max
+      const UPDATE_INTERVAL = 50;
 
       if (reader) {
         let buffer = "";
@@ -314,7 +235,6 @@ export function ChatClient({
 
           buffer += decoder.decode(value, { stream: true });
 
-          // Process complete SSE events
           const lines = buffer.split("\n");
           buffer = lines.pop() || "";
 
@@ -325,7 +245,6 @@ export function ChatClient({
 
                 if (data.type === "thinking") {
                   streamedThinking += data.content;
-                  // Throttle thinking UI updates
                   const now = Date.now();
                   if (now - lastThinkingUpdateTime > UPDATE_INTERVAL) {
                     lastThinkingUpdateTime = now;
@@ -339,7 +258,6 @@ export function ChatClient({
                   }
                 } else if (data.type === "chunk") {
                   streamedContent += data.content;
-                  // Throttle UI updates to prevent lag
                   const now = Date.now();
                   if (now - lastUpdateTime > UPDATE_INTERVAL) {
                     lastUpdateTime = now;
@@ -352,7 +270,6 @@ export function ChatClient({
                     );
                   }
                 } else if (data.type === "done") {
-                  // Update with final metadata
                   setMessages((prev) =>
                     prev.map((m) =>
                       m.id === assistantMessageId
@@ -373,7 +290,6 @@ export function ChatClient({
                     )
                   );
 
-                  // Update rate limit from response
                   if (data.rateLimit) {
                     setRateLimit({
                       remaining: data.rateLimit.remaining,
@@ -382,10 +298,8 @@ export function ChatClient({
                     });
                   }
 
-                  // Update balance
                   setBalance((prev) => prev - data.cost);
 
-                  // Update conversation ID if new
                   if (data.conversationId && !currentConversationId) {
                     setCurrentConversationId(data.conversationId);
                     setConversations((prev) => [
@@ -396,6 +310,7 @@ export function ChatClient({
                         model,
                         created_at: new Date().toISOString(),
                         updated_at: new Date().toISOString(),
+                        class_id: classContext.classId,
                       },
                       ...prev,
                     ]);
@@ -412,16 +327,12 @@ export function ChatClient({
         }
       }
     } catch (error) {
-      // Remove streaming message and show error
       setMessages((prev) =>
         prev.map((m) =>
           m.id === assistantMessageId
             ? {
                 ...m,
-                content:
-                  error instanceof Error
-                    ? error.message
-                    : tErrors("genericError"),
+                content: error instanceof Error ? error.message : tErrors("genericError"),
                 isStreaming: false,
               }
             : m
@@ -434,42 +345,147 @@ export function ChatClient({
 
   return (
     <div className="flex h-screen">
-      <Sidebar
-        conversations={conversations}
-        currentConversationId={currentConversationId}
-        balance={balance}
-        personalBalance={personalBalance}
-        isTrainer={isTrainer}
-        onNewConversation={handleNewConversation}
-        onDeleteConversation={handleDeleteConversation}
-        orgContext={orgContext ? {
-          orgName: orgContext.orgName,
-          role: orgContext.role,
-          limits: orgContext.limits ? {
-            daily: orgContext.limits.daily ? { remaining: orgContext.limits.daily.remaining, limit: orgContext.limits.daily.limit } : undefined,
-            weekly: orgContext.limits.weekly ? { remaining: orgContext.limits.weekly.remaining, limit: orgContext.limits.weekly.limit } : undefined,
-            monthly: orgContext.limits.monthly ? { remaining: orgContext.limits.monthly.remaining, limit: orgContext.limits.monthly.limit } : undefined,
-          } : undefined,
-        } : undefined}
-        userInfo={userInfo}
-        classes={classes}
-        managedClasses={managedClasses}
-      />
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed lg:static inset-y-0 left-0 z-40 w-64 bg-[var(--background)] border-r border-[var(--border)] flex flex-col",
+          "transform transition-transform lg:transform-none",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-[var(--border)]">
+          <Link href="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+            iaiaz
+          </Link>
+        </div>
 
+        {/* Class context */}
+        <div className="p-4 border-b border-[var(--border)] bg-primary-50 dark:bg-primary-900/20">
+          <div className="flex items-center gap-2 mb-2">
+            <GraduationCap className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            <span className="font-semibold text-primary-700 dark:text-primary-300 truncate">
+              {classContext.className}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+            <Building2 className="w-4 h-4" />
+            <span className="truncate">{classContext.orgName}</span>
+          </div>
+          <div className="mt-3 text-sm">
+            <span className="text-[var(--muted-foreground)]">{tClass("classCredits")}:</span>
+            <span className="ml-2 font-semibold text-green-600 dark:text-green-400">
+              {formatCurrency(balance)}
+            </span>
+          </div>
+          {limits?.daily && (
+            <div className="mt-1 text-xs text-[var(--muted-foreground)]">
+              {t("sidebar.dailyLimit")}: {formatCurrency(limits.daily.remaining)} / {formatCurrency(limits.daily.limit)}
+            </div>
+          )}
+        </div>
+
+        {/* New conversation */}
+        <div className="p-4">
+          <Button className="w-full" onClick={handleNewConversation}>
+            <Plus className="w-4 h-4 mr-2" />
+            {tClass("newClassChat")}
+          </Button>
+        </div>
+
+        {/* Class conversations */}
+        <div className="flex-1 overflow-y-auto px-2">
+          <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
+            {tClass("classConversations")}
+          </div>
+          {conversations.length === 0 ? (
+            <p className="text-sm text-[var(--muted-foreground)] px-2 py-4 text-center">
+              {t("sidebar.noConversations")}
+            </p>
+          ) : (
+            <ul className="space-y-1">
+              {conversations.map((conv) => (
+                <li key={conv.id}>
+                  <NextLink
+                    href={`/class/${classContext.classId}/chat/${conv.id}`}
+                    className={cn(
+                      "flex items-center gap-2 px-2 py-2 rounded-lg text-sm transition-colors group",
+                      currentConversationId === conv.id
+                        ? "bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
+                        : "hover:bg-[var(--muted)]"
+                    )}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <MessageSquare className="w-4 h-4 flex-shrink-0" />
+                    <span className="flex-1 truncate">{conv.title || t("sidebar.newConversation")}</span>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDeleteConversation(conv.id);
+                      }}
+                      className={cn(
+                        "p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all",
+                        deletingId === conv.id && "opacity-100"
+                      )}
+                      disabled={deletingId === conv.id}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </NextLink>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-[var(--border)]">
+          <NextLink
+            href={`/class/${classContext.classId}`}
+            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {tClass("backToClass")}
+          </NextLink>
+          <Link
+            href="/chat"
+            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:bg-[var(--muted)] transition-colors"
+          >
+            <MessageSquare className="w-4 h-4" />
+            {tClass("personalChat")}
+          </Link>
+        </div>
+      </aside>
+
+      {/* Mobile sidebar toggle */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] shadow-sm"
+      >
+        <MessageSquare className="w-5 h-5" />
+      </button>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main chat area */}
       <main className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background)]">
-          <div className="lg:hidden w-10" /> {/* Spacer for mobile menu */}
+          <div className="lg:hidden w-10" />
           <div className="flex items-center gap-3">
             <ModelSelector
               value={model}
               onChange={setModel}
               models={pricingData.models}
               markupMultiplier={pricingData.settings.markupMultiplier}
-              externalOpen={modelSelectorOpen}
-              onOpenChange={setModelSelectorOpen}
             />
-            {/* Extended Thinking Toggle (Claude) */}
             {claudeSupportsThinking && (
               <button
                 onClick={() => setEnableThinking(!enableThinking)}
@@ -484,7 +500,6 @@ export function ChatClient({
                 <span className="hidden sm:inline">{t("thinking.label")}</span>
               </button>
             )}
-            {/* Reasoning indicator (OpenAI o1/o3 - always on) */}
             {isOpenAIReasoning && (
               <div
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700"
@@ -496,7 +511,6 @@ export function ChatClient({
             )}
           </div>
           <div className="flex items-center gap-3">
-            {/* Cost warning when thinking enabled (Claude) */}
             {enableThinking && claudeSupportsThinking && (
               <div className="hidden md:flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="w-3.5 h-3.5" />
@@ -504,68 +518,47 @@ export function ChatClient({
               </div>
             )}
             {/* Credit source indicator */}
-            {orgContext ? (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--muted)] text-sm">
-                <Building2 className="w-4 h-4 text-[var(--muted-foreground)]" />
-                <span className="text-[var(--muted-foreground)] hidden sm:inline">{t("usingOrgCredits")}:</span>
-                <span className="font-semibold">{formatCurrency(balance)}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--muted)] text-sm">
-                <MessageSquare className="w-4 h-4 text-[var(--muted-foreground)]" />
-                <span className="text-[var(--muted-foreground)] hidden sm:inline">{t("usingPersonalCredits")}:</span>
-                <span className="font-semibold">{formatCurrency(balance)}</span>
-              </div>
-            )}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-sm">
+              <GraduationCap className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+              <span className="text-[var(--muted-foreground)]">{tClass("usingClassCredits")}:</span>
+              <span className="font-semibold text-primary-600 dark:text-primary-400">
+                {formatCurrency(balance)}
+              </span>
+            </div>
           </div>
         </header>
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            showModelPicker ? (
-              <ModelPickerOverlay
-                pricingData={pricingData}
-                currentModel={model}
-                onSelectModel={(modelId) => {
-                  setModel(modelId);
-                  setShowModelPicker(false);
-                }}
-                onClose={() => setShowModelPicker(false)}
-                onBrowseModels={() => {
-                  setShowModelPicker(false);
-                  setModelSelectorOpen(true);
-                }}
-              />
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
-                  <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
-                </div>
-                <h1 className="text-2xl font-bold mb-2">
-                  {t("welcome.title")}
-                </h1>
-                <p className="text-[var(--muted-foreground)] max-w-md mb-6">
-                  {t("welcome.description")}
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-                  {[
-                    { key: "python", text: t("suggestions.python") },
-                    { key: "email", text: t("suggestions.email") },
-                    { key: "summary", text: t("suggestions.summary") },
-                    { key: "ideas", text: t("suggestions.ideas") },
-                  ].map((suggestion) => (
-                    <button
-                      key={suggestion.key}
-                      onClick={() => handleSendMessage(suggestion.text)}
-                      className="px-3 py-2 rounded-lg border border-[var(--border)] text-sm hover:bg-[var(--muted)] transition-colors"
-                    >
-                      {suggestion.text}
-                    </button>
-                  ))}
-                </div>
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
-            )
+              <h1 className="text-2xl font-bold mb-2">{tClass("welcome.title")}</h1>
+              <p className="text-[var(--muted-foreground)] max-w-md mb-2">
+                {tClass("welcome.description")}
+              </p>
+              <p className="text-sm text-primary-600 dark:text-primary-400 mb-6">
+                {classContext.className}
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                {[
+                  { key: "python", text: t("suggestions.python") },
+                  { key: "email", text: t("suggestions.email") },
+                  { key: "summary", text: t("suggestions.summary") },
+                  { key: "ideas", text: t("suggestions.ideas") },
+                ].map((suggestion) => (
+                  <button
+                    key={suggestion.key}
+                    onClick={() => handleSendMessage(suggestion.text)}
+                    className="px-3 py-2 rounded-lg border border-[var(--border)] text-sm hover:bg-[var(--muted)] transition-colors"
+                  >
+                    {suggestion.text}
+                  </button>
+                ))}
+              </div>
+            </div>
           ) : (
             <div className="max-w-3xl mx-auto">
               {messages.map((message) => (
@@ -582,7 +575,7 @@ export function ChatClient({
           model={model}
           balance={balance}
           isLoading={isLoading}
-          disabled={balance <= 0 || showModelPicker}
+          disabled={balance <= 0}
           rateLimit={rateLimit}
           rateLimitError={rateLimitError}
           conversationId={currentConversationId}
