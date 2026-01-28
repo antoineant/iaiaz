@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 
 interface GoogleButtonProps {
@@ -12,13 +12,14 @@ interface GoogleButtonProps {
 export function GoogleButton({ mode, accountType }: GoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("auth.google");
+  const locale = useLocale();
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     const supabase = createClient();
 
-    // Build redirect URL with account type for signup
-    let redirectTo = `${window.location.origin}/auth/callback`;
+    // Build redirect URL with locale and account type for signup
+    let redirectTo = `${window.location.origin}/${locale}/auth/callback`;
     if (mode === "signup" && accountType) {
       redirectTo += `?account_type=${accountType}`;
     }
