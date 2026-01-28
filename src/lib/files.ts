@@ -7,9 +7,23 @@ export const ALLOWED_IMAGE_TYPES = [
   "image/gif",
   "image/webp",
 ];
-export const ALLOWED_DOCUMENT_TYPES = ["application/pdf"];
+export const ALLOWED_DOCUMENT_TYPES = [
+  "application/pdf",
+  "application/msword", // .doc
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+];
 export const ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_DOCUMENT_TYPES];
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+// Word document MIME types
+export const WORD_MIME_TYPES = [
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
+export function isWordMimeType(mimeType: string): boolean {
+  return WORD_MIME_TYPES.includes(mimeType);
+}
 
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return "0 o";
@@ -32,6 +46,8 @@ export function getExtension(mimeType: string): string {
     "image/gif": "gif",
     "image/webp": "webp",
     "application/pdf": "pdf",
+    "application/msword": "doc",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
   };
   return extensions[mimeType] || "bin";
 }
@@ -84,7 +100,7 @@ export function validateFile(file: File): { valid: boolean; error?: string } {
   if (!fileType) {
     return {
       valid: false,
-      error: "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF",
+      error: "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF, DOC, DOCX",
     };
   }
 
@@ -96,4 +112,11 @@ export function validateFile(file: File): { valid: boolean; error?: string } {
   }
 
   return { valid: true };
+}
+
+// Extract text from Word document
+export async function extractWordText(buffer: Buffer): Promise<string> {
+  const mammoth = await import("mammoth");
+  const result = await mammoth.extractRawText({ buffer });
+  return result.value;
 }

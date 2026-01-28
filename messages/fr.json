@@ -345,10 +345,10 @@
       "placeholder": "Écrivez votre message ou déposez un fichier...",
       "placeholderRateLimit": "Limite atteinte, veuillez patienter...",
       "dropFiles": "Déposez vos fichiers ici",
-      "attachFile": "Joindre un fichier (PNG, JPG, GIF, WebP, PDF)",
+      "attachFile": "Joindre un fichier (PNG, JPG, GIF, WebP, PDF, DOC, DOCX)",
       "attachImage": "Joindre une image (PNG, JPG, GIF, WebP)",
       "noFileSupport": "Ce modèle ne supporte pas les fichiers joints.",
-      "imagesPdfSupported": "Images et PDF supportés (max 10 Mo). Collez ou glissez-déposez.",
+      "imagesPdfSupported": "Images, PDF et documents Word supportés (max 10 Mo). Collez ou glissez-déposez.",
       "imagesOnlySupported": "Images supportées (max 10 Mo). PDF non supporté par ce modèle."
     },
     "errors": {

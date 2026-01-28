@@ -15,7 +15,7 @@ import {
   getModelTier,
   getTierLimits,
 } from "@/lib/rate-limiter";
-import { getFileBase64, isImageMimeType, isPdfMimeType } from "@/lib/files";
+import { getFileBase64, isImageMimeType, isPdfMimeType, isWordMimeType, extractWordText } from "@/lib/files";
 import type { ContentPart, FileUploadRecord } from "@/types";
 import {
   getUserCredits,
@@ -45,6 +45,7 @@ async function buildMultimodalContent(
   attachments: FileUploadRecord[]
 ): Promise<ContentPart[]> {
   const parts: ContentPart[] = [];
+  const wordDocTexts: string[] = [];
 
   // Add file attachments first (images before text is recommended for some models)
   for (const file of attachments) {
@@ -64,13 +65,25 @@ async function buildMultimodalContent(
           base64,
           filename: file.original_filename,
         });
+      } else if (isWordMimeType(file.mime_type)) {
+        // Word documents: extract text and include as text content
+        const buffer = Buffer.from(base64, "base64");
+        const extractedText = await extractWordText(buffer);
+        if (extractedText.trim()) {
+          wordDocTexts.push(`--- Document: ${file.original_filename} ---\n${extractedText}\n--- Fin du document ---`);
+        }
       }
     } catch (error) {
       console.error(`Failed to load file ${file.id}:`, error);
     }
   }
 
-  // Add text content
+  // Add Word document content as text (before user's message)
+  if (wordDocTexts.length > 0) {
+    parts.push({ type: "text", text: wordDocTexts.join("\n\n") });
+  }
+
+  // Add user's text content
   if (text.trim()) {
     parts.push({ type: "text", text });
   }

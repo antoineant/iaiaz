@@ -331,10 +331,10 @@
       "placeholder": "Write your message or drop a file...",
       "placeholderRateLimit": "Rate limit reached, please wait...",
       "dropFiles": "Drop your files here",
-      "attachFile": "Attach a file (PNG, JPG, GIF, WebP, PDF)",
+      "attachFile": "Attach a file (PNG, JPG, GIF, WebP, PDF, DOC, DOCX)",
       "attachImage": "Attach an image (PNG, JPG, GIF, WebP)",
       "noFileSupport": "This model doesn't support file attachments.",
-      "imagesPdfSupported": "Images and PDF supported (max 10 MB). Paste or drag and drop.",
+      "imagesPdfSupported": "Images, PDF and Word documents supported (max 10 MB). Paste or drag and drop.",
       "imagesOnlySupported": "Images supported (max 10 MB). PDF not supported by this model."
     },
     "errors": {
