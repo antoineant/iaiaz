@@ -16,6 +16,7 @@ import {
   ModelPickerOverlay,
   shouldShowModelPicker,
   getPreferredModel,
+  setPreferredModel,
 } from "@/components/chat/model-picker-overlay";
 
 interface OrgContext {
@@ -463,7 +464,10 @@ export function ChatClient({
           <div className="flex items-center gap-3">
             <ModelSelector
               value={model}
-              onChange={setModel}
+              onChange={(modelId) => {
+                setModel(modelId);
+                setPreferredModel(modelId);
+              }}
               models={pricingData.models}
               markupMultiplier={pricingData.settings.markupMultiplier}
               externalOpen={modelSelectorOpen}

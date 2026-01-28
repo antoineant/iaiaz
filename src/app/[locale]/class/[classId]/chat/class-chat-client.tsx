@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getPreferredModel, setPreferredModel } from "@/components/chat/model-picker-overlay";
 
 interface ClassContext {
   classId: string;
@@ -92,6 +93,14 @@ export function ClassChatClient({
   const [enableThinking, setEnableThinking] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Load preferred model on mount
+  useEffect(() => {
+    const preferred = getPreferredModel();
+    if (preferred && pricingData.models.find((m) => m.id === preferred && m.is_active)) {
+      setModel(preferred);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Check if current model supports extended thinking
   const claudeSupportsThinking =
@@ -482,7 +491,10 @@ export function ClassChatClient({
           <div className="flex items-center gap-3">
             <ModelSelector
               value={model}
-              onChange={setModel}
+              onChange={(modelId) => {
+                setModel(modelId);
+                setPreferredModel(modelId);
+              }}
               models={pricingData.models}
               markupMultiplier={pricingData.settings.markupMultiplier}
             />

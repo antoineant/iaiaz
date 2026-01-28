@@ -238,3 +238,9 @@ export function getPreferredModel(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(PREFERRED_MODEL_KEY);
 }
+
+// Helper to save preferred model (called when user changes model via dropdown)
+export function setPreferredModel(modelId: string): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(PREFERRED_MODEL_KEY, modelId);
+}
