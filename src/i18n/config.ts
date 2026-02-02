@@ -81,6 +81,8 @@ export const pathnames = {
   '/dashboard/settings': '/dashboard/settings',
   '/dashboard/classes': '/dashboard/classes',
   '/class/[classId]': '/class/[classId]',
+  '/class/[classId]/chat': '/class/[classId]/chat',
+  '/class/[classId]/chat/[id]': '/class/[classId]/chat/[id]',
   '/join': '/join',
   '/org': '/org',
   '/org/setup': '/org/setup',
