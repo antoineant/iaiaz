@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import NextLink from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -90,6 +90,7 @@ export function Sidebar({
 }: SidebarProps) {
   const router = useRouter();
   const t = useTranslations("chat.sidebar");
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
@@ -157,7 +158,7 @@ export function Sidebar({
               </div>
             )}
             {canManageOrg && (
-              <NextLink href="/org">
+              <NextLink href={`/${locale}/org`}>
                 <Button variant="outline" size="sm" className="w-full mt-3">
                   <Settings className="w-4 h-4 mr-2" />
                   {t("manageOrg")}
@@ -199,13 +200,13 @@ export function Sidebar({
           <Plus className="w-4 h-4 mr-2" />
           {t("newConversation")}
         </Button>
-        <NextLink href="/create/images" onClick={() => setIsOpen(false)} className="block mt-4">
+        <NextLink href={`/${locale}/create/images`} onClick={() => setIsOpen(false)} className="block mt-4">
           <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
             <ImageIcon className="w-4 h-4 mr-2" />
             {t("imageStudio")}
           </Button>
         </NextLink>
-        <NextLink href="/create/videos" onClick={() => setIsOpen(false)} className="block mt-2">
+        <NextLink href={`/${locale}/create/videos`} onClick={() => setIsOpen(false)} className="block mt-2">
           <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
             <Video className="w-4 h-4 mr-2" />
             {t("videoStudio")}
@@ -270,7 +271,7 @@ export function Sidebar({
                 {managedClasses.slice(0, 3).map((cls) => (
                   <li key={cls.id}>
                     <NextLink
-                      href={`/org/classes/${cls.id}`}
+                      href={`/${locale}/org/classes/${cls.id}`}
                       className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
@@ -286,7 +287,7 @@ export function Sidebar({
                 ))}
               </ul>
               <NextLink
-                href="/org/classes"
+                href={`/${locale}/org/classes`}
                 className="flex items-center justify-center gap-1 px-2 py-2 text-xs text-primary-600 dark:text-primary-400 hover:underline"
                 onClick={() => setIsOpen(false)}
               >
@@ -296,7 +297,7 @@ export function Sidebar({
             </>
           ) : (
             <NextLink
-              href="/org/classes"
+              href={`/${locale}/org/classes`}
               className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:bg-[var(--muted)] transition-colors"
               onClick={() => setIsOpen(false)}
             >
@@ -314,8 +315,8 @@ export function Sidebar({
                   <li key={cls.class_id}>
                     <NextLink
                       href={cls.is_accessible
-                        ? `/class/${cls.class_id}/chat`
-                        : `/class/${cls.class_id}`
+                        ? `/${locale}/class/${cls.class_id}/chat`
+                        : `/${locale}/class/${cls.class_id}`
                       }
                       className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
                       onClick={() => setIsOpen(false)}
