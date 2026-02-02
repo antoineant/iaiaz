@@ -22,6 +22,9 @@ import {
   MessageSquare,
   Trash2,
   Building2,
+  LogOut,
+  User,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -41,6 +44,14 @@ interface UserInfo {
   avatarUrl?: string | null;
 }
 
+interface StudentClass {
+  class_id: string;
+  class_name: string;
+  organization_name: string;
+  is_accessible: boolean;
+  credits_remaining: number;
+}
+
 interface ClassChatClientProps {
   userId: string;
   initialBalance: number;
@@ -55,6 +66,7 @@ interface ClassChatClientProps {
     weekly?: { used: number; limit: number; remaining: number };
     monthly?: { used: number; limit: number; remaining: number };
   };
+  studentClasses?: StudentClass[];
 }
 
 export function ClassChatClient({
@@ -67,6 +79,7 @@ export function ClassChatClient({
   classContext,
   userInfo,
   limits,
+  studentClasses = [],
 }: ClassChatClientProps) {
   const router = useRouter();
   const t = useTranslations("chat");
@@ -155,6 +168,12 @@ export function ClassChatClient({
       handleNewConversation();
     }
     setDeletingId(null);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
   };
 
   const handleSendMessage = async (content: string, attachments?: FileAttachment[]) => {
@@ -449,22 +468,74 @@ export function ClassChatClient({
           )}
         </div>
 
+        {/* Other Classes section */}
+        {studentClasses.length > 0 && (
+          <div className="px-2 py-2 border-t border-[var(--border)]">
+            <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
+              {t("sidebar.classes")}
+            </div>
+            <ul className="space-y-1">
+              {studentClasses.slice(0, 3).map((cls) => (
+                <li key={cls.class_id}>
+                  <NextLink
+                    href={cls.is_accessible
+                      ? `/${locale}/class/${cls.class_id}/chat`
+                      : `/${locale}/class/${cls.class_id}`
+                    }
+                    className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <span className={cn(
+                      "w-2 h-2 rounded-full flex-shrink-0",
+                      cls.is_accessible ? "bg-green-500" : "bg-gray-400"
+                    )} />
+                    <GraduationCap className="w-4 h-4 flex-shrink-0 text-[var(--muted-foreground)]" />
+                    <span className="flex-1 truncate">{cls.class_name}</span>
+                    <span className="text-xs text-[var(--muted-foreground)]">
+                      {formatCurrency(cls.credits_remaining)}
+                    </span>
+                  </NextLink>
+                </li>
+              ))}
+            </ul>
+            {studentClasses.length > 3 && (
+              <Link
+                href="/dashboard/classes"
+                className="flex items-center justify-center gap-1 px-2 py-2 text-xs text-primary-600 dark:text-primary-400 hover:underline"
+                onClick={() => setSidebarOpen(false)}
+              >
+                {t("sidebar.viewAllClasses")}
+                <ChevronRight className="w-3 h-3" />
+              </Link>
+            )}
+          </div>
+        )}
+
         {/* Footer */}
-        <div className="p-4 border-t border-[var(--border)]">
-          <NextLink
-            href={`/${locale}/class/${classContext.classId}`}
-            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {tClass("backToClass")}
-          </NextLink>
+        <div className="p-4 border-t border-[var(--border)] space-y-1">
           <Link
             href="/chat"
-            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:bg-[var(--muted)] transition-colors"
+            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+            onClick={() => setSidebarOpen(false)}
           >
             <MessageSquare className="w-4 h-4" />
             {tClass("personalChat")}
           </Link>
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <User className="w-4 h-4" />
+            {t("sidebar.myAccount")}
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors text-left"
+          >
+            <LogOut className="w-4 h-4" />
+            {t("sidebar.logout")}
+          </button>
         </div>
       </aside>
 

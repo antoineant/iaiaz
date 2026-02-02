@@ -90,7 +90,7 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
   }
 
   // Fetch data in parallel
-  const [credits, classConversationsResult, pricingData] = await Promise.all([
+  const [credits, classConversationsResult, pricingData, studentClassesResult] = await Promise.all([
     getUserCredits(user.id),
     adminClient
       .from("conversations")
@@ -100,7 +100,53 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
       .order("updated_at", { ascending: false })
       .limit(50),
     getPricingData(),
+    // Fetch student's other active classes for sidebar navigation
+    adminClient
+      .from("organization_members")
+      .select(`
+        class_id,
+        credit_allocated,
+        credit_used,
+        organization_classes!inner (
+          id,
+          name,
+          status,
+          starts_at,
+          ends_at
+        ),
+        organizations!inner (
+          name
+        )
+      `)
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .not("class_id", "is", null),
   ]);
+
+  // Transform student classes for sidebar
+  const studentClasses = (studentClassesResult.data || [])
+    .map((m) => {
+      const cls = m.organization_classes as unknown as {
+        id: string;
+        name: string;
+        status: string;
+        starts_at: string | null;
+        ends_at: string | null;
+      };
+      const org = m.organizations as unknown as { name: string };
+      const now = new Date();
+      const isAccessible = cls.status === 'active' &&
+        (!cls.starts_at || new Date(cls.starts_at) <= now) &&
+        (!cls.ends_at || new Date(cls.ends_at) >= now);
+      return {
+        class_id: m.class_id!,
+        class_name: cls.name,
+        organization_name: org.name,
+        is_accessible: isAccessible,
+        credits_remaining: (m.credit_allocated || 0) - (m.credit_used || 0),
+      };
+    })
+    .filter((c) => c.class_id !== classId); // Exclude current class
 
   // Build class context
   const classContext = {
@@ -127,6 +173,7 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
       classContext={classContext}
       userInfo={userInfo}
       limits={credits.limits}
+      studentClasses={studentClasses}
     />
   );
 }
