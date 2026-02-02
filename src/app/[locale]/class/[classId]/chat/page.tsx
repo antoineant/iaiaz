@@ -45,7 +45,6 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
         id,
         name,
         status,
-        is_active,
         starts_at,
         ends_at
       ),
@@ -69,7 +68,6 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
     id: string;
     name: string;
     status: string;
-    is_active: boolean;
     starts_at: string | null;
     ends_at: string | null;
   };
@@ -80,9 +78,9 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
     credit_balance: number;
   };
 
-  // Check if class is accessible
+  // Check if class is accessible (status is active and within time bounds)
   const now = new Date();
-  const isAccessible = classInfo.is_active &&
+  const isAccessible = classInfo.status === 'active' &&
     (!classInfo.starts_at || new Date(classInfo.starts_at) <= now) &&
     (!classInfo.ends_at || new Date(classInfo.ends_at) >= now);
 

@@ -48,7 +48,6 @@ export default async function ClassChatConversationPage({
         id,
         name,
         status,
-        is_active,
         starts_at,
         ends_at
       ),
@@ -85,7 +84,6 @@ export default async function ClassChatConversationPage({
     id: string;
     name: string;
     status: string;
-    is_active: boolean;
     starts_at: string | null;
     ends_at: string | null;
   };
