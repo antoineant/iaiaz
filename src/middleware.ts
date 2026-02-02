@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
-import { locales, defaultLocale, localePrefix, pathnames } from "@/i18n/config";
+import { locales, defaultLocale, localePrefix } from "@/i18n/config";
 
 interface CookieToSet {
   name: string;
@@ -10,11 +10,12 @@ interface CookieToSet {
 }
 
 // Create the next-intl middleware
+// Note: We don't pass pathnames here to allow all dynamic routes to work.
+// The pathnames config in navigation.ts is only used for Link component translations.
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale,
   localePrefix,
-  pathnames,
 });
 
 // Helper to extract locale from pathname
@@ -92,7 +93,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes (locale-agnostic matching)
-  const protectedPaths = ["/chat", "/dashboard", "/org"];
+  const protectedPaths = ["/chat", "/dashboard", "/org", "/class"];
   const isProtectedPath = protectedPaths.some((path) =>
     pathnameWithoutLocale.startsWith(path)
   );
