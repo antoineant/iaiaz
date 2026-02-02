@@ -20,7 +20,7 @@ export default async function AnalyticsPage({ params }: Props) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   return <AnalyticsDashboard locale={locale} />;

@@ -33,7 +33,7 @@ export default async function DashboardPage({ params }: Props) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check if user has accepted terms
@@ -44,7 +44,7 @@ export default async function DashboardPage({ params }: Props) {
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Fetch profile

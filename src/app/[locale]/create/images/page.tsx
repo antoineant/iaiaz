@@ -4,7 +4,12 @@ import { redirect } from "next/navigation";
 import { ImageStudioClient } from "./image-studio-client";
 import { getUserCredits, getEffectiveBalance } from "@/lib/credits";
 
-export default async function ImageStudioPage() {
+interface ImageStudioPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function ImageStudioPage({ params }: ImageStudioPageProps) {
+  const { locale } = await params;
   const supabase = await createClient();
   const adminClient = createAdminClient();
 
@@ -13,7 +18,7 @@ export default async function ImageStudioPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check if user has accepted terms
@@ -24,7 +29,7 @@ export default async function ImageStudioPage() {
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Fetch data in parallel

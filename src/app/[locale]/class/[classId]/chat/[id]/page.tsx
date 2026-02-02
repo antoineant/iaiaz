@@ -7,13 +7,13 @@ import { getUserCredits } from "@/lib/credits";
 import type { ChatMessage } from "@/types";
 
 interface ClassChatConversationPageProps {
-  params: Promise<{ classId: string; id: string }>;
+  params: Promise<{ locale: string; classId: string; id: string }>;
 }
 
 export default async function ClassChatConversationPage({
   params,
 }: ClassChatConversationPageProps) {
-  const { classId, id: conversationId } = await params;
+  const { locale, classId, id: conversationId } = await params;
   const supabase = await createClient();
   const adminClient = createAdminClient();
 
@@ -22,7 +22,7 @@ export default async function ClassChatConversationPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check terms acceptance
@@ -33,7 +33,7 @@ export default async function ClassChatConversationPage({
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Verify user is a member of this class and get class info

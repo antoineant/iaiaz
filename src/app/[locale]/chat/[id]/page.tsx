@@ -6,13 +6,13 @@ import { getUserCredits } from "@/lib/credits";
 import type { ChatMessage } from "@/types";
 
 interface ChatConversationPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ locale: string; id: string }>;
 }
 
 export default async function ChatConversationPage({
   params,
 }: ChatConversationPageProps) {
-  const { id } = await params;
+  const { locale, id } = await params;
   const supabase = await createClient();
 
   const {
@@ -20,7 +20,7 @@ export default async function ChatConversationPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check if user has accepted terms
@@ -31,7 +31,7 @@ export default async function ChatConversationPage({
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Fetch the conversation and verify ownership

@@ -6,11 +6,11 @@ import { getPricingData } from "@/lib/pricing-db";
 import { getUserCredits } from "@/lib/credits";
 
 interface ClassChatPageProps {
-  params: Promise<{ classId: string }>;
+  params: Promise<{ locale: string; classId: string }>;
 }
 
 export default async function ClassChatPage({ params }: ClassChatPageProps) {
-  const { classId } = await params;
+  const { locale, classId } = await params;
   const supabase = await createClient();
   const adminClient = createAdminClient();
 
@@ -19,7 +19,7 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check if user has accepted terms
@@ -30,7 +30,7 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Verify user is a member of this class and get class info
@@ -88,7 +88,7 @@ export default async function ClassChatPage({ params }: ClassChatPageProps) {
 
   if (!isAccessible) {
     // Redirect to class info page if class is not accessible
-    redirect(`/class/${classId}`);
+    redirect(`/${locale}/class/${classId}`);
   }
 
   // Fetch data in parallel

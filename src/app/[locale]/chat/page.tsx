@@ -4,7 +4,12 @@ import { ChatClient } from "./chat-client";
 import { getPricingData } from "@/lib/pricing-db";
 import { getUserCredits } from "@/lib/credits";
 
-export default async function ChatPage() {
+interface ChatPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function ChatPage({ params }: ChatPageProps) {
+  const { locale } = await params;
   const supabase = await createClient();
 
   const {
@@ -12,7 +17,7 @@ export default async function ChatPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check if user has accepted terms
@@ -23,7 +28,7 @@ export default async function ChatPage() {
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Fetch user credits (org or personal), personal conversations (class_id IS NULL), and pricing data in parallel

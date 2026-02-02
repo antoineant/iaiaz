@@ -4,7 +4,12 @@ import { redirect } from "next/navigation";
 import { VideoStudioClient } from "./video-studio-client";
 import { getUserCredits, getEffectiveBalance } from "@/lib/credits";
 
-export default async function VideoStudioPage() {
+interface VideoStudioPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function VideoStudioPage({ params }: VideoStudioPageProps) {
+  const { locale } = await params;
   const supabase = await createClient();
   const adminClient = createAdminClient();
 
@@ -13,7 +18,7 @@ export default async function VideoStudioPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect(`/${locale}/auth/login`);
   }
 
   // Check if user has accepted terms
@@ -24,7 +29,7 @@ export default async function VideoStudioPage() {
     .single();
 
   if (!termsCheck?.terms_accepted_at) {
-    redirect("/auth/accept-terms");
+    redirect(`/${locale}/auth/accept-terms`);
   }
 
   // Fetch data in parallel
