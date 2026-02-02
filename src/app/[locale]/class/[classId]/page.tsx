@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import NextLink from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,6 +44,7 @@ export default function ClassInfoPage() {
   const t = useTranslations("classInfo");
   const params = useParams();
   const classId = params.classId as string;
+  const locale = useLocale();
 
   const [classInfo, setClassInfo] = useState<ClassInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -237,7 +238,7 @@ export default function ClassInfoPage() {
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-3">
               {classInfo.is_accessible ? (
-                <NextLink href={`/class/${classId}/chat`} className="flex-1">
+                <NextLink href={`/${locale}/class/${classId}/chat`} className="flex-1">
                   <Button className="w-full">
                     {t("goToChat")}
                     <ArrowRight className="w-4 h-4 ml-2" />

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,7 @@ interface ClassesData {
 export default function StudentClassesPage() {
   const t = useTranslations("dashboard.classes");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
 
   const [data, setData] = useState<ClassesData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -211,7 +213,7 @@ export default function StudentClassesPage() {
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {active_classes.map((cls) => (
-                <ClassCard key={cls.membership_id} classData={cls} t={t} />
+                <ClassCard key={cls.membership_id} classData={cls} t={t} locale={locale} />
               ))}
             </div>
           </div>
@@ -238,9 +240,11 @@ export default function StudentClassesPage() {
 function ClassCard({
   classData,
   t,
+  locale,
 }: {
   classData: StudentClass;
   t: ReturnType<typeof useTranslations>;
+  locale: string;
 }) {
   const creditsRemaining = classData.credits_remaining;
 
@@ -288,12 +292,12 @@ function ClassCard({
           )}
         </div>
 
-        <Link href="/chat">
+        <NextLink href={`/${locale}/class/${classData.class_id}/chat`}>
           <Button className="w-full">
             {t("card.goToChat")}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
-        </Link>
+        </NextLink>
       </CardContent>
     </Card>
   );
