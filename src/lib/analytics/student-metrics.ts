@@ -689,12 +689,13 @@ export async function computeClassStudentMetricsWithNLP(
   }
 
   // Analyze prompts (will use cache for already-analyzed ones)
+  // Pass classId to enable topic matching for "progression pédagogique"
   const promptsToAnalyze = messages.map((m) => ({
     id: m.id,
     content: m.content || "",
   }));
 
-  const nlpAnalysis = await analyzePrompts(promptsToAnalyze);
+  const nlpAnalysis = await analyzePrompts(promptsToAnalyze, classId);
 
   // Recalculate AI Literacy scores with NLP
   const studentsWithNLP: StudentAnalytics[] = basicMetrics.students.map(
