@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { formatFileSize } from "@/lib/files";
 import { CodePreview, isPreviewableLanguage } from "./code-preview";
+import { MessageErrorBoundary } from "./message-error-boundary";
 
 interface MessageProps {
   message: ChatMessage;
@@ -313,91 +314,117 @@ export function Message({ message }: MessageProps) {
               // User messages: simple whitespace-pre-wrap
               <div className="whitespace-pre-wrap">{message.content}</div>
             ) : (
-              // AI messages: full markdown rendering
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  // Custom code block rendering
-                  code({ node, className, children, ...props }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    const isInline = !match && !className;
+              // AI messages: full markdown rendering with error boundary
+              <MessageErrorBoundary fallbackContent={message.content}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    // Custom code block rendering
+                    code({ node, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      const isInline = !match && !className;
 
-                    if (isInline) {
+                      if (isInline) {
+                        return (
+                          <code
+                            className="bg-[var(--muted)] px-1.5 py-0.5 rounded text-sm font-mono"
+                            {...props}
+                          >
+                            {children}
+                          </code>
+                        );
+                      }
+
                       return (
-                        <code
-                          className="bg-[var(--muted)] px-1.5 py-0.5 rounded text-sm font-mono"
+                        <CodeBlock
+                          language={match?.[1]}
+                          copiedLabel={t("copied")}
+                          copyLabel={t("copy")}
+                          showPreviewLabel={t("showPreview")}
+                          showCodeLabel={t("showCode")}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </CodeBlock>
+                      );
+                    },
+                    // Custom pre block for ASCII art and diagrams
+                    pre({ children, ...props }) {
+                      // Check if this is a code block (has code child) or raw pre
+                      const childArray = Array.isArray(children) ? children : [children];
+                      const hasCodeChild = childArray.some(
+                        (child) => typeof child === "object" && child !== null && "type" in child && child.type === "code"
+                      );
+
+                      if (hasCodeChild) {
+                        // Let the code component handle it
+                        return <>{children}</>;
+                      }
+
+                      // Raw pre block (ASCII art, diagrams) - use monospace font
+                      return (
+                        <pre
+                          className="bg-[var(--muted)] p-4 rounded-lg overflow-x-auto text-sm font-mono whitespace-pre my-4"
+                          style={{ fontFamily: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" }}
                           {...props}
                         >
                           {children}
-                        </code>
+                        </pre>
                       );
-                    }
-
-                    return (
-                      <CodeBlock
-                        language={match?.[1]}
-                        copiedLabel={t("copied")}
-                        copyLabel={t("copy")}
-                        showPreviewLabel={t("showPreview")}
-                        showCodeLabel={t("showCode")}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </CodeBlock>
-                    );
-                  },
-                  // Custom link rendering
-                  a({ href, children }) {
-                    return (
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-600 dark:text-primary-400 hover:underline"
-                      >
-                        {children}
-                      </a>
-                    );
-                  },
-                  // Custom table rendering
-                  table({ children }) {
-                    return (
-                      <div className="overflow-x-auto my-4">
-                        <table className="min-w-full border-collapse border border-[var(--border)]">
+                    },
+                    // Custom link rendering
+                    a({ href, children }) {
+                      return (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-600 dark:text-primary-400 hover:underline"
+                        >
                           {children}
-                        </table>
-                      </div>
-                    );
-                  },
-                  th({ children }) {
-                    return (
-                      <th className="border border-[var(--border)] bg-[var(--muted)] px-3 py-2 text-left font-semibold">
-                        {children}
-                      </th>
-                    );
-                  },
-                  td({ children }) {
-                    return (
-                      <td className="border border-[var(--border)] px-3 py-2">
-                        {children}
-                      </td>
-                    );
-                  },
-                  // Custom blockquote
-                  blockquote({ children }) {
-                    return (
-                      <blockquote className="border-l-4 border-primary-300 dark:border-primary-600 pl-4 italic text-[var(--muted-foreground)] my-4">
-                        {children}
-                      </blockquote>
-                    );
-                  },
-                  // Custom horizontal rule
-                  hr() {
-                    return <hr className="my-6 border-[var(--border)]" />;
-                  },
-                }}
-              >
-                {message.content}
-              </ReactMarkdown>
+                        </a>
+                      );
+                    },
+                    // Custom table rendering
+                    table({ children }) {
+                      return (
+                        <div className="overflow-x-auto my-4">
+                          <table className="min-w-full border-collapse border border-[var(--border)]">
+                            {children}
+                          </table>
+                        </div>
+                      );
+                    },
+                    th({ children }) {
+                      return (
+                        <th className="border border-[var(--border)] bg-[var(--muted)] px-3 py-2 text-left font-semibold">
+                          {children}
+                        </th>
+                      );
+                    },
+                    td({ children }) {
+                      return (
+                        <td className="border border-[var(--border)] px-3 py-2">
+                          {children}
+                        </td>
+                      );
+                    },
+                    // Custom blockquote
+                    blockquote({ children }) {
+                      return (
+                        <blockquote className="border-l-4 border-primary-300 dark:border-primary-600 pl-4 italic text-[var(--muted-foreground)] my-4">
+                          {children}
+                        </blockquote>
+                      );
+                    },
+                    // Custom horizontal rule
+                    hr() {
+                      return <hr className="my-6 border-[var(--border)]" />;
+                    },
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
+              </MessageErrorBoundary>
             )
           ) : null}
         </div>

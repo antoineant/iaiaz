@@ -137,8 +137,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body className={`${inter.variable} antialiased`}>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           {children}
           <CookieConsentBanner />
