@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { Search, Plus, Minus, Shield, User, GraduationCap, Building2, Briefcase, Trash2, Loader2, X, Mail, MailCheck, MailX, RefreshCw } from "lucide-react";
 
 interface Profile {
@@ -540,7 +541,7 @@ export default function UsersPage() {
                   key={user.id}
                   className="p-4 flex items-center justify-between hover:bg-[var(--muted)]/50"
                 >
-                  <div className="flex-1">
+                  <Link href={`/admin/users/${user.id}`} className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-medium">{user.display_name || user.email}</span>
                       <span className={`px-2 py-0.5 text-xs ${config.bg} ${config.text} rounded-full flex items-center gap-1`}>
@@ -571,7 +572,7 @@ export default function UsersPage() {
                         <> • Dernière connexion: {new Date(user.last_sign_in_at).toLocaleDateString("fr-FR")}</>
                       )}
                     </p>
-                  </div>
+                  </Link>
 
                   <div className="flex items-center gap-4">
                     <div className="text-right">

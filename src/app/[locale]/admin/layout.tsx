@@ -134,7 +134,7 @@ export default function AdminLayout({
         <nav className="flex-1 p-4">
           <ul className="space-y-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
               return (
                 <li key={item.href}>
                   <Link
