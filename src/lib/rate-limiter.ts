@@ -23,7 +23,7 @@ export interface RateLimitStatus {
  */
 const FALLBACK_TIERS: Record<string, ModelTier> = {
   // Premium models (3 req/min)
-  "claude-opus-4-5-20250514": "premium",
+  "claude-opus-4-6": "premium",
   "gpt-5.2": "premium",
   "gpt-5-pro": "premium",
   "gemini-2.5-pro-preview-06-05": "premium",

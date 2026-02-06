@@ -30,8 +30,8 @@ export {
  */
 export const MODEL_PRICING = {
   // ===== ANTHROPIC CLAUDE =====
-  "claude-opus-4-5-20250514": {
-    name: "Claude Opus 4.5",
+  "claude-opus-4-6": {
+    name: "Claude Opus 4.6",
     provider: "Anthropic",
     input: 5.0,
     output: 25.0,
