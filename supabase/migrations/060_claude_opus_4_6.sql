@@ -4,7 +4,7 @@
 -- Insert the new Claude Opus 4.6 model
 INSERT INTO ai_models (
   id, name, provider, input_price, output_price, description, category,
-  is_recommended, is_active, capabilities, rate_limit_tier, sort_order
+  is_recommended, is_active, capabilities, rate_limit_tier, display_order
 )
 VALUES (
   'claude-opus-4-6',
