@@ -4,7 +4,7 @@
 -- Insert the new Claude Opus 4.6 model
 INSERT INTO ai_models (
   id, name, provider, input_price, output_price, description, category,
-  is_recommended, is_active, capabilities, rate_limit_tier, display_order
+  is_recommended, is_active, capabilities, rate_limit_tier, display_order, co2_per_1k_tokens
 )
 VALUES (
   'claude-opus-4-6',
@@ -18,7 +18,8 @@ VALUES (
   true,
   '{"images": true, "pdf": true}'::jsonb,
   'premium',
-  10
+  10,
+  0.50  -- Premium tier CO2 rate
 )
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
@@ -31,8 +32,3 @@ ON CONFLICT (id) DO UPDATE SET
 UPDATE ai_models
 SET is_active = false
 WHERE id = 'claude-opus-4-5-20250514';
-
--- Update carbon footprint tier mapping for the new model
-INSERT INTO model_carbon_tiers (model_id, tier)
-VALUES ('claude-opus-4-6', 'premium')
-ON CONFLICT (model_id) DO UPDATE SET tier = EXCLUDED.tier;
