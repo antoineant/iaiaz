@@ -19,6 +19,7 @@ import {
   setPreferredModel,
 } from "@/components/chat/model-picker-overlay";
 import { ContextLimitModal } from "@/components/chat/context-limit-modal";
+import { ContextUsageIndicator } from "@/components/chat/context-usage-indicator";
 
 interface OrgContext {
   orgName: string;
@@ -106,6 +107,7 @@ export function ChatClient({
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [showContextLimitModal, setShowContextLimitModal] = useState(false);
   const [contextLimitConversationId, setContextLimitConversationId] = useState<string | undefined>();
+  const [totalTokens, setTotalTokens] = useState(0);
 
   // Initialize model picker state and preferred model
   useEffect(() => {
@@ -119,6 +121,20 @@ export function ChatClient({
       setModel(preferred);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calculate initial tokens from existing messages
+  useEffect(() => {
+    if (initialMessages.length > 0) {
+      const total = initialMessages.reduce((acc, msg) => {
+        if (msg.tokens) {
+          return acc + msg.tokens.input + msg.tokens.output;
+        }
+        // Estimate tokens for messages without token data (~4 chars per token)
+        return acc + Math.ceil(msg.content.length / 4);
+      }, 0);
+      setTotalTokens(total);
+    }
+  }, [initialMessages]);
 
   // Check if user can manage org (owner/admin/teacher)
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
@@ -210,6 +226,7 @@ export function ChatClient({
   const handleNewConversation = () => {
     setMessages([]);
     setCurrentConversationId(undefined);
+    setTotalTokens(0);
     router.push("/chat");
   };
 
@@ -227,11 +244,18 @@ export function ChatClient({
     // Start a new conversation
     setMessages([]);
     setCurrentConversationId(undefined);
+    setTotalTokens(0);
     router.push("/chat");
     // Send the summary as the first message after a short delay to let the page update
     setTimeout(() => {
       handleSendMessage(summary);
     }, 100);
+  };
+
+  // Handler for proactive context limit suggestion
+  const handleSuggestNewConversation = () => {
+    setContextLimitConversationId(currentConversationId);
+    setShowContextLimitModal(true);
   };
 
   const handleDeleteConversation = async (id: string) => {
@@ -409,6 +433,9 @@ export function ChatClient({
 
                   // Update balance
                   setBalance((prev) => prev - data.cost);
+
+                  // Update total tokens for context tracking
+                  setTotalTokens((prev) => prev + data.tokensInput + data.tokensOutput);
 
                   // Update conversation ID if new
                   if (data.conversationId && !currentConversationId) {
@@ -612,6 +639,14 @@ export function ChatClient({
             </div>
           )}
         </div>
+
+        {/* Context Usage Warning */}
+        {messages.length > 0 && (
+          <ContextUsageIndicator
+            totalTokens={totalTokens}
+            onSuggestNewConversation={handleSuggestNewConversation}
+          />
+        )}
 
         {/* Input */}
         <ChatInput

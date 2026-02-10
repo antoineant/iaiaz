@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { getPreferredModel, setPreferredModel } from "@/components/chat/model-picker-overlay";
 import { ContextLimitModal } from "@/components/chat/context-limit-modal";
+import { ContextUsageIndicator } from "@/components/chat/context-usage-indicator";
 
 interface ClassContext {
   classId: string;
@@ -110,6 +111,7 @@ export function ClassChatClient({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showContextLimitModal, setShowContextLimitModal] = useState(false);
   const [contextLimitConversationId, setContextLimitConversationId] = useState<string | undefined>();
+  const [totalTokens, setTotalTokens] = useState(0);
 
   // Load preferred model on mount
   useEffect(() => {
@@ -118,6 +120,20 @@ export function ClassChatClient({
       setModel(preferred);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calculate initial tokens from existing messages
+  useEffect(() => {
+    if (initialMessages.length > 0) {
+      const total = initialMessages.reduce((acc, msg) => {
+        if (msg.tokens) {
+          return acc + msg.tokens.input + msg.tokens.output;
+        }
+        // Estimate tokens for messages without token data (~4 chars per token)
+        return acc + Math.ceil(msg.content.length / 4);
+      }, 0);
+      setTotalTokens(total);
+    }
+  }, [initialMessages]);
 
   // Check if current model supports extended thinking
   const claudeSupportsThinking =
@@ -160,6 +176,7 @@ export function ClassChatClient({
   const handleNewConversation = () => {
     setMessages([]);
     setCurrentConversationId(undefined);
+    setTotalTokens(0);
     router.push(`/${locale}/class/${classContext.classId}/chat`);
   };
 
@@ -177,11 +194,18 @@ export function ClassChatClient({
     // Start a new conversation
     setMessages([]);
     setCurrentConversationId(undefined);
+    setTotalTokens(0);
     router.push(`/${locale}/class/${classContext.classId}/chat`);
     // Send the summary as the first message after a short delay
     setTimeout(() => {
       handleSendMessage(summary);
     }, 100);
+  };
+
+  // Handler for proactive context limit suggestion
+  const handleSuggestNewConversation = () => {
+    setContextLimitConversationId(currentConversationId);
+    setShowContextLimitModal(true);
   };
 
   const handleDeleteConversation = async (id: string) => {
@@ -352,6 +376,9 @@ export function ClassChatClient({
                   }
 
                   setBalance((prev) => prev - data.cost);
+
+                  // Update total tokens for context tracking
+                  setTotalTokens((prev) => prev + data.tokensInput + data.tokensOutput);
 
                   if (data.conversationId && !currentConversationId) {
                     setCurrentConversationId(data.conversationId);
@@ -685,6 +712,14 @@ export function ClassChatClient({
             </div>
           )}
         </div>
+
+        {/* Context Usage Warning */}
+        {messages.length > 0 && (
+          <ContextUsageIndicator
+            totalTokens={totalTokens}
+            onSuggestNewConversation={handleSuggestNewConversation}
+          />
+        )}
 
         {/* Input */}
         <ChatInput

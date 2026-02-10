@@ -396,6 +396,13 @@
       "freshDescription": "Start a blank conversation without previous context.",
       "recommended": "Recommended",
       "cancel": "Cancel"
+    },
+    "contextUsage": {
+      "title": "Conversation memory",
+      "info": "This conversation is using a significant portion of available memory.",
+      "warning": "The conversation is approaching the memory limit. Consider starting a new conversation soon.",
+      "critical": "Memory limit almost reached! We recommend summarizing and continuing in a new conversation.",
+      "suggestNew": "Summarize and continue"
     }
   },
   "dashboard": {
