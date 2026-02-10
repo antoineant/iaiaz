@@ -103,13 +103,26 @@ export function ChatInput({
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || t("errors.uploadError"));
+        let errorMessage = t("errors.uploadError");
+        try {
+          const data = await response.json();
+          errorMessage = data.error || errorMessage;
+        } catch {
+          // Response wasn't JSON, use status text
+          errorMessage = `${t("errors.uploadError")} (${response.status})`;
+        }
+        throw new Error(errorMessage);
       }
 
       return await response.json();
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("Upload error:", error, { fileName: file.name, fileSize: file.size, fileType: file.type });
+
+      // Handle network errors more gracefully
+      if (error instanceof TypeError && error.message === "Failed to fetch") {
+        throw new Error(t("errors.uploadError") + " - Vérifiez votre connexion internet.");
+      }
+
       throw error;
     }
   };

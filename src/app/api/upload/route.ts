@@ -64,9 +64,24 @@ export async function POST(request: NextRequest) {
       });
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
+      console.error("Supabase upload error:", uploadError);
+      console.error("File details:", { name: file.name, type: file.type, size: file.size, storagePath });
+
+      // Provide more specific error messages
+      if (uploadError.message?.includes("Payload too large") || uploadError.message?.includes("413")) {
+        return NextResponse.json(
+          { error: `Fichier trop volumineux pour le serveur. Essayez un fichier plus petit.` },
+          { status: 413 }
+        );
+      }
+      if (uploadError.message?.includes("Invalid") || uploadError.message?.includes("pattern")) {
+        return NextResponse.json(
+          { error: `Erreur de téléchargement. Vérifiez que le fichier n'est pas corrompu.` },
+          { status: 400 }
+        );
+      }
       return NextResponse.json(
-        { error: "Erreur lors du téléchargement" },
+        { error: `Erreur lors du téléchargement: ${uploadError.message || 'Erreur inconnue'}` },
         { status: 500 }
       );
     }
