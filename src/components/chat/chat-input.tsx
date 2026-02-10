@@ -90,31 +90,52 @@ export function ChatInput({
   };
 
   const uploadFile = async (file: File): Promise<FileAttachment | null> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    if (conversationId) {
-      formData.append("conversationId", conversationId);
-    }
-
     try {
-      const response = await fetch("/api/upload", {
+      // Step 1: Get signed upload URL from our API
+      const signedUrlResponse = await fetch("/api/upload/signed-url", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          conversationId,
+        }),
       });
 
-      if (!response.ok) {
-        let errorMessage = t("errors.uploadError");
-        try {
-          const data = await response.json();
-          errorMessage = data.error || errorMessage;
-        } catch {
-          // Response wasn't JSON, use status text
-          errorMessage = `${t("errors.uploadError")} (${response.status})`;
-        }
-        throw new Error(errorMessage);
+      if (!signedUrlResponse.ok) {
+        const data = await signedUrlResponse.json().catch(() => ({}));
+        throw new Error(data.error || t("errors.uploadError"));
       }
 
-      return await response.json();
+      const { uploadUrl, token, path, fileId } = await signedUrlResponse.json();
+
+      // Step 2: Upload directly to Supabase (bypasses Vercel 4.5MB limit)
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error(`${t("errors.uploadError")} (${uploadResponse.status})`);
+      }
+
+      // Step 3: Confirm upload and get download URL
+      const confirmResponse = await fetch("/api/upload/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileId, storagePath: path }),
+      });
+
+      if (!confirmResponse.ok) {
+        const data = await confirmResponse.json().catch(() => ({}));
+        throw new Error(data.error || t("errors.uploadError"));
+      }
+
+      return await confirmResponse.json();
     } catch (error) {
       console.error("Upload error:", error, { fileName: file.name, fileSize: file.size, fileType: file.type });
 
