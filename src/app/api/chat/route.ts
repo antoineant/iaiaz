@@ -442,19 +442,24 @@ export async function POST(request: NextRequest) {
           } catch (error) {
             // Parse error for user-friendly message
             let userMessage = error instanceof Error ? error.message : "Stream error";
+            let errorCode = "AI_ERROR";
 
             if (error instanceof Error) {
               const errorMsg = error.message.toLowerCase();
               if (errorMsg.includes("too long") || errorMsg.includes("maximum") || errorMsg.includes("context_length")) {
-                userMessage = "Les documents sont trop volumineux. Essayez d'envoyer un seul document à la fois ou de démarrer une nouvelle conversation.";
+                userMessage = "La conversation est trop longue pour être traitée. Vous pouvez résumer cette conversation et continuer dans une nouvelle.";
+                errorCode = "CONTEXT_LENGTH_EXCEEDED";
               } else if (errorMsg.includes("rate_limit") || errorMsg.includes("429")) {
                 userMessage = "Le service est surchargé. Veuillez réessayer dans quelques instants.";
+                errorCode = "RATE_LIMITED";
               }
             }
 
             const errorData = JSON.stringify({
               type: "error",
               error: userMessage,
+              code: errorCode,
+              conversationId: streamConversationId,
             });
             controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
             controller.close();
@@ -624,6 +629,7 @@ export async function POST(request: NextRequest) {
     // Parse error for user-friendly messages
     let userMessage = "Erreur lors du traitement de la requête";
     let statusCode = 500;
+    let errorCode = "AI_ERROR";
 
     if (error instanceof Error) {
       const errorMsg = error.message.toLowerCase();
@@ -637,6 +643,7 @@ export async function POST(request: NextRequest) {
       else if (errorMsg.includes("rate_limit") || errorMsg.includes("429") || errorMsg.includes("too many requests")) {
         userMessage = "Le service est surchargé. Veuillez réessayer dans quelques instants.";
         statusCode = 429;
+        errorCode = "RATE_LIMITED";
       }
       // Authentication error with provider
       else if (errorMsg.includes("unauthorized") || errorMsg.includes("401") || errorMsg.includes("invalid_api_key")) {
@@ -655,15 +662,16 @@ export async function POST(request: NextRequest) {
       }
       // Context length exceeded
       else if (errorMsg.includes("context_length") || errorMsg.includes("too long") || errorMsg.includes("maximum")) {
-        userMessage = "Les documents sont trop volumineux. Essayez d'envoyer un seul document à la fois ou de démarrer une nouvelle conversation.";
+        userMessage = "La conversation est trop longue pour être traitée. Vous pouvez résumer cette conversation et continuer dans une nouvelle.";
         statusCode = 400;
+        errorCode = "CONTEXT_LENGTH_EXCEEDED";
       }
     }
 
     return NextResponse.json(
       {
         error: userMessage,
-        code: "AI_ERROR",
+        code: errorCode,
       },
       { status: statusCode }
     );

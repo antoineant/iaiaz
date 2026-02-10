@@ -386,6 +386,16 @@
       "costWarning": "~5x more expensive",
       "reasoning": "Reasoning",
       "reasoningTooltip": "This model automatically includes its reasoning process"
+    },
+    "contextLimit": {
+      "title": "Conversation too long",
+      "description": "This conversation has reached the AI's context limit (approximately 200,000 tokens). You can summarize the conversation and continue in a new one, or start fresh.",
+      "summarizeOption": "Summarize and continue",
+      "summarizeDescription": "The AI will create a summary of your current conversation and use it as a starting point in a new conversation.",
+      "freshOption": "New conversation",
+      "freshDescription": "Start a blank conversation without previous context.",
+      "recommended": "Recommended",
+      "cancel": "Cancel"
     }
   },
   "dashboard": {

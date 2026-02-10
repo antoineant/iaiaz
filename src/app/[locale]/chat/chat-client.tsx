@@ -18,6 +18,7 @@ import {
   getPreferredModel,
   setPreferredModel,
 } from "@/components/chat/model-picker-overlay";
+import { ContextLimitModal } from "@/components/chat/context-limit-modal";
 
 interface OrgContext {
   orgName: string;
@@ -103,6 +104,8 @@ export function ChatClient({
   const [enableThinking, setEnableThinking] = useState(false);
   const [showModelPicker, setShowModelPicker] = useState(false);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [showContextLimitModal, setShowContextLimitModal] = useState(false);
+  const [contextLimitConversationId, setContextLimitConversationId] = useState<string | undefined>();
 
   // Initialize model picker state and preferred model
   useEffect(() => {
@@ -208,6 +211,27 @@ export function ChatClient({
     setMessages([]);
     setCurrentConversationId(undefined);
     router.push("/chat");
+  };
+
+  // Handler for context limit: start fresh
+  const handleContextLimitStartFresh = () => {
+    setShowContextLimitModal(false);
+    setContextLimitConversationId(undefined);
+    handleNewConversation();
+  };
+
+  // Handler for context limit: continue with summary
+  const handleContextLimitContinueWithSummary = (summary: string) => {
+    setShowContextLimitModal(false);
+    setContextLimitConversationId(undefined);
+    // Start a new conversation
+    setMessages([]);
+    setCurrentConversationId(undefined);
+    router.push("/chat");
+    // Send the summary as the first message after a short delay to let the page update
+    setTimeout(() => {
+      handleSendMessage(summary);
+    }, 100);
   };
 
   const handleDeleteConversation = async (id: string) => {
@@ -402,6 +426,15 @@ export function ChatClient({
                     ]);
                   }
                 } else if (data.type === "error") {
+                  // Check for context length exceeded error
+                  if (data.code === "CONTEXT_LENGTH_EXCEEDED") {
+                    // Remove the failed messages
+                    setMessages((prev) => prev.filter((m) => m.id !== userMessage.id && m.id !== assistantMessageId));
+                    // Show the context limit modal
+                    setContextLimitConversationId(data.conversationId || currentConversationId);
+                    setShowContextLimitModal(true);
+                    return;
+                  }
                   throw new Error(data.error);
                 }
               } catch (e) {
@@ -593,6 +626,15 @@ export function ChatClient({
           pricingData={pricingData}
         />
       </main>
+
+      {/* Context Limit Modal */}
+      <ContextLimitModal
+        isOpen={showContextLimitModal}
+        onClose={() => setShowContextLimitModal(false)}
+        conversationId={contextLimitConversationId}
+        onStartFresh={handleContextLimitStartFresh}
+        onContinueWithSummary={handleContextLimitContinueWithSummary}
+      />
     </div>
   );
 }
