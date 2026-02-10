@@ -3,6 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getFileType, getExtension, MAX_FILE_SIZE, MAX_FILE_SIZE_MB, formatFileSize } from "@/lib/files";
 
+// Route segment config for App Router
+export const maxDuration = 60; // Allow up to 60 seconds for large uploads
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
