@@ -17,7 +17,7 @@ import {
   Loader2,
   Image as ImageIcon,
 } from "lucide-react";
-import { formatFileSize } from "@/lib/files";
+import { formatFileSize, ALLOWED_TYPES, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/files";
 
 export interface RateLimitInfo {
   remaining: number;
@@ -37,15 +37,6 @@ interface ChatInputProps {
   conversationId?: string;
   pricingData: PricingData;
 }
-
-const ALLOWED_TYPES = [
-  "image/png",
-  "image/jpeg",
-  "image/gif",
-  "image/webp",
-  "application/pdf",
-];
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export function ChatInput({
   onSend,
@@ -88,10 +79,11 @@ export function ChatInput({
       return t("errors.fileTooLarge");
     }
     // Check model capabilities
-    if (file.type === "application/pdf" && !capabilities.pdf) {
+    const isDocument = !ALLOWED_IMAGE_TYPES.includes(file.type);
+    if (isDocument && !capabilities.pdf) {
       return t("errors.pdfNotSupported");
     }
-    if (file.type.startsWith("image/") && !capabilities.images) {
+    if (!isDocument && !capabilities.images) {
       return t("errors.imageNotSupported");
     }
     return null;
@@ -351,7 +343,7 @@ export function ChatInput({
               capabilities.images && capabilities.pdf
                 ? ALLOWED_TYPES.join(",")
                 : capabilities.images
-                  ? ALLOWED_TYPES.filter((t) => t !== "application/pdf").join(",")
+                  ? ALLOWED_IMAGE_TYPES.join(",")
                   : ""
             }
             multiple
