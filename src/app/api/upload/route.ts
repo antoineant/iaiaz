@@ -117,9 +117,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate signed URL for immediate display
-    const { data: urlData } = await adminClient.storage
+    const { data: urlData, error: urlError } = await adminClient.storage
       .from("chat-attachments")
       .createSignedUrl(storagePath, 3600); // 1 hour expiry
+
+    if (urlError) {
+      console.error("Signed URL error:", urlError);
+      // Continue without URL - file is still uploaded
+    }
 
     return NextResponse.json({
       id: fileRecord.id,
