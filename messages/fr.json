@@ -348,14 +348,14 @@
       "attachFile": "Joindre un fichier (PNG, JPG, GIF, WebP, PDF, DOC, DOCX)",
       "attachImage": "Joindre une image (PNG, JPG, GIF, WebP)",
       "noFileSupport": "Ce modèle ne supporte pas les fichiers joints.",
-      "imagesPdfSupported": "Images, PDF et documents Word supportés (max 10 Mo). Collez ou glissez-déposez.",
-      "imagesOnlySupported": "Images supportées (max 10 Mo). PDF non supporté par ce modèle."
+      "imagesPdfSupported": "Images, PDF et documents Word supportés (max 20 Mo). Collez ou glissez-déposez.",
+      "imagesOnlySupported": "Images supportées (max 20 Mo). PDF non supporté par ce modèle."
     },
     "errors": {
       "sendError": "Erreur lors de l'envoi du message",
       "genericError": "Une erreur est survenue",
-      "unsupportedFileType": "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF",
-      "fileTooLarge": "Fichier trop volumineux. Taille maximale: 10 Mo",
+      "unsupportedFileType": "Type de fichier non supporté. Types acceptés: PNG, JPG, GIF, WebP, PDF, DOC, DOCX",
+      "fileTooLarge": "Ce fichier dépasse la limite de 20 Mo. Essayez de le compresser ou de le diviser.",
       "pdfNotSupported": "Ce modèle ne supporte pas les PDFs. Utilisez Claude ou Gemini pour les PDFs.",
       "imageNotSupported": "Ce modèle ne supporte pas les images. Choisissez un autre modèle.",
       "uploadError": "Erreur lors du téléchargement",

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getFileType, getExtension, MAX_FILE_SIZE } from "@/lib/files";
+import { getFileType, getExtension, MAX_FILE_SIZE, MAX_FILE_SIZE_MB, formatFileSize } from "@/lib/files";
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: "Fichier trop volumineux. Taille maximale: 10 Mo" },
+        { error: `Fichier trop volumineux (${formatFileSize(file.size)}). Maximum autorisé: ${MAX_FILE_SIZE_MB} Mo` },
         { status: 400 }
       );
     }

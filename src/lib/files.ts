@@ -13,7 +13,8 @@ export const ALLOWED_DOCUMENT_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
 ];
 export const ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_DOCUMENT_TYPES];
-export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+export const MAX_FILE_SIZE_MB = 20;
 
 // Word document MIME types
 export const WORD_MIME_TYPES = [
@@ -107,7 +108,7 @@ export function validateFile(file: File): { valid: boolean; error?: string } {
   if (file.size > MAX_FILE_SIZE) {
     return {
       valid: false,
-      error: "Fichier trop volumineux. Taille maximale: 10 Mo",
+      error: `Fichier trop volumineux (${formatFileSize(file.size)}). Maximum: ${MAX_FILE_SIZE_MB} Mo`,
     };
   }
 

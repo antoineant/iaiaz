@@ -334,14 +334,14 @@
       "attachFile": "Attach a file (PNG, JPG, GIF, WebP, PDF, DOC, DOCX)",
       "attachImage": "Attach an image (PNG, JPG, GIF, WebP)",
       "noFileSupport": "This model doesn't support file attachments.",
-      "imagesPdfSupported": "Images, PDF and Word documents supported (max 10 MB). Paste or drag and drop.",
-      "imagesOnlySupported": "Images supported (max 10 MB). PDF not supported by this model."
+      "imagesPdfSupported": "Images, PDF and Word documents supported (max 20 MB). Paste or drag and drop.",
+      "imagesOnlySupported": "Images supported (max 20 MB). PDF not supported by this model."
     },
     "errors": {
       "sendError": "Error sending message",
       "genericError": "An error occurred",
-      "unsupportedFileType": "Unsupported file type. Accepted types: PNG, JPG, GIF, WebP, PDF",
-      "fileTooLarge": "File too large. Maximum size: 10 MB",
+      "unsupportedFileType": "Unsupported file type. Accepted types: PNG, JPG, GIF, WebP, PDF, DOC, DOCX",
+      "fileTooLarge": "This file exceeds the 20 MB limit. Try compressing or splitting it.",
       "pdfNotSupported": "This model doesn't support PDFs. Use Claude or Gemini for PDFs.",
       "imageNotSupported": "This model doesn't support images. Choose another model.",
       "uploadError": "Upload error",
