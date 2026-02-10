@@ -440,9 +440,21 @@ export async function POST(request: NextRequest) {
             controller.enqueue(encoder.encode(`data: ${finalData}\n\n`));
             controller.close();
           } catch (error) {
+            // Parse error for user-friendly message
+            let userMessage = error instanceof Error ? error.message : "Stream error";
+
+            if (error instanceof Error) {
+              const errorMsg = error.message.toLowerCase();
+              if (errorMsg.includes("too long") || errorMsg.includes("maximum") || errorMsg.includes("context_length")) {
+                userMessage = "Les documents sont trop volumineux. Essayez d'envoyer un seul document à la fois ou de démarrer une nouvelle conversation.";
+              } else if (errorMsg.includes("rate_limit") || errorMsg.includes("429")) {
+                userMessage = "Le service est surchargé. Veuillez réessayer dans quelques instants.";
+              }
+            }
+
             const errorData = JSON.stringify({
               type: "error",
-              error: error instanceof Error ? error.message : "Stream error",
+              error: userMessage,
             });
             controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
             controller.close();
@@ -643,7 +655,7 @@ export async function POST(request: NextRequest) {
       }
       // Context length exceeded
       else if (errorMsg.includes("context_length") || errorMsg.includes("too long") || errorMsg.includes("maximum")) {
-        userMessage = "Le message est trop long. Veuillez raccourcir votre conversation.";
+        userMessage = "Les documents sont trop volumineux. Essayez d'envoyer un seul document à la fois ou de démarrer une nouvelle conversation.";
         statusCode = 400;
       }
     }
