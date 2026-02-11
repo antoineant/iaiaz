@@ -22,6 +22,7 @@ export interface ModelConfig {
   is_recommended: boolean;
   is_active: boolean;
   max_tokens: number;
+  context_window: number;  // max input tokens for context
   rate_limit_tier: "economy" | "standard" | "premium";
   capabilities: {
     images: boolean;
@@ -103,6 +104,7 @@ export async function getAllModels(): Promise<Record<string, ModelConfig>> {
       is_recommended: model.is_recommended || false,
       is_active: model.is_active,
       max_tokens: model.max_tokens || 4096,
+      context_window: model.context_window || 128000,
       rate_limit_tier: model.rate_limit_tier || "standard",
       capabilities: model.capabilities || { images: false, pdf: false },
       system_role: model.system_role,

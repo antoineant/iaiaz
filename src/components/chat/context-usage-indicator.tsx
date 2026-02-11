@@ -4,29 +4,32 @@ import { useTranslations } from "next-intl";
 import { AlertTriangle, Brain, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const MAX_CONTEXT = 200000;
-const WARNING_THRESHOLD = 180000; // 90% - show yellow warning
-const CRITICAL_THRESHOLD = 190000; // 95% - show red + suggest new conversation
-
 interface ContextUsageIndicatorProps {
   totalTokens: number;
+  maxContext: number; // Model-specific context window
   onSuggestNewConversation: () => void;
   className?: string;
 }
 
 export function ContextUsageIndicator({
   totalTokens,
+  maxContext,
   onSuggestNewConversation,
   className,
 }: ContextUsageIndicatorProps) {
   const t = useTranslations("chat.contextUsage");
 
-  // Don't show anything until we've used at least 50K tokens
-  if (totalTokens < 50000) return null;
+  // Calculate thresholds based on model's context window
+  const warningThreshold = Math.floor(maxContext * 0.90); // 90%
+  const criticalThreshold = Math.floor(maxContext * 0.95); // 95%
 
-  const percentage = Math.min((totalTokens / MAX_CONTEXT) * 100, 100);
-  const isWarning = totalTokens >= WARNING_THRESHOLD;
-  const isCritical = totalTokens >= CRITICAL_THRESHOLD;
+  // Don't show anything until we've used at least 25% of context (min 50K for large contexts)
+  const minShowThreshold = Math.min(Math.floor(maxContext * 0.25), 50000);
+  if (totalTokens < minShowThreshold) return null;
+
+  const percentage = Math.min((totalTokens / maxContext) * 100, 100);
+  const isWarning = totalTokens >= warningThreshold;
+  const isCritical = totalTokens >= criticalThreshold;
 
   const formatTokens = (tokens: number) => {
     if (tokens >= 1000) {
@@ -80,7 +83,7 @@ export function ContextUsageIndicator({
                   : "text-blue-600 dark:text-blue-400"
             )}
           >
-            {formatTokens(totalTokens)} / {formatTokens(MAX_CONTEXT)}
+            {formatTokens(totalTokens)} / {formatTokens(maxContext)}
           </span>
         </div>
 

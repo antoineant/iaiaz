@@ -14,6 +14,7 @@ export interface DBModel {
   is_recommended: boolean;
   is_active: boolean;
   max_tokens: number;
+  context_window?: number;  // max input tokens for context
   co2_per_1k_tokens?: number;
   capabilities?: {
     images?: boolean;

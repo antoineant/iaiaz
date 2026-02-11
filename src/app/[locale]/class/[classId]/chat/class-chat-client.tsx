@@ -717,6 +717,7 @@ export function ClassChatClient({
         {messages.length > 0 && (
           <ContextUsageIndicator
             totalTokens={totalTokens}
+            maxContext={pricingData.models.find((m) => m.id === model)?.context_window || 128000}
             onSuggestNewConversation={handleSuggestNewConversation}
           />
         )}
