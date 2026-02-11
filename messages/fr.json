@@ -412,10 +412,11 @@
       "cancel": "Annuler"
     },
     "contextUsage": {
-      "title": "Mémoire de conversation",
+      "title": "Mémoire",
+      "tokensUsed": "Tokens utilisés",
       "info": "Cette conversation utilise une partie significative de la mémoire disponible.",
-      "warning": "La conversation approche de la limite de mémoire. Pensez à démarrer une nouvelle conversation bientôt.",
-      "critical": "Limite de mémoire presque atteinte ! Nous recommandons de résumer et continuer dans une nouvelle conversation.",
+      "warning": "Approche de la limite. Pensez à démarrer une nouvelle conversation.",
+      "critical": "Limite presque atteinte ! Résumez et continuez dans une nouvelle conversation.",
       "suggestNew": "Résumer et continuer"
     }
   },

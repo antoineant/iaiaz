@@ -398,10 +398,11 @@
       "cancel": "Cancel"
     },
     "contextUsage": {
-      "title": "Conversation memory",
+      "title": "Memory",
+      "tokensUsed": "Tokens used",
       "info": "This conversation is using a significant portion of available memory.",
-      "warning": "The conversation is approaching the memory limit. Consider starting a new conversation soon.",
-      "critical": "Memory limit almost reached! We recommend summarizing and continuing in a new conversation.",
+      "warning": "Approaching limit. Consider starting a new conversation.",
+      "critical": "Limit almost reached! Summarize and continue in a new conversation.",
       "suggestNew": "Summarize and continue"
     }
   },
