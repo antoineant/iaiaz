@@ -25,24 +25,12 @@ export function ContextUsageIndicator({
   // Calculate thresholds based on model's context window
   const warningThreshold = Math.floor(maxContext * 0.90);
   const criticalThreshold = Math.floor(maxContext * 0.95);
-
-  // Don't show anything until we've used at least 25% of context (min 50K for large contexts)
   const minShowThreshold = Math.min(Math.floor(maxContext * 0.25), 50000);
-  if (totalTokens < minShowThreshold) return null;
 
   const percentage = Math.min((totalTokens / maxContext) * 100, 100);
   const isWarning = totalTokens >= warningThreshold;
   const isCritical = totalTokens >= criticalThreshold;
-
-  const formatTokens = (tokens: number) => {
-    if (tokens >= 1000000) {
-      return `${(tokens / 1000000).toFixed(1)}M`;
-    }
-    if (tokens >= 1000) {
-      return `${(tokens / 1000).toFixed(0)}K`;
-    }
-    return tokens.toString();
-  };
+  const shouldShow = totalTokens >= minShowThreshold;
 
   // Close expanded view when clicking outside
   useEffect(() => {
@@ -63,7 +51,20 @@ export function ContextUsageIndicator({
     if (isCritical && !isExpanded) {
       setIsExpanded(true);
     }
-  }, [isCritical]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isCritical, isExpanded]);
+
+  const formatTokens = (tokens: number) => {
+    if (tokens >= 1000000) {
+      return `${(tokens / 1000000).toFixed(1)}M`;
+    }
+    if (tokens >= 1000) {
+      return `${(tokens / 1000).toFixed(0)}K`;
+    }
+    return tokens.toString();
+  };
+
+  // Don't render if below threshold
+  if (!shouldShow) return null;
 
   return (
     <div className={cn("relative flex justify-end px-4 py-1", className)}>
