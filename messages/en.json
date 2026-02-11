@@ -421,6 +421,7 @@
       "title": "Quick actions",
       "newConversation": "New conversation",
       "buyCredits": "Buy credits",
+      "purchases": "Purchase history",
       "analytics": "Usage analytics",
       "settings": "Settings"
     },
@@ -686,6 +687,18 @@
       "startChatting": "Start chatting",
       "viewDashboard": "View my dashboard"
     }
+  },
+  "purchases": {
+    "title": "Purchase history",
+    "noPurchases": "No purchases",
+    "noPurchasesDescription": "You haven't purchased any credits yet.",
+    "buyCredits": "Buy credits",
+    "personalPurchases": "Personal purchases",
+    "organizationPurchases": "Organization purchases",
+    "creditPurchase": "Credit purchase",
+    "viewReceipt": "Receipt",
+    "noReceipt": "No receipt",
+    "receiptInfo": "Stripe receipts are automatically generated for each purchase. If a receipt is not available, please contact support."
   },
   "auth": {
     "or": "or",

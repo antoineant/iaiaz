@@ -79,6 +79,31 @@ export async function POST(request: NextRequest) {
 }
 
 /**
+ * Get receipt URL from a Stripe PaymentIntent
+ */
+async function getReceiptUrl(paymentIntentId: string): Promise<string | null> {
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    // Get the latest charge from the payment intent
+    const chargeId = typeof paymentIntent.latest_charge === "string"
+      ? paymentIntent.latest_charge
+      : paymentIntent.latest_charge?.id;
+
+    if (!chargeId) {
+      console.log("No charge found for payment intent");
+      return null;
+    }
+
+    const charge = await stripe.charges.retrieve(chargeId);
+    return charge.receipt_url || null;
+  } catch (error) {
+    console.error("Error fetching receipt URL:", error);
+    return null;
+  }
+}
+
+/**
  * Handle personal credit purchase (for individual users)
  */
 async function handlePersonalPurchase(
@@ -95,13 +120,19 @@ async function handlePersonalPurchase(
   }
 
   const adminClient = createAdminClient();
+  const paymentIntentId = session.payment_intent as string;
 
-  // Add credits to user
+  // Get receipt URL from Stripe
+  const receiptUrl = await getReceiptUrl(paymentIntentId);
+  console.log("Receipt URL:", receiptUrl);
+
+  // Add credits to user (with receipt URL)
   const { error } = await adminClient.rpc("add_credits", {
     p_user_id: userId,
     p_amount: parseFloat(credits),
     p_description: `Achat pack ${packId}`,
-    p_stripe_payment_id: session.payment_intent as string,
+    p_stripe_payment_id: paymentIntentId,
+    p_receipt_url: receiptUrl,
   });
 
   if (error) {
@@ -158,6 +189,10 @@ async function handleOrganizationPurchase(
   const creditAmount = parseFloat(credits);
   const stripePaymentId = session.payment_intent as string;
 
+  // Get receipt URL from Stripe
+  const receiptUrl = await getReceiptUrl(stripePaymentId);
+  console.log("Organization receipt URL:", receiptUrl);
+
   // 1. Update organization credit_balance
   const { data: org, error: orgFetchError } = await adminClient
     .from("organizations")
@@ -187,7 +222,7 @@ async function handleOrganizationPurchase(
 
   console.log(`Successfully added ${credits}€ credits to organization ${organizationId} (${organizationName})`);
 
-  // 2. Log the transaction in organization_transactions
+  // 2. Log the transaction in organization_transactions (with receipt URL)
   const { error: txError } = await adminClient
     .from("organization_transactions")
     .insert({
@@ -199,6 +234,7 @@ async function handleOrganizationPurchase(
         ? `Achat pack ${packId} (-${discount}%)`
         : `Achat pack ${packId}`,
       stripe_payment_id: stripePaymentId,
+      receipt_url: receiptUrl,
     });
 
   if (txError) {

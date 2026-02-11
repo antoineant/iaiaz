@@ -435,6 +435,7 @@
       "title": "Actions rapides",
       "newConversation": "Nouvelle conversation",
       "buyCredits": "Acheter des crédits",
+      "purchases": "Historique des achats",
       "analytics": "Statistiques d'utilisation",
       "settings": "Paramètres"
     },
@@ -579,6 +580,18 @@
       "startChatting": "Commencer à discuter",
       "viewDashboard": "Voir mon tableau de bord"
     }
+  },
+  "purchases": {
+    "title": "Historique des achats",
+    "noPurchases": "Aucun achat",
+    "noPurchasesDescription": "Vous n'avez pas encore effectué d'achat de crédits.",
+    "buyCredits": "Acheter des crédits",
+    "personalPurchases": "Achats personnels",
+    "organizationPurchases": "Achats organisation",
+    "creditPurchase": "Achat de crédits",
+    "viewReceipt": "Facture",
+    "noReceipt": "Pas de reçu",
+    "receiptInfo": "Les reçus Stripe sont générés automatiquement pour chaque achat. Si un reçu n'est pas disponible, contactez le support."
   },
   "auth": {
     "or": "ou",

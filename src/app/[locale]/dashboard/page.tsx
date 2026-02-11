@@ -14,6 +14,7 @@ import {
   Settings,
   BarChart3,
   Leaf,
+  Receipt,
 } from "lucide-react";
 
 type Props = {
@@ -196,6 +197,15 @@ export default async function DashboardPage({ params }: Props) {
               <Link href="/dashboard/credits">
                 <Button variant="outline" className="w-full justify-between">
                   {t("quickActions.buyCredits")}
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+              <Link href="/dashboard/purchases">
+                <Button variant="outline" className="w-full justify-between">
+                  <span className="flex items-center gap-2">
+                    <Receipt className="w-4 h-4" />
+                    {t("quickActions.purchases")}
+                  </span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
