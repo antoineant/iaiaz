@@ -114,7 +114,7 @@ export default async function EtudiantsPage({ params }: Props) {
       <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/etudiants" className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Study
             </span>
             <span className="text-sm text-[var(--muted-foreground)] font-medium">
@@ -133,7 +133,7 @@ export default async function EtudiantsPage({ params }: Props) {
               {t("nav.login")}
             </Link>
             <Link href="/auth/signup">
-              <Button size="sm" className="bg-primary-600 hover:bg-primary-700 text-white">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
                 {t("hero.cta")}
               </Button>
             </Link>
@@ -143,19 +143,19 @@ export default async function EtudiantsPage({ params }: Props) {
 
       <main>
         {/* Hero — Familia-style gradient */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950 dark:via-[var(--background)] dark:to-accent-950">
+        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950 dark:via-[var(--background)] dark:to-indigo-950">
           <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
             <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/40 text-blue-700 dark:text-blue-300 text-sm font-medium mb-6 shadow-sm">
                 <GraduationCap className="w-4 h-4" />
                 {t("hero.badge")}
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
-                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
                   {t("hero.title")}
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
                   {t("hero.titleHighlight")}
                 </span>
               </h1>
@@ -164,7 +164,7 @@ export default async function EtudiantsPage({ params }: Props) {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
                 <Link href="/auth/signup">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white px-8 py-3 text-lg">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 text-lg">
                     <Sparkles className="w-5 h-5 mr-2" />
                     {t("hero.cta")}
                   </Button>
@@ -496,7 +496,7 @@ export default async function EtudiantsPage({ params }: Props) {
         </section>
 
         {/* CTA — Familia-style gradient */}
-        <section className="py-20 bg-gradient-to-r from-primary-600 to-accent-600">
+        <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="max-w-3xl mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">
               {t("cta.title")}
@@ -505,7 +505,7 @@ export default async function EtudiantsPage({ params }: Props) {
               {t("cta.subtitle")}
             </p>
             <Link href="/auth/signup">
-              <Button size="lg" className="bg-white text-primary-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
+              <Button size="lg" className="bg-white text-blue-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
                 {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>

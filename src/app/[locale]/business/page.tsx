@@ -102,7 +102,7 @@ export default async function BusinessPage({ params }: Props) {
       <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/business" className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
               Business
             </span>
             <span className="text-sm text-[var(--muted-foreground)] font-medium">
@@ -121,7 +121,7 @@ export default async function BusinessPage({ params }: Props) {
               {t("nav.login")}
             </Link>
             <a href="mailto:contact@iaiaz.com?subject=Demande%20démo%20-%20Entreprise">
-              <Button size="sm" className="bg-primary-600 hover:bg-primary-700 text-white">
+              <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white">
                 {t("hero.ctaSecondary")}
               </Button>
             </a>
@@ -131,19 +131,19 @@ export default async function BusinessPage({ params }: Props) {
 
       <main>
         {/* Hero — Familia-style gradient */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950 dark:via-[var(--background)] dark:to-accent-950">
+        <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-violet-50 dark:from-indigo-950 dark:via-[var(--background)] dark:to-violet-950">
           <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
             <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-100 to-violet-100 dark:from-indigo-900/40 dark:to-violet-900/40 text-indigo-700 dark:text-indigo-300 text-sm font-medium mb-6 shadow-sm">
                 <Briefcase className="w-4 h-4" />
                 {t("hero.badge")}
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
-                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent">
                   {t("hero.title")}
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent">
                   {t("hero.titleHighlight")}
                 </span>
               </h1>
@@ -153,7 +153,7 @@ export default async function BusinessPage({ params }: Props) {
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
                 <NextLink href="/auth/signup/business">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white px-8 py-3 text-lg">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white px-8 py-3 text-lg">
                     <Sparkles className="w-5 h-5 mr-2" />
                     {t("hero.cta")}
                   </Button>
@@ -670,7 +670,7 @@ export default async function BusinessPage({ params }: Props) {
         </section>
 
         {/* CTA — Familia-style gradient */}
-        <section className="py-20 bg-gradient-to-r from-primary-600 to-accent-600">
+        <section className="py-20 bg-gradient-to-r from-indigo-600 to-violet-600">
           <div className="max-w-3xl mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">
               {t("cta.title")}
@@ -680,7 +680,7 @@ export default async function BusinessPage({ params }: Props) {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <NextLink href="/auth/signup/business">
-                <Button size="lg" className="bg-white text-primary-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
+                <Button size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
                   {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </NextLink>
