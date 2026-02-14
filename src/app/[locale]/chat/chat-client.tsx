@@ -8,7 +8,7 @@ import { Sidebar } from "@/components/chat/sidebar";
 import { ModelSelector } from "@/components/chat/model-selector";
 import { Message } from "@/components/chat/message";
 import { ChatInput, type RateLimitInfo } from "@/components/chat/chat-input";
-import type { Conversation, ChatMessage, FileAttachment } from "@/types";
+import type { Conversation, ChatMessage, FileAttachment, CustomAssistant } from "@/types";
 import type { PricingData } from "@/lib/pricing-db";
 import { Sparkles, Brain, AlertTriangle, MessageSquare, Building2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
@@ -20,6 +20,9 @@ import {
 } from "@/components/chat/model-picker-overlay";
 import { ContextLimitModal } from "@/components/chat/context-limit-modal";
 import { ContextUsageIndicator } from "@/components/chat/context-usage-indicator";
+import { FamiliaWelcome } from "@/components/familia/familia-welcome";
+import { FamiliaParentWelcome } from "@/components/familia/familia-parent-welcome";
+import { applyAccentColor, getThemeColor } from "@/lib/familia/theme";
 
 interface OrgContext {
   orgName: string;
@@ -53,6 +56,30 @@ interface ManagedClass {
   student_count: number;
 }
 
+interface AssistantInfo {
+  id: string;
+  name: string;
+  avatar: string;
+  color: string;
+}
+
+interface FamiliaMode {
+  assistants: CustomAssistant[];
+  accentColor: string | null;
+  supervisionMode: string;
+  userName: string;
+  dailyCreditLimit?: number | null;
+  dailyCreditsUsed?: number;
+  cumulativeCredits?: boolean;
+  weeklyCreditsUsed?: number;
+  creditsAllocated?: number;
+}
+
+interface FamiliaParentMode {
+  orgId: string;
+  orgName: string;
+}
+
 interface ChatClientProps {
   userId: string;
   initialBalance: number;
@@ -64,6 +91,9 @@ interface ChatClientProps {
   pricingData: PricingData;
   orgContext?: OrgContext;
   userInfo?: UserInfo;
+  assistantInfo?: AssistantInfo;
+  familiaMode?: FamiliaMode;
+  familiaParentMode?: FamiliaParentMode;
 }
 
 export function ChatClient({
@@ -77,6 +107,9 @@ export function ChatClient({
   pricingData,
   orgContext,
   userInfo,
+  assistantInfo,
+  familiaMode,
+  familiaParentMode,
 }: ChatClientProps) {
   const router = useRouter();
   const t = useTranslations("chat");
@@ -109,10 +142,15 @@ export function ChatClient({
   const [contextLimitConversationId, setContextLimitConversationId] = useState<string | undefined>();
   const [totalTokens, setTotalTokens] = useState(0);
 
+  // Familia state
+  const [familiaAssistants, setFamiliaAssistants] = useState<CustomAssistant[]>(familiaMode?.assistants || []);
+  const [selectedAssistant, setSelectedAssistant] = useState<AssistantInfo | undefined>(assistantInfo);
+  const [familiaAccentColor, setFamiliaAccentColor] = useState<string | null>(familiaMode?.accentColor || null);
+
   // Initialize model picker state and preferred model
   useEffect(() => {
-    // Check if we should show the model picker
-    if (!conversationId && messages.length === 0) {
+    // Check if we should show the model picker (not for familia teens or parents)
+    if (!conversationId && messages.length === 0 && !familiaMode && !familiaParentMode) {
       setShowModelPicker(shouldShowModelPicker());
     }
     // Load preferred model if set
@@ -227,6 +265,7 @@ export function ChatClient({
     setMessages([]);
     setCurrentConversationId(undefined);
     setTotalTokens(0);
+    setSelectedAssistant(undefined); // Clear selected assistant for familia
     router.push("/chat");
   };
 
@@ -318,6 +357,7 @@ export function ChatClient({
           stream: true,
           // Enable thinking for Claude (opt-in) or OpenAI reasoning models (always)
           enableThinking: isOpenAIReasoning || (claudeSupportsThinking && enableThinking),
+          ...(selectedAssistant ? { assistantId: selectedAssistant.id } : {}),
         }),
       });
 
@@ -493,8 +533,26 @@ export function ChatClient({
     }
   };
 
+  // Handle familia assistant selection
+  const handleSelectFamiliaAssistant = (assistant: CustomAssistant) => {
+    const theme = getThemeColor(assistant.color);
+    setSelectedAssistant({
+      id: assistant.id,
+      name: assistant.name,
+      avatar: assistant.avatar,
+      color: theme?.hex || "#3B82F6",
+    });
+  };
+
+  const handleFamiliaAssistantCreated = (assistant: CustomAssistant) => {
+    setFamiliaAssistants((prev) => [...prev, assistant]);
+  };
+
   return (
-    <div className="flex h-screen">
+    <div
+      className="flex h-screen"
+      style={familiaMode ? applyAccentColor(familiaAccentColor || "blue") : undefined}
+    >
       <Sidebar
         conversations={conversations}
         currentConversationId={currentConversationId}
@@ -515,6 +573,18 @@ export function ChatClient({
         userInfo={userInfo}
         classes={classes}
         managedClasses={managedClasses}
+        familiaMode={familiaMode ? {
+          accentColor: familiaAccentColor,
+          userName: familiaMode.userName,
+          supervisionMode: familiaMode.supervisionMode,
+          dailyCreditLimit: familiaMode.dailyCreditLimit,
+          dailyCreditsUsed: familiaMode.dailyCreditsUsed,
+          cumulativeCredits: familiaMode.cumulativeCredits,
+          weeklyCreditsUsed: familiaMode.weeklyCreditsUsed,
+          creditsAllocated: familiaMode.creditsAllocated,
+        } : undefined}
+        onAccentColorChange={familiaMode ? setFamiliaAccentColor : undefined}
+        familiaParentMode={familiaParentMode}
       />
 
       <main className="flex-1 flex flex-col min-w-0">
@@ -522,19 +592,28 @@ export function ChatClient({
         <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background)]">
           <div className="lg:hidden w-10" /> {/* Spacer for mobile menu */}
           <div className="flex items-center gap-3">
-            <ModelSelector
-              value={model}
-              onChange={(modelId) => {
-                setModel(modelId);
-                setPreferredModel(modelId);
-              }}
-              models={pricingData.models}
-              markupMultiplier={pricingData.settings.markupMultiplier}
-              externalOpen={modelSelectorOpen}
-              onOpenChange={setModelSelectorOpen}
-            />
-            {/* Extended Thinking Toggle (Claude) */}
-            {claudeSupportsThinking && (
+            {selectedAssistant && (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border"
+                style={{ borderColor: selectedAssistant.color, backgroundColor: `${selectedAssistant.color}15` }}>
+                <span>{selectedAssistant.avatar}</span>
+                <span>{selectedAssistant.name}</span>
+              </div>
+            )}
+            {!familiaMode && !familiaParentMode && (
+              <ModelSelector
+                value={model}
+                onChange={(modelId) => {
+                  setModel(modelId);
+                  setPreferredModel(modelId);
+                }}
+                models={pricingData.models}
+                markupMultiplier={pricingData.settings.markupMultiplier}
+                externalOpen={modelSelectorOpen}
+                onOpenChange={setModelSelectorOpen}
+              />
+            )}
+            {/* Extended Thinking Toggle (Claude) - hidden for familia */}
+            {!familiaMode && !familiaParentMode && claudeSupportsThinking && (
               <button
                 onClick={() => setEnableThinking(!enableThinking)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
@@ -548,8 +627,8 @@ export function ChatClient({
                 <span className="hidden sm:inline">{t("thinking.label")}</span>
               </button>
             )}
-            {/* Reasoning indicator (OpenAI o1/o3 - always on) */}
-            {isOpenAIReasoning && (
+            {/* Reasoning indicator (OpenAI o1/o3 - always on) - hidden for familia */}
+            {!familiaMode && !familiaParentMode && isOpenAIReasoning && (
               <div
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700"
                 title={t("thinking.reasoningTooltip")}
@@ -587,7 +666,20 @@ export function ChatClient({
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            showModelPicker ? (
+            familiaMode && !selectedAssistant ? (
+              <FamiliaWelcome
+                userName={familiaMode.userName}
+                assistants={familiaAssistants}
+                accentColor={familiaAccentColor}
+                onSelectAssistant={handleSelectFamiliaAssistant}
+                onAssistantCreated={handleFamiliaAssistantCreated}
+              />
+            ) : familiaParentMode ? (
+              <FamiliaParentWelcome
+                orgName={familiaParentMode.orgName}
+                onSendMessage={handleSendMessage}
+              />
+            ) : showModelPicker ? (
               <ModelPickerOverlay
                 pricingData={pricingData}
                 currentModel={model}
@@ -601,6 +693,28 @@ export function ChatClient({
                   setModelSelectorOpen(true);
                 }}
               />
+            ) : familiaMode && selectedAssistant ? (
+              // Familia: Assistant selected, show personalized empty state
+              <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                <div
+                  className="w-20 h-20 rounded-3xl flex items-center justify-center mb-4 shadow-lg"
+                  style={{
+                    backgroundColor: `${selectedAssistant.color}20`,
+                    border: `2px solid ${selectedAssistant.color}40`
+                  }}
+                >
+                  <span className="text-5xl">{selectedAssistant.avatar}</span>
+                </div>
+                <h1 className="text-2xl font-bold mb-2" style={{ color: selectedAssistant.color }}>
+                  {selectedAssistant.name}
+                </h1>
+                <p className="text-[var(--muted-foreground)] max-w-md mb-6">
+                  {t("familia.assistantReady", { name: familiaMode.userName })}
+                </p>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  {t("familia.startTyping")}
+                </p>
+              </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-8 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
@@ -660,6 +774,8 @@ export function ChatClient({
           rateLimitError={rateLimitError}
           conversationId={currentConversationId}
           pricingData={pricingData}
+          accentColor={familiaMode ? (getThemeColor(familiaAccentColor || "blue")?.hex) : undefined}
+          familiaMode={!!familiaMode}
         />
       </main>
 

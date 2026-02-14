@@ -48,6 +48,21 @@ export default async function DashboardPage({ params }: Props) {
     redirect(`/${locale}/auth/accept-terms`);
   }
 
+  // Check if user is a family owner/admin - redirect to familia dashboard
+  const { data: familyMembership } = await supabase
+    .from("organization_members")
+    .select("organization_id, role, organizations(type)")
+    .eq("user_id", user.id)
+    .eq("organizations.type", "family")
+    .single();
+
+  if (
+    familyMembership &&
+    (familyMembership.role === "owner" || familyMembership.role === "admin")
+  ) {
+    redirect(`/${locale}/familia/dashboard`);
+  }
+
   // Fetch profile
   const { data: profile } = await supabase
     .from("profiles")

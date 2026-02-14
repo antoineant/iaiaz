@@ -10,9 +10,10 @@ interface CostEstimateProps {
   inputText: string;
   balance: number;
   pricingData: PricingData;
+  simplified?: boolean; // For familia teens - hide technical details
 }
 
-export function CostEstimate({ model, inputText, balance, pricingData }: CostEstimateProps) {
+export function CostEstimate({ model, inputText, balance, pricingData, simplified = false }: CostEstimateProps) {
   const t = useTranslations("chat.costEstimate");
 
   if (!inputText.trim()) {
@@ -76,9 +77,12 @@ export function CostEstimate({ model, inputText, balance, pricingData }: CostEst
         </div>
       )}
 
-      <div className="ml-auto text-[var(--muted-foreground)]">
-        {t("tokens", { inputTokens, outputTokens: estimatedOutputTokens })}
-      </div>
+      {/* Hide technical details for familia teens */}
+      {!simplified && (
+        <div className="ml-auto text-[var(--muted-foreground)]">
+          {t("tokens", { inputTokens, outputTokens: estimatedOutputTokens })}
+        </div>
+      )}
     </div>
   );
 }

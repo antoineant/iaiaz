@@ -36,6 +36,8 @@ interface ChatInputProps {
   rateLimitError?: string | null;
   conversationId?: string;
   pricingData: PricingData;
+  accentColor?: string;
+  familiaMode?: boolean;
 }
 
 export function ChatInput({
@@ -48,6 +50,8 @@ export function ChatInput({
   rateLimitError,
   conversationId,
   pricingData,
+  accentColor,
+  familiaMode,
 }: ChatInputProps) {
   const t = useTranslations("chat");
   const [input, setInput] = useState("");
@@ -332,6 +336,7 @@ export function ChatInput({
               inputText={input}
               balance={balance}
               pricingData={pricingData}
+              simplified={familiaMode}
             />
             {rateLimit && (
               <RateLimitIndicator
@@ -385,7 +390,7 @@ export function ChatInput({
             className="hidden"
           />
 
-          <div className="flex items-end">
+          <div className="flex items-center">
             {/* File picker button */}
             <Button
               type="button"
@@ -393,7 +398,7 @@ export function ChatInput({
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={disabled || isLoading || uploading || isRateLimited || (!capabilities.images && !capabilities.pdf)}
-              className={`m-1 ${!capabilities.images && !capabilities.pdf ? "opacity-40 cursor-not-allowed" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
+              className={`mx-1 flex-shrink-0 ${!capabilities.images && !capabilities.pdf ? "opacity-40 cursor-not-allowed" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
               title={
                 !capabilities.images && !capabilities.pdf
                   ? t("input.noFileSupport")
@@ -422,14 +427,19 @@ export function ChatInput({
               }
               rows={1}
               disabled={disabled || isLoading || isRateLimited}
-              className="flex-1 resize-none bg-transparent py-3 pr-12 text-sm placeholder:text-[var(--muted-foreground)] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 resize-none bg-transparent py-3 text-sm placeholder:text-[var(--muted-foreground)] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             />
 
             <Button
               type="submit"
               size="sm"
               disabled={!hasContent || disabled || isLoading || isRateLimited}
-              className="m-1"
+              className="mx-1.5 flex-shrink-0"
+              style={accentColor ? {
+                backgroundColor: accentColor,
+                borderColor: accentColor,
+                color: "#fff",
+              } : undefined}
             >
               <Send className="w-4 h-4" />
             </Button>

@@ -36,7 +36,8 @@ function isMultimodalContent(
 // Anthropic (Claude) - supports images and PDFs natively
 async function callAnthropic(
   model: string,
-  messages: UnifiedMessage[]
+  messages: UnifiedMessage[],
+  systemPrompt?: string
 ): Promise<AIResponse> {
   const Anthropic = (await import("@anthropic-ai/sdk")).default;
   const client = new Anthropic({
@@ -89,6 +90,7 @@ async function callAnthropic(
     model,
     max_tokens: 4096,
     messages: anthropicMessages,
+    ...(systemPrompt ? { system: systemPrompt } : {}),
   });
 
   const textContent = response.content.find((c) => c.type === "text");
@@ -286,7 +288,8 @@ async function callAnthropicStream(
   model: string,
   messages: UnifiedMessage[],
   onChunk: StreamCallback,
-  onThinking?: ThinkingCallback
+  onThinking?: ThinkingCallback,
+  systemPrompt?: string
 ): Promise<AIStreamResponse> {
   const Anthropic = (await import("@anthropic-ai/sdk")).default;
   const client = new Anthropic({
@@ -345,6 +348,7 @@ async function callAnthropicStream(
     model,
     max_tokens: supportsThinking ? 16000 : 4096,
     messages: anthropicMessages,
+    ...(systemPrompt ? { system: systemPrompt } : {}),
   };
 
   // Add thinking configuration for supported models
@@ -646,13 +650,14 @@ function getProvider(
 // Main router function - supports both text-only and multimodal messages
 export async function callAI(
   modelId: string,
-  messages: UnifiedMessage[]
+  messages: UnifiedMessage[],
+  systemPrompt?: string
 ): Promise<AIResponse> {
   const provider = getProvider(modelId);
 
   switch (provider) {
     case "anthropic":
-      return callAnthropic(modelId, messages);
+      return callAnthropic(modelId, messages, systemPrompt);
     case "openai":
       return callOpenAI(modelId, messages);
     case "google":
@@ -669,13 +674,14 @@ export async function callAIStream(
   modelId: string,
   messages: UnifiedMessage[],
   onChunk: StreamCallback,
-  onThinking?: ThinkingCallback
+  onThinking?: ThinkingCallback,
+  systemPrompt?: string
 ): Promise<AIStreamResponse> {
   const provider = getProvider(modelId);
 
   switch (provider) {
     case "anthropic":
-      return callAnthropicStream(modelId, messages, onChunk, onThinking);
+      return callAnthropicStream(modelId, messages, onChunk, onThinking, systemPrompt);
     case "openai":
       return callOpenAIStream(modelId, messages, onChunk, onThinking);
     case "google":

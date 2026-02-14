@@ -9,8 +9,8 @@
       "description": "GPT-5, Claude, Gemini à partir de 0.01€. Pas d'abonnement, payez uniquement ce que vous utilisez. 1€ offert à l'inscription."
     },
     "comparatif": {
-      "title": "Comparatif - iaiaz vs ChatGPT Plus vs Claude Pro",
-      "description": "Comparez iaiaz avec les abonnements ChatGPT Plus et Claude Pro. Économisez jusqu'à 90% avec le paiement à l'usage."
+      "title": "Comparatif - Choisissez votre profil | iaiaz",
+      "description": "Comparez iaiaz avec les alternatives selon votre profil : étudiant, établissement ou formateur. Trouvez la solution adaptée."
     },
     "etudiants": {
       "title": "IA Étudiants - GPT-5, Claude dès 0.01€ | 1€ offert | iaiaz",
@@ -75,10 +75,6 @@
       "ogTitle": "IA Visible vs Invisible - Comparatif Formateurs",
       "ogDescription": "Transformez l'utilisation cachée de l'IA en avantage pédagogique avec iaiaz."
     },
-    "comparatif": {
-      "title": "Comparatif - Choisissez votre profil | iaiaz",
-      "description": "Comparez iaiaz avec les alternatives selon votre profil : étudiant, établissement ou formateur. Trouvez la solution adaptée."
-    },
     "business": {
       "title": "iaiaz Business - IA multi-modèles pour entreprises | Facturation à l'usage",
       "description": "Tous les modèles IA (Claude, GPT-5, Gemini, Mistral) pour vos équipes. Facturation à la consommation, suivi détaillé, maîtrise des coûts. Essai gratuit 14 jours.",
@@ -110,6 +106,7 @@
   },
   "common": {
     "nav": {
+      "familia": "Familia",
       "pricing": "Tarifs",
       "compare": "Comparatif",
       "forWhom": "Pour qui ?",
@@ -321,7 +318,22 @@
       "noManagedClasses": "Créer une classe",
       "privateConversations": "Conversations privées",
       "imageStudio": "Studio Image",
-      "videoStudio": "Studio Vidéo"
+      "videoStudio": "Studio Vidéo",
+      "teenGreeting": "Hey {name}",
+      "teenCreditsLeft": "dispo",
+      "teenDailyLimit": "Limite du jour",
+      "teenWeeklyLimit": "Budget de la semaine",
+      "teenLowCreditWarning": "Oups, bientôt plus de crédits !",
+      "teenAskForCredits": "Demander des crédits",
+      "teenNewChat": "Nouveau chat",
+      "teenLogout": "A plus !",
+      "teenGuided": "Mode encadré",
+      "teenTrusted": "Mode confiance",
+      "teenTheme": "Mon style",
+      "familiaParentBadge": "Famille",
+      "familyCredits": "Crédits famille",
+      "backToFamiliaDashboard": "Retour au tableau de bord",
+      "familiaDashboard": "Tableau de bord famille"
     },
     "usingPersonalCredits": "Crédits personnels",
     "usingOrgCredits": "Crédits établissement",
@@ -367,6 +379,10 @@
       "insufficientCredits": "Crédits insuffisants",
       "lowBalance": "Solde bas",
       "tokens": "~{inputTokens} tokens entrée, ~{outputTokens} sortie"
+    },
+    "familia": {
+      "assistantReady": "Je suis là pour t'aider, {name} !",
+      "startTyping": "Pose ta première question ci-dessous..."
     },
     "rateLimit": {
       "eco": "Éco",
@@ -967,9 +983,18 @@
       "title": "Adapté au budget étudiant",
       "subtitle": "Fini les 20€/mois de ChatGPT Plus. Avec iaiaz, tu maîtrises ton budget.",
       "note": "Les crédits n'expirent jamais. Recharge quand tu veux.",
-      "example1": { "amount": "1€", "usage": "~50 questions avec Claude Sonnet" },
-      "example2": { "amount": "5€", "usage": "Un mois d'utilisation modérée" },
-      "example3": { "amount": "10€", "usage": "Préparation complète des partiels" }
+      "example1": {
+        "amount": "1€",
+        "usage": "~50 questions avec Claude Sonnet"
+      },
+      "example2": {
+        "amount": "5€",
+        "usage": "Un mois d'utilisation modérée"
+      },
+      "example3": {
+        "amount": "10€",
+        "usage": "Préparation complète des partiels"
+      }
     },
     "useCases": {
       "title": "Comment les étudiants utilisent iaiaz",
@@ -1014,9 +1039,18 @@
     },
     "testimonials": {
       "title": "Ce qu'en disent les étudiants",
-      "t1": { "quote": "Avec 5€, j'ai tenu tout le semestre. Parfait pour les partiels !", "author": "Léa, L3 Droit" },
-      "t2": { "quote": "Je peux enfin utiliser Claude ET GPT-5 selon mes besoins, sans me ruiner.", "author": "Thomas, M1 Informatique" },
-      "t3": { "quote": "Le modèle Mistral est incroyable pour le français, et il coûte presque rien.", "author": "Camille, Prépa Lettres" }
+      "t1": {
+        "quote": "Avec 5€, j'ai tenu tout le semestre. Parfait pour les partiels !",
+        "author": "Léa, L3 Droit"
+      },
+      "t2": {
+        "quote": "Je peux enfin utiliser Claude ET GPT-5 selon mes besoins, sans me ruiner.",
+        "author": "Thomas, M1 Informatique"
+      },
+      "t3": {
+        "quote": "Le modèle Mistral est incroyable pour le français, et il coûte presque rien.",
+        "author": "Camille, Prépa Lettres"
+      }
     },
     "ethics": {
       "title": "Note sur l'utilisation éthique",
@@ -3597,6 +3631,516 @@
       "home": "Accueil",
       "blog": "Blog",
       "article": "ChatGPT vs Claude"
+    }
+  },
+  "familia": {
+    "landing": {
+      "nav": {
+        "pricing": "Tarifs",
+        "faq": "FAQ",
+        "safety": "Notre engagement",
+        "login": "Se connecter"
+      },
+      "hero": {
+        "badge": "Familia by iaiaz",
+        "title1": "L'IA en famille",
+        "title2": "et en confiance.",
+        "subtitle": "Pour les parents qui préfèrent accompagner plutôt qu'interdire",
+        "description": "Vos enfants vont utiliser l'IA, c'est inévitable. Autant le faire ensemble — et savoir quand ils ont besoin d'aide.",
+        "cta": "1€ offert pour essayer",
+        "learnMore": "Découvrir"
+      },
+      "problem": {
+        "title": "Vos ados utilisent déjà l'IA. Et vous ?",
+        "stat1": "des ados utilisent l'IA pour leurs devoirs",
+        "stat2": "des parents se sentent dépassés",
+        "stat3": "des parents préfèrent accompagner qu'interdire"
+      },
+      "features": {
+        "title": "Conçu pour les familles",
+        "subtitle": "Pas besoin d'être expert en IA. On s'occupe de tout.",
+        "family": {
+          "title": "On apprend ensemble",
+          "desc": "Un seul compte, des crédits partagés. Toute la famille découvre l'IA à son rythme."
+        },
+        "controls": {
+          "title": "Adapté à chaque âge",
+          "desc": "Mode Encadré pour les 12-14 ans, Mode Confiance pour les 15-17 ans. Vous choisissez le niveau d'autonomie."
+        },
+        "transparency": {
+          "title": "Suivi des devoirs",
+          "desc": "Vous voyez sur quels sujets vos enfants travaillent, et on vous alerte quand ils bloquent. Pas besoin de leur demander."
+        },
+        "limits": {
+          "title": "Des limites saines",
+          "desc": "Heures de coucher, budget quotidien, crédits maîtrisés. Comme pour le temps d'écran."
+        },
+        "teen": {
+          "title": "Une interface pour eux",
+          "desc": "Moderne, simple, pensée pour les ados. Ils vont adorer."
+        },
+        "learn": {
+          "title": "Apprendre, sans tricher",
+          "desc": "L'IA est là pour les aider à comprendre, pas pour faire le travail à leur place."
+        }
+      },
+      "scenario": {
+        "title": "Détectez les difficultés avant le bulletin",
+        "subtitle": "Familia analyse ce que vos enfants demandent à l'IA et vous alerte quand quelque chose mérite votre attention.",
+        "step1title": "Emma galère en maths",
+        "step1desc": "Cette semaine, elle a posé 5 questions sur les fractions. L'IA l'aide, mais le sujet revient encore et encore.",
+        "step2title": "Vous recevez une alerte",
+        "step2desc": "« Emma semble avoir du mal avec les fractions — 5 questions cette semaine sur le même chapitre. »",
+        "step3title": "Vous l'aidez à temps",
+        "step3desc": "Un échange le soir, un exercice ensemble, et Emma comprend enfin. Avant le contrôle.",
+        "closing": "Sans Familia, vous ne l'auriez jamais su."
+      },
+      "dashboard": {
+        "title": "Votre tableau de bord",
+        "subtitle": "Tout est clair, en un coup d'œil. Qui utilise quoi, combien, et quand.",
+        "mockTitle": "Tableau de bord Familia — Famille Dupont",
+        "mockBalance": "Budget restant",
+        "mockUsed": "Utilisé cette semaine",
+        "mockGuided": "Mode Encadré",
+        "mockTrusted": "Mode Confiance",
+        "mockTopics": "Cette semaine",
+        "emmaTopic1": "Maths",
+        "emmaTopic2": "Français",
+        "emmaTopic3": "SVT",
+        "lucasTopic1": "Philo",
+        "lucasTopic2": "Histoire",
+        "lucasTopic3": "Anglais",
+        "insightsTitle": "Alertes & insights",
+        "insightDifficulty": "Emma a posé 5 questions sur les fractions cette semaine — elle semble avoir du mal avec ce chapitre",
+        "insightLateUsage": "Lucas a utilisé l'IA après 22h hier soir",
+        "insightPositive": "Emma progresse en conjugaison : ses questions sont de plus en plus précises",
+        "controlTitle": "Ce que vous contrôlez",
+        "ctrl1": "Un budget quotidien par enfant (ex : « Max 0,50€/jour pour Lucas »)",
+        "ctrl2": "Les heures d'accès : pas d'IA après 22h ou avant 7h",
+        "ctrl3": "Le niveau d'autonomie : Mode Encadré (12-14 ans) ou Mode Confiance (15-17 ans)",
+        "ctrl4": "Les notifications : alerte en cas de contenu signalé ou de limite atteinte",
+        "ctrl5": "L'accès à l'historique : stats d'utilisation ou détail selon le mode"
+      },
+      "credits": {
+        "title": "Le budget IA, comment ça marche ?",
+        "subtitle": "C'est simple : chaque question posée à l'IA coûte quelques centimes. Votre abonnement inclut un budget de départ pour toute la famille.",
+        "analogy": "C'est comme un forfait téléphone : vous avez une enveloppe incluse, et vous rechargez si besoin. Pas de mauvaise surprise, vous maîtrisez le budget.",
+        "analogyBold": "C'est comme un forfait téléphone :",
+        "analogyRest": "vous avez une enveloppe incluse, et vous rechargez si besoin. Pas de mauvaise surprise, vous maîtrisez le budget.",
+        "homework": "séances de devoirs",
+        "homeworkDesc": "« Explique-moi ce chapitre de maths », « Aide-moi à comprendre la Révolution française »",
+        "essays": "rédactions accompagnées",
+        "essaysDesc": "« Aide-moi à structurer ma dissert », « Corrige mon intro d'anglais »",
+        "questions": "questions rapides",
+        "questionsDesc": "« C'est quoi la photosynthèse ? », « Traduis cette phrase en espagnol »",
+        "note": "Estimations basées sur une utilisation typique. Chaque conversation coûte entre 0,03€ (question rapide) et 0,35€ (longue session). Vous rechargez quand vous voulez, au montant de votre choix."
+      },
+      "pricing": {
+        "title": "Simple et transparent",
+        "subtitle": "Par enfant. Tarif réduit à partir du 3e.",
+        "month": "mois",
+        "cta": "1€ offert pour essayer",
+        "whatIsThis": "Comment ça marche ?",
+        "perChild": "par enfant/mois",
+        "extraChild": "À partir du 3e enfant",
+        "extraChildPrice": "5€/mois",
+        "extraChildNote": "crédits uniquement, abonnement offert",
+        "creditsIncluded": "5€ de budget IA inclus par enfant",
+        "creditsRollover": "Les crédits rechargés se cumulent d'un mois à l'autre",
+        "features": {
+          "creditsPerChild": "5€ de budget IA par enfant/mois",
+          "dashboard": "Tableau de bord parental & insights",
+          "supervision": "Supervision adaptée à l'âge",
+          "reports": "Rapports d'utilisation & alertes",
+          "topup": "Rechargez quand vous voulez",
+          "discount": "3e enfant : abonnement offert"
+        }
+      },
+      "faq": {
+        "title": "Vos questions",
+        "safety": {
+          "q": "Les données de mon enfant sont protégées ?",
+          "a": "Oui. Tout est chiffré et hébergé en Europe. Les conversations ne sont jamais utilisées pour entraîner l'IA."
+        },
+        "ages": {
+          "q": "C'est pour quel âge ?",
+          "a": "Pour les 12-17 ans, accompagnés par leurs parents. Le mode Encadré (12-14 ans) offre plus d'encadrement que le mode Confiance (15-17 ans)."
+        },
+        "conversations": {
+          "q": "Je peux voir ce que fait mon enfant ?",
+          "a": "En mode Encadré, vous avez accès aux statistiques et aux alertes. En mode Confiance, vous voyez l'utilisation globale, mais pas le contenu des conversations."
+        },
+        "cancel": {
+          "q": "Je peux arrêter quand je veux ?",
+          "a": "Bien sûr, sans engagement. Vos crédits restants restent utilisables après résiliation."
+        },
+        "topup": {
+          "q": "Et quand les crédits sont épuisés ?",
+          "a": "Vous rechargez en un clic, au montant de votre choix. Votre enfant voit un message sympa l'invitant à vous demander une recharge."
+        }
+      },
+      "safety": {
+        "title": "Comment notre IA protège vos enfants",
+        "subtitle": "Transparence totale sur ce qui se passe quand votre enfant discute avec l'IA.",
+        "guardian": "Un gardien dans chaque conversation",
+        "guardianDesc": "Chaque conversation est guidée par un prompt gardien qui assure un comportement éducatif et adapté à l'âge. L'IA aide à comprendre, elle ne fait pas le travail à leur place.",
+        "serious": "Quand un sujet grave apparaît",
+        "seriousDesc": "Si votre enfant évoque la dépression, le harcèlement ou toute détresse personnelle, l'IA ne joue PAS au psy. Elle écoute, reconnaît ses émotions, et lui donne les vrais numéros d'aide.",
+        "hotlines": "Les numéros que votre enfant verrait",
+        "filSante": "Fil Santé Jeunes — anonyme, gratuit, 12-25 ans",
+        "suicide": "Prévention du suicide",
+        "harcelement": "Non au harcèlement",
+        "enfance": "Enfance en danger",
+        "noDo": "Ce que nous ne faisons pas",
+        "noDoDesc": "Nous ne stockons pas les conversations sensibles. Nous n'espionnons pas. Nous redirigeons vers de vrais humains.",
+        "parentsSee": "Ce que vous voyez",
+        "parentsSeeDesc": "Les matières scolaires et les tendances d'utilisation — jamais le contenu des conversations personnelles."
+      },
+      "cta": {
+        "title": "Prêt à découvrir l'IA en famille ?",
+        "subtitle": "1€ de budget IA offert, sans engagement",
+        "button": "Essayer avec 1€ offert"
+      }
+    },
+    "signup": {
+      "subtitle": "Créez votre espace famille en quelques minutes",
+      "steps": {
+        "family": "Famille",
+        "members": "Membres",
+        "payment": "Paiement"
+      },
+      "familyTitle": "Votre famille",
+      "familyName": "Nom de famille",
+      "familyNamePlaceholder": "Ex : Famille Dupont",
+      "membersTitle": "Invitez vos proches",
+      "membersDesc": "Ajoutez vos enfants et éventuellement un autre parent. Vous pourrez aussi les ajouter plus tard.",
+      "roleChild": "Enfant",
+      "roleParent": "Parent",
+      "namePlaceholder": "Prénom",
+      "birthdate": "Date de naissance",
+      "schoolYear": "Niveau scolaire",
+      "selectYear": "Choisir le niveau",
+      "schoolYearHelp": "Permet d'adapter les réponses au programme scolaire",
+      "remove": "Retirer",
+      "addMember": "Ajouter un membre",
+      "paymentTitle": "Récapitulatif",
+      "family": "Famille",
+      "childCount": "Enfants",
+      "children": "enfant(s)",
+      "priceLine": "{quantity} × {unitPrice}€/mois",
+      "extraLine": "{quantity} × {unitPrice}€/mois (3e enfant+)",
+      "total": "Total",
+      "trialNote": "1€ de budget IA offert pour découvrir. Sans engagement.",
+      "noChildren": "Ajoutez au moins un enfant pour continuer.",
+      "next": "Suivant",
+      "back": "Retour",
+      "processing": "Un instant...",
+      "subscribe": "S'abonner"
+    },
+    "dashboard": {
+      "subtitle": "Tableau de bord familial",
+      "creditBalance": "disponible",
+      "quickStats": {
+        "title": "Cette semaine en un coup d'œil",
+        "spent": "dépensés cette semaine",
+        "conversations": "conversations",
+        "alerts": "alertes"
+      },
+      "members": {
+        "title": "Membres de la famille",
+        "thisWeek": "Cette semaine",
+        "topTopics": "Sujets principaux",
+        "difficultyDetected": "Difficultés ({count} fois cette semaine)",
+        "lateUsage": "Usage tardif détecté",
+        "viewDetails": "Voir les détails",
+        "adjustSettings": "Ajuster les paramètres",
+        "modes": {
+          "guided": "Mode Encadré",
+          "trusted": "Mode autonome",
+          "adult": "Mode adulte"
+        },
+        "noChildren": "Aucun enfant trouvé dans cette famille",
+        "personalBalance": "Crédits personnels",
+        "spent": "dépensé"
+      },
+      "smartInsights": {
+        "title": "Insights intelligents"
+      },
+      "insights": {
+        "difficulty": "{name} a eu des difficultés {count} fois cette semaine — peut avoir besoin d'aide",
+        "lateUsage": "{name} a utilisé l'IA après les heures autorisées",
+        "topicTrend": "{name} explore {topic} — nouvel intérêt détecté !",
+        "budgetOnTrack": "Budget familial dans les clous (moy. {daily}€/jour)"
+      },
+      "quickActions": {
+        "title": "Actions rapides",
+        "manageControls": "Gérer les contrôles",
+        "addCredits": "Ajouter des crédits",
+        "viewAllActivity": "Voir toute l'activité"
+      },
+      "header": {
+        "chat": "Chat",
+        "transfer": "Transférer des crédits",
+        "logout": "Déconnexion"
+      },
+      "subscription": {
+        "paymentPending": "Votre abonnement n'est pas encore actif. Finalisez votre paiement pour commencer.",
+        "completePurchase": "Finaliser",
+        "trialActive": "Période d'essai en cours — votre abonnement commencera le {date}.",
+        "pastDue": "Votre paiement a échoué. Veuillez mettre à jour vos informations de paiement pour continuer."
+      },
+      "welcome": {
+        "title": "Bienvenue sur Familia !",
+        "subtitle": "Votre espace famille est prêt. Voici comment démarrer :",
+        "step1Title": "Invitez vos enfants",
+        "step1Text": "Envoyez-leur une invitation par email depuis les réglages.",
+        "step2Title": "Les contrôles sont automatiques",
+        "step2Text": "Le mode de supervision s'adapte à l'âge de chaque enfant.",
+        "step3Title": "Explorez ensemble",
+        "step3Text": "Découvrez comment l'IA peut aider toute la famille au quotidien.",
+        "creditNote": "1€ offert !",
+        "creditText": "Vous avez 1€ de budget IA pour découvrir le service avant votre premier paiement.",
+        "getStarted": "C'est parti !"
+      },
+      "transfer": {
+        "title": "Transférer des crédits aux enfants",
+        "description": "Allouer des crédits de votre solde familial vers les enfants",
+        "orgBalance": "Solde familial",
+        "totalToTransfer": "Total à transférer",
+        "remaining": "Restant",
+        "cancel": "Annuler",
+        "confirm": "Transférer",
+        "transferring": "Transfert en cours...",
+        "success": "Crédits transférés avec succès !",
+        "error": "Échec du transfert. Veuillez réessayer."
+      }
+    },
+    "childReport": {
+      "notFound": "Profil introuvable",
+      "backToDashboard": "Retour au tableau de bord",
+      "guidedMode": "Mode Encadré",
+      "trustedMode": "Mode Confiance",
+      "years": "ans",
+      "creditsUsed": "Crédits utilisés",
+      "conversations": "Conversations",
+      "supervisionMode": "Mode de supervision",
+      "last7days": "7 derniers jours",
+      "manageControls": "Gérer les contrôles",
+      "adjustSettings": "Modifier les réglages"
+    },
+    "childAnalytics": {
+      "notFound": "Profil introuvable",
+      "backToDashboard": "Retour au tableau de bord",
+      "guidedMode": "Mode Encadré",
+      "trustedMode": "Mode Confiance",
+      "years": "ans",
+      "last7days": "7 jours",
+      "last30days": "30 jours",
+      "kpi": {
+        "conversations": "Conversations",
+        "totalCost": "Coût total",
+        "dailyAvg": "Moy. / jour",
+        "struggleRatio": "Taux de difficulté",
+        "co2Impact": "Impact CO2"
+      },
+      "sections": {
+        "dailyActivity": "Activité quotidienne",
+        "learningMap": "Carte d'apprentissage",
+        "subjects": "Matières",
+        "sessions": "sessions",
+        "topTopics": "Sujets principaux",
+        "activityTypes": "Types d'activité",
+        "usagePatterns": "Habitudes d'utilisation",
+        "struggles": "Difficultés détectées",
+        "safety": "Sécurité & alertes",
+        "recentConversations": "Conversations récentes"
+      },
+      "activityTypeLabels": {
+        "homework": "Devoirs",
+        "revision": "Révisions",
+        "creative": "Créatif",
+        "essay": "Rédaction",
+        "general": "Général"
+      },
+      "timeBlocks": {
+        "morning": "Matin",
+        "afternoon": "Après-midi",
+        "evening": "Soir",
+        "night": "Nuit"
+      },
+      "days": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mer",
+        "thu": "Jeu",
+        "fri": "Ven",
+        "sat": "Sam",
+        "sun": "Dim"
+      },
+      "struggleInsight": "{name} a eu des difficultés en {subject}, surtout sur {topic} ({count} sessions)",
+      "struggleInsightSimple": "{name} a eu des difficultés en {subject} ({count} sessions)",
+      "noStruggles": "Aucune difficulté détectée — bravo !",
+      "dismissed": "Traité",
+      "manageControls": "Gérer les contrôles",
+      "adjustSettings": "Modifier les réglages",
+      "tips": {
+        "conversations": "Nombre de conversations IA démarrées sur cette période.",
+        "totalCost": "Coût total de l'utilisation de l'IA (appels API) pour cet enfant.",
+        "struggleRatio": "% de sessions d'apprentissage où l'IA a détecté des difficultés répétées sur un même sujet. Vert <20 %, orange 20–50 %, rouge >50 %.",
+        "co2Impact": "Empreinte carbone estimée de l'utilisation de l'IA, basée sur le modèle et les tokens utilisés.",
+        "dailyActivity": "Nombre de messages envoyés par jour.",
+        "subjects": "Matières détectées à partir de l'activité des conversations. Chaque session est analysée par l'IA.",
+        "usagePatterns": "Quand votre enfant utilise l'IA, par jour et créneau horaire. L'icône lune = heures calmes.",
+        "struggles": "Pourcentage de sessions par matière où des difficultés répétées ont été détectées."
+      },
+      "suggestions": {
+        "generate": "Générer des suggestions IA",
+        "generating": "Analyse en cours...",
+        "title": "Suggestions pour vous",
+        "lastGenerated": "Dernière génération : {date}",
+        "error": "Impossible de générer les suggestions",
+        "noData": "Pas encore assez de données pour générer des suggestions"
+      },
+      "empty": {
+        "noActivity": "Aucune activité sur cette période",
+        "noActivityDesc": "Cet enfant n'a pas encore utilisé l'IA pendant cette période.",
+        "noTopics": "Aucun sujet détecté pour le moment",
+        "noFlags": "Aucune alerte — tout va bien !"
+      }
+    },
+    "settings": {
+      "title": "Réglages Familia",
+      "backToDashboard": "Retour au tableau de bord",
+      "inviteMember": "Inviter un membre",
+      "namePlaceholder": "Prénom",
+      "roleChild": "Enfant",
+      "roleParent": "Parent",
+      "sendInvite": "Envoyer",
+      "inviteSent": "Invitation envoyée !",
+      "inviteError": "L'envoi a échoué",
+      "childControls": "Contrôles parentaux",
+      "noChildren": "Aucun enfant dans la famille pour le moment",
+      "save": "Enregistrer",
+      "supervisionMode": "Mode de supervision",
+      "guided": "Encadré",
+      "trusted": "Confiance",
+      "dailyCreditLimit": "Budget quotidien (€)",
+      "unlimited": "Pas de limite",
+      "cumulativeCredits": "Crédits cumulables",
+      "cumulativeCreditsDesc": "Les crédits non utilisés sont reportés (sur 7 jours)",
+      "quietHoursStart": "Heure de coucher",
+      "quietHoursEnd": "Heure de réveil",
+      "profile": "Profil",
+      "displayName": "Prénom",
+      "birthdate": "Date de naissance",
+      "schoolYear": "Classe",
+      "schoolYears": {
+        "6eme": "6ème",
+        "5eme": "5ème",
+        "4eme": "4ème",
+        "3eme": "3ème",
+        "seconde": "Seconde",
+        "premiere": "Première",
+        "terminale": "Terminale",
+        "superieur": "Supérieur"
+      }
+    },
+    "chat": {
+      "greeting": "Salut {name} !",
+      "subtitle": "Qu'est-ce qu'on apprend aujourd'hui ?",
+      "quickStart": "Tu veux faire quoi ?",
+      "welcome": {
+        "greeting": "Salut {name} ✨",
+        "subtitle": "Qu'est-ce qu'on explore ?",
+        "startTyping": "Ou tape directement en bas...",
+        "createNew": "Créer"
+      },
+      "parentWelcome": {
+        "greeting": "Bienvenue dans votre IA famille",
+        "subtitle": "Discutez avec l'IA en utilisant les crédits familiaux",
+        "suggestion1": "Aidez-moi à comprendre les difficultés scolaires de mon ado",
+        "suggestion2": "Comment mon enfant peut-il utiliser l'IA de façon responsable ?",
+        "suggestion3": "Proposez des activités d'apprentissage en famille",
+        "suggestion4": "Conseils pour parler de l'IA avec les adolescents",
+        "hint": "Tapez un message ou choisissez une suggestion ci-dessus"
+      },
+      "prompts": {
+        "homework": "Aide aux devoirs",
+        "essay": "Rédiger un texte",
+        "math": "Un problème de maths",
+        "creative": "Des idées créatives",
+        "learn": "Découvrir un sujet"
+      },
+      "startConversation": "Lancer une conversation",
+      "startDesc": "Pose ta question",
+      "guidedBadge": "Mode Encadré – Tes parents suivent ton utilisation",
+      "trustedBadge": "Mode Confiance – Tu gères en autonomie",
+      "myAssistants": "Mes assistants",
+      "createAssistant": "Créer",
+      "recentConversations": "Conversations récentes",
+      "noConversationsYet": "Pas encore de conversations. Lance-toi !",
+      "settings": "Réglages",
+      "theme": "Thème",
+      "chooseColor": "Choisis ta couleur",
+      "wizard": {
+        "title": "Créer un assistant",
+        "step1Title": "Choisis un avatar",
+        "step2Title": "Donne-lui un nom",
+        "step3Title": "Qu'est-ce qu'il fait ?",
+        "nameLabel": "Nom",
+        "namePlaceholder": "Mon assistant...",
+        "colorLabel": "Couleur",
+        "customLabel": "Ou écris tes propres instructions",
+        "customPlaceholder": "Décris comment ton assistant doit t'aider...",
+        "next": "Suivant",
+        "back": "Retour",
+        "create": "Créer !",
+        "presets": {
+          "homework": "Aide aux devoirs — patient et étape par étape",
+          "writing": "Coach écriture — structure et style",
+          "science": "Sciences — exemples concrets et expériences",
+          "languages": "Langues — grammaire et conversation"
+        }
+      },
+      "supervisionInfo": {
+        "guidedTitle": "Mode Encadré (12-14 ans)",
+        "trustedTitle": "Mode autonome (15-17 ans)",
+        "whatParentsSee": "Ce que tes parents PEUVENT voir",
+        "whatParentsDontSee": "Ce que tes parents NE PEUVENT PAS voir",
+        "canSee": [
+          "Les matières sur lesquelles tu travailles (Maths, Français, etc.)",
+          "Si tu galères sur un sujet (plusieurs questions sur le même thème)",
+          "Quand tu utilises l'IA (heure de la journée)",
+          "Combien de crédit tu utilises"
+        ],
+        "cannotSee": [
+          "Tes messages et questions réels",
+          "Les réponses de l'IA",
+          "Le contenu de tes conversations",
+          "Les choses personnelles que tu discutes"
+        ],
+        "guidedWhy": "Ce mode aide tes parents à te soutenir quand tu bloques, sans envahir ta vie privée. Ils voient les tendances, pas les détails.",
+        "trustedWhy": "Tu as plus d'autonomie. Tes parents voient seulement l'activité générale pour s'assurer que tu restes en sécurité et utilises les crédits de façon responsable."
+      }
+    },
+    "join": {
+      "invalidInvite": "Ce lien d'invitation n'est pas valide",
+      "alreadyAccepted": "Cette invitation a déjà été utilisée",
+      "expired": "Ce lien a expiré",
+      "childTitle": "Tes parents t'invitent !",
+      "parentTitle": "Rejoignez la famille",
+      "invitedTo": "Vous êtes invité(e) à rejoindre {family}",
+      "needsAccount": "Créez un compte pour rejoindre votre famille.",
+      "enterBirthdate": "Ta date de naissance",
+      "birthdateHelp": "On en a besoin pour adapter ton expérience (12 ans minimum)",
+      "schoolYear": "Ton niveau scolaire",
+      "selectYear": "Choisis ton niveau",
+      "schoolYearHelp": "Pour que l'IA s'adapte à ton programme scolaire",
+      "joinFamily": "Rejoindre ma famille",
+      "createAccount": "Créer mon compte",
+      "acceptError": "Oups, quelque chose n'a pas marché",
+      "welcomeFamily": "Bienvenue dans la famille !",
+      "redirecting": "C'est bon, on t'emmène..."
     }
   }
 }

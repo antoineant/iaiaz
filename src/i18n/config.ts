@@ -121,4 +121,11 @@ export const pathnames = {
   },
   '/legal/privacy': '/legal/privacy',
   '/legal/cookies': '/legal/cookies',
+  '/familia': '/familia',
+  '/familia/signup': '/familia/signup',
+  '/familia/dashboard': '/familia/dashboard',
+  '/familia/dashboard/[childId]': '/familia/dashboard/[childId]',
+  '/familia/settings': '/familia/settings',
+  '/familia/chat': '/familia/chat',
+  '/familia/join/[token]': '/familia/join/[token]',
 } as const;

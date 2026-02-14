@@ -14,6 +14,35 @@ export interface Conversation {
   updated_at: string;
   class_id?: string | null;  // If set, this is a class conversation
   organization_id?: string | null;  // If set, this is an org conversation (trainer)
+  assistant_id?: string | null;  // If set, linked to a custom assistant
+}
+
+// Familia custom assistants
+export interface CustomAssistant {
+  id: string;
+  user_id: string;
+  name: string;
+  avatar: string;
+  system_prompt: string;
+  purpose: string | null;
+  color: string;
+  is_preset: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type AccentColor = 'blue' | 'pink' | 'green' | 'orange' | 'purple' | 'red' | 'teal' | 'amber';
+
+export interface ConversationActivity {
+  id: string;
+  conversation_id: string;
+  message_id: string | null;
+  subject: string | null;
+  topic: string | null;
+  activity_type: string | null;
+  struggle: boolean;
+  created_at: string;
 }
 
 export interface Message {

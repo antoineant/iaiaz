@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendCreditsPurchaseEmail, sendOrgCreditsPurchaseEmail, sendSubscriptionEmail } from "@/lib/email";
+import { sendEmail, sendCreditsPurchaseEmail, sendOrgCreditsPurchaseEmail, sendSubscriptionEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -193,10 +193,10 @@ async function handleOrganizationPurchase(
   const receiptUrl = await getReceiptUrl(stripePaymentId);
   console.log("Organization receipt URL:", receiptUrl);
 
-  // 1. Update organization credit_balance
+  // 1. Update organization credit_balance and purchased_credits
   const { data: org, error: orgFetchError } = await adminClient
     .from("organizations")
-    .select("credit_balance")
+    .select("credit_balance, purchased_credits")
     .eq("id", organizationId)
     .single();
 
@@ -206,11 +206,13 @@ async function handleOrganizationPurchase(
   }
 
   const newBalance = (org.credit_balance || 0) + creditAmount;
+  const newPurchased = (org.purchased_credits || 0) + creditAmount;
 
   const { error: updateError } = await adminClient
     .from("organizations")
     .update({
       credit_balance: newBalance,
+      purchased_credits: newPurchased,
       updated_at: new Date().toISOString(),
     })
     .eq("id", organizationId);
@@ -338,7 +340,7 @@ async function handleSubscriptionUpdate(
   if (eventType === "customer.subscription.created") {
     const { data: org } = await adminClient
       .from("organizations")
-      .select("name, contact_email")
+      .select("name, contact_email, settings")
       .eq("id", organizationId)
       .single();
 
@@ -353,6 +355,120 @@ async function handleSubscriptionUpdate(
 
       if (emailResult.success) {
         console.log(`Subscription confirmation email sent to ${org.contact_email}`);
+      }
+    }
+
+    // Send pending invites stored during signup (before payment)
+    if (org?.settings) {
+      const settings = org.settings as Record<string, unknown>;
+      const pendingInvites = settings.pending_invites as Array<{
+        email: string;
+        name: string;
+        role: string;
+        birthdate?: string;
+      }> | undefined;
+      const inviteLocale = (settings.invite_locale as string) || "fr";
+
+      if (pendingInvites && pendingInvites.length > 0) {
+        // Find parent user_id (org owner) for invited_by
+        const { data: owner } = await adminClient
+          .from("organization_members")
+          .select("user_id")
+          .eq("organization_id", organizationId)
+          .eq("role", "owner")
+          .single();
+
+        const invitedBy = owner?.user_id || null;
+        const localePrefix = inviteLocale !== "fr" ? `/${inviteLocale}` : "";
+
+        for (const member of pendingInvites) {
+          try {
+            const { data: invite } = await adminClient
+              .from("organization_invites")
+              .insert({
+                organization_id: organizationId,
+                email: member.email.toLowerCase(),
+                role: member.role,
+                credit_amount: 0,
+                invited_by: invitedBy,
+                expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+              })
+              .select("token")
+              .single();
+
+            if (invite) {
+              const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/familia/join/${invite.token}`;
+              const isChild = member.role === "student";
+
+              await sendEmail({
+                to: member.email,
+                subject: isChild
+                  ? `${org.name} - Tes parents t'invitent sur iaiaz !`
+                  : `Rejoignez ${org.name} sur iaiaz Familia`,
+                html: buildFamiliaInviteEmail(member.name, org.name, inviteUrl, isChild),
+              });
+
+              console.log(`Sent pending invite to ${member.email} for org ${organizationId}`);
+            }
+          } catch (err) {
+            console.error(`Failed to send pending invite to ${member.email}:`, err);
+          }
+        }
+
+        // Clear pending invites from settings
+        const { pending_invites, invite_locale, ...cleanSettings } = settings;
+        await adminClient
+          .from("organizations")
+          .update({ settings: cleanSettings })
+          .eq("id", organizationId);
+      }
+    }
+
+    // Allocate monthly credits at trial start (so family can use AI during trial)
+    if (subscription.status === "trialing" && metadata.type === "familia") {
+      const creditsPerChild = parseFloat(metadata.creditsPerChild || "5");
+      const childCount = parseInt(metadata.childCount || "1", 10);
+      const monthlyCredits = creditsPerChild * childCount;
+
+      if (monthlyCredits > 0) {
+        const { data: currentOrg } = await adminClient
+          .from("organizations")
+          .select("credit_balance")
+          .eq("id", organizationId)
+          .single();
+
+        if (currentOrg) {
+          const newBalance = (currentOrg.credit_balance || 0) + monthlyCredits;
+          await adminClient
+            .from("organizations")
+            .update({ credit_balance: newBalance, updated_at: new Date().toISOString() })
+            .eq("id", organizationId);
+
+          // Also sync to parent's personal balance (mirrored)
+          const { data: parentMember } = await adminClient
+            .from("organization_members")
+            .select("user_id")
+            .eq("organization_id", organizationId)
+            .eq("role", "owner")
+            .single();
+
+          if (parentMember) {
+            await adminClient
+              .from("profiles")
+              .update({ credits_balance: newBalance })
+              .eq("id", parentMember.user_id);
+          }
+
+          // Log the trial credit transaction
+          await adminClient.from("organization_transactions").insert({
+            organization_id: organizationId,
+            type: "purchase",
+            amount: monthlyCredits,
+            description: `Credits inclus - debut essai Familia (${childCount} enfant${childCount > 1 ? "s" : ""} x ${creditsPerChild}€)`,
+          });
+
+          console.log(`Added ${monthlyCredits}EUR trial credits to familia org ${organizationId}`);
+        }
       }
     }
   }
@@ -452,6 +568,76 @@ async function handleSubscriptionPayment(invoice: Stripe.Invoice) {
     });
 
   console.log(`Subscription payment succeeded for organization ${organizationId}: ${(invoice.amount_paid || 0) / 100} ${invoice.currency}`);
+
+  // Familia plan: reset subscription credits and preserve purchased credits
+  if (subscription.metadata?.type === "familia") {
+    // Compute total children from subscription line items
+    const creditsPerChild = parseFloat(subscription.metadata?.creditsPerChild || "5");
+    let totalChildren = parseInt(subscription.metadata?.childCount || "1", 10);
+
+    // Try to get accurate count from subscription items
+    if (subscription.items?.data) {
+      totalChildren = subscription.items.data.reduce(
+        (sum, item) => sum + (item.quantity || 0),
+        0
+      );
+    }
+
+    const subscriptionCredits = creditsPerChild * totalChildren;
+
+    if (subscriptionCredits > 0) {
+      const { data: org } = await adminClient
+        .from("organizations")
+        .select("credit_balance, purchased_credits")
+        .eq("id", organizationId)
+        .single();
+
+      if (org) {
+        // Cap purchased_credits to current balance (can't exceed what's left)
+        const purchasedCredits = Math.min(
+          org.purchased_credits || 0,
+          org.credit_balance || 0
+        );
+        // New balance = preserved purchased credits + fresh subscription credits
+        const newBalance = purchasedCredits + subscriptionCredits;
+
+        await adminClient
+          .from("organizations")
+          .update({
+            credit_balance: newBalance,
+            purchased_credits: purchasedCredits,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", organizationId);
+
+        // Sync parent's personal balance (mirrored with org)
+        const { data: parentMember } = await adminClient
+          .from("organization_members")
+          .select("user_id")
+          .eq("organization_id", organizationId)
+          .eq("role", "owner")
+          .single();
+
+        if (parentMember) {
+          await adminClient
+            .from("profiles")
+            .update({ credits_balance: newBalance })
+            .eq("id", parentMember.user_id);
+        }
+
+        // Log the credit transaction
+        await adminClient.from("organization_transactions").insert({
+          organization_id: organizationId,
+          type: "purchase",
+          amount: subscriptionCredits,
+          description: `Credits mensuels Familia (${totalChildren} enfant${totalChildren > 1 ? "s" : ""} x ${creditsPerChild}€)`,
+          stripe_payment_id: invoice.payment_intent as string,
+        });
+
+        console.log(`Reset credits for familia org ${organizationId}: ${subscriptionCredits}€ subscription + ${purchasedCredits}€ purchased = ${newBalance}€ total`);
+      }
+    }
+  }
 }
 
 /**
@@ -513,4 +699,44 @@ async function handleSubscriptionPaymentFailed(invoice: Stripe.Invoice) {
       "payment_failed"
     );
   }
+}
+
+/**
+ * Build HTML email for Familia invite (used by webhook for pending invites)
+ */
+function buildFamiliaInviteEmail(
+  name: string,
+  familyName: string,
+  inviteUrl: string,
+  isChild: boolean
+): string {
+  if (isChild) {
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">Familia by iaiaz</h1>
+  </div>
+  <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Hey ${name} !</h2>
+  <p style="margin-bottom: 16px;">Tes parents t'invitent a rejoindre <strong>${familyName}</strong> sur iaiaz.</p>
+  <p style="margin-bottom: 16px;">Tu vas pouvoir utiliser l'IA pour tes devoirs, tes projets creatifs, et apprendre plein de nouvelles choses !</p>
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="${inviteUrl}" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9, #d946ef); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 18px;">Rejoindre ma famille</a>
+  </div>
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">L'equipe iaiaz</p>
+</body></html>`;
+  }
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="font-size: 32px; font-weight: 800; color: #0ea5e9; margin: 0;">Familia by iaiaz</h1>
+  </div>
+  <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Bonjour ${name},</h2>
+  <p style="margin-bottom: 16px;">Vous etes invite(e) a rejoindre <strong>${familyName}</strong> sur iaiaz Familia en tant que parent.</p>
+  <p style="margin-bottom: 16px;">Vous aurez acces au tableau de bord parental, aux controles et au suivi de l'utilisation de l'IA par votre famille.</p>
+  <div style="text-align: center; margin: 32px 0;">
+    <a href="${inviteUrl}" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">Rejoindre la famille</a>
+  </div>
+  <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">L'equipe iaiaz</p>
+</body></html>`;
 }

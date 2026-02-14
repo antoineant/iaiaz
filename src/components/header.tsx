@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, GraduationCap, Building2, Users, Briefcase } from "lucide-react";
+import { Menu, X, ChevronDown, GraduationCap, Building2, Users, Briefcase, Heart } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface HeaderProps {
@@ -30,6 +30,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
   }, []);
 
   const mainNavLinks = [
+    { href: "/familia" as const, label: t("nav.familia") },
     { href: "/tarifs" as const, label: t("nav.pricing") },
     { href: "/comparatif" as const, label: t("nav.compare") },
   ];

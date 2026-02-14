@@ -27,6 +27,9 @@ import {
   type CreditContext,
 } from "@/lib/credits";
 import { isModelAllowedForUser } from "@/lib/org";
+import { checkFamiliaPreConditions, logContentFlag, getFamilyOrgInfo } from "@/lib/familia/content-filter";
+import { buildFamiliaSystemPrompt, buildParentSystemPrompt, parseFamiliaMetadata, createFamiliaMetaStripper } from "@/lib/familia/guardian-prompt";
+import { calculateAge } from "@/lib/familia/age-verification";
 
 interface ChatRequest {
   message: string;
@@ -37,6 +40,7 @@ interface ChatRequest {
   stream?: boolean;
   enableThinking?: boolean; // Enable Claude Extended Thinking (costs more tokens)
   classId?: string; // Class context for class conversations (uses org credits only)
+  assistantId?: string; // Familia custom assistant ID
 }
 
 // Build multimodal content from text and attachments
@@ -107,7 +111,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: ChatRequest = await request.json();
-    const { message, model, conversationId, messages = [], attachments = [], stream = false, enableThinking = false, classId } = body;
+    const { message, model, conversationId, messages = [], attachments = [], stream = false, enableThinking = false, classId, assistantId } = body;
 
     // If classId provided, validate class membership
     let validatedClassId: string | null = null;
@@ -153,6 +157,137 @@ export async function POST(request: NextRequest) {
         { error: "Ce modèle n'est pas disponible pour votre classe" },
         { status: 403 }
       );
+    }
+
+    // Check Familia parental controls (quiet hours, daily limits)
+    const familiaCheck = await checkFamiliaPreConditions(user.id);
+    if (!familiaCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: familiaCheck.detail || "Utilisation restreinte par le controle parental",
+          code: "PARENTAL_CONTROL",
+        },
+        { status: 403 }
+      );
+    }
+
+    // Build Familia system prompt if user is a family member
+    let familiaSystemPrompt: string | undefined;
+    const familyInfo = await getFamilyOrgInfo(user.id);
+    if (familyInfo?.isFamilyMember && familyInfo.orgId) {
+      const isParent = familyInfo.role === "owner" || familyInfo.role === "admin";
+
+      if (isParent) {
+        // --- Parent branch: build prompt with children context ---
+        const [childMembers, orgData] = await Promise.all([
+          adminClient
+            .from("organization_members")
+            .select("user_id, supervision_mode")
+            .eq("organization_id", familyInfo.orgId)
+            .eq("role", "student")
+            .eq("status", "active"),
+          adminClient
+            .from("organizations")
+            .select("name")
+            .eq("id", familyInfo.orgId)
+            .single(),
+        ]);
+
+        const orgName = orgData.data?.name || "Ma famille";
+        const childIds = (childMembers.data || []).map((m) => m.user_id);
+
+        if (childIds.length > 0) {
+          // Fetch children profiles and recent activity in parallel
+          const [childProfiles, activityData] = await Promise.all([
+            adminClient
+              .from("profiles")
+              .select("id, display_name, birthdate, school_year")
+              .in("id", childIds),
+            adminClient
+              .from("conversation_activity")
+              .select("subject, struggle, conversations!inner(user_id)")
+              .in("conversations.user_id", childIds)
+              .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+          ]);
+
+          // Build supervision mode lookup
+          const supervisionByChild = new Map(
+            (childMembers.data || []).map((m) => [m.user_id, m.supervision_mode || "guided"])
+          );
+
+          // Aggregate activity per child
+          const activityByChild = new Map<string, Map<string, { count: number; struggleCount: number }>>();
+          for (const row of activityData.data || []) {
+            const conv = row.conversations as unknown as { user_id: string };
+            const childId = conv.user_id;
+            const subject = row.subject || "general";
+            if (!activityByChild.has(childId)) activityByChild.set(childId, new Map());
+            const subjectMap = activityByChild.get(childId)!;
+            const existing = subjectMap.get(subject) || { count: 0, struggleCount: 0 };
+            existing.count++;
+            if (row.struggle) existing.struggleCount++;
+            subjectMap.set(subject, existing);
+          }
+
+          // Build children context array
+          const childrenContext = (childProfiles.data || []).map((p) => ({
+            name: p.display_name?.split(" ")[0] || "Enfant",
+            age: p.birthdate ? calculateAge(new Date(p.birthdate)) : null,
+            schoolYear: p.school_year || null,
+            supervisionMode: supervisionByChild.get(p.id) || "guided",
+            recentSubjects: activityByChild.has(p.id)
+              ? Array.from(activityByChild.get(p.id)!.entries()).map(([subject, stats]) => ({
+                  subject,
+                  count: stats.count,
+                  struggleCount: stats.struggleCount,
+                }))
+              : [],
+          }));
+
+          familiaSystemPrompt = buildParentSystemPrompt(orgName, childrenContext);
+        } else {
+          familiaSystemPrompt = buildParentSystemPrompt(orgName, []);
+        }
+      } else {
+        // --- Child branch: existing guardian prompt (unchanged) ---
+        const { data: memberInfo } = await adminClient
+          .from("organization_members")
+          .select("supervision_mode, age_bracket")
+          .eq("user_id", user.id)
+          .eq("status", "active")
+          .single();
+
+        const ageBracket = memberInfo?.age_bracket || "12-14";
+        const supervisionMode = memberInfo?.supervision_mode || "guided";
+
+        const { data: profile } = await adminClient
+          .from("profiles")
+          .select("display_name, school_year, birthdate")
+          .eq("id", user.id)
+          .single();
+
+        const displayName = profile?.display_name || "there";
+        const firstName = displayName.split(" ")[0];
+        const schoolYear = profile?.school_year || null;
+        const exactAge = profile?.birthdate
+          ? calculateAge(new Date(profile.birthdate))
+          : null;
+
+        let assistant: { name: string; system_prompt: string } | null = null;
+        if (assistantId) {
+          const { data: assistantData } = await adminClient
+            .from("custom_assistants")
+            .select("name, system_prompt")
+            .eq("id", assistantId)
+            .eq("user_id", user.id)
+            .single();
+          if (assistantData) {
+            assistant = assistantData;
+          }
+        }
+
+        familiaSystemPrompt = buildFamiliaSystemPrompt(ageBracket, supervisionMode, firstName, assistant, schoolYear, exactAge);
+      }
     }
 
     // Get pricing settings for cost estimation
@@ -297,7 +432,8 @@ export async function POST(request: NextRequest) {
             user_id: user.id,
             title: message.slice(0, 100) || "Image/Document",
             model,
-            class_id: validatedClassId, // Set class context if provided
+            class_id: validatedClassId,
+            ...(assistantId ? { assistant_id: assistantId } : {}),
           })
           .select()
           .single();
@@ -342,11 +478,19 @@ export async function POST(request: NextRequest) {
       const readableStream = new ReadableStream({
         async start(controller) {
           try {
+            // Set up metadata stripper for Familia conversations
+            const metaStripper = familiaSystemPrompt ? createFamiliaMetaStripper() : null;
+
             const aiResponse = await callAIStream(
               model,
               fullMessages,
               (chunk) => {
-                const data = JSON.stringify({ type: "chunk", content: chunk });
+                let safeChunk = chunk;
+                if (metaStripper) {
+                  safeChunk = metaStripper.processChunk(chunk);
+                  if (!safeChunk) return; // Buffering potential meta tag
+                }
+                const data = JSON.stringify({ type: "chunk", content: safeChunk });
                 controller.enqueue(encoder.encode(`data: ${data}\n\n`));
               },
               enableThinking
@@ -354,8 +498,18 @@ export async function POST(request: NextRequest) {
                     const data = JSON.stringify({ type: "thinking", content: thinkingChunk });
                     controller.enqueue(encoder.encode(`data: ${data}\n\n`));
                   }
-                : undefined
+                : undefined,
+              familiaSystemPrompt
             );
+
+            // Flush any remaining buffered content from meta stripper
+            if (metaStripper) {
+              const remaining = metaStripper.flush();
+              if (remaining) {
+                const data = JSON.stringify({ type: "chunk", content: remaining });
+                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+              }
+            }
 
             // Calculate actual cost
             const actualCost = await calculateCostFromDBAdmin(
@@ -372,6 +526,11 @@ export async function POST(request: NextRequest) {
               co2Rate
             );
 
+            // Parse and strip metadata from stored content for Familia
+            const { cleanContent, metadata: familiaMetadata } = familiaSystemPrompt
+              ? parseFamiliaMetadata(aiResponse.content)
+              : { cleanContent: aiResponse.content, metadata: null };
+
             // Save assistant message
             if (streamConversationId) {
               const { data: assistantMsg } = await adminClient
@@ -379,7 +538,7 @@ export async function POST(request: NextRequest) {
                 .insert({
                   conversation_id: streamConversationId,
                   role: "assistant",
-                  content: aiResponse.content,
+                  content: cleanContent,
                   tokens_input: aiResponse.tokensInput,
                   tokens_output: aiResponse.tokensOutput,
                   cost: actualCost,
@@ -399,6 +558,18 @@ export async function POST(request: NextRequest) {
                   cost_eur: actualCost,
                   co2_grams: co2Grams,
                 });
+
+                // Save activity metadata for parent analytics
+                if (familiaMetadata && streamConversationId) {
+                  await adminClient.from("conversation_activity").insert({
+                    conversation_id: streamConversationId,
+                    message_id: assistantMsg.id,
+                    subject: familiaMetadata.subject || null,
+                    topic: familiaMetadata.topic || null,
+                    activity_type: familiaMetadata.type || null,
+                    struggle: familiaMetadata.struggle || false,
+                  });
+                }
               }
             }
 
@@ -477,7 +648,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Non-streaming response (original behavior)
-    const aiResponse = await callAI(model, fullMessages);
+    const aiResponse = await callAI(model, fullMessages, familiaSystemPrompt);
 
     // Calculate actual cost using database pricing
     const actualCost = await calculateCostFromDBAdmin(
@@ -505,7 +676,8 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           title: message.slice(0, 100) || "Image/Document",
           model,
-          class_id: validatedClassId, // Set class context if provided
+          class_id: validatedClassId,
+          ...(assistantId ? { assistant_id: assistantId } : {}),
         })
         .select()
         .single();
@@ -522,6 +694,11 @@ export async function POST(request: NextRequest) {
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversationId);
     }
+
+    // Parse and strip metadata from content for Familia
+    const { cleanContent: nonStreamCleanContent, metadata: nonStreamMetadata } = familiaSystemPrompt
+      ? parseFamiliaMetadata(aiResponse.content)
+      : { cleanContent: aiResponse.content, metadata: null };
 
     // Save messages to database
     if (finalConversationId) {
@@ -548,13 +725,13 @@ export async function POST(request: NextRequest) {
           .in("id", attachments);
       }
 
-      // Assistant message
+      // Assistant message (with metadata stripped)
       const { data: assistantMsg } = await adminClient
         .from("messages")
         .insert({
           conversation_id: finalConversationId,
           role: "assistant",
-          content: aiResponse.content,
+          content: nonStreamCleanContent,
           tokens_input: aiResponse.tokensInput,
           tokens_output: aiResponse.tokensOutput,
           cost: actualCost,
@@ -575,6 +752,18 @@ export async function POST(request: NextRequest) {
           cost_eur: actualCost,
           co2_grams: co2Grams,
         });
+
+        // Save activity metadata for parent analytics
+        if (nonStreamMetadata && finalConversationId) {
+          await adminClient.from("conversation_activity").insert({
+            conversation_id: finalConversationId,
+            message_id: assistantMsg.id,
+            subject: nonStreamMetadata.subject || null,
+            topic: nonStreamMetadata.topic || null,
+            activity_type: nonStreamMetadata.type || null,
+            struggle: nonStreamMetadata.struggle || false,
+          });
+        }
       }
     }
 
@@ -596,7 +785,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        content: aiResponse.content,
+        content: nonStreamCleanContent,
         tokensInput: aiResponse.tokensInput,
         tokensOutput: aiResponse.tokensOutput,
         cost: actualCost,
@@ -654,6 +843,26 @@ export async function POST(request: NextRequest) {
       else if (errorMsg.includes("content_policy") || errorMsg.includes("safety") || errorMsg.includes("blocked")) {
         userMessage = "Votre message n'a pas pu être traité. Veuillez reformuler votre demande.";
         statusCode = 400;
+
+        // Log content flag for familia parental review
+        try {
+          const supabaseForFlag = await createClient();
+          const { data: flagUser } = await supabaseForFlag.auth.getUser();
+          if (flagUser?.user) {
+            const familyInfo = await getFamilyOrgInfo(flagUser.user.id);
+            if (familyInfo?.isFamilyMember && familyInfo.orgId) {
+              await logContentFlag(
+                null, // conversation_id not available in error handler
+                flagUser.user.id,
+                familyInfo.orgId,
+                "content_policy",
+                "Message bloque par le filtre de contenu du fournisseur IA"
+              );
+            }
+          }
+        } catch {
+          // Non-blocking: don't fail the response if flagging fails
+        }
       }
       // Timeout
       else if (errorMsg.includes("timeout") || errorMsg.includes("timed out")) {
