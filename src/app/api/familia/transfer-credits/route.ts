@@ -98,7 +98,7 @@ export async function POST(request: Request) {
       // Get current balance (use admin client to bypass RLS)
       const { data: profile } = await adminClient
         .from("profiles")
-        .select("credits_balance, display_name")
+        .select("credits_balance, display_name, credits_allocated")
         .eq("id", userId)
         .single();
 
