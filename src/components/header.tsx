@@ -30,13 +30,13 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
   }, []);
 
   const mainNavLinks = [
-    { href: "/familia" as const, label: t("nav.familia") },
     { href: "/tarifs" as const, label: t("nav.pricing") },
     { href: "/comparatif" as const, label: t("nav.compare") },
   ];
 
   const audienceLinks = [
     { href: "/etudiants" as const, label: t("nav.students"), icon: GraduationCap },
+    { href: "/familia" as const, label: t("nav.familia"), icon: Heart },
     { href: "/etablissements" as const, label: t("nav.schools"), icon: Building2 },
     { href: "/formateurs" as const, label: t("nav.trainers"), icon: Users },
     { href: "/business" as const, label: t("nav.business"), icon: Briefcase },
