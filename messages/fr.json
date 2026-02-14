@@ -111,8 +111,7 @@
       "compare": "Comparatif",
       "forWhom": "Pour qui ?",
       "students": "Étudiants",
-      "schools": "Établissements",
-      "trainers": "Formateurs",
+      "study": "Étude",
       "business": "Entreprises",
       "login": "Connexion",
       "signup": "Commencer",
@@ -968,8 +967,13 @@
     }
   },
   "etudiants": {
+    "nav": {
+      "pricing": "Tarifs",
+      "faq": "FAQ",
+      "login": "Se connecter"
+    },
     "hero": {
-      "badge": "Spécial Étudiants",
+      "badge": "Study by iaiaz",
       "title": "L'IA qui respecte",
       "titleHighlight": "ton budget étudiant",
       "subtitle": "GPT-5, Claude, Gemini et Mistral à portée de main, sans abonnement. Tu ne paies que ce que tu consommes, dès 0.001€ par message.",
@@ -1079,6 +1083,44 @@
         "question": "Quelle IA est la meilleure pour les études ?",
         "answer": "Ça dépend ! Claude excelle en français et analyse de textes. GPT-5 est top en maths et code. Gemini gère les très longs documents. Mistral est économique pour les questions simples. Avec iaiaz, tu as accès à toutes ces IA."
       }
+    },
+    "schools": {
+      "title": "Pour les établissements",
+      "subtitle": "Offrez un accès équitable à l'IA à tous vos étudiants.",
+      "equity": {
+        "title": "Équité d'accès",
+        "description": "Chaque étudiant accède aux mêmes modèles IA, peu importe son budget personnel."
+      },
+      "cost": {
+        "title": "Maîtrise des coûts",
+        "description": "Dès 1€ par étudiant/mois — sans abonnement individuel ni licence par siège."
+      },
+      "visibility": {
+        "title": "Visibilité pédagogique",
+        "description": "Tableau de bord enseignant : sujets consultés, fréquence d'usage, alertes pédagogiques."
+      },
+      "privacy": {
+        "title": "Confidentialité garantie",
+        "description": "Données hébergées en UE, conformité RGPD, aucune donnée utilisée pour entraîner les modèles."
+      },
+      "cta": "Demander une démo"
+    },
+    "trainers": {
+      "title": "Pour les formateurs",
+      "subtitle": "Comprenez comment vos étudiants utilisent l'IA — et transformez ces données en pédagogie.",
+      "dashboard": {
+        "title": "Tableau de bord enseignant",
+        "description": "Visualisez les sujets demandés, les pics d'utilisation, et les difficultés détectées — en temps réel."
+      },
+      "analytics": {
+        "title": "Statistiques par classe",
+        "description": "Nombre de questions, modèles utilisés, heures d'activité — pour chaque classe et chaque étudiant."
+      },
+      "insights": {
+        "title": "Alertes pédagogiques",
+        "description": "Détection automatique des difficultés récurrentes : un étudiant pose 12 fois la même question sur les intégrales ? Vous le savez."
+      },
+      "cta": "Créer mon espace classe"
     },
     "breadcrumb": {
       "home": "Accueil",
@@ -2924,8 +2966,13 @@
     }
   },
   "business": {
+    "nav": {
+      "pricing": "Tarifs",
+      "faq": "FAQ",
+      "login": "Se connecter"
+    },
     "hero": {
-      "badge": "Offre Entreprises",
+      "badge": "Business by iaiaz",
       "title": "L'IA pour vos équipes.",
       "titleHighlight": "L'IA à la carte.",
       "subtitle": "Tous les modèles IA (Claude, GPT-5, Gemini, Mistral) sur une seule plateforme. Facturation à la consommation et suivi détaillé. Vos équipes ont l'outil qu'il leur faut, vous gardez le contrôle.",

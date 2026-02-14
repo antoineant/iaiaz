@@ -27,8 +27,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
 
 type Props = {
@@ -98,47 +98,84 @@ export default async function BusinessPage({ params }: Props) {
       <FAQSchema faqs={faqs} />
       <BreadcrumbSchema items={breadcrumbItems} />
 
-      <Header />
-
-      <main>
-        {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
-            <Building2 className="w-4 h-4" />
-            {t("hero.badge")}
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {t("hero.title")}
-            <br />
-            <span className="text-primary-600 dark:text-primary-400">{t("hero.titleHighlight")}</span>
-          </h1>
-          <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            {t("hero.subtitle")}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <NextLink href="/auth/signup/business">
-              <Button size="lg">
-                <Sparkles className="w-5 h-5 mr-2" />
-                {t("hero.cta")}
-              </Button>
-            </NextLink>
+      {/* Business by iaiaz — Branded Header */}
+      <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/business" className="flex items-baseline gap-1.5">
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+              Business
+            </span>
+            <span className="text-sm text-[var(--muted-foreground)] font-medium">
+              by iaiaz
+            </span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <a href="#pricing" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              {t("nav.pricing")}
+            </a>
+            <a href="#faq" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              {t("nav.faq")}
+            </a>
+            <LanguageSwitcher />
+            <Link href="/auth/login" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              {t("nav.login")}
+            </Link>
             <a href="mailto:contact@iaiaz.com?subject=Demande%20démo%20-%20Entreprise">
-              <Button variant="outline" size="lg">
+              <Button size="sm" className="bg-primary-600 hover:bg-primary-700 text-white">
                 {t("hero.ctaSecondary")}
               </Button>
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[var(--muted-foreground)]">
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> {t("hero.noPerSeat")}
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> {t("hero.allModels")}
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> {t("hero.analytics")}
-            </span>
+        </div>
+      </header>
+
+      <main>
+        {/* Hero — Familia-style gradient */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950 dark:via-[var(--background)] dark:to-accent-950">
+          <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
+            <div className="text-center max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
+                <Briefcase className="w-4 h-4" />
+                {t("hero.badge")}
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                  {t("hero.title")}
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                  {t("hero.titleHighlight")}
+                </span>
+              </h1>
+              <p className="text-xl sm:text-2xl text-[var(--muted-foreground)] mb-8 font-medium">
+                {t("hero.subtitle")}
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                <NextLink href="/auth/signup/business">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white px-8 py-3 text-lg">
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    {t("hero.cta")}
+                  </Button>
+                </NextLink>
+                <a href="mailto:contact@iaiaz.com?subject=Demande%20démo%20-%20Entreprise">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto px-8 py-3 text-lg">
+                    {t("hero.ctaSecondary")}
+                  </Button>
+                </a>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[var(--muted-foreground)]">
+                <span className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" /> {t("hero.noPerSeat")}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" /> {t("hero.allModels")}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" /> {t("hero.analytics")}
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -259,14 +296,14 @@ export default async function BusinessPage({ params }: Props) {
                   </tr>
                   <tr className="border-b">
                     <td className="py-4 px-4 font-medium">{t("comparison.analyticsLabel")}</td>
-                    <td className="text-center py-4 px-4">❌</td>
-                    <td className="text-center py-4 px-4">❌</td>
+                    <td className="text-center py-4 px-4">-</td>
+                    <td className="text-center py-4 px-4">-</td>
                     <td className="text-center py-4 px-4 bg-primary-50 dark:bg-primary-900/20"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-4 px-4 font-medium">{t("comparison.limits")}</td>
-                    <td className="text-center py-4 px-4">❌</td>
-                    <td className="text-center py-4 px-4">❌</td>
+                    <td className="text-center py-4 px-4">-</td>
+                    <td className="text-center py-4 px-4">-</td>
                     <td className="text-center py-4 px-4 bg-primary-50 dark:bg-primary-900/20"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
                   </tr>
                 </tbody>
@@ -454,7 +491,7 @@ export default async function BusinessPage({ params }: Props) {
         </section>
 
         {/* Pricing */}
-        <section className="bg-[var(--muted)] py-16">
+        <section id="pricing" className="bg-[var(--muted)] py-16">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-4">
               {t("pricing.title")}
@@ -616,11 +653,9 @@ export default async function BusinessPage({ params }: Props) {
         </section>
 
         {/* FAQ */}
-        <section className="bg-[var(--muted)] py-16">
+        <section id="faq" className="bg-[var(--muted)] py-16">
           <div className="max-w-3xl mx-auto px-4">
-            <h2 className="text-2xl font-bold text-center mb-12">
-              {t("faq.title")}
-            </h2>
+            <h2 className="text-2xl font-bold text-center mb-12">FAQ</h2>
             <div className="space-y-6">
               {faqs.map((faq, index) => (
                 <Card key={index}>
@@ -634,28 +669,28 @@ export default async function BusinessPage({ params }: Props) {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="max-w-6xl mx-auto px-4 py-16">
-          <div className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950 dark:to-accent-950 rounded-2xl p-8 md:p-12 text-center">
+        {/* CTA — Familia-style gradient */}
+        <section className="py-20 bg-gradient-to-r from-primary-600 to-accent-600">
+          <div className="max-w-3xl mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">
               {t("cta.title")}
             </h2>
-            <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
+            <p className="text-xl mb-8 text-white/80">
               {t("cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <NextLink href="/auth/signup/business">
-                <Button size="lg">
+                <Button size="lg" className="bg-white text-primary-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
                   {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </NextLink>
               <a href="mailto:contact@iaiaz.com?subject=Demande%20démo%20-%20Entreprise">
-                <Button variant="outline" size="lg">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg">
                   {t("cta.demo")}
                 </Button>
               </a>
             </div>
-            <p className="text-sm text-[var(--muted-foreground)] mt-4">
+            <p className="text-sm text-white/60 mt-4">
               {t("cta.note")}
             </p>
           </div>

@@ -12,11 +12,16 @@ import {
   ArrowRight,
   Sparkles,
   PiggyBank,
+  Building2,
+  Users,
+  BarChart3,
+  Shield,
+  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
 
 type Props = {
@@ -105,51 +110,88 @@ export default async function EtudiantsPage({ params }: Props) {
       <FAQSchema faqs={faqs} />
       <BreadcrumbSchema items={breadcrumbItems} />
 
-      <Header />
-
-      <main>
-        {/* Hero */}
-        <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
-            <GraduationCap className="w-4 h-4" />
-            {t("hero.badge")}
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {t("hero.title")}
-            <br />
-            <span className="text-primary-600">{t("hero.titleHighlight")}</span>
-          </h1>
-          <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
-            {t("hero.subtitle")}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+      {/* Study by iaiaz — Branded Header */}
+      <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/etudiants" className="flex items-baseline gap-1.5">
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+              Study
+            </span>
+            <span className="text-sm text-[var(--muted-foreground)] font-medium">
+              by iaiaz
+            </span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <a href="#pricing" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              {t("nav.pricing")}
+            </a>
+            <a href="#faq" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              {t("nav.faq")}
+            </a>
+            <LanguageSwitcher />
+            <Link href="/auth/login" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              {t("nav.login")}
+            </Link>
             <Link href="/auth/signup">
-              <Button size="lg">
-                <Sparkles className="w-5 h-5 mr-2" />
+              <Button size="sm" className="bg-primary-600 hover:bg-primary-700 text-white">
                 {t("hero.cta")}
               </Button>
             </Link>
-            <Link href="/comparatif">
-              <Button variant="outline" size="lg">
-                {t("hero.ctaSecondary")}
-              </Button>
-            </Link>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[var(--muted-foreground)]">
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> {t("hero.noCreditCard")}
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> {t("hero.noCommitment")}
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-500" /> {t("hero.noExpiration")}
-            </span>
+        </div>
+      </header>
+
+      <main>
+        {/* Hero — Familia-style gradient */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950 dark:via-[var(--background)] dark:to-accent-950">
+          <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
+            <div className="text-center max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/40 dark:to-accent-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm">
+                <GraduationCap className="w-4 h-4" />
+                {t("hero.badge")}
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                  {t("hero.title")}
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+                  {t("hero.titleHighlight")}
+                </span>
+              </h1>
+              <p className="text-xl sm:text-2xl text-[var(--muted-foreground)] mb-8 font-medium">
+                {t("hero.subtitle")}
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                <Link href="/auth/signup">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white px-8 py-3 text-lg">
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    {t("hero.cta")}
+                  </Button>
+                </Link>
+                <Link href="/comparatif">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto px-8 py-3 text-lg">
+                    {t("hero.ctaSecondary")}
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[var(--muted-foreground)]">
+                <span className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" /> {t("hero.noCreditCard")}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" /> {t("hero.noCommitment")}
+                </span>
+                <span className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" /> {t("hero.noExpiration")}
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Budget Section */}
-        <section className="bg-[var(--muted)] py-16">
+        <section id="pricing" className="bg-[var(--muted)] py-16">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center justify-center gap-2 mb-4">
               <PiggyBank className="w-6 h-6 text-primary-600" />
@@ -319,6 +361,111 @@ export default async function EtudiantsPage({ params }: Props) {
           </div>
         </section>
 
+        {/* Pour les établissements — Fold-in section */}
+        <section className="bg-[var(--muted)] py-16">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Building2 className="w-6 h-6 text-primary-600" />
+              <h2 className="text-2xl font-bold">{t("schools.title")}</h2>
+            </div>
+            <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-xl mx-auto">
+              {t("schools.subtitle")}
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+              <Card>
+                <CardContent className="pt-6">
+                  <Shield className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("schools.equity.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("schools.equity.description")}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <PiggyBank className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("schools.cost.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("schools.cost.description")}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <Eye className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("schools.visibility.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("schools.visibility.description")}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <Shield className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                  <h3 className="font-bold text-lg mb-2">{t("schools.privacy.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    {t("schools.privacy.description")}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="text-center mt-8">
+              <a href="mailto:contact@iaiaz.com?subject=Demande%20d%27information%20-%20Établissement">
+                <Button size="lg" variant="outline">
+                  {t("schools.cta")} <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Pour les formateurs — Fold-in section */}
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Users className="w-6 h-6 text-primary-600" />
+            <h2 className="text-2xl font-bold">{t("trainers.title")}</h2>
+          </div>
+          <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-xl mx-auto">
+            {t("trainers.subtitle")}
+          </p>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <Card>
+              <CardContent className="pt-6">
+                <BarChart3 className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                <h3 className="font-bold text-lg mb-2">{t("trainers.dashboard.title")}</h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  {t("trainers.dashboard.description")}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <BarChart3 className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                <h3 className="font-bold text-lg mb-2">{t("trainers.analytics.title")}</h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  {t("trainers.analytics.description")}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-4" />
+                <h3 className="font-bold text-lg mb-2">{t("trainers.insights.title")}</h3>
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  {t("trainers.insights.description")}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="text-center mt-8">
+            <a href="mailto:contact@iaiaz.com?subject=Créer%20mon%20espace%20classe">
+              <Button size="lg" variant="outline">
+                {t("trainers.cta")} <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </a>
+          </div>
+        </section>
+
         {/* Ethics Note */}
         <section className="max-w-6xl mx-auto px-4 py-8">
           <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-6 max-w-3xl mx-auto">
@@ -331,21 +478,38 @@ export default async function EtudiantsPage({ params }: Props) {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="max-w-6xl mx-auto px-4 py-16">
-          <div className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950 dark:to-accent-950 rounded-2xl p-8 md:p-12 text-center">
+        {/* FAQ */}
+        <section id="faq" className="bg-[var(--muted)] py-16">
+          <div className="max-w-3xl mx-auto px-4">
+            <h2 className="text-2xl font-bold text-center mb-12">FAQ</h2>
+            <div className="space-y-6">
+              {faqs.map((faq, index) => (
+                <Card key={index}>
+                  <CardContent className="pt-6">
+                    <h3 className="font-bold mb-2">{faq.question}</h3>
+                    <p className="text-sm text-[var(--muted-foreground)]">{faq.answer}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA — Familia-style gradient */}
+        <section className="py-20 bg-gradient-to-r from-primary-600 to-accent-600">
+          <div className="max-w-3xl mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">
               {t("cta.title")}
             </h2>
-            <p className="text-[var(--muted-foreground)] mb-8 max-w-xl mx-auto">
+            <p className="text-xl mb-8 text-white/80">
               {t("cta.subtitle")}
             </p>
             <Link href="/auth/signup">
-              <Button size="lg">
+              <Button size="lg" className="bg-white text-primary-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
                 {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
-            <p className="text-sm text-[var(--muted-foreground)] mt-4">
+            <p className="text-sm text-white/60 mt-4">
               {t("cta.note")}
             </p>
           </div>

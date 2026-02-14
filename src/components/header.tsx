@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, GraduationCap, Building2, Users, Briefcase, Heart } from "lucide-react";
+import { Menu, X, ChevronDown, GraduationCap, Briefcase, Heart } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface HeaderProps {
@@ -35,10 +35,8 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
   ];
 
   const audienceLinks = [
-    { href: "/etudiants" as const, label: t("nav.students"), icon: GraduationCap },
     { href: "/familia" as const, label: t("nav.familia"), icon: Heart },
-    { href: "/etablissements" as const, label: t("nav.schools"), icon: Building2 },
-    { href: "/formateurs" as const, label: t("nav.trainers"), icon: Users },
+    { href: "/etudiants" as const, label: t("nav.study"), icon: GraduationCap },
     { href: "/business" as const, label: t("nav.business"), icon: Briefcase },
   ];
 

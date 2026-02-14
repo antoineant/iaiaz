@@ -60,6 +60,14 @@ export async function middleware(request: NextRequest) {
   // Get pathname without locale for route matching
   const pathnameWithoutLocale = getPathnameWithoutLocale(pathname);
 
+  // Redirect old audience pages to /etudiants (both FR and EN paths)
+  const redirectToStudy = ["/etablissements", "/formateurs", "/schools", "/trainers"];
+  if (redirectToStudy.includes(pathnameWithoutLocale)) {
+    const url = request.nextUrl.clone();
+    url.pathname = `${localePathPrefix}/etudiants`;
+    return NextResponse.redirect(url, 301);
+  }
+
   // Set up Supabase client with the response from intl middleware
   let response = intlResponse;
 

@@ -97,8 +97,7 @@
       "compare": "Compare",
       "forWhom": "For whom?",
       "students": "Students",
-      "schools": "Schools",
-      "trainers": "Trainers",
+      "study": "Study",
       "business": "Business",
       "login": "Login",
       "signup": "Get Started",
@@ -1075,8 +1074,13 @@
     }
   },
   "etudiants": {
+    "nav": {
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "login": "Log in"
+    },
     "hero": {
-      "badge": "For Students",
+      "badge": "Study by iaiaz",
       "title": "AI that respects",
       "titleHighlight": "your student budget",
       "subtitle": "GPT-5, Claude, Gemini and Mistral at your fingertips, without subscription. Pay only for what you use, from $0.001 per message.",
@@ -1186,6 +1190,44 @@
         "question": "Which AI is best for studying?",
         "answer": "It depends! Claude excels at writing and text analysis. GPT-5 is great for math and code. Gemini handles very long documents. Mistral is economical for simple questions. With iaiaz, you have access to all of them."
       }
+    },
+    "schools": {
+      "title": "For Schools & Universities",
+      "subtitle": "Provide equitable AI access to all your students.",
+      "equity": {
+        "title": "Equitable access",
+        "description": "Every student accesses the same AI models, regardless of personal budget."
+      },
+      "cost": {
+        "title": "Cost control",
+        "description": "From $1 per student/month — no individual subscriptions or per-seat licenses."
+      },
+      "visibility": {
+        "title": "Educational visibility",
+        "description": "Teacher dashboard: topics consulted, usage frequency, educational alerts."
+      },
+      "privacy": {
+        "title": "Privacy guaranteed",
+        "description": "Data hosted in the EU, GDPR compliant, no data used for model training."
+      },
+      "cta": "Request a demo"
+    },
+    "trainers": {
+      "title": "For Trainers & Educators",
+      "subtitle": "Understand how your students use AI — and turn data into better teaching.",
+      "dashboard": {
+        "title": "Teacher dashboard",
+        "description": "See topics asked about, usage peaks, and detected difficulties — in real time."
+      },
+      "analytics": {
+        "title": "Class-level analytics",
+        "description": "Number of questions, models used, activity hours — for each class and each student."
+      },
+      "insights": {
+        "title": "Educational alerts",
+        "description": "Automatic detection of recurring difficulties: a student asks 12 times about integrals? You'll know."
+      },
+      "cta": "Create my classroom"
     },
     "breadcrumb": {
       "home": "Home",
@@ -2910,8 +2952,13 @@
     "insufficientClassCredits": "Insufficient class credits"
   },
   "business": {
+    "nav": {
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "login": "Log in"
+    },
     "hero": {
-      "badge": "For businesses",
+      "badge": "Business by iaiaz",
       "title": "AI for your teams.",
       "titleHighlight": "Without overpaying for unused licenses.",
       "subtitle": "Multi-model access (Claude, GPT-5, Gemini, Mistral) with pay-per-use and detailed analytics. Your teams use the AI they need. You control the costs.",
