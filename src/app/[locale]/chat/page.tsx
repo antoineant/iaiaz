@@ -6,6 +6,7 @@ import { getPricingData } from "@/lib/pricing-db";
 import { getUserCredits } from "@/lib/credits";
 import { getThemeColor } from "@/lib/familia/theme";
 import { getFamilyOrgInfo } from "@/lib/familia/content-filter";
+import { getOrSeedAssistants } from "@/lib/familia/assistants";
 import type { CustomAssistant } from "@/types";
 
 interface ChatPageProps {
@@ -73,11 +74,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
     // Fetch familia data only for family children
     isFamiliaChild
       ? Promise.all([
-          adminClient
-            .from("custom_assistants")
-            .select("*")
-            .eq("user_id", user.id)
-            .order("sort_order", { ascending: true }),
+          getOrSeedAssistants(user.id),
           adminClient
             .from("organization_members")
             .select("supervision_mode, organization_id")
@@ -145,11 +142,11 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   } | undefined;
 
   if (isFamiliaChild && familiaDataResult) {
-    const [assistantsResult, membershipResult, parentalControlsResult, dailyUsedResult, weeklyUsedResult] = familiaDataResult;
+    const [assistants, membershipResult, parentalControlsResult, dailyUsedResult, weeklyUsedResult] = familiaDataResult;
     const firstName = termsCheck?.display_name?.split(" ")[0] || user.user_metadata?.full_name?.split(" ")[0] || "";
     const isCumulative = parentalControlsResult.data?.cumulative_credits ?? false;
     familiaMode = {
-      assistants: (assistantsResult.data || []) as CustomAssistant[],
+      assistants,
       accentColor: termsCheck?.accent_color || null,
       supervisionMode: membershipResult.data?.supervision_mode || "guided",
       userName: firstName,
