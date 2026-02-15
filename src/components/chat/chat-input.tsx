@@ -281,7 +281,9 @@ export function ChatInput({
 
         const { text } = await response.json();
         if (text) {
-          setInput((prev) => (prev ? prev + " " + text : text));
+          onSend(text, attachments.length > 0 ? attachments : undefined);
+          setInput("");
+          setAttachments([]);
         }
       } catch (error) {
         console.error("Transcription error:", error);
