@@ -4149,7 +4149,7 @@
       "welcome": {
         "greeting": "Salut {name} ✨",
         "subtitle": "Qu'est-ce qu'on explore ?",
-        "startTyping": "Ou tape directement en bas...",
+        "startTyping": "Ou écris directement en bas...",
         "createNew": "Créer"
       },
       "parentWelcome": {
