@@ -2984,6 +2984,17 @@
           "disabled": "Désactivé"
         },
         "saved": "Préférences enregistrées"
+      },
+      "deleteAccount": {
+        "title": "Supprimer mon compte",
+        "description": "Supprimez définitivement votre compte et toutes les données associées. Cette action est irréversible.",
+        "button": "Supprimer mon compte",
+        "confirmTitle": "Supprimer votre compte ?",
+        "confirmMessage": "Cela supprimera définitivement votre compte, toutes vos conversations, fichiers et données personnelles. Cette action est irréversible.",
+        "confirmLabel": "Tapez votre email pour confirmer",
+        "cancel": "Annuler",
+        "confirm": "Supprimer définitivement",
+        "error": "Une erreur est survenue lors de la suppression de votre compte."
       }
     }
   },

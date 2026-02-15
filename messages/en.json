@@ -677,6 +677,17 @@
           "disabled": "Disabled"
         },
         "saved": "Preferences saved"
+      },
+      "deleteAccount": {
+        "title": "Delete my account",
+        "description": "Permanently delete your account and all associated data. This action cannot be undone.",
+        "button": "Delete my account",
+        "confirmTitle": "Delete your account?",
+        "confirmMessage": "This will permanently delete your account, all conversations, files, and personal data. This action cannot be undone.",
+        "confirmLabel": "Type your email to confirm",
+        "cancel": "Cancel",
+        "confirm": "Permanently delete",
+        "error": "An error occurred while deleting your account."
       }
     }
   },

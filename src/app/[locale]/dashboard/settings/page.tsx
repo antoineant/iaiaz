@@ -77,6 +77,12 @@ export default function SettingsPage() {
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Delete account states
+  const [showDeleteAccountConfirm, setShowDeleteAccountConfirm] = useState(false);
+  const [deleteAccountEmail, setDeleteAccountEmail] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteAccountError, setDeleteAccountError] = useState<string | null>(null);
+
   // Email preferences states
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [isSavingMarketing, setIsSavingMarketing] = useState(false);
@@ -241,6 +247,30 @@ export default function SettingsPage() {
       setDeleteError(t("privacy.deleteAll.error"));
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    setDeleteAccountError(null);
+
+    try {
+      const response = await fetch("/api/account/delete", {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        window.location.href = "/";
+      } else {
+        const data = await response.json();
+        setDeleteAccountError(data.error || t("privacy.deleteAccount.error"));
+      }
+    } catch {
+      setDeleteAccountError(t("privacy.deleteAccount.error"));
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -672,6 +702,28 @@ export default function SettingsPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Delete Account */}
+              <div className="border-t border-[var(--border)] pt-6">
+                <Label className="mb-2 block">{t("privacy.deleteAccount.title")}</Label>
+                <p className="text-sm text-[var(--muted-foreground)] mb-3">
+                  {t("privacy.deleteAccount.description")}
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDeleteAccountConfirm(true)}
+                  className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 hover:bg-red-50 dark:border-red-800 dark:hover:border-red-700 dark:hover:bg-red-900/20"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {t("privacy.deleteAccount.button")}
+                </Button>
+                {deleteAccountError && (
+                  <p className="text-sm text-red-600 mt-2 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {deleteAccountError}
+                  </p>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -705,6 +757,56 @@ export default function SettingsPage() {
                     <Trash2 className="w-4 h-4 mr-2" />
                   )}
                   {t("privacy.deleteAll.confirm")}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Account Confirmation Modal */}
+        {showDeleteAccountConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-[var(--background)] rounded-lg p-6 max-w-md mx-4 shadow-xl">
+              <h3 className="text-lg font-semibold mb-2">
+                {t("privacy.deleteAccount.confirmTitle")}
+              </h3>
+              <p className="text-[var(--muted-foreground)] mb-4">
+                {t("privacy.deleteAccount.confirmMessage")}
+              </p>
+              <div className="mb-6">
+                <Label className="mb-2 block text-sm">
+                  {t("privacy.deleteAccount.confirmLabel")}
+                </Label>
+                <Input
+                  type="email"
+                  value={deleteAccountEmail}
+                  onChange={(e) => setDeleteAccountEmail(e.target.value)}
+                  placeholder={profile?.email || ""}
+                  disabled={isDeletingAccount}
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowDeleteAccountConfirm(false);
+                    setDeleteAccountEmail("");
+                  }}
+                  disabled={isDeletingAccount}
+                >
+                  {t("privacy.deleteAccount.cancel")}
+                </Button>
+                <Button
+                  onClick={handleDeleteAccount}
+                  disabled={isDeletingAccount || deleteAccountEmail !== profile?.email}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {isDeletingAccount ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Trash2 className="w-4 h-4 mr-2" />
+                  )}
+                  {t("privacy.deleteAccount.confirm")}
                 </Button>
               </div>
             </div>
