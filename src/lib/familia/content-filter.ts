@@ -84,19 +84,21 @@ export async function getFamilyOrgInfo(
     .select(`
       id,
       role,
-      organization:organizations (
+      organization:organizations!inner (
         id,
         type
       )
     `)
     .eq("user_id", userId)
     .eq("status", "active")
-    .single();
+    .eq("organizations.type", "family")
+    .limit(1)
+    .maybeSingle();
 
   if (!membership) return { isFamilyMember: false };
 
   const org = membership.organization as unknown as { id: string; type: string } | null;
-  if (!org || org.type !== "family") return { isFamilyMember: false };
+  if (!org) return { isFamilyMember: false };
 
   return {
     isFamilyMember: true,

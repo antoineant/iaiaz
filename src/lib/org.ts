@@ -65,13 +65,15 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
       role,
       class_id,
       class_name,
-      organization:organizations (
+      organization:organizations!inner (
         id,
-        name
+        name,
+        type
       )
     `)
     .eq("user_id", user.id)
     .eq("status", "active")
+    .neq("organizations.type", "family")
     .order("created_at", { ascending: false })
     .limit(1);
 
@@ -81,7 +83,7 @@ export async function getUserOrgMembership(): Promise<OrgMembership | null> {
 
   const membership = memberships[0];
 
-  const org = membership.organization as unknown as { id: string; name: string } | null;
+  const org = membership.organization as unknown as { id: string; name: string; type: string } | null;
   if (!org) {
     return null;
   }

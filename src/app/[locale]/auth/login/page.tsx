@@ -15,7 +15,9 @@ import { Loader2, Mail } from "lucide-react";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/chat";
+  const redirectParam = searchParams.get("redirect");
+  const redirect = redirectParam || "/chat";
+  const hasExplicitRedirect = !!redirectParam;
   const t = useTranslations("auth.login");
 
   const [email, setEmail] = useState("");
@@ -57,7 +59,11 @@ function LoginForm() {
       return;
     }
 
-    router.push(redirect);
+    if (hasExplicitRedirect) {
+      router.push(redirect);
+    } else {
+      router.push("/auth/choose-workspace");
+    }
     router.refresh();
   };
 
@@ -88,7 +94,7 @@ function LoginForm() {
         <h1 className="text-xl font-semibold">{t("title")}</h1>
       </CardHeader>
       <CardContent>
-        <GoogleButton mode="login" />
+        <GoogleButton mode="login" redirectAfter={hasExplicitRedirect ? redirect : undefined} />
 
         <Divider />
 

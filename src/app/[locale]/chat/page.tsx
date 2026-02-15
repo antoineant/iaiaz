@@ -10,12 +10,12 @@ import type { CustomAssistant } from "@/types";
 
 interface ChatPageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ assistantId?: string; skipRedirect?: string }>;
+  searchParams: Promise<{ assistantId?: string }>;
 }
 
 export default async function ChatPage({ params, searchParams }: ChatPageProps) {
   const { locale } = await params;
-  const { assistantId, skipRedirect } = await searchParams;
+  const { assistantId } = await searchParams;
   const supabase = await createClient();
 
   const {
@@ -41,11 +41,8 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   const familyInfo = await getFamilyOrgInfo(user.id);
   const isFamiliaChild = familyInfo?.isFamilyMember && familyInfo.role !== "owner" && familyInfo.role !== "admin";
 
-  // Check if user is a family owner/admin - redirect to familia dashboard (unless skipRedirect is set)
+  // Check if user is a family owner/admin (no redirect — parents can use Study mode from /chat)
   const isFamiliaParent = familyInfo?.isFamilyMember && (familyInfo.role === "owner" || familyInfo.role === "admin");
-  if (isFamiliaParent && !skipRedirect) {
-    redirect(`/${locale}/familia/dashboard`);
-  }
 
   // Fetch org name for parent mode
   let familiaParentMode: { orgId: string; orgName: string } | undefined;
