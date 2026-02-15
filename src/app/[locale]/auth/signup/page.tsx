@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -418,12 +419,12 @@ function SignupForm() {
 
             <div className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
               {t("hasAccount")}{" "}
-              <Link
-                href="/auth/login"
+              <NextLink
+                href={redirectUrl ? `/auth/login?redirect=${encodeURIComponent(redirectUrl)}` : "/auth/login"}
                 className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
               >
                 {t("login")}
-              </Link>
+              </NextLink>
             </div>
           </CardContent>
         </Card>
