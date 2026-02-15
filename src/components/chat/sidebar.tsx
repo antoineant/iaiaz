@@ -10,8 +10,9 @@ import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PrivacyInfoModal } from "./privacy-info-modal";
 import { SupervisionInfoModal } from "@/components/familia/supervision-info-modal";
+import { ChildSettingsPanel } from "@/components/familia/child-settings-panel";
 import type { Conversation } from "@/types";
-import { getThemeColor, ACCENT_COLORS } from "@/lib/familia/theme";
+import { getThemeColor } from "@/lib/familia/theme";
 import {
   Plus,
   MessageSquare,
@@ -30,7 +31,6 @@ import {
   Video,
   User,
   Users,
-  Palette,
 } from "lucide-react";
 
 interface OrgContext {
@@ -121,10 +121,10 @@ export function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [showThemePicker, setShowThemePicker] = useState(false);
   const [showSupervisionInfo, setShowSupervisionInfo] = useState(false);
   const [showPreciseBalance, setShowPreciseBalance] = useState(false);
   const [teenAccentColor, setTeenAccentColor] = useState(familiaMode?.accentColor || null);
+  const [showChildSettings, setShowChildSettings] = useState(false);
 
   const isOrgMember = !!orgContext;
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
@@ -320,47 +320,15 @@ export function Sidebar({
 
       {/* Teen footer — theme picker, supervision badge, logout */}
       <div className="p-3 border-t border-[var(--border)] space-y-2">
-        {/* Inline theme color dots */}
+        {/* Mon espace button */}
         <div className="px-1">
           <button
-            onClick={() => setShowThemePicker(!showThemePicker)}
+            onClick={() => setShowChildSettings(true)}
             className="flex items-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors w-full py-1"
           >
-            <Palette className="w-3.5 h-3.5" />
-            <span>{t("teenTheme")}</span>
+            <Settings className="w-3.5 h-3.5" />
+            <span>{t("teenMySpace")}</span>
           </button>
-          {showThemePicker && (
-            <div className="flex gap-1.5 mt-2 flex-wrap">
-              {ACCENT_COLORS.map((color) => (
-                <button
-                  key={color.name}
-                  onClick={async () => {
-                    setTeenAccentColor(color.name);
-                    // Notify parent so welcome screen updates
-                    onAccentColorChange?.(color.name);
-                    // Apply CSS variables
-                    document.documentElement.style.setProperty("--accent-color", color.hex);
-                    document.documentElement.style.setProperty("--accent-light", color.light);
-                    document.documentElement.style.setProperty("--accent-dark", color.dark);
-                    // Persist to server
-                    await fetch("/api/familia/theme", {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ color: color.name }),
-                    });
-                  }}
-                  className={cn(
-                    "w-6 h-6 rounded-full transition-all",
-                    teenAccentColor === color.name
-                      ? "ring-2 ring-offset-1 ring-gray-900 dark:ring-white scale-110"
-                      : "hover:scale-110"
-                  )}
-                  style={{ backgroundColor: color.hex }}
-                  aria-label={color.name}
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Supervision mode badge — clickable for transparency info */}
@@ -412,6 +380,18 @@ export function Sidebar({
           ],
           why: familiaMode.supervisionMode === "guided" ? tSupervision("guidedWhy") : tSupervision("trustedWhy"),
         }}
+      />
+
+      {/* Child Settings Panel */}
+      <ChildSettingsPanel
+        open={showChildSettings}
+        onClose={() => setShowChildSettings(false)}
+        accentColor={teenAccentColor}
+        onAccentColorChange={(color) => {
+          setTeenAccentColor(color);
+          onAccentColorChange?.(color);
+        }}
+        teenTheme={teenTheme || undefined}
       />
     </>
   ) : null;

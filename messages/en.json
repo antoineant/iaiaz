@@ -315,6 +315,7 @@
       "teenGuided": "Guided mode",
       "teenTrusted": "Trusted mode",
       "teenTheme": "My vibe",
+      "teenMySpace": "My space",
       "familiaParentBadge": "Family",
       "familyCredits": "Family Credits",
       "backToFamiliaDashboard": "Back to Dashboard",
@@ -3945,6 +3946,35 @@
       "resetPassword": "Reset password",
       "resetPasswordSent": "Password reset email sent to {email}",
       "resetPasswordError": "Failed to send reset email"
+    },
+    "childSettings": {
+      "title": "My space",
+      "tabs": {
+        "profile": "My profile",
+        "assistants": "My assistants",
+        "activity": "My activity"
+      },
+      "profile": {
+        "avatar": "Choose your avatar",
+        "displayName": "Your name",
+        "theme": "Your color"
+      },
+      "assistants": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirmDelete": "Delete this assistant?",
+        "empty": "No assistants yet",
+        "create": "Create an assistant"
+      },
+      "activity": {
+        "thisWeek": "This week",
+        "conversations": "conversations",
+        "creditsUsed": "credits used",
+        "topSubjects": "Your favorite subjects",
+        "noActivity": "No activity this week"
+      },
+      "save": "Save",
+      "saved": "Saved!"
     },
     "chat": {
       "greeting": "Hey, {name}!",

@@ -329,6 +329,7 @@
       "teenGuided": "Mode encadré",
       "teenTrusted": "Mode confiance",
       "teenTheme": "Mon style",
+      "teenMySpace": "Mon espace",
       "familiaParentBadge": "Famille",
       "familyCredits": "Crédits famille",
       "backToFamiliaDashboard": "Retour au tableau de bord",
@@ -4141,6 +4142,35 @@
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordSent": "Email de réinitialisation envoyé à {email}",
       "resetPasswordError": "Échec de l'envoi de l'email"
+    },
+    "childSettings": {
+      "title": "Mon espace",
+      "tabs": {
+        "profile": "Mon profil",
+        "assistants": "Mes assistants",
+        "activity": "Mon activité"
+      },
+      "profile": {
+        "avatar": "Choisis ton avatar",
+        "displayName": "Ton prénom",
+        "theme": "Ta couleur"
+      },
+      "assistants": {
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "confirmDelete": "Supprimer cet assistant ?",
+        "empty": "Pas encore d'assistant",
+        "create": "Créer un assistant"
+      },
+      "activity": {
+        "thisWeek": "Cette semaine",
+        "conversations": "conversations",
+        "creditsUsed": "crédits utilisés",
+        "topSubjects": "Tes matières préférées",
+        "noActivity": "Pas d'activité cette semaine"
+      },
+      "save": "Enregistrer",
+      "saved": "Enregistré !"
     },
     "chat": {
       "greeting": "Salut {name} !",

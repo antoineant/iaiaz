@@ -62,7 +62,7 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json();
-    const { display_name, credit_preference, conversation_retention_days, marketing_consent } = body;
+    const { display_name, avatar_url, credit_preference, conversation_retention_days, marketing_consent } = body;
 
     // Validate credit_preference if provided
     const validPreferences: CreditPreference[] = [
@@ -102,6 +102,9 @@ export async function PATCH(request: Request) {
     }
     if (marketing_consent !== undefined && typeof marketing_consent === "boolean") {
       updates.marketing_consent = marketing_consent;
+    }
+    if (avatar_url !== undefined) {
+      updates.avatar_url = avatar_url?.trim() || null;
     }
 
     if (Object.keys(updates).length === 0) {
