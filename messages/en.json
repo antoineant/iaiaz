@@ -3941,7 +3941,10 @@
       "statusPending": "Pending",
       "statusAccepted": "Accepted",
       "statusExpired": "Expired",
-      "statusRevoked": "Revoked"
+      "statusRevoked": "Revoked",
+      "resetPassword": "Reset password",
+      "resetPasswordSent": "Password reset email sent to {email}",
+      "resetPasswordError": "Failed to send reset email"
     },
     "chat": {
       "greeting": "Hey, {name}!",

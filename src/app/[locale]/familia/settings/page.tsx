@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X } from "lucide-react";
+import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X, KeyRound } from "lucide-react";
 
 const SCHOOL_YEAR_OPTIONS = [
   "6eme", "5eme", "4eme", "3eme",
@@ -71,6 +71,8 @@ function FamiliaSettingsContent() {
   const [invites, setInvites] = useState<FamiliaInvite[]>([]);
   const [revoking, setRevoking] = useState<string | null>(null);
   const [resending, setResending] = useState<string | null>(null);
+  const [resettingPassword, setResettingPassword] = useState<string | null>(null);
+  const [resetMsg, setResetMsg] = useState<Record<string, string>>({});
 
   // Local edits: keyed by user_id
   const [edits, setEdits] = useState<Record<string, Partial<ChildControl["controls"]>>>({});
@@ -254,6 +256,28 @@ function FamiliaSettingsContent() {
       console.error("Error resending invite:", err);
     } finally {
       setResending(null);
+    }
+  };
+
+  const resetChildPassword = async (childUserId: string) => {
+    setResettingPassword(childUserId);
+    setResetMsg({});
+    try {
+      const res = await fetch("/api/familia/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ childUserId }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setResetMsg((prev) => ({ ...prev, [childUserId]: t("resetPasswordSent", { email: data.email }) }));
+      } else {
+        setResetMsg((prev) => ({ ...prev, [childUserId]: data.error || t("resetPasswordError") }));
+      }
+    } catch {
+      setResetMsg((prev) => ({ ...prev, [childUserId]: t("resetPasswordError") }));
+    } finally {
+      setResettingPassword(null);
     }
   };
 
@@ -606,6 +630,28 @@ function FamiliaSettingsContent() {
                         <label className="text-sm">{t("cumulativeCredits")}</label>
                         <p className="text-xs text-[var(--muted-foreground)]">{t("cumulativeCreditsDesc")}</p>
                       </div>
+                    </div>
+
+                    {/* Reset Password */}
+                    <div className="sm:col-span-2 pt-3 border-t border-[var(--border)]">
+                      <div className="flex items-center gap-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => resetChildPassword(child.user_id)}
+                          disabled={resettingPassword === child.user_id}
+                        >
+                          {resettingPassword === child.user_id ? (
+                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                          ) : (
+                            <KeyRound className="w-4 h-4 mr-2" />
+                          )}
+                          {t("resetPassword")}
+                        </Button>
+                      </div>
+                      {resetMsg[child.user_id] && (
+                        <p className="text-sm mt-2 text-[var(--muted-foreground)]">{resetMsg[child.user_id]}</p>
+                      )}
                     </div>
 
                   </div>
