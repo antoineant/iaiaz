@@ -4109,7 +4109,20 @@
         "premiere": "Première",
         "terminale": "Terminale",
         "superieur": "Supérieur"
-      }
+      },
+      "invitesTitle": "Invitations envoyées",
+      "noInvites": "Aucune invitation envoyée",
+      "inviteStatus": "Statut",
+      "sentAt": "Envoyée le",
+      "expiresAt": "Expire le",
+      "cancelInvite": "Annuler",
+      "resendInvite": "Renvoyer",
+      "inviteCancelled": "Invitation annulée",
+      "inviteResent": "Invitation renvoyée !",
+      "statusPending": "En attente",
+      "statusAccepted": "Acceptée",
+      "statusExpired": "Expirée",
+      "statusRevoked": "Révoquée"
     },
     "chat": {
       "greeting": "Salut {name} !",

@@ -158,6 +158,181 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Helper: get family org for authenticated parent
+async function getFamilyOrgForParent() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Non autorise", status: 401 } as const;
+
+  const { data: membership } = await supabase
+    .from("organization_members")
+    .select(`
+      id,
+      role,
+      organization:organizations!inner (id, name, type, max_family_members)
+    `)
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .in("role", ["owner", "admin"])
+    .eq("organizations.type", "family")
+    .limit(1)
+    .maybeSingle();
+
+  if (!membership) {
+    return { error: "Vous devez etre parent de la famille", status: 403 } as const;
+  }
+
+  const org = membership.organization as unknown as {
+    id: string;
+    name: string;
+    type: string;
+    max_family_members: number;
+  };
+
+  return { user, org } as const;
+}
+
+export async function GET() {
+  try {
+    const result = await getFamilyOrgForParent();
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    const adminClient = createAdminClient();
+    const { data: invites, error } = await adminClient
+      .from("organization_invites")
+      .select("id, email, role, status, token, created_at, expires_at")
+      .eq("organization_id", result.org.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching invites:", error);
+      return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+    }
+
+    return NextResponse.json({ invites: invites || [] });
+  } catch (error) {
+    console.error("GET invites error:", error);
+    return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const result = await getFamilyOrgForParent();
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    const { inviteId } = await request.json();
+    if (!inviteId) {
+      return NextResponse.json({ error: "inviteId requis" }, { status: 400 });
+    }
+
+    const adminClient = createAdminClient();
+
+    // Verify invite belongs to this org and is pending
+    const { data: invite } = await adminClient
+      .from("organization_invites")
+      .select("id, status")
+      .eq("id", inviteId)
+      .eq("organization_id", result.org.id)
+      .single();
+
+    if (!invite) {
+      return NextResponse.json({ error: "Invitation introuvable" }, { status: 404 });
+    }
+
+    if (invite.status !== "pending") {
+      return NextResponse.json({ error: "Seules les invitations en attente peuvent etre annulees" }, { status: 400 });
+    }
+
+    const { error } = await adminClient
+      .from("organization_invites")
+      .update({ status: "revoked" })
+      .eq("id", inviteId);
+
+    if (error) {
+      console.error("Error revoking invite:", error);
+      return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("DELETE invite error:", error);
+    return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const result = await getFamilyOrgForParent();
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    const { inviteId, locale } = await request.json();
+    if (!inviteId) {
+      return NextResponse.json({ error: "inviteId requis" }, { status: 400 });
+    }
+
+    const adminClient = createAdminClient();
+
+    // Get invite details
+    const { data: invite } = await adminClient
+      .from("organization_invites")
+      .select("id, email, role, status, token")
+      .eq("id", inviteId)
+      .eq("organization_id", result.org.id)
+      .single();
+
+    if (!invite) {
+      return NextResponse.json({ error: "Invitation introuvable" }, { status: 404 });
+    }
+
+    if (invite.status !== "pending" && invite.status !== "expired") {
+      return NextResponse.json({ error: "Cette invitation ne peut pas etre renvoyee" }, { status: 400 });
+    }
+
+    // Reset expiry and status
+    const newExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    const { error: updateError } = await adminClient
+      .from("organization_invites")
+      .update({ expires_at: newExpiry, status: "pending" })
+      .eq("id", inviteId);
+
+    if (updateError) {
+      console.error("Error updating invite:", updateError);
+      return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+    }
+
+    // Resend email
+    const localePrefix = locale && locale !== "fr" ? `/${locale}` : "";
+    const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/familia/join/${invite.token}`;
+    const isChild = invite.role === "student";
+    const emailName = invite.email.split("@")[0];
+
+    await sendEmail({
+      to: invite.email,
+      subject: isChild
+        ? `${result.org.name} - Tes parents t'invitent sur iaiaz !`
+        : `Rejoignez ${result.org.name} sur iaiaz Familia`,
+      html: isChild
+        ? buildChildInviteEmail(emailName, result.org.name, inviteUrl)
+        : buildParentInviteEmail(emailName, result.org.name, inviteUrl),
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("PATCH invite error:", error);
+    return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+  }
+}
+
 function buildChildInviteEmail(name: string, familyName: string, inviteUrl: string): string {
   return `
 <!DOCTYPE html>

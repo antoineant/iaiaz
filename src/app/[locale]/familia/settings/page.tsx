@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Save, UserPlus, Shield, User } from "lucide-react";
+import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X } from "lucide-react";
 
 const SCHOOL_YEAR_OPTIONS = [
   "6eme", "5eme", "4eme", "3eme",
@@ -18,6 +18,16 @@ interface ChildProfile {
   display_name: string | null;
   birthdate: string | null;
   school_year: string | null;
+}
+
+interface FamiliaInvite {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  token: string;
+  created_at: string;
+  expires_at: string;
 }
 
 interface ChildControl {
@@ -58,6 +68,9 @@ function FamiliaSettingsContent() {
   const [inviteRole, setInviteRole] = useState<"admin" | "student">("student");
   const [inviting, setInviting] = useState(false);
   const [inviteMsg, setInviteMsg] = useState("");
+  const [invites, setInvites] = useState<FamiliaInvite[]>([]);
+  const [revoking, setRevoking] = useState<string | null>(null);
+  const [resending, setResending] = useState<string | null>(null);
 
   // Local edits: keyed by user_id
   const [edits, setEdits] = useState<Record<string, Partial<ChildControl["controls"]>>>({});
@@ -67,9 +80,24 @@ function FamiliaSettingsContent() {
     loadData();
   }, []);
 
+  const loadInvites = async () => {
+    try {
+      const res = await fetch("/api/familia/invite");
+      if (res.ok) {
+        const data = await res.json();
+        setInvites(data.invites || []);
+      }
+    } catch (err) {
+      console.error("Error loading invites:", err);
+    }
+  };
+
   const loadData = async () => {
     try {
-      const res = await fetch("/api/familia/analytics?days=7");
+      const [res] = await Promise.all([
+        fetch("/api/familia/analytics?days=7"),
+        loadInvites(),
+      ]);
       if (!res.ok) return;
       const data = await res.json();
 
@@ -181,6 +209,7 @@ function FamiliaSettingsContent() {
         setInviteMsg(t("inviteSent"));
         setInviteEmail("");
         setInviteName("");
+        await loadInvites();
       } else {
         setInviteMsg(data.error || t("inviteError"));
       }
@@ -189,6 +218,122 @@ function FamiliaSettingsContent() {
     } finally {
       setInviting(false);
     }
+  };
+
+  const cancelInvite = async (inviteId: string) => {
+    setRevoking(inviteId);
+    try {
+      const res = await fetch("/api/familia/invite", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inviteId }),
+      });
+      if (res.ok) {
+        await loadInvites();
+      }
+    } catch (err) {
+      console.error("Error cancelling invite:", err);
+    } finally {
+      setRevoking(null);
+    }
+  };
+
+  const resendInvite = async (inviteId: string) => {
+    setResending(inviteId);
+    try {
+      const res = await fetch("/api/familia/invite", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inviteId, locale }),
+      });
+      if (res.ok) {
+        setInviteMsg(t("inviteResent"));
+        await loadInvites();
+      }
+    } catch (err) {
+      console.error("Error resending invite:", err);
+    } finally {
+      setResending(null);
+    }
+  };
+
+  const getStatusBadge = (invite: FamiliaInvite) => {
+    const isExpired = invite.status === "pending" && new Date(invite.expires_at) < new Date();
+    const status = isExpired ? "expired" : invite.status;
+
+    const styles: Record<string, string> = {
+      pending: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+      accepted: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+      expired: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+      revoked: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+    };
+
+    const icons: Record<string, React.ReactNode> = {
+      pending: <Clock className="w-3 h-3" />,
+      accepted: <CheckCircle className="w-3 h-3" />,
+      expired: <XCircle className="w-3 h-3" />,
+      revoked: <XCircle className="w-3 h-3" />,
+    };
+
+    const labelKey = `status${status.charAt(0).toUpperCase()}${status.slice(1)}` as
+      | "statusPending"
+      | "statusAccepted"
+      | "statusExpired"
+      | "statusRevoked";
+
+    return (
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${styles[status] || styles.revoked}`}>
+        {icons[status]}
+        {t(labelKey)}
+      </span>
+    );
+  };
+
+  const getInviteActions = (invite: FamiliaInvite) => {
+    const isExpired = invite.status === "pending" && new Date(invite.expires_at) < new Date();
+    const effectiveStatus = isExpired ? "expired" : invite.status;
+
+    if (effectiveStatus === "pending") {
+      return (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => resendInvite(invite.id)}
+            disabled={resending === invite.id}
+          >
+            {resending === invite.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <RotateCw className="w-3 h-3 mr-1" />}
+            {t("resendInvite")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => cancelInvite(invite.id)}
+            disabled={revoking === invite.id}
+            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+          >
+            {revoking === invite.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <X className="w-3 h-3 mr-1" />}
+            {t("cancelInvite")}
+          </Button>
+        </div>
+      );
+    }
+
+    if (effectiveStatus === "expired") {
+      return (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => resendInvite(invite.id)}
+          disabled={resending === invite.id}
+        >
+          {resending === invite.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <RotateCw className="w-3 h-3 mr-1" />}
+          {t("resendInvite")}
+        </Button>
+      );
+    }
+
+    return null;
   };
 
   if (isLoading) {
@@ -255,6 +400,55 @@ function FamiliaSettingsContent() {
           </div>
           {inviteMsg && (
             <p className="text-sm mt-2 text-[var(--muted-foreground)]">{inviteMsg}</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Sent Invitations */}
+      <Card className="mb-8">
+        <CardHeader>
+          <h2 className="font-semibold flex items-center gap-2">
+            <Mail className="w-5 h-5" />
+            {t("invitesTitle")}
+          </h2>
+        </CardHeader>
+        <CardContent>
+          {invites.length === 0 ? (
+            <p className="text-[var(--muted-foreground)] text-center py-4">{t("noInvites")}</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-[var(--border)]">
+                  <tr>
+                    <th className="text-left pb-2 text-sm font-medium text-[var(--muted-foreground)]">Email</th>
+                    <th className="text-left pb-2 text-sm font-medium text-[var(--muted-foreground)]">{t("inviteStatus")}</th>
+                    <th className="text-left pb-2 text-sm font-medium text-[var(--muted-foreground)]">{t("sentAt")}</th>
+                    <th className="text-left pb-2 text-sm font-medium text-[var(--muted-foreground)]">{t("expiresAt")}</th>
+                    <th className="text-right pb-2 text-sm font-medium text-[var(--muted-foreground)]"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invites.map((invite) => (
+                    <tr key={invite.id} className="border-b border-[var(--border)] last:border-0">
+                      <td className="py-3 pr-4">
+                        <div className="text-sm">{invite.email}</div>
+                        <div className="text-xs text-[var(--muted-foreground)]">
+                          {invite.role === "student" ? t("roleChild") : t("roleParent")}
+                        </div>
+                      </td>
+                      <td className="py-3 pr-4">{getStatusBadge(invite)}</td>
+                      <td className="py-3 pr-4 text-sm text-[var(--muted-foreground)]">
+                        {new Date(invite.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 pr-4 text-sm text-[var(--muted-foreground)]">
+                        {new Date(invite.expires_at).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 text-right">{getInviteActions(invite)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </CardContent>
       </Card>

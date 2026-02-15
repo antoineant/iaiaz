@@ -3913,7 +3913,20 @@
         "premiere": "Première",
         "terminale": "Terminale",
         "superieur": "Higher education"
-      }
+      },
+      "invitesTitle": "Sent invitations",
+      "noInvites": "No invitations sent yet",
+      "inviteStatus": "Status",
+      "sentAt": "Sent",
+      "expiresAt": "Expires",
+      "cancelInvite": "Cancel",
+      "resendInvite": "Resend",
+      "inviteCancelled": "Invitation cancelled",
+      "inviteResent": "Invitation resent!",
+      "statusPending": "Pending",
+      "statusAccepted": "Accepted",
+      "statusExpired": "Expired",
+      "statusRevoked": "Revoked"
     },
     "chat": {
       "greeting": "Hey, {name}!",
