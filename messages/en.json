@@ -792,6 +792,10 @@
         "disposableEmail": "Please use a valid email address (temporary emails are not accepted)",
         "tooManyAttempts": "Too many signup attempts. Please try again later.",
         "generic": "An error occurred. Please try again."
+      },
+      "familiaChild": {
+        "subtitle": "Create your account to join your family",
+        "parentalNote": "Your parent invited you to join the family on iaiaz. This account will be supervised by your parent."
       }
     },
     "signupBusiness": {

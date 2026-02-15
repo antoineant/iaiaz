@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
-import { Check, User, GraduationCap, Building2, Mail, RefreshCw, Clock } from "lucide-react";
+import { Check, User, GraduationCap, Building2, Mail, RefreshCw, Clock, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 type AccountType = "student" | "trainer" | "school";
@@ -20,10 +20,18 @@ function SignupForm() {
   // Read initial account type and redirect from URL params
   const initialType = searchParams.get("type") as AccountType | null;
   const redirectUrl = searchParams.get("redirect");
+  const paramBirthdate = searchParams.get("birthdate");
+  const paramSchoolYear = searchParams.get("schoolYear");
+
+  // Detect familia child mode: redirect points to a familia join page
+  const isFamiliaChild = redirectUrl?.startsWith("/familia/join/") ?? false;
+
   const [accountType, setAccountType] = useState<AccountType>(
-    initialType && ["student", "trainer", "school"].includes(initialType)
-      ? initialType
-      : "student"
+    isFamiliaChild
+      ? "student"
+      : initialType && ["student", "trainer", "school"].includes(initialType)
+        ? initialType
+        : "student"
   );
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -88,16 +96,26 @@ function SignupForm() {
     setIsLoading(true);
 
     try {
+      // Build the redirect URL, including birthdate/schoolYear for familia children
+      let finalRedirectUrl = redirectUrl || undefined;
+      if (isFamiliaChild && redirectUrl) {
+        const joinParams = new URLSearchParams();
+        if (paramBirthdate) joinParams.set("birthdate", paramBirthdate);
+        if (paramSchoolYear) joinParams.set("schoolYear", paramSchoolYear);
+        const qs = joinParams.toString();
+        finalRedirectUrl = qs ? `${redirectUrl}?${qs}` : redirectUrl;
+      }
+
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           password,
-          accountType,
+          accountType: isFamiliaChild ? "student" : accountType,
           displayName: displayName.trim() || undefined,
-          marketingConsent,
-          redirectUrl: redirectUrl || undefined,
+          marketingConsent: isFamiliaChild ? false : marketingConsent,
+          redirectUrl: finalRedirectUrl,
         }),
       });
 
@@ -198,11 +216,17 @@ function SignupForm() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
-            iaiaz
-          </Link>
+          {isFamiliaChild ? (
+            <h1 className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+              Familia by iaiaz
+            </h1>
+          ) : (
+            <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+              iaiaz
+            </Link>
+          )}
           <p className="text-[var(--muted-foreground)] mt-2">
-            {t("subtitle")}
+            {isFamiliaChild ? t("familiaChild.subtitle") : t("subtitle")}
           </p>
         </div>
 
@@ -211,9 +235,12 @@ function SignupForm() {
             <h1 className="text-xl font-semibold">{t("title")}</h1>
           </CardHeader>
           <CardContent>
-            <GoogleButton mode="signup" accountType={accountType} />
-
-            <Divider />
+            {!isFamiliaChild && (
+              <>
+                <GoogleButton mode="signup" accountType={accountType} />
+                <Divider />
+              </>
+            )}
 
             <form onSubmit={handleSignup} className="space-y-4">
               {error && (
@@ -222,92 +249,104 @@ function SignupForm() {
                 </div>
               )}
 
-              {/* Account Type Selection */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t("accountType.label")}</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setAccountType("student")}
-                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                      accountType === "student"
-                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                      accountType === "student"
-                        ? "bg-primary-600 text-white"
-                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                    }`}>
-                      <User className="w-5 h-5" />
-                    </div>
-                    <p className="font-medium text-sm">{t("accountType.student")}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                      {t("accountType.studentDesc")}
-                    </p>
-                    {accountType === "student" && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="w-4 h-4 text-primary-600" />
-                      </div>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setAccountType("trainer")}
-                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                      accountType === "trainer"
-                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                      accountType === "trainer"
-                        ? "bg-primary-600 text-white"
-                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                    }`}>
-                      <GraduationCap className="w-5 h-5" />
-                    </div>
-                    <p className="font-medium text-sm">{t("accountType.trainer")}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                      {t("accountType.trainerDesc")}
-                    </p>
-                    {accountType === "trainer" && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="w-4 h-4 text-primary-600" />
-                      </div>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setAccountType("school")}
-                    className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                      accountType === "school"
-                        ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                        : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                      accountType === "school"
-                        ? "bg-primary-600 text-white"
-                        : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                    }`}>
-                      <Building2 className="w-5 h-5" />
-                    </div>
-                    <p className="font-medium text-sm">{t("accountType.school")}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                      {t("accountType.schoolDesc")}
-                    </p>
-                    {accountType === "school" && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="w-4 h-4 text-primary-600" />
-                      </div>
-                    )}
-                  </button>
+              {/* Parental consent note for familia children */}
+              {isFamiliaChild && (
+                <div className="flex gap-3 p-4 bg-accent-50 dark:bg-accent-950/30 rounded-lg border border-accent-200 dark:border-accent-800">
+                  <Heart className="w-5 h-5 text-accent-500 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-accent-700 dark:text-accent-300">
+                    {t("familiaChild.parentalNote")}
+                  </p>
                 </div>
-              </div>
+              )}
+
+              {/* Account Type Selection - hidden for familia children */}
+              {!isFamiliaChild && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">{t("accountType.label")}</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setAccountType("student")}
+                      className={`relative p-3 rounded-lg border-2 transition-all text-center ${
+                        accountType === "student"
+                          ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                          : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                        accountType === "student"
+                          ? "bg-primary-600 text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}>
+                        <User className="w-5 h-5" />
+                      </div>
+                      <p className="font-medium text-sm">{t("accountType.student")}</p>
+                      <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
+                        {t("accountType.studentDesc")}
+                      </p>
+                      {accountType === "student" && (
+                        <div className="absolute top-2 right-2">
+                          <Check className="w-4 h-4 text-primary-600" />
+                        </div>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setAccountType("trainer")}
+                      className={`relative p-3 rounded-lg border-2 transition-all text-center ${
+                        accountType === "trainer"
+                          ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                          : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                        accountType === "trainer"
+                          ? "bg-primary-600 text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}>
+                        <GraduationCap className="w-5 h-5" />
+                      </div>
+                      <p className="font-medium text-sm">{t("accountType.trainer")}</p>
+                      <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
+                        {t("accountType.trainerDesc")}
+                      </p>
+                      {accountType === "trainer" && (
+                        <div className="absolute top-2 right-2">
+                          <Check className="w-4 h-4 text-primary-600" />
+                        </div>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setAccountType("school")}
+                      className={`relative p-3 rounded-lg border-2 transition-all text-center ${
+                        accountType === "school"
+                          ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                          : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                        accountType === "school"
+                          ? "bg-primary-600 text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}>
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <p className="font-medium text-sm">{t("accountType.school")}</p>
+                      <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
+                        {t("accountType.schoolDesc")}
+                      </p>
+                      {accountType === "school" && (
+                        <div className="absolute top-2 right-2">
+                          <Check className="w-4 h-4 text-primary-600" />
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Display Name (optional but encouraged for trainers) */}
               <Input
@@ -353,18 +392,20 @@ function SignupForm() {
                 autoComplete="new-password"
               />
 
-              {/* Marketing consent checkbox - unchecked by default per GDPR */}
-              <label className="flex items-start gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={marketingConsent}
-                  onChange={(e) => setMarketingConsent(e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-[var(--border)] text-primary-600 focus:ring-primary-500 cursor-pointer"
-                />
-                <span className="text-sm text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors">
-                  {t("marketingConsent")}
-                </span>
-              </label>
+              {/* Marketing consent checkbox - hidden for familia children (minors) */}
+              {!isFamiliaChild && (
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={marketingConsent}
+                    onChange={(e) => setMarketingConsent(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-[var(--border)] text-primary-600 focus:ring-primary-500 cursor-pointer"
+                  />
+                  <span className="text-sm text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors">
+                    {t("marketingConsent")}
+                  </span>
+                </label>
+              )}
 
               <Button
                 type="submit"

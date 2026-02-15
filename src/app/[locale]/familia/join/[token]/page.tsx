@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Heart, Check, AlertCircle } from "lucide-react";
 
-export default function FamiliaJoinPage() {
+function FamiliaJoinInner() {
   const t = useTranslations("familia.join");
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const token = params.token as string;
 
   const [inviteInfo, setInviteInfo] = useState<{
@@ -23,8 +24,8 @@ export default function FamiliaJoinPage() {
   const [isAccepting, setIsAccepting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [birthdate, setBirthdate] = useState("");
-  const [schoolYear, setSchoolYear] = useState("");
+  const [birthdate, setBirthdate] = useState(searchParams.get("birthdate") || "");
+  const [schoolYear, setSchoolYear] = useState(searchParams.get("schoolYear") || "");
   const [needsAuth, setNeedsAuth] = useState(false);
 
   useEffect(() => {
@@ -75,6 +76,15 @@ export default function FamiliaJoinPage() {
     load();
   }, [token, t]);
 
+  const buildSignupUrl = () => {
+    const redirectPath = `/familia/join/${token}`;
+    const signupParams = new URLSearchParams();
+    signupParams.set("redirect", redirectPath);
+    if (birthdate) signupParams.set("birthdate", birthdate);
+    if (schoolYear) signupParams.set("schoolYear", schoolYear);
+    return `/auth/signup?${signupParams.toString()}`;
+  };
+
   const acceptInvite = async () => {
     setIsAccepting(true);
     setError("");
@@ -83,7 +93,7 @@ export default function FamiliaJoinPage() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      router.push(`/auth/signup?redirect=/familia/join/${token}`);
+      router.push(buildSignupUrl());
       return;
     }
 
@@ -204,7 +214,7 @@ export default function FamiliaJoinPage() {
               )}
 
               <Button
-                onClick={needsAuth ? () => router.push(`/auth/signup?redirect=/familia/join/${token}`) : acceptInvite}
+                onClick={needsAuth ? () => router.push(buildSignupUrl()) : acceptInvite}
                 disabled={isAccepting}
                 className="w-full bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white"
               >
@@ -218,5 +228,17 @@ export default function FamiliaJoinPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function FamiliaJoinPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      </div>
+    }>
+      <FamiliaJoinInner />
+    </Suspense>
   );
 }
