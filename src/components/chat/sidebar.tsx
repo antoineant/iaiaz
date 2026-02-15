@@ -234,7 +234,7 @@ export function Sidebar({
       })()}
 
       {/* Low credit warning - Ask for more credits */}
-      {balance < 1 && (
+      {balance < 0.5 && (
         <div className="px-4 pb-3">
           <div className="p-3 rounded-xl border border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/30">
             <p className="text-xs text-orange-700 dark:text-orange-300 mb-2">

@@ -247,9 +247,15 @@ function ThinkingBlock({
   );
 }
 
+/** Strip <familia_meta>...</familia_meta> tags that may leak into displayed content */
+function stripFamiliaMeta(content: string): string {
+  return content.replace(/<familia_meta>[\s\S]*?<\/familia_meta>/g, "").trimEnd();
+}
+
 export function Message({ message }: MessageProps) {
   const t = useTranslations("chat.message");
   const isUser = message.role === "user";
+  const displayContent = message.content && !isUser ? stripFamiliaMeta(message.content) : message.content;
 
   return (
     <div
@@ -275,9 +281,9 @@ export function Message({ message }: MessageProps) {
             {isUser ? t("you") : t("assistant")}
           </span>
           {/* Copy button for AI responses */}
-          {!isUser && message.content && !message.isStreaming && (
+          {!isUser && displayContent && !message.isStreaming && (
             <CopyButton
-              text={message.content}
+              text={displayContent}
               className="opacity-0 group-hover:opacity-100"
               copiedLabel={t("copied")}
               copyLabel={t("copy")}
@@ -304,18 +310,18 @@ export function Message({ message }: MessageProps) {
         )}
 
         <div className="prose prose-sm max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent">
-          {message.isStreaming && !message.content && !message.thinking ? (
+          {message.isStreaming && !displayContent && !message.thinking ? (
             <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>{t("thinking")}</span>
             </div>
-          ) : message.content ? (
+          ) : displayContent ? (
             isUser ? (
               // User messages: simple whitespace-pre-wrap
-              <div className="whitespace-pre-wrap">{message.content}</div>
+              <div className="whitespace-pre-wrap">{displayContent}</div>
             ) : (
               // AI messages: full markdown rendering with error boundary
-              <MessageErrorBoundary fallbackContent={message.content}>
+              <MessageErrorBoundary fallbackContent={displayContent}>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
@@ -422,7 +428,7 @@ export function Message({ message }: MessageProps) {
                     },
                   }}
                 >
-                  {message.content}
+                  {displayContent}
                 </ReactMarkdown>
               </MessageErrorBoundary>
             )
