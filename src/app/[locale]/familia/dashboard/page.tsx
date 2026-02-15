@@ -34,10 +34,12 @@ export default async function FamiliaDashboardPage({ params, searchParams }: Pro
   // Check if user is a family owner or admin
   const { data: membership } = await supabase
     .from("organization_members")
-    .select("organization_id, role, organizations(type)")
+    .select("organization_id, role, organizations!inner(type)")
     .eq("user_id", user.id)
+    .eq("status", "active")
     .eq("organizations.type", "family")
-    .single();
+    .limit(1)
+    .maybeSingle();
 
   if (!membership || (membership.role !== "owner" && membership.role !== "admin")) {
     // Not a family owner/admin, redirect to regular dashboard
