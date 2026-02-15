@@ -17,6 +17,17 @@ export async function POST(request: Request) {
 
     const { token, birthdate, schoolYear } = await request.json();
 
+    // Validate age before accepting invite (so invite isn't consumed on validation failure)
+    if (birthdate) {
+      const age = calculateAge(new Date(birthdate));
+      if (age < 12) {
+        return NextResponse.json(
+          { error: "L'utilisateur doit avoir au moins 12 ans" },
+          { status: 400 }
+        );
+      }
+    }
+
     // 1. Accept invite via RPC
     const { data, error } = await supabase.rpc("accept_organization_invite", {
       p_token: token,
@@ -35,16 +46,7 @@ export async function POST(request: Request) {
 
     // 2-5. For children: set birthdate, school year, supervision mode, parental controls
     if (role === "student" && birthdate) {
-      const age = calculateAge(new Date(birthdate));
-
-      if (age < 12) {
-        return NextResponse.json(
-          { error: "L'utilisateur doit avoir au moins 12 ans" },
-          { status: 400 }
-        );
-      }
-
-      const supervisionMode = getSupervisionMode(age);
+      const supervisionMode = getSupervisionMode(calculateAge(new Date(birthdate)));
 
       await adminClient
         .from("profiles")
