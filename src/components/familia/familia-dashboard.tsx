@@ -381,9 +381,14 @@ export function FamiliaDashboard({
           <h2 className="text-lg font-semibold mb-4">{t("members.title")}</h2>
           {children.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-[var(--muted-foreground)]">
+              <p className="text-[var(--muted-foreground)] mb-4">
                 {t("members.noChildren")}
               </p>
+              <Link href="/familia/settings">
+                <Button>
+                  {t("members.addMember")}
+                </Button>
+              </Link>
             </Card>
           ) : (
             <div className="space-y-3">

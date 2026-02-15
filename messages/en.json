@@ -3728,6 +3728,7 @@
           "adult": "Adult Mode"
         },
         "noChildren": "No children found in this family",
+        "addMember": "Add a family member",
         "personalBalance": "Personal credits",
         "spent": "spent"
       },
