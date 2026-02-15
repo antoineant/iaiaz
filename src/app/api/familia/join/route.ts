@@ -36,6 +36,14 @@ export async function POST(request: Request) {
     // 2-5. For children: set birthdate, school year, supervision mode, parental controls
     if (role === "student" && birthdate) {
       const age = calculateAge(new Date(birthdate));
+
+      if (age < 12) {
+        return NextResponse.json(
+          { error: "L'utilisateur doit avoir au moins 12 ans" },
+          { status: 400 }
+        );
+      }
+
       const supervisionMode = getSupervisionMode(age);
 
       await adminClient

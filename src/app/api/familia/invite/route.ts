@@ -29,12 +29,14 @@ export async function POST(request: NextRequest) {
       .select(`
         id,
         role,
-        organization:organizations (id, name, type, max_family_members)
+        organization:organizations!inner (id, name, type, max_family_members)
       `)
       .eq("user_id", user.id)
       .eq("status", "active")
       .in("role", ["owner", "admin"])
-      .single();
+      .eq("organizations.type", "family")
+      .limit(1)
+      .maybeSingle();
 
     if (!membership) {
       return NextResponse.json(
