@@ -125,6 +125,7 @@ export function Sidebar({
   const [showPreciseBalance, setShowPreciseBalance] = useState(false);
   const [teenAccentColor, setTeenAccentColor] = useState(familiaMode?.accentColor || null);
   const [showChildSettings, setShowChildSettings] = useState(false);
+  const [creditRequestStatus, setCreditRequestStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const isOrgMember = !!orgContext;
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
@@ -241,16 +242,45 @@ export function Sidebar({
               {t("teenLowCreditWarning")}
             </p>
             <button
-              onClick={() => {
-                // Copy a friendly message to clipboard
-                const message = `Salut ! J'ai bientôt plus de crédits sur iaiaz. Tu peux m'en ajouter ? Merci ! 😊`;
-                navigator.clipboard.writeText(message);
-                alert("Message copié ! Tu peux le coller et l'envoyer à tes parents.");
+              onClick={async () => {
+                if (creditRequestStatus === "sending" || creditRequestStatus === "sent") return;
+                setCreditRequestStatus("sending");
+                try {
+                  const res = await fetch("/api/familia/request-credits", { method: "POST" });
+                  setCreditRequestStatus(res.ok ? "sent" : "error");
+                  if (res.ok) setTimeout(() => setCreditRequestStatus("idle"), 10000);
+                  else setTimeout(() => setCreditRequestStatus("idle"), 3000);
+                } catch {
+                  setCreditRequestStatus("error");
+                  setTimeout(() => setCreditRequestStatus("idle"), 3000);
+                }
               }}
-              className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white transition-colors"
+              disabled={creditRequestStatus === "sending" || creditRequestStatus === "sent"}
+              className={cn(
+                "w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold text-white transition-colors",
+                creditRequestStatus === "sent"
+                  ? "bg-green-600"
+                  : creditRequestStatus === "error"
+                    ? "bg-red-600"
+                    : "bg-orange-600 hover:bg-orange-700",
+                (creditRequestStatus === "sending" || creditRequestStatus === "sent") && "opacity-80"
+              )}
             >
-              <span>💬</span>
-              {t("teenAskForCredits")}
+              {creditRequestStatus === "sending" ? (
+                t("teenAskForCreditsSending")
+              ) : creditRequestStatus === "sent" ? (
+                <>
+                  <span>✓</span>
+                  {t("teenAskForCreditsSent")}
+                </>
+              ) : creditRequestStatus === "error" ? (
+                t("teenAskForCreditsError")
+              ) : (
+                <>
+                  <span>💬</span>
+                  {t("teenAskForCredits")}
+                </>
+              )}
             </button>
           </div>
         </div>
