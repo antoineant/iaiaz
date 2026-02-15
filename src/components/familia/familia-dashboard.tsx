@@ -60,6 +60,7 @@ interface Flag {
 interface FamiliaDashboardProps {
   locale: string;
   showWelcome?: boolean;
+  organizationId: string;
   organizationName: string;
   subscriptionStatus: string;
   subscriptionTrialEnd: string | null;
@@ -76,6 +77,7 @@ interface FamiliaDashboardProps {
 export function FamiliaDashboard({
   locale,
   showWelcome,
+  organizationId,
   organizationName,
   subscriptionStatus,
   subscriptionTrialEnd,
@@ -92,6 +94,26 @@ export function FamiliaDashboard({
   const router = useRouter();
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(showWelcome);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const childCount = members.filter((m) => m.role !== "owner" && m.role !== "admin").length;
+
+  const handleSubscribe = async () => {
+    setIsSubscribing(true);
+    try {
+      const res = await fetch("/api/stripe/checkout/familia", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ childCount: Math.max(childCount, 1), organizationId }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      setIsSubscribing(false);
+    }
+  };
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -270,22 +292,37 @@ export function FamiliaDashboard({
               <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
               <p className="text-sm text-amber-800 dark:text-amber-200">{t("subscription.paymentPending")}</p>
             </div>
-            <Link href="/familia/signup">
-              <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
-                {t("subscription.completePurchase")}
-              </Button>
-            </Link>
+            <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white" onClick={handleSubscribe} disabled={isSubscribing}>
+              {t("subscription.subscribe")}
+            </Button>
           </div>
         )}
 
-        {subscriptionStatus === "trialing" && subscriptionTrialEnd && (
-          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center gap-3">
-            <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              {t("subscription.trialActive", {
-                date: new Date(subscriptionTrialEnd).toLocaleDateString(locale, { day: "numeric", month: "long" }),
-              })}
-            </p>
+        {subscriptionStatus === "trialing" && subscriptionTrialEnd && new Date(subscriptionTrialEnd) > new Date() && (
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                {t("subscription.trialActive", {
+                  date: new Date(subscriptionTrialEnd).toLocaleDateString(locale, { day: "numeric", month: "long" }),
+                })}
+              </p>
+            </div>
+            <Button size="sm" variant="outline" onClick={handleSubscribe} disabled={isSubscribing}>
+              {t("subscription.subscribe")}
+            </Button>
+          </div>
+        )}
+
+        {subscriptionStatus === "trialing" && subscriptionTrialEnd && new Date(subscriptionTrialEnd) <= new Date() && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <p className="text-sm text-red-800 dark:text-red-200">{t("subscription.trialExpired")}</p>
+            </div>
+            <Button size="sm" className="bg-primary-600 hover:bg-primary-700 text-white" onClick={handleSubscribe} disabled={isSubscribing}>
+              {t("subscription.subscribe")}
+            </Button>
           </div>
         )}
 
@@ -541,24 +578,26 @@ export function FamiliaDashboard({
                 <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 font-bold text-sm flex-shrink-0">3</div>
                 <div>
                   <p className="font-semibold">{t("welcome.step3Title")}</p>
-                  <p className="text-sm text-[var(--muted-foreground)]">{t("welcome.step3Text")}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">{t("welcome.step3Text", { creditBalance: creditBalance.toFixed(0) })}</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-6">
               <p className="text-sm text-green-700 dark:text-green-300">
-                <span className="font-semibold">{t("welcome.creditNote")}</span>{" "}
+                <span className="font-semibold">{t("welcome.creditNote", { amount: creditBalance.toFixed(0) })}</span>{" "}
                 {t("welcome.creditText")}
               </p>
             </div>
 
-            <Button
-              onClick={() => setShowWelcomeModal(false)}
-              className="w-full bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white"
-            >
-              {t("welcome.getStarted")}
-            </Button>
+            <Link href="/familia/settings">
+              <Button
+                onClick={() => setShowWelcomeModal(false)}
+                className="w-full bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white"
+              >
+                {t("welcome.getStarted")}
+              </Button>
+            </Link>
           </div>
         </div>
       )}

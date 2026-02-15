@@ -3851,38 +3851,33 @@
     },
     "signup": {
       "subtitle": "Créez votre espace famille en quelques minutes",
-      "steps": {
-        "family": "Famille",
-        "members": "Membres",
-        "payment": "Paiement"
+      "createAccount": "Créez votre compte",
+      "orLoginWith": "ou connectez-vous avec",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "loginLink": "Connectez-vous",
+      "verifyEmail": {
+        "title": "Vérifiez votre email",
+        "description": "Un email de confirmation a été envoyé à {email}.",
+        "hint": "Pensez à vérifier vos spams. Le lien expire au bout de 24h."
       },
       "familyTitle": "Votre famille",
       "familyName": "Nom de famille",
       "familyNamePlaceholder": "Ex : Famille Dupont",
-      "membersTitle": "Invitez vos proches",
-      "membersDesc": "Ajoutez vos enfants et éventuellement un autre parent. Vous pourrez aussi les ajouter plus tard.",
-      "roleChild": "Enfant",
-      "roleParent": "Parent",
-      "namePlaceholder": "Prénom",
-      "birthdate": "Date de naissance",
-      "schoolYear": "Niveau scolaire",
-      "selectYear": "Choisir le niveau",
-      "schoolYearHelp": "Permet d'adapter les réponses au programme scolaire",
-      "remove": "Retirer",
-      "addMember": "Ajouter un membre",
-      "paymentTitle": "Récapitulatif",
-      "family": "Famille",
-      "childCount": "Enfants",
-      "children": "enfant(s)",
-      "priceLine": "{quantity} × {unitPrice}€/mois",
-      "extraLine": "{quantity} × {unitPrice}€/mois (3e enfant+)",
-      "total": "Total",
-      "trialNote": "1€ de budget IA offert pour découvrir. Sans engagement.",
-      "noChildren": "Ajoutez au moins un enfant pour continuer.",
-      "next": "Suivant",
-      "back": "Retour",
+      "childCount": "Nombre d'enfants",
+      "extraParentCount": "Parents supplémentaires",
+      "extraParentNote": "En plus de vous (facultatif)",
+      "trialSummary": {
+        "title": "Votre essai gratuit",
+        "monthlyPrice": "Ensuite à partir de {price}€/mois",
+        "todayPrice": "Aujourd'hui",
+        "freeCredits": "{amount}€ de crédits IA offerts",
+        "trialDays": "7 jours d'essai gratuit",
+        "noCard": "Aucune carte bancaire requise",
+        "cancelAnytime": "Sans engagement, annulez à tout moment"
+      },
+      "startTrial": "Démarrer l'essai gratuit",
       "processing": "Un instant...",
-      "subscribe": "S'abonner"
+      "welcomeBack": "Bienvenue, {name} !"
     },
     "dashboard": {
       "subtitle": "Tableau de bord familial",
@@ -3931,23 +3926,24 @@
         "logout": "Déconnexion"
       },
       "subscription": {
-        "paymentPending": "Votre abonnement n'est pas encore actif. Finalisez votre paiement pour commencer.",
-        "completePurchase": "Finaliser",
-        "trialActive": "Période d'essai en cours — votre abonnement commencera le {date}.",
+        "paymentPending": "Votre abonnement n'est pas encore actif. Abonnez-vous pour continuer.",
+        "subscribe": "S'abonner",
+        "trialActive": "Essai gratuit en cours — se termine le {date}.",
+        "trialExpired": "Votre essai gratuit est terminé. Abonnez-vous pour que vos enfants puissent continuer à utiliser l'IA.",
         "pastDue": "Votre paiement a échoué. Veuillez mettre à jour vos informations de paiement pour continuer."
       },
       "welcome": {
         "title": "Bienvenue sur Familia !",
         "subtitle": "Votre espace famille est prêt. Voici comment démarrer :",
         "step1Title": "Invitez vos enfants",
-        "step1Text": "Envoyez-leur une invitation par email depuis les réglages.",
+        "step1Text": "Rendez-vous dans les réglages pour leur envoyer une invitation par email.",
         "step2Title": "Les contrôles sont automatiques",
         "step2Text": "Le mode de supervision s'adapte à l'âge de chaque enfant.",
-        "step3Title": "Explorez ensemble",
-        "step3Text": "Découvrez comment l'IA peut aider toute la famille au quotidien.",
-        "creditNote": "1€ offert !",
-        "creditText": "Vous avez 1€ de budget IA pour découvrir le service avant votre premier paiement.",
-        "getStarted": "C'est parti !"
+        "step3Title": "Votre essai démarre",
+        "step3Text": "{creditBalance}€ de crédits IA offerts et 7 jours pour découvrir le service.",
+        "creditNote": "{amount}€ offerts !",
+        "creditText": "Profitez de vos crédits IA pour explorer le service pendant 7 jours.",
+        "getStarted": "Inviter mes enfants"
       },
       "transfer": {
         "title": "Transférer des crédits aux enfants",

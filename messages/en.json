@@ -3655,38 +3655,33 @@
     },
     "signup": {
       "subtitle": "Set up your family space in minutes",
-      "steps": {
-        "family": "Family",
-        "members": "Members",
-        "payment": "Payment"
+      "createAccount": "Create your account",
+      "orLoginWith": "or sign in with",
+      "alreadyHaveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "verifyEmail": {
+        "title": "Check your email",
+        "description": "A confirmation email has been sent to {email}.",
+        "hint": "Check your spam folder. The link expires in 24 hours."
       },
       "familyTitle": "Your family",
       "familyName": "Family name",
       "familyNamePlaceholder": "e.g. The Smiths",
-      "membersTitle": "Invite your family",
-      "membersDesc": "Add your children and optionally another parent. You can also invite them later from settings.",
-      "roleChild": "Child",
-      "roleParent": "Parent",
-      "namePlaceholder": "First name",
-      "birthdate": "Date of birth",
-      "schoolYear": "School year",
-      "selectYear": "Select level",
-      "schoolYearHelp": "Helps the AI adapt to the school curriculum",
-      "remove": "Remove",
-      "addMember": "Add a member",
-      "paymentTitle": "Summary",
-      "family": "Family",
-      "childCount": "Children",
-      "children": "child(ren)",
-      "priceLine": "{quantity} × €{unitPrice}/month",
-      "extraLine": "{quantity} × €{unitPrice}/month (3rd+ child)",
-      "total": "Total",
-      "trialNote": "€1 AI budget free to try. No commitment.",
-      "noChildren": "Add at least one child to continue.",
-      "next": "Next",
-      "back": "Back",
+      "childCount": "Number of children",
+      "extraParentCount": "Additional parents",
+      "extraParentNote": "Besides yourself (optional)",
+      "trialSummary": {
+        "title": "Your free trial",
+        "monthlyPrice": "Then from €{price}/month",
+        "todayPrice": "Today",
+        "freeCredits": "€{amount} free AI credits",
+        "trialDays": "7-day free trial",
+        "noCard": "No credit card required",
+        "cancelAnytime": "No commitment, cancel anytime"
+      },
+      "startTrial": "Start free trial",
       "processing": "Processing...",
-      "subscribe": "Subscribe"
+      "welcomeBack": "Welcome back, {name}!"
     },
     "dashboard": {
       "subtitle": "Family Dashboard",
@@ -3735,23 +3730,24 @@
         "logout": "Logout"
       },
       "subscription": {
-        "paymentPending": "Your subscription is not yet active. Complete your payment to get started.",
-        "completePurchase": "Complete",
-        "trialActive": "Free trial active — your subscription will start on {date}.",
+        "paymentPending": "Your subscription is not yet active. Subscribe to continue.",
+        "subscribe": "Subscribe",
+        "trialActive": "Free trial active — ends on {date}.",
+        "trialExpired": "Your free trial has ended. Subscribe so your children can keep using AI.",
         "pastDue": "Your payment failed. Please update your payment information to continue."
       },
       "welcome": {
         "title": "Welcome to Familia!",
         "subtitle": "Your family space is ready. Here's how to get started:",
         "step1Title": "Invite your children",
-        "step1Text": "Send them an email invitation from the settings page.",
+        "step1Text": "Go to settings to send them an email invitation.",
         "step2Title": "Controls are automatic",
         "step2Text": "Supervision mode adapts to each child's age.",
-        "step3Title": "Explore together",
-        "step3Text": "Discover how AI can help the whole family every day.",
-        "creditNote": "1€ free!",
-        "creditText": "You have 1€ of AI budget to explore the service before your first payment.",
-        "getStarted": "Let's go!"
+        "step3Title": "Your trial starts now",
+        "step3Text": "€{creditBalance} free AI credits and 7 days to explore the service.",
+        "creditNote": "€{amount} free!",
+        "creditText": "Use your AI credits to explore the service for 7 days.",
+        "getStarted": "Invite my children"
       },
       "transfer": {
         "title": "Transfer Credits to Children",

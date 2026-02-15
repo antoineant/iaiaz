@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (org.subscription_status === "active" || org.subscription_status === "trialing") {
+    if (org.subscription_status === "active") {
       return NextResponse.json(
         { error: "Vous avez deja un abonnement actif" },
         { status: 400 }
@@ -125,9 +125,8 @@ export async function POST(request: NextRequest) {
       mode: "subscription",
       allow_promotion_codes: true,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/familia/dashboard?welcome=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/familia/signup`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/familia/dashboard`,
       subscription_data: {
-        trial_period_days: 7,
         metadata: {
           organizationId: org.id,
           type: "familia",

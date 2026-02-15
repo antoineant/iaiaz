@@ -1,20 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { calculateAge, getSupervisionMode, getAgeBracket, validateBirthdate } from "@/lib/familia/age-verification";
-import { initializeChildControls } from "@/lib/familia/parental-controls";
-
-interface PendingMember {
-  name: string;
-  email: string;
-  role: "admin" | "student";
-  birthdate?: string;
-}
 
 interface CreateFamilyRequest {
   familyName: string;
-  members?: PendingMember[];
-  locale?: string;
+  childCount: number;
+  extraParentCount: number;
 }
 
 export async function POST(request: NextRequest) {
@@ -31,10 +22,18 @@ export async function POST(request: NextRequest) {
     }
 
     const body: CreateFamilyRequest = await request.json();
-    const { familyName, members: pendingMembers, locale } = body;
+    const { familyName, childCount, extraParentCount } = body;
 
     if (!familyName?.trim()) {
       return NextResponse.json({ error: "Nom de famille requis" }, { status: 400 });
+    }
+
+    if (!childCount || childCount < 1 || childCount > 6) {
+      return NextResponse.json({ error: "Nombre d'enfants invalide (1-6)" }, { status: 400 });
+    }
+
+    if (extraParentCount < 0 || extraParentCount > 2) {
+      return NextResponse.json({ error: "Nombre de parents supplémentaires invalide (0-2)" }, { status: 400 });
     }
 
     // Check user doesn't already own a family org
@@ -69,8 +68,9 @@ export async function POST(request: NextRequest) {
       .replace(/^-|-$/g, "")
       + "-" + Math.random().toString(36).substring(2, 8);
 
-    // Count student members as children
-    const childCount = pendingMembers?.filter(m => m.role === "student").length || 0;
+    const welcomeCredit = 1.0 * childCount;
+    const trialEnd = new Date();
+    trialEnd.setDate(trialEnd.getDate() + 7);
 
     // Create the family organization
     const { data: org, error: orgError } = await adminClient
@@ -81,17 +81,15 @@ export async function POST(request: NextRequest) {
         type: "family",
         contact_email: user.email,
         contact_name: user.user_metadata?.full_name || user.email,
-        credit_balance: 1.0, // 1€ welcome credit immediately
-        max_family_members: childCount + 2, // children + 2 parents
+        credit_balance: welcomeCredit,
+        max_family_members: childCount + extraParentCount + 1,
         status: "active",
+        subscription_status: "trialing",
+        subscription_trial_end: trialEnd.toISOString(),
         settings: {
-          allowed_models: null, // All models for now
+          allowed_models: null,
           conversation_visibility: "stats_only",
           alert_threshold_percent: 80,
-          // Store pending invites to send after payment
-          ...(pendingMembers && pendingMembers.length > 0
-            ? { pending_invites: pendingMembers, invite_locale: locale || "fr" }
-            : {}),
         },
       })
       .select()
@@ -128,20 +126,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Sync parent's personal balance with org balance (1€ welcome credit)
-    const WELCOME_CREDIT = 1.0;
-
+    // Sync parent's personal balance with org balance
     await adminClient
       .from("profiles")
-      .update({ credits_balance: WELCOME_CREDIT })
+      .update({ credits_balance: welcomeCredit })
       .eq("id", user.id);
 
     // Log the welcome credit transaction
     await adminClient.from("organization_transactions").insert({
       organization_id: org.id,
       type: "purchase",
-      amount: WELCOME_CREDIT,
-      description: "Credit de bienvenue Familia (1€ offert)",
+      amount: welcomeCredit,
+      description: `Credit de bienvenue Familia (${welcomeCredit}€ offert pour ${childCount} enfant${childCount > 1 ? "s" : ""})`,
     });
 
     return NextResponse.json({

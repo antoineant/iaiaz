@@ -101,7 +101,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes (locale-agnostic matching)
-  const protectedPaths = ["/chat", "/dashboard", "/org", "/class", "/familia/dashboard", "/familia/settings", "/familia/chat", "/familia/signup"];
+  const protectedPaths = ["/chat", "/dashboard", "/org", "/class", "/familia/dashboard", "/familia/settings", "/familia/chat"];
   const isProtectedPath = protectedPaths.some((path) =>
     pathnameWithoutLocale.startsWith(path)
   );

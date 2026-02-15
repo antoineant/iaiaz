@@ -174,6 +174,7 @@ export default async function FamiliaDashboardPage({ params, searchParams }: Pro
     <FamiliaDashboard
       locale={locale}
       showWelcome={welcome === "true"}
+      organizationId={organizationId}
       organizationName={org?.name || "Familia"}
       subscriptionStatus={org?.subscription_status || "none"}
       subscriptionTrialEnd={org?.subscription_trial_end || null}

@@ -37,6 +37,13 @@ export async function checkFamiliaPreConditions(
         detail: "Tu as atteint ta limite de crédits. Demande à tes parents pour en avoir plus !",
       };
     }
+    if (result.reason === "trial_expired") {
+      return {
+        allowed: false,
+        reason: "trial_expired",
+        detail: "La période d'essai est terminée. Demande à tes parents de s'abonner !",
+      };
+    }
   }
 
   return { allowed: true };

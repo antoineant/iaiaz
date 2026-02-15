@@ -7,9 +7,10 @@ import { createClient } from "@/lib/supabase/client";
 interface GoogleButtonProps {
   mode: "login" | "signup";
   accountType?: "student" | "trainer" | "school" | "business";
+  redirectAfter?: string;
 }
 
-export function GoogleButton({ mode, accountType }: GoogleButtonProps) {
+export function GoogleButton({ mode, accountType, redirectAfter }: GoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("auth.google");
   const locale = useLocale();
@@ -20,8 +21,15 @@ export function GoogleButton({ mode, accountType }: GoogleButtonProps) {
 
     // Build redirect URL with locale and account type for signup
     let redirectTo = `${window.location.origin}/${locale}/auth/callback`;
+    const params = new URLSearchParams();
     if (mode === "signup" && accountType) {
-      redirectTo += `?account_type=${accountType}`;
+      params.set("account_type", accountType);
+    }
+    if (redirectAfter) {
+      params.set("next", redirectAfter);
+    }
+    if (params.toString()) {
+      redirectTo += `?${params.toString()}`;
     }
 
     await supabase.auth.signInWithOAuth({
