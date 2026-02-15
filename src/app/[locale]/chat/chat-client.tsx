@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Sidebar } from "@/components/chat/sidebar";
 import { ModelSelector } from "@/components/chat/model-selector";
-import { Message } from "@/components/chat/message";
+import { Message, type TtsState } from "@/components/chat/message";
+import { createAudioPlayer } from "@/lib/audio/player";
 import { ChatInput, type RateLimitInfo } from "@/components/chat/chat-input";
 import type { Conversation, ChatMessage, FileAttachment, CustomAssistant } from "@/types";
 import type { PricingData } from "@/lib/pricing-db";
@@ -146,6 +147,11 @@ export function ChatClient({
   const [familiaAssistants, setFamiliaAssistants] = useState<CustomAssistant[]>(familiaMode?.assistants || []);
   const [selectedAssistant, setSelectedAssistant] = useState<AssistantInfo | undefined>(assistantInfo);
   const [familiaAccentColor, setFamiliaAccentColor] = useState<string | null>(familiaMode?.accentColor || null);
+
+  // TTS state
+  const [playingMessageId, setPlayingMessageId] = useState<string | null>(null);
+  const [ttsLoadingMessageId, setTtsLoadingMessageId] = useState<string | null>(null);
+  const audioPlayerRef = useRef<ReturnType<typeof createAudioPlayer> | null>(null);
 
   // Initialize model picker state and preferred model
   useEffect(() => {
@@ -533,6 +539,65 @@ export function ChatClient({
     }
   };
 
+  // TTS handlers
+  const handlePlayTts = useCallback(async (messageId: string, text: string) => {
+    try {
+      // Initialize player if needed
+      if (!audioPlayerRef.current) {
+        audioPlayerRef.current = createAudioPlayer();
+        audioPlayerRef.current.onStateChange((state) => {
+          if (state === "idle") {
+            setPlayingMessageId(null);
+            setTtsLoadingMessageId(null);
+          }
+        });
+      }
+
+      setTtsLoadingMessageId(messageId);
+
+      const response = await fetch("/api/audio/synthesize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) throw new Error("TTS failed");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      setPlayingMessageId(messageId);
+      setTtsLoadingMessageId(null);
+
+      await audioPlayerRef.current.play(url);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("TTS error:", error);
+      setPlayingMessageId(null);
+      setTtsLoadingMessageId(null);
+    }
+  }, []);
+
+  const handleStopTts = useCallback(() => {
+    audioPlayerRef.current?.stop();
+    setPlayingMessageId(null);
+    setTtsLoadingMessageId(null);
+  }, []);
+
+  // Cleanup audio player on unmount
+  useEffect(() => {
+    return () => {
+      audioPlayerRef.current?.destroy();
+    };
+  }, []);
+
+  // Helper to get TTS state for a message
+  const getTtsState = useCallback((messageId: string): TtsState => {
+    if (ttsLoadingMessageId === messageId) return "loading";
+    if (playingMessageId === messageId) return "playing";
+    return "idle";
+  }, [ttsLoadingMessageId, playingMessageId]);
+
   // Handle familia assistant selection
   const handleSelectFamiliaAssistant = (assistant: CustomAssistant) => {
     const theme = getThemeColor(assistant.color);
@@ -747,7 +812,13 @@ export function ChatClient({
           ) : (
             <div className="max-w-3xl mx-auto">
               {messages.map((message) => (
-                <Message key={message.id} message={message} />
+                <Message
+                  key={message.id}
+                  message={message}
+                  ttsState={getTtsState(message.id)}
+                  onPlayTts={handlePlayTts}
+                  onStopTts={handleStopTts}
+                />
               ))}
               <div ref={messagesEndRef} />
             </div>

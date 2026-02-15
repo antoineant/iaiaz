@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { CostEstimate } from "./cost-estimate";
 import { RateLimitIndicator } from "./rate-limit-indicator";
@@ -16,8 +16,11 @@ import {
   FileText,
   Loader2,
   Image as ImageIcon,
+  Mic,
+  MicOff,
 } from "lucide-react";
 import { formatFileSize, ALLOWED_TYPES, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/files";
+import { createAudioRecorder, type RecorderState } from "@/lib/audio/recorder";
 
 export interface RateLimitInfo {
   remaining: number;
@@ -54,13 +57,17 @@ export function ChatInput({
   familiaMode,
 }: ChatInputProps) {
   const t = useTranslations("chat");
+  const locale = useLocale();
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<FileAttachment[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [micState, setMicState] = useState<RecorderState | "transcribing">("idle");
+  const [recordingDuration, setRecordingDuration] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const recorderRef = useRef<ReturnType<typeof createAudioRecorder> | null>(null);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -250,6 +257,55 @@ export function ChatInput({
     }
   };
 
+  // Speech-to-text recording handler
+  const handleMicClick = useCallback(async () => {
+    if (micState === "recording") {
+      // Stop recording and transcribe
+      try {
+        const recorder = recorderRef.current;
+        if (!recorder) return;
+        const audioBlob = await recorder.stop();
+        setMicState("transcribing");
+        setRecordingDuration(0);
+
+        const formData = new FormData();
+        formData.append("audio", audioBlob, "recording.webm");
+        formData.append("locale", locale);
+
+        const response = await fetch("/api/audio/transcribe", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Transcription failed");
+
+        const { text } = await response.json();
+        if (text) {
+          setInput((prev) => (prev ? prev + " " + text : text));
+        }
+      } catch (error) {
+        console.error("Transcription error:", error);
+        setUploadError(t("input.transcribeError"));
+      } finally {
+        setMicState("idle");
+        recorderRef.current = null;
+      }
+    } else if (micState === "idle") {
+      // Start recording
+      try {
+        const recorder = createAudioRecorder();
+        recorderRef.current = recorder;
+        recorder.onDurationChange(setRecordingDuration);
+        await recorder.start();
+        setMicState("recording");
+      } catch {
+        setUploadError(t("input.micPermissionDenied"));
+        setMicState("idle");
+        recorderRef.current = null;
+      }
+    }
+  }, [micState, locale, t]);
+
   const isRateLimited = rateLimit?.remaining === 0;
   const hasContent = input.trim() || attachments.length > 0;
 
@@ -413,6 +469,42 @@ export function ChatInput({
                 <Paperclip className="w-5 h-5" />
               )}
             </Button>
+
+            {/* Mic button for speech-to-text */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleMicClick}
+              disabled={disabled || isLoading || uploading || isRateLimited || micState === "transcribing" || micState === "stopping"}
+              className={`flex-shrink-0 ${
+                micState === "recording"
+                  ? "text-red-500 hover:text-red-600 animate-pulse"
+                  : micState === "transcribing"
+                    ? "text-[var(--muted-foreground)]"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              }`}
+              title={
+                micState === "recording"
+                  ? t("input.recording")
+                  : micState === "transcribing"
+                    ? t("input.transcribing")
+                    : t("input.record")
+              }
+            >
+              {micState === "transcribing" ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : micState === "recording" ? (
+                <MicOff className="w-5 h-5" />
+              ) : (
+                <Mic className="w-5 h-5" />
+              )}
+            </Button>
+            {micState === "recording" && (
+              <span className="text-xs text-red-500 font-mono mr-1">
+                {Math.floor(recordingDuration / 60)}:{(recordingDuration % 60).toString().padStart(2, "0")}
+              </span>
+            )}
 
             <textarea
               ref={textareaRef}

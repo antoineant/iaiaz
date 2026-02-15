@@ -350,7 +350,12 @@
       "attachImage": "Attach an image (PNG, JPG, GIF, WebP)",
       "noFileSupport": "This model doesn't support file attachments.",
       "imagesPdfSupported": "Images, PDF and Word documents supported (max 20 MB). Paste or drag and drop.",
-      "imagesOnlySupported": "Images supported (max 20 MB). PDF not supported by this model."
+      "imagesOnlySupported": "Images supported (max 20 MB). PDF not supported by this model.",
+      "record": "Record voice message",
+      "recording": "Recording...",
+      "transcribing": "Transcribing...",
+      "micPermissionDenied": "Microphone access denied",
+      "transcribeError": "Could not transcribe audio"
     },
     "errors": {
       "sendError": "Error sending message",
@@ -389,7 +394,10 @@
       "thinking": "Thinking...",
       "thinkingProcess": "Thinking process",
       "showPreview": "Preview",
-      "showCode": "Code"
+      "showCode": "Code",
+      "play": "Read aloud",
+      "stop": "Stop reading",
+      "ttsError": "Could not generate speech"
     },
     "modelSelector": {
       "placeholder": "Choose a model",

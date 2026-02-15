@@ -20,13 +20,20 @@ import {
   Brain,
   ChevronDown,
   ChevronRight,
+  Volume2,
+  Square,
 } from "lucide-react";
 import { formatFileSize } from "@/lib/files";
 import { CodePreview, isPreviewableLanguage } from "./code-preview";
 import { MessageErrorBoundary } from "./message-error-boundary";
 
+export type TtsState = "idle" | "loading" | "playing";
+
 interface MessageProps {
   message: ChatMessage;
+  ttsState?: TtsState;
+  onPlayTts?: (messageId: string, text: string) => void;
+  onStopTts?: () => void;
 }
 
 function CopyButton({
@@ -252,7 +259,7 @@ function stripFamiliaMeta(content: string): string {
   return content.replace(/<familia_meta>[\s\S]*?<\/familia_meta>/g, "").trimEnd();
 }
 
-export function Message({ message }: MessageProps) {
+export function Message({ message, ttsState = "idle", onPlayTts, onStopTts }: MessageProps) {
   const t = useTranslations("chat.message");
   const isUser = message.role === "user";
   const displayContent = message.content && !isUser ? stripFamiliaMeta(message.content) : message.content;
@@ -280,14 +287,41 @@ export function Message({ message }: MessageProps) {
           <span className="font-medium text-sm">
             {isUser ? t("you") : t("assistant")}
           </span>
-          {/* Copy button for AI responses */}
+          {/* Action buttons for AI responses */}
           {!isUser && displayContent && !message.isStreaming && (
-            <CopyButton
-              text={displayContent}
-              className="opacity-0 group-hover:opacity-100"
-              copiedLabel={t("copied")}
-              copyLabel={t("copy")}
-            />
+            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100">
+              {/* TTS play/stop button */}
+              {onPlayTts && (
+                <button
+                  onClick={() =>
+                    ttsState === "playing"
+                      ? onStopTts?.()
+                      : onPlayTts(message.id, displayContent)
+                  }
+                  disabled={ttsState === "loading"}
+                  className={cn(
+                    "p-1.5 rounded-md transition-colors",
+                    "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
+                    "hover:bg-[var(--muted)]",
+                    ttsState === "loading" && "opacity-50 cursor-not-allowed"
+                  )}
+                  title={ttsState === "playing" ? t("stop") : t("play")}
+                >
+                  {ttsState === "loading" ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : ttsState === "playing" ? (
+                    <Square className="w-4 h-4" />
+                  ) : (
+                    <Volume2 className="w-4 h-4" />
+                  )}
+                </button>
+              )}
+              <CopyButton
+                text={displayContent}
+                copiedLabel={t("copied")}
+                copyLabel={t("copy")}
+              />
+            </div>
           )}
         </div>
 

@@ -364,7 +364,12 @@
       "attachImage": "Joindre une image (PNG, JPG, GIF, WebP)",
       "noFileSupport": "Ce modèle ne supporte pas les fichiers joints.",
       "imagesPdfSupported": "Images, PDF et documents Word supportés (max 20 Mo). Collez ou glissez-déposez.",
-      "imagesOnlySupported": "Images supportées (max 20 Mo). PDF non supporté par ce modèle."
+      "imagesOnlySupported": "Images supportées (max 20 Mo). PDF non supporté par ce modèle.",
+      "record": "Enregistrer un message vocal",
+      "recording": "Enregistrement...",
+      "transcribing": "Transcription...",
+      "micPermissionDenied": "Accès au micro refusé",
+      "transcribeError": "Impossible de transcrire l'audio"
     },
     "errors": {
       "sendError": "Erreur lors de l'envoi du message",
@@ -403,7 +408,10 @@
       "thinking": "Réflexion en cours...",
       "thinkingProcess": "Processus de réflexion",
       "showPreview": "Aperçu",
-      "showCode": "Code"
+      "showCode": "Code",
+      "play": "Lire à voix haute",
+      "stop": "Arrêter la lecture",
+      "ttsError": "Impossible de générer la parole"
     },
     "modelSelector": {
       "placeholder": "Choisir un modèle",
