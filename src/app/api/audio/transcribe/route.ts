@@ -41,10 +41,19 @@ export async function POST(request: NextRequest) {
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+    // Use the locale as a hint but also provide a prompt in the target language
+    // to prevent Whisper from translating instead of transcribing.
+    // The prompt biases the model toward the expected language.
+    const promptByLocale: Record<string, string> = {
+      fr: "Transcription en français.",
+      en: "Transcription in English.",
+    };
+
     const transcription = await client.audio.transcriptions.create({
       model: "whisper-1",
       file: audioFile,
       language: locale === "fr" ? "fr" : "en",
+      prompt: promptByLocale[locale] || promptByLocale.fr,
     });
 
     return NextResponse.json({ text: transcription.text });
