@@ -406,10 +406,13 @@ export default async function FamiliaLandingPage({ params }: Props) {
           <Card className="border-2 border-primary-200 dark:border-primary-800 max-w-lg mx-auto">
             <CardContent className="pt-8 pb-8">
               <h3 className="text-2xl font-bold mb-1 text-center">Familia</h3>
-              <div className="text-center mb-6">
+              <div className="text-center mb-2">
                 <span className="text-5xl font-extrabold">9,90&#x20AC;</span>
                 <span className="text-[var(--muted-foreground)] text-lg"> /{t("pricing.perChild")}</span>
               </div>
+              <p className="text-center text-green-600 dark:text-green-400 font-semibold text-sm mb-6">
+                {t("pricing.creditsIncluded")}
+              </p>
 
               {/* Degressive pricing note */}
               <div className="mb-6 p-4 rounded-lg bg-accent-50 dark:bg-accent-950/30 border border-accent-200 dark:border-accent-800 text-center">
@@ -425,7 +428,7 @@ export default async function FamiliaLandingPage({ params }: Props) {
                     <tr className="bg-[var(--muted)]/50">
                       <th className="px-4 py-2 text-left font-medium text-[var(--muted-foreground)]">{locale === "fr" ? "Enfants" : "Children"}</th>
                       <th className="px-4 py-2 text-right font-medium text-[var(--muted-foreground)]">/{t("pricing.month")}</th>
-                      <th className="px-4 py-2 text-right font-medium text-[var(--muted-foreground)]">{locale === "fr" ? "Budget IA" : "AI budget"}</th>
+                      <th className="px-4 py-2 text-right font-medium text-[var(--muted-foreground)]">{locale === "fr" ? "Budget IA inclus" : "AI budget included"}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -438,7 +441,10 @@ export default async function FamiliaLandingPage({ params }: Props) {
                       <tr key={row.kids} className="border-t border-[var(--border)]">
                         <td className="px-4 py-2">{row.kids}</td>
                         <td className="px-4 py-2 text-right font-semibold">{row.price}&#x20AC;</td>
-                        <td className="px-4 py-2 text-right text-green-600">{row.credits}&#x20AC;</td>
+                        <td className="px-4 py-2 text-right">
+                          <span className="text-green-600 font-semibold">{row.credits}&#x20AC;</span>
+                          <span className="ml-1 text-[10px] font-medium text-green-600 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full">{locale === "fr" ? "inclus" : "incl."}</span>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
