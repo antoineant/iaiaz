@@ -27,6 +27,8 @@ export function GoogleButton({ mode, accountType, redirectAfter }: GoogleButtonP
     }
     if (redirectAfter) {
       params.set("next", redirectAfter);
+      // Store in cookie as fallback (Supabase may strip query params on redirect)
+      document.cookie = `auth_redirect_after=${encodeURIComponent(redirectAfter)}; path=/; max-age=600; SameSite=Lax`;
     }
     if (params.toString()) {
       redirectTo += `?${params.toString()}`;

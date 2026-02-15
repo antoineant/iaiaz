@@ -6,8 +6,18 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const error_description = searchParams.get("error_description");
-  const next = searchParams.get("next") ?? "/chat";
   const accountType = searchParams.get("account_type"); // For Google OAuth signup
+
+  // Read redirect target: URL param > cookie fallback > default
+  let next = searchParams.get("next") ?? "/chat";
+  if (next === "/chat") {
+    // Check cookie fallback (set by GoogleButton when redirectAfter is used)
+    const cookieHeader = request.headers.get("cookie") || "";
+    const match = cookieHeader.match(/auth_redirect_after=([^;]+)/);
+    if (match) {
+      next = decodeURIComponent(match[1]);
+    }
+  }
 
   console.log("[auth/callback] Starting callback", {
     hasCode: !!code,
@@ -139,11 +149,15 @@ export async function GET(request: Request) {
         const acceptTermsUrl = finalRedirect !== "/chat"
           ? `${origin}/auth/accept-terms?redirect=${encodeURIComponent(finalRedirect)}`
           : `${origin}/auth/accept-terms`;
-        return NextResponse.redirect(acceptTermsUrl);
+        const resp = NextResponse.redirect(acceptTermsUrl);
+        resp.cookies.delete("auth_redirect_after");
+        return resp;
       }
 
       // Terms already accepted, proceed to destination
-      return NextResponse.redirect(`${origin}${finalRedirect}`);
+      const resp = NextResponse.redirect(`${origin}${finalRedirect}`);
+      resp.cookies.delete("auth_redirect_after");
+      return resp;
     }
 
     console.error("[auth/callback] Failed to exchange code:", error?.message);

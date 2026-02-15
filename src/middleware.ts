@@ -60,6 +60,14 @@ export async function middleware(request: NextRequest) {
   // Get pathname without locale for route matching
   const pathnameWithoutLocale = getPathnameWithoutLocale(pathname);
 
+  // Handle OAuth PKCE code arriving at wrong URL (Supabase redirect fallback)
+  const code = request.nextUrl.searchParams.get("code");
+  if (code && !pathnameWithoutLocale.startsWith("/auth/callback")) {
+    const url = request.nextUrl.clone();
+    url.pathname = `${localePathPrefix}/auth/callback`;
+    return NextResponse.redirect(url);
+  }
+
   // Redirect old audience pages to /etudiants (both FR and EN paths)
   const redirectToStudy = ["/etablissements", "/formateurs", "/schools", "/trainers"];
   if (redirectToStudy.includes(pathnameWithoutLocale)) {
