@@ -72,6 +72,7 @@ export const pathnames = {
   '/auth/forgot-password': '/auth/forgot-password',
   '/auth/reset-password': '/auth/reset-password',
   '/auth/accept-terms': '/auth/accept-terms',
+  '/auth/choose-workspace': '/auth/choose-workspace',
   '/chat': '/chat',
   '/chat/[id]': '/chat/[id]',
   '/dashboard': '/dashboard',

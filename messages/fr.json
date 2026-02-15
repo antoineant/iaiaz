@@ -748,6 +748,28 @@
       "continueWith": "Continuer avec Google",
       "signupWith": "S'inscrire avec Google",
       "connecting": "Connexion..."
+    },
+    "chooseWorkspace": {
+      "title": "Choisissez votre espace",
+      "subtitle": "Vous avez accès à plusieurs espaces iaiaz",
+      "types": {
+        "study": {
+          "title": "Study by iaiaz",
+          "description": "Votre assistant IA personnel"
+        },
+        "business": {
+          "title": "Business by iaiaz",
+          "description": "{orgName}"
+        },
+        "familia": {
+          "title": "Familia by iaiaz",
+          "description": "{orgName}"
+        },
+        "setup-familia": {
+          "title": "Familia by iaiaz",
+          "description": "Créez votre espace famille"
+        }
+      }
     }
   },
   "join": {

@@ -8,21 +8,9 @@ export async function GET(request: Request) {
   const error_description = searchParams.get("error_description");
   const accountType = searchParams.get("account_type"); // For Google OAuth signup
 
-  // Read redirect target: URL param > cookie fallback > default
-  let next = searchParams.get("next") ?? "/chat";
-  if (next === "/chat") {
-    // Check cookie fallback (set by GoogleButton when redirectAfter is used)
-    const cookieHeader = request.headers.get("cookie") || "";
-    const match = cookieHeader.match(/auth_redirect_after=([^;]+)/);
-    if (match) {
-      next = decodeURIComponent(match[1]);
-    }
-  }
-
   console.log("[auth/callback] Starting callback", {
     hasCode: !!code,
     error_description,
-    next,
     origin,
     accountType,
   });
@@ -131,32 +119,41 @@ export async function GET(request: Request) {
         }
       }
 
-      // Determine final redirect: URL param > user_metadata > default
-      let finalRedirect = next;
-      if (next === "/chat" && data.user.user_metadata?.redirect_after_confirm) {
-        finalRedirect = data.user.user_metadata.redirect_after_confirm;
-        console.log("[auth/callback] Using redirect from user_metadata:", finalRedirect);
+      // Transfer intent from user_metadata to cookie (email signup flow)
+      // GoogleButton already sets the cookie for OAuth flows; this handles email confirmation flows
+      let intentToStore: string | null = null;
+      if (data.user.user_metadata?.redirect_after_confirm) {
+        intentToStore = data.user.user_metadata.redirect_after_confirm;
+        console.log("[auth/callback] Transferring redirect from user_metadata to cookie:", intentToStore);
 
-        // Clear the redirect from metadata (one-time use)
         await adminClient.auth.admin.updateUserById(data.user.id, {
           user_metadata: { redirect_after_confirm: null },
         });
       }
 
-      // If terms not accepted, redirect to accept-terms page (with final redirect stored)
+      // Helper to set intent cookie on response
+      const setIntentCookie = (resp: NextResponse) => {
+        if (intentToStore) {
+          resp.cookies.set("auth_redirect_after", encodeURIComponent(intentToStore), {
+            path: "/",
+            maxAge: 600,
+            sameSite: "lax",
+          });
+        }
+      };
+
+      // If terms not accepted, redirect to accept-terms → choose-workspace
       if (!profile?.terms_accepted_at) {
-        // Pass the final redirect to accept-terms so it can redirect after
-        const acceptTermsUrl = finalRedirect !== "/chat"
-          ? `${origin}/auth/accept-terms?redirect=${encodeURIComponent(finalRedirect)}`
-          : `${origin}/auth/accept-terms`;
-        const resp = NextResponse.redirect(acceptTermsUrl);
-        resp.cookies.delete("auth_redirect_after");
+        const resp = NextResponse.redirect(
+          `${origin}/auth/accept-terms?redirect=/auth/choose-workspace`
+        );
+        setIntentCookie(resp);
         return resp;
       }
 
-      // Terms already accepted, proceed to destination
-      const resp = NextResponse.redirect(`${origin}${finalRedirect}`);
-      resp.cookies.delete("auth_redirect_after");
+      // Terms already accepted — go to workspace chooser
+      const resp = NextResponse.redirect(`${origin}/auth/choose-workspace`);
+      setIntentCookie(resp);
       return resp;
     }
 

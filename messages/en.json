@@ -855,6 +855,28 @@
       "continueWith": "Continue with Google",
       "signupWith": "Sign up with Google",
       "connecting": "Connecting..."
+    },
+    "chooseWorkspace": {
+      "title": "Choose your workspace",
+      "subtitle": "You have access to multiple iaiaz workspaces",
+      "types": {
+        "study": {
+          "title": "Study by iaiaz",
+          "description": "Your personal AI assistant"
+        },
+        "business": {
+          "title": "Business by iaiaz",
+          "description": "{orgName}"
+        },
+        "familia": {
+          "title": "Familia by iaiaz",
+          "description": "{orgName}"
+        },
+        "setup-familia": {
+          "title": "Familia by iaiaz",
+          "description": "Set up your family space"
+        }
+      }
     }
   },
   "join": {
