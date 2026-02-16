@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 import type { CustomAssistant } from "@/types";
 import { getThemeColor, ACCENT_COLORS } from "@/lib/mifa/theme";
+import { MifaAvatar } from "./mifa-avatar";
 import { AssistantWizard } from "./assistant-wizard";
 
 interface MifaWelcomeProps {
@@ -135,10 +136,10 @@ export function MifaWelcome({
                     boxShadow: `inset 0 0 0 1.5px ${cardHex}60, 0 0 20px ${cardHex}25`,
                   }}
                 />
-                <span className="relative text-4xl transition-transform duration-300 group-hover:scale-110 group-hover:drop-shadow-lg"
+                <span className="relative transition-transform duration-300 group-hover:scale-110 group-hover:drop-shadow-lg"
                   style={{ animation: `emoji-bounce ${4 + (index % 4) * 0.3}s ease-in-out infinite` }}
                 >
-                  {assistant.avatar}
+                  <MifaAvatar avatar={assistant.avatar} avatarType={assistant.avatar_type} size={48} />
                 </span>
                 <span className="relative text-sm font-semibold truncate w-full" style={{ color: cardDark }}>
                   {assistant.name}
