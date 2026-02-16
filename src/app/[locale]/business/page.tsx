@@ -130,7 +130,7 @@ export default async function BusinessPage({ params }: Props) {
       </header>
 
       <main>
-        {/* Hero — Familia-style gradient */}
+        {/* Hero — Mifa-style gradient */}
         <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-violet-50 dark:from-indigo-950 dark:via-[var(--background)] dark:to-violet-950">
           <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
             <div className="text-center max-w-3xl mx-auto">
@@ -669,7 +669,7 @@ export default async function BusinessPage({ params }: Props) {
           </div>
         </section>
 
-        {/* CTA — Familia-style gradient */}
+        {/* CTA — Mifa-style gradient */}
         <section className="py-20 bg-gradient-to-r from-indigo-600 to-violet-600">
           <div className="max-w-3xl mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">

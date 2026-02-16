@@ -21,9 +21,9 @@ import {
 } from "@/components/chat/model-picker-overlay";
 import { ContextLimitModal } from "@/components/chat/context-limit-modal";
 import { ContextUsageIndicator } from "@/components/chat/context-usage-indicator";
-import { FamiliaWelcome } from "@/components/familia/familia-welcome";
-import { FamiliaParentWelcome } from "@/components/familia/familia-parent-welcome";
-import { applyAccentColor, getThemeColor } from "@/lib/familia/theme";
+import { MifaWelcome } from "@/components/mifa/mifa-welcome";
+import { MifaParentWelcome } from "@/components/mifa/mifa-parent-welcome";
+import { applyAccentColor, getThemeColor } from "@/lib/mifa/theme";
 
 interface OrgContext {
   orgName: string;
@@ -64,7 +64,7 @@ interface AssistantInfo {
   color: string;
 }
 
-interface FamiliaMode {
+interface MifaMode {
   assistants: CustomAssistant[];
   accentColor: string | null;
   supervisionMode: string;
@@ -76,7 +76,7 @@ interface FamiliaMode {
   creditsAllocated?: number;
 }
 
-interface FamiliaParentMode {
+interface MifaParentMode {
   orgId: string;
   orgName: string;
 }
@@ -93,8 +93,8 @@ interface ChatClientProps {
   orgContext?: OrgContext;
   userInfo?: UserInfo;
   assistantInfo?: AssistantInfo;
-  familiaMode?: FamiliaMode;
-  familiaParentMode?: FamiliaParentMode;
+  mifaMode?: MifaMode;
+  mifaParentMode?: MifaParentMode;
 }
 
 export function ChatClient({
@@ -109,8 +109,8 @@ export function ChatClient({
   orgContext,
   userInfo,
   assistantInfo,
-  familiaMode,
-  familiaParentMode,
+  mifaMode,
+  mifaParentMode,
 }: ChatClientProps) {
   const router = useRouter();
   const t = useTranslations("chat");
@@ -143,10 +143,10 @@ export function ChatClient({
   const [contextLimitConversationId, setContextLimitConversationId] = useState<string | undefined>();
   const [totalTokens, setTotalTokens] = useState(0);
 
-  // Familia state
-  const [familiaAssistants, setFamiliaAssistants] = useState<CustomAssistant[]>(familiaMode?.assistants || []);
+  // Mifa state
+  const [mifaAssistants, setMifaAssistants] = useState<CustomAssistant[]>(mifaMode?.assistants || []);
   const [selectedAssistant, setSelectedAssistant] = useState<AssistantInfo | undefined>(assistantInfo);
-  const [familiaAccentColor, setFamiliaAccentColor] = useState<string | null>(familiaMode?.accentColor || null);
+  const [mifaAccentColor, setMifaAccentColor] = useState<string | null>(mifaMode?.accentColor || null);
 
   // TTS state
   const [playingMessageId, setPlayingMessageId] = useState<string | null>(null);
@@ -155,8 +155,8 @@ export function ChatClient({
 
   // Initialize model picker state and preferred model
   useEffect(() => {
-    // Check if we should show the model picker (not for familia teens or parents)
-    if (!conversationId && messages.length === 0 && !familiaMode && !familiaParentMode) {
+    // Check if we should show the model picker (not for mifa teens or parents)
+    if (!conversationId && messages.length === 0 && !mifaMode && !mifaParentMode) {
       setShowModelPicker(shouldShowModelPicker());
     }
     // Load preferred model if set
@@ -271,7 +271,7 @@ export function ChatClient({
     setMessages([]);
     setCurrentConversationId(undefined);
     setTotalTokens(0);
-    setSelectedAssistant(undefined); // Clear selected assistant for familia
+    setSelectedAssistant(undefined); // Clear selected assistant for mifa
     router.push("/chat");
   };
 
@@ -598,8 +598,8 @@ export function ChatClient({
     return "idle";
   }, [ttsLoadingMessageId, playingMessageId]);
 
-  // Handle familia assistant selection
-  const handleSelectFamiliaAssistant = (assistant: CustomAssistant) => {
+  // Handle mifa assistant selection
+  const handleSelectMifaAssistant = (assistant: CustomAssistant) => {
     const theme = getThemeColor(assistant.color);
     setSelectedAssistant({
       id: assistant.id,
@@ -609,14 +609,14 @@ export function ChatClient({
     });
   };
 
-  const handleFamiliaAssistantCreated = (assistant: CustomAssistant) => {
-    setFamiliaAssistants((prev) => [...prev, assistant]);
+  const handleMifaAssistantCreated = (assistant: CustomAssistant) => {
+    setMifaAssistants((prev) => [...prev, assistant]);
   };
 
   return (
     <div
       className="flex h-screen"
-      style={familiaMode ? applyAccentColor(familiaAccentColor || "blue") : undefined}
+      style={mifaMode ? applyAccentColor(mifaAccentColor || "blue") : undefined}
     >
       <Sidebar
         conversations={conversations}
@@ -638,18 +638,18 @@ export function ChatClient({
         userInfo={userInfo}
         classes={classes}
         managedClasses={managedClasses}
-        familiaMode={familiaMode ? {
-          accentColor: familiaAccentColor,
-          userName: familiaMode.userName,
-          supervisionMode: familiaMode.supervisionMode,
-          dailyCreditLimit: familiaMode.dailyCreditLimit,
-          dailyCreditsUsed: familiaMode.dailyCreditsUsed,
-          cumulativeCredits: familiaMode.cumulativeCredits,
-          weeklyCreditsUsed: familiaMode.weeklyCreditsUsed,
-          creditsAllocated: familiaMode.creditsAllocated,
+        mifaMode={mifaMode ? {
+          accentColor: mifaAccentColor,
+          userName: mifaMode.userName,
+          supervisionMode: mifaMode.supervisionMode,
+          dailyCreditLimit: mifaMode.dailyCreditLimit,
+          dailyCreditsUsed: mifaMode.dailyCreditsUsed,
+          cumulativeCredits: mifaMode.cumulativeCredits,
+          weeklyCreditsUsed: mifaMode.weeklyCreditsUsed,
+          creditsAllocated: mifaMode.creditsAllocated,
         } : undefined}
-        onAccentColorChange={familiaMode ? setFamiliaAccentColor : undefined}
-        familiaParentMode={familiaParentMode}
+        onAccentColorChange={mifaMode ? setMifaAccentColor : undefined}
+        mifaParentMode={mifaParentMode}
       />
 
       <main className="flex-1 flex flex-col min-w-0">
@@ -664,7 +664,7 @@ export function ChatClient({
                 <span>{selectedAssistant.name}</span>
               </div>
             )}
-            {!familiaMode && !familiaParentMode && (
+            {!mifaMode && !mifaParentMode && (
               <ModelSelector
                 value={model}
                 onChange={(modelId) => {
@@ -677,8 +677,8 @@ export function ChatClient({
                 onOpenChange={setModelSelectorOpen}
               />
             )}
-            {/* Extended Thinking Toggle (Claude) - hidden for familia */}
-            {!familiaMode && !familiaParentMode && claudeSupportsThinking && (
+            {/* Extended Thinking Toggle (Claude) - hidden for mifa */}
+            {!mifaMode && !mifaParentMode && claudeSupportsThinking && (
               <button
                 onClick={() => setEnableThinking(!enableThinking)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
@@ -692,8 +692,8 @@ export function ChatClient({
                 <span className="hidden sm:inline">{t("thinking.label")}</span>
               </button>
             )}
-            {/* Reasoning indicator (OpenAI o1/o3 - always on) - hidden for familia */}
-            {!familiaMode && !familiaParentMode && isOpenAIReasoning && (
+            {/* Reasoning indicator (OpenAI o1/o3 - always on) - hidden for mifa */}
+            {!mifaMode && !mifaParentMode && isOpenAIReasoning && (
               <div
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700"
                 title={t("thinking.reasoningTooltip")}
@@ -731,17 +731,17 @@ export function ChatClient({
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            familiaMode && !selectedAssistant ? (
-              <FamiliaWelcome
-                userName={familiaMode.userName}
-                assistants={familiaAssistants}
-                accentColor={familiaAccentColor}
-                onSelectAssistant={handleSelectFamiliaAssistant}
-                onAssistantCreated={handleFamiliaAssistantCreated}
+            mifaMode && !selectedAssistant ? (
+              <MifaWelcome
+                userName={mifaMode.userName}
+                assistants={mifaAssistants}
+                accentColor={mifaAccentColor}
+                onSelectAssistant={handleSelectMifaAssistant}
+                onAssistantCreated={handleMifaAssistantCreated}
               />
-            ) : familiaParentMode ? (
-              <FamiliaParentWelcome
-                orgName={familiaParentMode.orgName}
+            ) : mifaParentMode ? (
+              <MifaParentWelcome
+                orgName={mifaParentMode.orgName}
                 onSendMessage={handleSendMessage}
               />
             ) : showModelPicker ? (
@@ -758,8 +758,8 @@ export function ChatClient({
                   setModelSelectorOpen(true);
                 }}
               />
-            ) : familiaMode && selectedAssistant ? (
-              // Familia: Assistant selected, show personalized empty state
+            ) : mifaMode && selectedAssistant ? (
+              // Mifa: Assistant selected, show personalized empty state
               <div className="h-full flex flex-col items-center justify-center p-8 text-center">
                 <div
                   className="w-20 h-20 rounded-3xl flex items-center justify-center mb-4 shadow-lg"
@@ -774,10 +774,10 @@ export function ChatClient({
                   {selectedAssistant.name}
                 </h1>
                 <p className="text-[var(--muted-foreground)] max-w-md mb-6">
-                  {t("familia.assistantReady", { name: familiaMode.userName })}
+                  {t("mifa.assistantReady", { name: mifaMode.userName })}
                 </p>
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  {t("familia.startTyping")}
+                  {t("mifa.startTyping")}
                 </p>
               </div>
             ) : (
@@ -845,8 +845,8 @@ export function ChatClient({
           rateLimitError={rateLimitError}
           conversationId={currentConversationId}
           pricingData={pricingData}
-          accentColor={familiaMode ? (getThemeColor(familiaAccentColor || "blue")?.hex) : undefined}
-          familiaMode={!!familiaMode}
+          accentColor={mifaMode ? (getThemeColor(mifaAccentColor || "blue")?.hex) : undefined}
+          mifaMode={!!mifaMode}
         />
       </main>
 

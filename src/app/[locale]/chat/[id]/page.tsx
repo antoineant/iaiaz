@@ -4,8 +4,8 @@ import { redirect, notFound } from "next/navigation";
 import { ChatClient } from "../chat-client";
 import { getPricingData } from "@/lib/pricing-db";
 import { getUserCredits } from "@/lib/credits";
-import { getFamilyOrgInfo } from "@/lib/familia/content-filter";
-import { getThemeColor } from "@/lib/familia/theme";
+import { getFamilyOrgInfo } from "@/lib/mifa/content-filter";
+import { getThemeColor } from "@/lib/mifa/theme";
 import type { ChatMessage, CustomAssistant } from "@/types";
 
 interface ChatConversationPageProps {
@@ -51,18 +51,18 @@ export default async function ChatConversationPage({
 
   // Check if user is a family child or parent
   const familyInfo = await getFamilyOrgInfo(user.id);
-  const isFamiliaChild = familyInfo?.isFamilyMember && familyInfo.role !== "owner" && familyInfo.role !== "admin";
-  const isFamiliaParent = familyInfo?.isFamilyMember && (familyInfo.role === "owner" || familyInfo.role === "admin");
+  const isMifaChild = familyInfo?.isFamilyMember && familyInfo.role !== "owner" && familyInfo.role !== "admin";
+  const isMifaParent = familyInfo?.isFamilyMember && (familyInfo.role === "owner" || familyInfo.role === "admin");
 
   // Fetch org name for parent mode
-  let familiaParentMode: { orgId: string; orgName: string } | undefined;
-  if (isFamiliaParent && familyInfo?.orgId) {
+  let mifaParentMode: { orgId: string; orgName: string } | undefined;
+  if (isMifaParent && familyInfo?.orgId) {
     const { data: orgData } = await supabase
       .from("organizations")
       .select("name")
       .eq("id", familyInfo.orgId)
       .single();
-    familiaParentMode = {
+    mifaParentMode = {
       orgId: familyInfo.orgId,
       orgName: orgData?.name || "Family",
     };
@@ -70,7 +70,7 @@ export default async function ChatConversationPage({
 
   // Fetch all data in parallel - only personal conversations (class_id IS NULL)
   const adminClient = createAdminClient();
-  const [credits, conversationsResult, messagesResult, pricingData, familiaDataResult] = await Promise.all([
+  const [credits, conversationsResult, messagesResult, pricingData, mifaDataResult] = await Promise.all([
     getUserCredits(user.id),
     supabase
       .from("conversations")
@@ -85,8 +85,8 @@ export default async function ChatConversationPage({
       .eq("conversation_id", id)
       .order("created_at", { ascending: true }),
     getPricingData(),
-    // Fetch familia data only for family children
-    isFamiliaChild
+    // Fetch mifa data only for family children
+    isMifaChild
       ? Promise.all([
           adminClient
             .from("custom_assistants")
@@ -146,8 +146,8 @@ export default async function ChatConversationPage({
     }
   }
 
-  // Build familiaMode for family children
-  let familiaMode: {
+  // Build mifaMode for family children
+  let mifaMode: {
     assistants: CustomAssistant[];
     accentColor: string | null;
     supervisionMode: string;
@@ -159,11 +159,11 @@ export default async function ChatConversationPage({
     creditsAllocated?: number;
   } | undefined;
 
-  if (isFamiliaChild && familiaDataResult) {
-    const [assistantsResult, membershipResult, parentalControlsResult, dailyUsedResult, weeklyUsedResult] = familiaDataResult;
+  if (isMifaChild && mifaDataResult) {
+    const [assistantsResult, membershipResult, parentalControlsResult, dailyUsedResult, weeklyUsedResult] = mifaDataResult;
     const firstName = termsCheck?.display_name?.split(" ")[0] || user.user_metadata?.full_name?.split(" ")[0] || "";
     const isCumulative = parentalControlsResult.data?.cumulative_credits ?? false;
-    familiaMode = {
+    mifaMode = {
       assistants: (assistantsResult.data || []) as CustomAssistant[],
       accentColor: termsCheck?.accent_color || null,
       supervisionMode: membershipResult.data?.supervision_mode || "guided",
@@ -203,8 +203,8 @@ export default async function ChatConversationPage({
       orgContext={orgContext}
       userInfo={userInfo}
       assistantInfo={assistantInfo}
-      familiaMode={familiaMode}
-      familiaParentMode={familiaParentMode}
+      mifaMode={mifaMode}
+      mifaParentMode={mifaParentMode}
     />
   );
 }

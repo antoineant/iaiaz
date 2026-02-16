@@ -78,7 +78,7 @@ export default function SettingsPage() {
 
   // Form values
   const [markup, setMarkup] = useState(50);
-  const [familiaMarkup, setFamiliaMarkup] = useState(0);
+  const [mifaMarkup, setMifaMarkup] = useState(0);
   const [freeCredits, setFreeCredits] = useState(1.0);
   const [minBalanceWarning, setMinBalanceWarning] = useState(0.5);
 
@@ -105,8 +105,8 @@ export default function SettingsPage() {
         if (setting.key === "markup" && setting.value.percentage) {
           setMarkup(setting.value.percentage);
         }
-        if (setting.key === "familia_markup" && setting.value.percentage !== undefined) {
-          setFamiliaMarkup(setting.value.percentage);
+        if (setting.key === "mifa_markup" && setting.value.percentage !== undefined) {
+          setMifaMarkup(setting.value.percentage);
         }
         if (setting.key === "free_credits" && setting.value.amount) {
           setFreeCredits(setting.value.amount);
@@ -177,8 +177,8 @@ export default function SettingsPage() {
       let err = await saveSetting("markup", { percentage: markup });
       if (err) throw new Error("Erreur lors de la sauvegarde du markup");
 
-      err = await saveSetting("familia_markup", { percentage: familiaMarkup });
-      if (err) throw new Error("Erreur lors de la sauvegarde du markup Familia");
+      err = await saveSetting("mifa_markup", { percentage: mifaMarkup });
+      if (err) throw new Error("Erreur lors de la sauvegarde du markup Mifa");
 
       err = await saveSetting("free_credits", { amount: freeCredits });
       if (err) throw new Error("Erreur lors de la sauvegarde des crédits gratuits");
@@ -382,7 +382,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Familia Markup */}
+        {/* Mifa Markup */}
         <Card>
           <CardHeader>
             <h2 className="font-semibold flex items-center gap-2">
@@ -403,21 +403,21 @@ export default function SettingsPage() {
                   type="range"
                   min="0"
                   max="200"
-                  value={familiaMarkup}
-                  onChange={(e) => setFamiliaMarkup(parseInt(e.target.value))}
+                  value={mifaMarkup}
+                  onChange={(e) => setMifaMarkup(parseInt(e.target.value))}
                   className="flex-1"
                 />
                 <Input
                   type="number"
                   className="w-24"
-                  value={familiaMarkup}
-                  onChange={(e) => setFamiliaMarkup(parseInt(e.target.value) || 0)}
+                  value={mifaMarkup}
+                  onChange={(e) => setMifaMarkup(parseInt(e.target.value) || 0)}
                 />
                 <span className="text-lg font-bold">%</span>
               </div>
             </div>
 
-            {familiaMarkup === 0 && (
+            {mifaMarkup === 0 && (
               <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
                 Les crédits mifa sont facturés au prix API (aucun markup)
               </div>
@@ -434,7 +434,7 @@ export default function SettingsPage() {
                       recommendedModel,
                       useCase.inputTokens,
                       useCase.outputTokens,
-                      familiaMarkup
+                      mifaMarkup
                     );
                     return (
                       <div key={key} className="flex justify-between items-center">
@@ -448,7 +448,7 @@ export default function SettingsPage() {
                 </div>
                 {recommendedModel && (
                   <p className="text-xs text-[var(--muted-foreground)] mt-3">
-                    5€ = ~{Math.floor(5 / calculateCost(recommendedModel, USE_CASES.simpleQuestion.inputTokens, USE_CASES.simpleQuestion.outputTokens, familiaMarkup))} questions simples
+                    5€ = ~{Math.floor(5 / calculateCost(recommendedModel, USE_CASES.simpleQuestion.inputTokens, USE_CASES.simpleQuestion.outputTokens, mifaMarkup))} questions simples
                   </p>
                 )}
               </div>

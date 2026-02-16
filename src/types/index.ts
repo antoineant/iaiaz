@@ -17,7 +17,7 @@ export interface Conversation {
   assistant_id?: string | null;  // If set, linked to a custom assistant
 }
 
-// Familia custom assistants
+// Mifa custom assistants
 export interface CustomAssistant {
   id: string;
   user_id: string;

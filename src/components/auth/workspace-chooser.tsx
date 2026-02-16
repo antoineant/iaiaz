@@ -29,7 +29,7 @@ export default function WorkspaceChooser({
         return <GraduationCap className="w-7 h-7" />;
       case "business":
         return <Briefcase className="w-7 h-7" />;
-      case "familia":
+      case "mifa":
         return <Heart className="w-7 h-7" />;
     }
   };
@@ -40,7 +40,7 @@ export default function WorkspaceChooser({
         return "from-blue-500 to-indigo-600";
       case "business":
         return "from-indigo-500 to-violet-600";
-      case "familia":
+      case "mifa":
         return "from-pink-500 to-rose-600";
     }
   };
@@ -78,7 +78,7 @@ export default function WorkspaceChooser({
                       {t(`types.${w.type}.title`)}
                     </p>
                     <p className="text-sm text-[var(--muted-foreground)]">
-                      {w.type === "business" || w.type === "familia"
+                      {w.type === "business" || w.type === "mifa"
                         ? t(`types.${w.type}.description`, { orgName: w.name })
                         : t(`types.${w.type}.description`)}
                     </p>

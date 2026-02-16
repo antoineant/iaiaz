@@ -397,15 +397,15 @@ async function handleSubscriptionUpdate(
               .single();
 
             if (invite) {
-              const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/familia/join/${invite.token}`;
+              const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/mifa/join/${invite.token}`;
               const isChild = member.role === "student";
 
               await sendEmail({
                 to: member.email,
                 subject: isChild
                   ? `${org.name} - Tes parents t'invitent sur iaiaz !`
-                  : `Rejoignez ${org.name} sur iaiaz Familia`,
-                html: buildFamiliaInviteEmail(member.name, org.name, inviteUrl, isChild),
+                  : `Rejoignez ${org.name} sur iaiaz Mifa`,
+                html: buildMifaInviteEmail(member.name, org.name, inviteUrl, isChild),
               });
 
               console.log(`Sent pending invite to ${member.email} for org ${organizationId}`);
@@ -425,7 +425,7 @@ async function handleSubscriptionUpdate(
     }
 
     // Allocate monthly credits at trial start (so family can use AI during trial)
-    if (subscription.status === "trialing" && metadata.type === "familia") {
+    if (subscription.status === "trialing" && metadata.type === "mifa") {
       const creditsPerChild = parseFloat(metadata.creditsPerChild || "5");
       const childCount = parseInt(metadata.childCount || "1", 10);
       const monthlyCredits = creditsPerChild * childCount;
@@ -464,10 +464,10 @@ async function handleSubscriptionUpdate(
             organization_id: organizationId,
             type: "purchase",
             amount: monthlyCredits,
-            description: `Credits inclus - debut essai Familia (${childCount} enfant${childCount > 1 ? "s" : ""} x ${creditsPerChild}€)`,
+            description: `Credits inclus - debut essai Mifa (${childCount} enfant${childCount > 1 ? "s" : ""} x ${creditsPerChild}€)`,
           });
 
-          console.log(`Added ${monthlyCredits}EUR trial credits to familia org ${organizationId}`);
+          console.log(`Added ${monthlyCredits}EUR trial credits to mifa org ${organizationId}`);
         }
       }
     }
@@ -569,8 +569,8 @@ async function handleSubscriptionPayment(invoice: Stripe.Invoice) {
 
   console.log(`Subscription payment succeeded for organization ${organizationId}: ${(invoice.amount_paid || 0) / 100} ${invoice.currency}`);
 
-  // Familia plan: reset subscription credits and preserve purchased credits
-  if (subscription.metadata?.type === "familia") {
+  // Mifa plan: reset subscription credits and preserve purchased credits
+  if (subscription.metadata?.type === "mifa") {
     // Compute total children from subscription line items
     const creditsPerChild = parseFloat(subscription.metadata?.creditsPerChild || "5");
     let totalChildren = parseInt(subscription.metadata?.childCount || "1", 10);
@@ -630,11 +630,11 @@ async function handleSubscriptionPayment(invoice: Stripe.Invoice) {
           organization_id: organizationId,
           type: "purchase",
           amount: subscriptionCredits,
-          description: `Credits mensuels Familia (${totalChildren} enfant${totalChildren > 1 ? "s" : ""} x ${creditsPerChild}€)`,
+          description: `Credits mensuels Mifa (${totalChildren} enfant${totalChildren > 1 ? "s" : ""} x ${creditsPerChild}€)`,
           stripe_payment_id: invoice.payment_intent as string,
         });
 
-        console.log(`Reset credits for familia org ${organizationId}: ${subscriptionCredits}€ subscription + ${purchasedCredits}€ purchased = ${newBalance}€ total`);
+        console.log(`Reset credits for mifa org ${organizationId}: ${subscriptionCredits}€ subscription + ${purchasedCredits}€ purchased = ${newBalance}€ total`);
       }
     }
   }
@@ -702,9 +702,9 @@ async function handleSubscriptionPaymentFailed(invoice: Stripe.Invoice) {
 }
 
 /**
- * Build HTML email for Familia invite (used by webhook for pending invites)
+ * Build HTML email for Mifa invite (used by webhook for pending invites)
  */
-function buildFamiliaInviteEmail(
+function buildMifaInviteEmail(
   name: string,
   familyName: string,
   inviteUrl: string,
@@ -714,7 +714,7 @@ function buildFamiliaInviteEmail(
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="text-align: center; margin-bottom: 32px;">
-    <h1 style="font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">Familia by iaiaz</h1>
+    <h1 style="font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">Mifa by iaiaz</h1>
   </div>
   <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Hey ${name} !</h2>
   <p style="margin-bottom: 16px;">Tes parents t'invitent a rejoindre <strong>${familyName}</strong> sur iaiaz.</p>
@@ -729,10 +729,10 @@ function buildFamiliaInviteEmail(
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="text-align: center; margin-bottom: 32px;">
-    <h1 style="font-size: 32px; font-weight: 800; color: #0ea5e9; margin: 0;">Familia by iaiaz</h1>
+    <h1 style="font-size: 32px; font-weight: 800; color: #0ea5e9; margin: 0;">Mifa by iaiaz</h1>
   </div>
   <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 16px;">Bonjour ${name},</h2>
-  <p style="margin-bottom: 16px;">Vous etes invite(e) a rejoindre <strong>${familyName}</strong> sur iaiaz Familia en tant que parent.</p>
+  <p style="margin-bottom: 16px;">Vous etes invite(e) a rejoindre <strong>${familyName}</strong> sur iaiaz Mifa en tant que parent.</p>
   <p style="margin-bottom: 16px;">Vous aurez acces au tableau de bord parental, aux controles et au suivi de l'utilisation de l'IA par votre famille.</p>
   <div style="text-align: center; margin: 32px 0;">
     <a href="${inviteUrl}" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">Rejoindre la famille</a>

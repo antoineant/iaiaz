@@ -27,9 +27,9 @@ import {
   type CreditContext,
 } from "@/lib/credits";
 import { isModelAllowedForUser } from "@/lib/org";
-import { checkFamiliaPreConditions, logContentFlag, getFamilyOrgInfo } from "@/lib/familia/content-filter";
-import { buildFamiliaSystemPrompt, buildParentSystemPrompt, parseFamiliaMetadata, createFamiliaMetaStripper } from "@/lib/familia/guardian-prompt";
-import { calculateAge } from "@/lib/familia/age-verification";
+import { checkMifaPreConditions, logContentFlag, getFamilyOrgInfo } from "@/lib/mifa/content-filter";
+import { buildMifaSystemPrompt, buildParentSystemPrompt, parseMifaMetadata, createMifaMetaStripper } from "@/lib/mifa/guardian-prompt";
+import { calculateAge } from "@/lib/mifa/age-verification";
 
 interface ChatRequest {
   message: string;
@@ -40,7 +40,7 @@ interface ChatRequest {
   stream?: boolean;
   enableThinking?: boolean; // Enable Claude Extended Thinking (costs more tokens)
   classId?: string; // Class context for class conversations (uses org credits only)
-  assistantId?: string; // Familia custom assistant ID
+  assistantId?: string; // Mifa custom assistant ID
 }
 
 // Build multimodal content from text and attachments
@@ -159,20 +159,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check Familia parental controls (quiet hours, daily limits)
-    const familiaCheck = await checkFamiliaPreConditions(user.id);
-    if (!familiaCheck.allowed) {
+    // Check Mifa parental controls (quiet hours, daily limits)
+    const mifaCheck = await checkMifaPreConditions(user.id);
+    if (!mifaCheck.allowed) {
       return NextResponse.json(
         {
-          error: familiaCheck.detail || "Utilisation restreinte par le controle parental",
+          error: mifaCheck.detail || "Utilisation restreinte par le controle parental",
           code: "PARENTAL_CONTROL",
         },
         { status: 403 }
       );
     }
 
-    // Build Familia system prompt if user is a family member
-    let familiaSystemPrompt: string | undefined;
+    // Build Mifa system prompt if user is a family member
+    let mifaSystemPrompt: string | undefined;
     const familyInfo = await getFamilyOrgInfo(user.id);
     if (familyInfo?.isFamilyMember && familyInfo.orgId) {
       const isParent = familyInfo.role === "owner" || familyInfo.role === "admin";
@@ -244,9 +244,9 @@ export async function POST(request: NextRequest) {
               : [],
           }));
 
-          familiaSystemPrompt = buildParentSystemPrompt(orgName, childrenContext);
+          mifaSystemPrompt = buildParentSystemPrompt(orgName, childrenContext);
         } else {
-          familiaSystemPrompt = buildParentSystemPrompt(orgName, []);
+          mifaSystemPrompt = buildParentSystemPrompt(orgName, []);
         }
       } else {
         // --- Child branch: existing guardian prompt (unchanged) ---
@@ -286,12 +286,12 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        familiaSystemPrompt = buildFamiliaSystemPrompt(ageBracket, supervisionMode, firstName, assistant, schoolYear, exactAge);
+        mifaSystemPrompt = buildMifaSystemPrompt(ageBracket, supervisionMode, firstName, assistant, schoolYear, exactAge);
       }
     }
 
-    // Determine if this is a Familia user (for markup calculation)
-    const isFamiliaUser = familyInfo?.isFamilyMember === true;
+    // Determine if this is a Mifa user (for markup calculation)
+    const isMifaUser = familyInfo?.isFamilyMember === true;
 
     // Get pricing settings for cost estimation
     const pricingSettings = await getAppSettingsAdmin();
@@ -364,7 +364,7 @@ export async function POST(request: NextRequest) {
     // Calculate estimated cost using database pricing
     const estimatedBaseCost =
       (estimatedInputTokens * modelInfo.input_price + 500 * modelInfo.output_price) / 1_000_000;
-    const estimatedCost = estimatedBaseCost * (isFamiliaUser ? pricingSettings.familiaMarkupMultiplier : pricingSettings.markupMultiplier);
+    const estimatedCost = estimatedBaseCost * (isMifaUser ? pricingSettings.mifaMarkupMultiplier : pricingSettings.markupMultiplier);
 
     // Determine credit context based on classId
     const creditContext: CreditContext = validatedClassId
@@ -481,8 +481,8 @@ export async function POST(request: NextRequest) {
       const readableStream = new ReadableStream({
         async start(controller) {
           try {
-            // Set up metadata stripper for Familia conversations
-            const metaStripper = familiaSystemPrompt ? createFamiliaMetaStripper() : null;
+            // Set up metadata stripper for Mifa conversations
+            const metaStripper = mifaSystemPrompt ? createMifaMetaStripper() : null;
 
             const aiResponse = await callAIStream(
               model,
@@ -502,7 +502,7 @@ export async function POST(request: NextRequest) {
                     controller.enqueue(encoder.encode(`data: ${data}\n\n`));
                   }
                 : undefined,
-              familiaSystemPrompt
+              mifaSystemPrompt
             );
 
             // Flush any remaining buffered content from meta stripper
@@ -514,12 +514,12 @@ export async function POST(request: NextRequest) {
               }
             }
 
-            // Calculate actual cost (use Familia markup for Familia users)
+            // Calculate actual cost (use Mifa markup for Mifa users)
             const actualCost = await calculateCostFromDBAdmin(
               model,
               aiResponse.tokensInput,
               aiResponse.tokensOutput,
-              isFamiliaUser
+              isMifaUser
             );
 
             // Calculate CO2
@@ -530,9 +530,9 @@ export async function POST(request: NextRequest) {
               co2Rate
             );
 
-            // Parse and strip metadata from stored content for Familia
-            const { cleanContent, metadata: familiaMetadata } = familiaSystemPrompt
-              ? parseFamiliaMetadata(aiResponse.content)
+            // Parse and strip metadata from stored content for Mifa
+            const { cleanContent, metadata: mifaMetadata } = mifaSystemPrompt
+              ? parseMifaMetadata(aiResponse.content)
               : { cleanContent: aiResponse.content, metadata: null };
 
             // Save assistant message
@@ -564,14 +564,14 @@ export async function POST(request: NextRequest) {
                 });
 
                 // Save activity metadata for parent analytics
-                if (familiaMetadata && streamConversationId) {
+                if (mifaMetadata && streamConversationId) {
                   await adminClient.from("conversation_activity").insert({
                     conversation_id: streamConversationId,
                     message_id: assistantMsg.id,
-                    subject: familiaMetadata.subject || null,
-                    topic: familiaMetadata.topic || null,
-                    activity_type: familiaMetadata.type || null,
-                    struggle: familiaMetadata.struggle || false,
+                    subject: mifaMetadata.subject || null,
+                    topic: mifaMetadata.topic || null,
+                    activity_type: mifaMetadata.type || null,
+                    struggle: mifaMetadata.struggle || false,
                   });
                 }
               }
@@ -652,14 +652,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Non-streaming response (original behavior)
-    const aiResponse = await callAI(model, fullMessages, familiaSystemPrompt);
+    const aiResponse = await callAI(model, fullMessages, mifaSystemPrompt);
 
-    // Calculate actual cost using database pricing (use Familia markup for Familia users)
+    // Calculate actual cost using database pricing (use Mifa markup for Mifa users)
     const actualCost = await calculateCostFromDBAdmin(
       model,
       aiResponse.tokensInput,
       aiResponse.tokensOutput,
-      isFamiliaUser
+      isMifaUser
     );
 
     // Calculate CO2 emissions using model's CO2 rate
@@ -700,9 +700,9 @@ export async function POST(request: NextRequest) {
         .eq("id", conversationId);
     }
 
-    // Parse and strip metadata from content for Familia
-    const { cleanContent: nonStreamCleanContent, metadata: nonStreamMetadata } = familiaSystemPrompt
-      ? parseFamiliaMetadata(aiResponse.content)
+    // Parse and strip metadata from content for Mifa
+    const { cleanContent: nonStreamCleanContent, metadata: nonStreamMetadata } = mifaSystemPrompt
+      ? parseMifaMetadata(aiResponse.content)
       : { cleanContent: aiResponse.content, metadata: null };
 
     // Save messages to database
@@ -849,7 +849,7 @@ export async function POST(request: NextRequest) {
         userMessage = "Votre message n'a pas pu être traité. Veuillez reformuler votre demande.";
         statusCode = 400;
 
-        // Log content flag for familia parental review
+        // Log content flag for mifa parental review
         try {
           const supabaseForFlag = await createClient();
           const { data: flagUser } = await supabaseForFlag.auth.getUser();

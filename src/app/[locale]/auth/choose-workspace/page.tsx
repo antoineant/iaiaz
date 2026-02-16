@@ -6,7 +6,7 @@ import WorkspaceChooser from "@/components/auth/workspace-chooser";
 
 export type Workspace = {
   id: string;
-  type: "study" | "business" | "familia";
+  type: "study" | "business" | "mifa";
   name: string;
   orgId?: string;
   role?: string;
@@ -80,12 +80,12 @@ export default async function ChooseWorkspacePage({ params }: Props) {
       if (org.type === "family") {
         if (m.role === "owner" || m.role === "admin") {
           workspaces.push({
-            id: `familia-${org.id}`,
-            type: "familia",
+            id: `mifa-${org.id}`,
+            type: "mifa",
             name: org.name,
             orgId: org.id,
             role: m.role,
-            href: "/familia/dashboard",
+            href: "/mifa/dashboard",
           });
         }
       } else if (

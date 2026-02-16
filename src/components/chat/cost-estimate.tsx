@@ -10,7 +10,7 @@ interface CostEstimateProps {
   inputText: string;
   balance: number;
   pricingData: PricingData;
-  simplified?: boolean; // For familia teens - hide technical details
+  simplified?: boolean; // For mifa teens - hide technical details
 }
 
 export function CostEstimate({ model, inputText, balance, pricingData, simplified = false }: CostEstimateProps) {
@@ -77,7 +77,7 @@ export function CostEstimate({ model, inputText, balance, pricingData, simplifie
         </div>
       )}
 
-      {/* Hide technical details for familia teens */}
+      {/* Hide technical details for mifa teens */}
       {!simplified && (
         <div className="ml-auto text-[var(--muted-foreground)]">
           {t("tokens", { inputTokens, outputTokens: estimatedOutputTokens })}

@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import { ChatClient } from "./chat-client";
 import { getPricingData } from "@/lib/pricing-db";
 import { getUserCredits } from "@/lib/credits";
-import { getThemeColor } from "@/lib/familia/theme";
-import { getFamilyOrgInfo } from "@/lib/familia/content-filter";
-import { getOrSeedAssistants } from "@/lib/familia/assistants";
+import { getThemeColor } from "@/lib/mifa/theme";
+import { getFamilyOrgInfo } from "@/lib/mifa/content-filter";
+import { getOrSeedAssistants } from "@/lib/mifa/assistants";
 import type { CustomAssistant } from "@/types";
 
 interface ChatPageProps {
@@ -38,22 +38,22 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
     redirect(`/${locale}/auth/accept-terms`);
   }
 
-  // Check if user is a family child (no longer redirect — they use /chat directly with familiaMode)
+  // Check if user is a family child (no longer redirect — they use /chat directly with mifaMode)
   const familyInfo = await getFamilyOrgInfo(user.id);
-  const isFamiliaChild = familyInfo?.isFamilyMember && familyInfo.role !== "owner" && familyInfo.role !== "admin";
+  const isMifaChild = familyInfo?.isFamilyMember && familyInfo.role !== "owner" && familyInfo.role !== "admin";
 
   // Check if user is a family owner/admin (no redirect — parents can use Study mode from /chat)
-  const isFamiliaParent = familyInfo?.isFamilyMember && (familyInfo.role === "owner" || familyInfo.role === "admin");
+  const isMifaParent = familyInfo?.isFamilyMember && (familyInfo.role === "owner" || familyInfo.role === "admin");
 
   // Fetch org name for parent mode
-  let familiaParentMode: { orgId: string; orgName: string } | undefined;
-  if (isFamiliaParent && familyInfo?.orgId) {
+  let mifaParentMode: { orgId: string; orgName: string } | undefined;
+  if (isMifaParent && familyInfo?.orgId) {
     const { data: orgData } = await supabase
       .from("organizations")
       .select("name")
       .eq("id", familyInfo.orgId)
       .single();
-    familiaParentMode = {
+    mifaParentMode = {
       orgId: familyInfo.orgId,
       orgName: orgData?.name || "Family",
     };
@@ -61,7 +61,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
 
   // Fetch user credits (org or personal), personal conversations (class_id IS NULL), and pricing data in parallel
   const adminClient = createAdminClient();
-  const [credits, conversationsResult, pricingData, familiaDataResult] = await Promise.all([
+  const [credits, conversationsResult, pricingData, mifaDataResult] = await Promise.all([
     getUserCredits(user.id),
     supabase
       .from("conversations")
@@ -71,8 +71,8 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
       .order("updated_at", { ascending: false })
       .limit(50),
     getPricingData(),
-    // Fetch familia data only for family children
-    isFamiliaChild
+    // Fetch mifa data only for family children
+    isMifaChild
       ? Promise.all([
           getOrSeedAssistants(user.id),
           adminClient
@@ -128,8 +128,8 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
     }
   }
 
-  // Build familiaMode for family children
-  let familiaMode: {
+  // Build mifaMode for family children
+  let mifaMode: {
     assistants: CustomAssistant[];
     accentColor: string | null;
     supervisionMode: string;
@@ -141,11 +141,11 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
     creditsAllocated?: number;
   } | undefined;
 
-  if (isFamiliaChild && familiaDataResult) {
-    const [assistants, membershipResult, parentalControlsResult, dailyUsedResult, weeklyUsedResult] = familiaDataResult;
+  if (isMifaChild && mifaDataResult) {
+    const [assistants, membershipResult, parentalControlsResult, dailyUsedResult, weeklyUsedResult] = mifaDataResult;
     const firstName = termsCheck?.display_name?.split(" ")[0] || user.user_metadata?.full_name?.split(" ")[0] || "";
     const isCumulative = parentalControlsResult.data?.cumulative_credits ?? false;
-    familiaMode = {
+    mifaMode = {
       assistants,
       accentColor: termsCheck?.accent_color || null,
       supervisionMode: membershipResult.data?.supervision_mode || "guided",
@@ -169,8 +169,8 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
       orgContext={orgContext}
       userInfo={userInfo}
       assistantInfo={assistantInfo}
-      familiaMode={familiaMode}
-      familiaParentMode={familiaParentMode}
+      mifaMode={mifaMode}
+      mifaParentMode={mifaParentMode}
     />
   );
 }

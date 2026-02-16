@@ -25,8 +25,8 @@ export interface DBModel {
 export interface AppSettings {
   markup: number;
   markupMultiplier: number;
-  familiaMarkup: number;
-  familiaMarkupMultiplier: number;
+  mifaMarkup: number;
+  mifaMarkupMultiplier: number;
   freeCredits: number;
   minBalanceWarning: number;
 }
@@ -41,8 +41,8 @@ export interface PricingData {
 const DEFAULT_SETTINGS: AppSettings = {
   markup: 50,
   markupMultiplier: 1.5,
-  familiaMarkup: 0,
-  familiaMarkupMultiplier: 1.0,
+  mifaMarkup: 0,
+  mifaMarkupMultiplier: 1.0,
   freeCredits: 1.0,
   minBalanceWarning: 0.5,
 };
@@ -102,9 +102,9 @@ async function fetchSettingsWithClient(supabase: SupabaseClient): Promise<AppSet
     if (setting.key === "min_balance_warning" && setting.value?.amount !== undefined) {
       settings.minBalanceWarning = setting.value.amount;
     }
-    if (setting.key === "familia_markup" && setting.value?.percentage !== undefined) {
-      settings.familiaMarkup = setting.value.percentage;
-      settings.familiaMarkupMultiplier = 1 + setting.value.percentage / 100;
+    if (setting.key === "mifa_markup" && setting.value?.percentage !== undefined) {
+      settings.mifaMarkup = setting.value.percentage;
+      settings.mifaMarkupMultiplier = 1 + setting.value.percentage / 100;
     }
   });
 
@@ -126,10 +126,10 @@ export async function calculateCostFromDB(
   modelId: string,
   inputTokens: number,
   outputTokens: number,
-  isFamilia?: boolean
+  isMifa?: boolean
 ): Promise<number> {
   const supabase = await createClient();
-  return calculateCostWithClient(supabase, modelId, inputTokens, outputTokens, isFamilia);
+  return calculateCostWithClient(supabase, modelId, inputTokens, outputTokens, isMifa);
 }
 
 // Calculate cost using admin client (for API routes)
@@ -137,10 +137,10 @@ export async function calculateCostFromDBAdmin(
   modelId: string,
   inputTokens: number,
   outputTokens: number,
-  isFamilia?: boolean
+  isMifa?: boolean
 ): Promise<number> {
   const supabase = createAdminClient();
-  return calculateCostWithClient(supabase, modelId, inputTokens, outputTokens, isFamilia);
+  return calculateCostWithClient(supabase, modelId, inputTokens, outputTokens, isMifa);
 }
 
 // Internal helper to calculate cost with any client
@@ -149,7 +149,7 @@ async function calculateCostWithClient(
   modelId: string,
   inputTokens: number,
   outputTokens: number,
-  isFamilia?: boolean
+  isMifa?: boolean
 ): Promise<number> {
   // Fetch model pricing
   const { data: model, error: modelError } = await supabase
@@ -162,15 +162,15 @@ async function calculateCostWithClient(
     throw new Error(`Model not found: ${modelId}`);
   }
 
-  // Fetch markup setting (familia_markup for Familia users, global markup otherwise)
-  const markupKey = isFamilia ? "familia_markup" : "markup";
+  // Fetch markup setting (mifa_markup for Mifa users, global markup otherwise)
+  const markupKey = isMifa ? "mifa_markup" : "markup";
   const { data: settingsData } = await supabase
     .from("app_settings")
     .select("value")
     .eq("key", markupKey)
     .single();
 
-  const defaultPercentage = isFamilia ? 0 : 50;
+  const defaultPercentage = isMifa ? 0 : 50;
   const markupPercentage = settingsData?.value?.percentage ?? defaultPercentage;
   const markup = 1 + markupPercentage / 100;
 

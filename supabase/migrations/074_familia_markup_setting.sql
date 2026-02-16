@@ -1,5 +1,5 @@
--- Add familia-specific markup setting (separate from global markup)
--- Default 0% means Familia users get credits at API cost
+-- Add mifa-specific markup setting (separate from global markup)
+-- Default 0% means mifa users get credits at API cost
 INSERT INTO public.app_settings (key, value, description)
-VALUES ('familia_markup', '{"percentage": 0}', 'Markup for Familia users (separate from global)')
+VALUES ('mifa_markup', '{"percentage": 0}', 'Markup for mifa users (separate from global)')
 ON CONFLICT (key) DO NOTHING;

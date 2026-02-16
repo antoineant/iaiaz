@@ -46,8 +46,8 @@ export function Footer() {
             <h3 className="font-semibold text-sm mb-3">{t("footer.forWhom")}</h3>
             <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
               <li>
-                <Link href="/familia" className="hover:text-[var(--foreground)] transition-colors">
-                  {tNav("familia")}
+                <Link href="/mifa" className="hover:text-[var(--foreground)] transition-colors">
+                  {tNav("mifa")}
                 </Link>
               </li>
               <li>

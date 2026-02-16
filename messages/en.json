@@ -92,7 +92,7 @@
   },
   "common": {
     "nav": {
-      "familia": "Families",
+      "mifa": "Families",
       "pricing": "Pricing",
       "compare": "Compare",
       "forWhom": "For whom?",
@@ -319,10 +319,10 @@
       "teenTrusted": "Trusted mode",
       "teenTheme": "My vibe",
       "teenMySpace": "My space",
-      "familiaParentBadge": "Family",
+      "mifaParentBadge": "Family",
       "familyCredits": "Family Credits",
-      "backToFamiliaDashboard": "Back to Dashboard",
-      "familiaDashboard": "Family Dashboard"
+      "backToMifaDashboard": "Back to Dashboard",
+      "mifaDashboard": "Family Dashboard"
     },
     "usingPersonalCredits": "Using personal credits",
     "usingOrgCredits": "Using org credits",
@@ -374,7 +374,7 @@
       "lowBalance": "Low balance",
       "tokens": "~{inputTokens} input tokens, ~{outputTokens} output"
     },
-    "familia": {
+    "mifa": {
       "assistantReady": "I'm here to help you, {name}!",
       "startTyping": "Ask your first question below..."
     },
@@ -805,7 +805,7 @@
         "tooManyAttempts": "Too many signup attempts. Please try again later.",
         "generic": "An error occurred. Please try again."
       },
-      "familiaChild": {
+      "mifaChild": {
         "subtitle": "Create your account to join your family",
         "parentalNote": "Your parent invited you to join the family on iaiaz. This account will be supervised by your parent."
       }
@@ -895,11 +895,11 @@
           "title": "Business by iaiaz",
           "description": "{orgName}"
         },
-        "familia": {
+        "mifa": {
           "title": "mifa by iaiaz",
           "description": "{orgName}"
         },
-        "setup-familia": {
+        "setup-mifa": {
           "title": "mifa by iaiaz",
           "description": "Set up your family space"
         }
@@ -3533,7 +3533,7 @@
       "tip5": "Mention camera work: tracking shot, pan, zoom, static"
     }
   },
-  "familia": {
+  "mifa": {
     "landing": {
       "nav": {
         "pricing": "Pricing",

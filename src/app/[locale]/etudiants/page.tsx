@@ -142,7 +142,7 @@ export default async function EtudiantsPage({ params }: Props) {
       </header>
 
       <main>
-        {/* Hero — Familia-style gradient */}
+        {/* Hero — Mifa-style gradient */}
         <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950 dark:via-[var(--background)] dark:to-indigo-950">
           <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
             <div className="text-center max-w-3xl mx-auto">
@@ -495,7 +495,7 @@ export default async function EtudiantsPage({ params }: Props) {
           </div>
         </section>
 
-        {/* CTA — Familia-style gradient */}
+        {/* CTA — Mifa-style gradient */}
         <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="max-w-3xl mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">

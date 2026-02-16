@@ -1,0 +1,155 @@
+{
+  "auth": {
+    "subtitle": "L'IA en famille, en confiance",
+    "email": "Email",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "fillAllFields": "Veuillez remplir tous les champs"
+  },
+  "common": {
+    "buttons": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "close": "Fermer",
+      "back": "Retour",
+      "send": "Envoyer"
+    },
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "retry": "Réessayer",
+    "noData": "Aucune donnée"
+  },
+  "tabs": {
+    "chat": "Chat",
+    "dashboard": "Famille",
+    "settings": "Réglages",
+    "profile": "Mon espace"
+  },
+  "chat": {
+    "newChat": "Nouveau chat",
+    "recentConversations": "Conversations récentes",
+    "noConversations": "Aucune conversation",
+    "myAssistants": "Mes assistants",
+    "inputPlaceholder": "Écris ton message...",
+    "greeting": "Hey {name} !",
+    "welcome": "Choisis un assistant pour commencer",
+    "assistantReady": "Je suis là pour t'aider, {name} !",
+    "startTyping": "Pose ta première question ci-dessous...",
+    "thinking": "Réflexion en cours...",
+    "guidedBadge": "Mode Encadré — Tes parents peuvent voir ton activité",
+    "trustedBadge": "Mode Confiance — Tu es autonome"
+  },
+  "dashboard": {
+    "title": "Tableau de bord famille",
+    "creditBalance": "Crédits famille",
+    "quickStats": "Statistiques rapides",
+    "members": "Membres de la famille",
+    "smartInsights": "Conseils personnalisés",
+    "quickActions": "Actions rapides",
+    "transferCredits": "Transférer des crédits",
+    "inviteMember": "Inviter un membre",
+    "viewDetails": "Voir les détails",
+    "modes": {
+      "guided": "Mode Encadré",
+      "trusted": "Mode Confiance",
+      "adult": "Mode Adulte"
+    },
+    "welcome": {
+      "title": "Bienvenue dans mifa !",
+      "subtitle": "Votre espace famille est prêt."
+    },
+    "transfer": {
+      "title": "Transférer des crédits",
+      "amount": "Montant",
+      "to": "Vers",
+      "confirm": "Confirmer le transfert",
+      "success": "Crédits transférés avec succès",
+      "error": "Erreur lors du transfert"
+    },
+    "subscription": {
+      "active": "Abonnement actif",
+      "trial": "Période d'essai",
+      "expired": "Abonnement expiré"
+    }
+  },
+  "childAnalytics": {
+    "title": "Activité de {name}",
+    "notFound": "Enfant introuvable",
+    "kpi": {
+      "conversations": "Conversations",
+      "totalCost": "Coût total",
+      "dailyAvg": "Moy. quotidienne",
+      "struggleRatio": "Taux de difficulté"
+    },
+    "sections": {
+      "activity": "Activité récente",
+      "subjects": "Matières étudiées",
+      "usage": "Utilisation"
+    },
+    "insights": {
+      "title": "Observations",
+      "suggestions": "Suggestions"
+    }
+  },
+  "settings": {
+    "title": "Réglages famille",
+    "inviteMember": "Inviter un membre",
+    "childControls": "Contrôle parental",
+    "supervisionMode": "Mode de supervision",
+    "quietHours": "Heures calmes",
+    "quietHoursStart": "Début",
+    "quietHoursEnd": "Fin",
+    "dailyCreditLimit": "Limite de crédits quotidienne",
+    "dailyTimeLimit": "Limite de temps quotidienne",
+    "profile": "Profil",
+    "invites": "Invitations",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "modes": {
+      "guided": {
+        "title": "Encadré",
+        "description": "12-14 ans — Supervision parentale renforcée"
+      },
+      "trusted": {
+        "title": "Confiance",
+        "description": "15-17 ans — Plus d'autonomie"
+      },
+      "adult": {
+        "title": "Adulte",
+        "description": "18+ — Aucune restriction"
+      }
+    },
+    "saved": "Réglages sauvegardés"
+  },
+  "childSettings": {
+    "tabs": {
+      "profile": "Profil",
+      "assistants": "Assistants",
+      "activity": "Activité"
+    },
+    "profile": {
+      "displayName": "Surnom",
+      "birthdate": "Date de naissance",
+      "schoolYear": "Année scolaire"
+    },
+    "assistants": {
+      "create": "Créer un assistant",
+      "maxReached": "Maximum d'assistants atteint"
+    },
+    "stats": {
+      "weeklyActivity": "Activité de la semaine",
+      "conversations": "Conversations",
+      "creditsUsed": "Crédits utilisés",
+      "creditsRemaining": "Crédits restants"
+    },
+    "requestCredits": "Demander des crédits",
+    "requestCreditsSending": "Envoi...",
+    "requestCreditsSent": "Message envoyé à tes parents !",
+    "requestCreditsError": "Oups, réessaie",
+    "theme": {
+      "title": "Mon style",
+      "chooseColor": "Choisis ta couleur"
+    }
+  }
+}

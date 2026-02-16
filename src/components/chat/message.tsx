@@ -254,15 +254,15 @@ function ThinkingBlock({
   );
 }
 
-/** Strip <familia_meta>...</familia_meta> tags that may leak into displayed content */
-function stripFamiliaMeta(content: string): string {
-  return content.replace(/<familia_meta>[\s\S]*?<\/familia_meta>/g, "").trimEnd();
+/** Strip <mifa_meta>...</mifa_meta> tags that may leak into displayed content */
+function stripMifaMeta(content: string): string {
+  return content.replace(/<mifa_meta>[\s\S]*?<\/mifa_meta>/g, "").trimEnd();
 }
 
 export function Message({ message, ttsState = "idle", onPlayTts, onStopTts }: MessageProps) {
   const t = useTranslations("chat.message");
   const isUser = message.role === "user";
-  const displayContent = message.content && !isUser ? stripFamiliaMeta(message.content) : message.content;
+  const displayContent = message.content && !isUser ? stripMifaMeta(message.content) : message.content;
 
   return (
     <div

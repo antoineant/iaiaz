@@ -35,7 +35,7 @@ export function Header({ showAuthButtons = true }: HeaderProps) {
   ];
 
   const audienceLinks = [
-    { href: "/familia" as const, label: t("nav.familia"), icon: Heart },
+    { href: "/mifa" as const, label: t("nav.mifa"), icon: Heart },
     { href: "/etudiants" as const, label: t("nav.study"), icon: GraduationCap },
     { href: "/business" as const, label: t("nav.business"), icon: Briefcase },
   ];

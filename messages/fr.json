@@ -106,7 +106,7 @@
   },
   "common": {
     "nav": {
-      "familia": "Familles",
+      "mifa": "Familles",
       "pricing": "Tarifs",
       "compare": "Comparatif",
       "forWhom": "Pour qui ?",
@@ -333,10 +333,10 @@
       "teenTrusted": "Mode confiance",
       "teenTheme": "Mon style",
       "teenMySpace": "Mon espace",
-      "familiaParentBadge": "Famille",
+      "mifaParentBadge": "Famille",
       "familyCredits": "Crédits famille",
-      "backToFamiliaDashboard": "Retour au tableau de bord",
-      "familiaDashboard": "Tableau de bord famille"
+      "backToMifaDashboard": "Retour au tableau de bord",
+      "mifaDashboard": "Tableau de bord famille"
     },
     "usingPersonalCredits": "Crédits personnels",
     "usingOrgCredits": "Crédits établissement",
@@ -388,7 +388,7 @@
       "lowBalance": "Solde bas",
       "tokens": "~{inputTokens} tokens entrée, ~{outputTokens} sortie"
     },
-    "familia": {
+    "mifa": {
       "assistantReady": "Je suis là pour t'aider, {name} !",
       "startTyping": "Pose ta première question ci-dessous..."
     },
@@ -687,7 +687,7 @@
         "tooManyAttempts": "Trop de tentatives d'inscription. Veuillez réessayer plus tard.",
         "generic": "Une erreur est survenue. Veuillez réessayer."
       },
-      "familiaChild": {
+      "mifaChild": {
         "subtitle": "Crée ton compte pour rejoindre ta famille",
         "parentalNote": "Ton parent t'a invité(e) à rejoindre la famille sur iaiaz. Ce compte sera supervisé par ton parent."
       }
@@ -777,11 +777,11 @@
           "title": "Business by iaiaz",
           "description": "{orgName}"
         },
-        "familia": {
+        "mifa": {
           "title": "mifa by iaiaz",
           "description": "{orgName}"
         },
-        "setup-familia": {
+        "setup-mifa": {
           "title": "mifa by iaiaz",
           "description": "Créez votre espace famille"
         }
@@ -3729,7 +3729,7 @@
       "article": "ChatGPT vs Claude"
     }
   },
-  "familia": {
+  "mifa": {
     "landing": {
       "nav": {
         "pricing": "Tarifs",

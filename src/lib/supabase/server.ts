@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { cookies, headers } from "next/headers";
 
 interface CookieToSet {
   name: string;
@@ -15,6 +16,24 @@ interface CookieToSet {
 }
 
 export async function createClient() {
+  // Check for Bearer token auth (mobile app)
+  const headerStore = await headers();
+  const authorization = headerStore.get("authorization");
+  if (authorization?.startsWith("Bearer ")) {
+    const token = authorization.slice(7);
+    const client = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        global: {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      }
+    );
+    return client;
+  }
+
+  // Default: cookie-based auth (web)
   const cookieStore = await cookies();
 
   return createServerClient(

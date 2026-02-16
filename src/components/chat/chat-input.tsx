@@ -40,7 +40,7 @@ interface ChatInputProps {
   conversationId?: string;
   pricingData: PricingData;
   accentColor?: string;
-  familiaMode?: boolean;
+  mifaMode?: boolean;
 }
 
 export function ChatInput({
@@ -54,7 +54,7 @@ export function ChatInput({
   conversationId,
   pricingData,
   accentColor,
-  familiaMode,
+  mifaMode,
 }: ChatInputProps) {
   const t = useTranslations("chat");
   const locale = useLocale();
@@ -394,7 +394,7 @@ export function ChatInput({
               inputText={input}
               balance={balance}
               pricingData={pricingData}
-              simplified={familiaMode}
+              simplified={mifaMode}
             />
             {rateLimit && (
               <RateLimitIndicator

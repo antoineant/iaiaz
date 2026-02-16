@@ -1,0 +1,155 @@
+{
+  "auth": {
+    "subtitle": "Family AI, with confidence",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "fillAllFields": "Please fill in all fields"
+  },
+  "common": {
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "close": "Close",
+      "back": "Back",
+      "send": "Send"
+    },
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "noData": "No data"
+  },
+  "tabs": {
+    "chat": "Chat",
+    "dashboard": "Family",
+    "settings": "Settings",
+    "profile": "My space"
+  },
+  "chat": {
+    "newChat": "New chat",
+    "recentConversations": "Recent conversations",
+    "noConversations": "No conversations",
+    "myAssistants": "My assistants",
+    "inputPlaceholder": "Type your message...",
+    "greeting": "Hey {name}!",
+    "welcome": "Choose an assistant to get started",
+    "assistantReady": "I'm here to help you, {name}!",
+    "startTyping": "Ask your first question below...",
+    "thinking": "Thinking...",
+    "guidedBadge": "Guided Mode — Your parents can see your activity",
+    "trustedBadge": "Trusted Mode — You're on your own"
+  },
+  "dashboard": {
+    "title": "Family Dashboard",
+    "creditBalance": "Family Credits",
+    "quickStats": "Quick Stats",
+    "members": "Family Members",
+    "smartInsights": "Smart Insights",
+    "quickActions": "Quick Actions",
+    "transferCredits": "Transfer Credits",
+    "inviteMember": "Invite Member",
+    "viewDetails": "View Details",
+    "modes": {
+      "guided": "Guided Mode",
+      "trusted": "Trusted Mode",
+      "adult": "Adult Mode"
+    },
+    "welcome": {
+      "title": "Welcome to mifa!",
+      "subtitle": "Your family space is ready."
+    },
+    "transfer": {
+      "title": "Transfer Credits",
+      "amount": "Amount",
+      "to": "To",
+      "confirm": "Confirm Transfer",
+      "success": "Credits transferred successfully",
+      "error": "Error transferring credits"
+    },
+    "subscription": {
+      "active": "Active subscription",
+      "trial": "Trial period",
+      "expired": "Subscription expired"
+    }
+  },
+  "childAnalytics": {
+    "title": "{name}'s Activity",
+    "notFound": "Child not found",
+    "kpi": {
+      "conversations": "Conversations",
+      "totalCost": "Total Cost",
+      "dailyAvg": "Daily Avg",
+      "struggleRatio": "Struggle Ratio"
+    },
+    "sections": {
+      "activity": "Recent Activity",
+      "subjects": "Subjects Studied",
+      "usage": "Usage"
+    },
+    "insights": {
+      "title": "Observations",
+      "suggestions": "Suggestions"
+    }
+  },
+  "settings": {
+    "title": "Family Settings",
+    "inviteMember": "Invite Member",
+    "childControls": "Parental Controls",
+    "supervisionMode": "Supervision Mode",
+    "quietHours": "Quiet Hours",
+    "quietHoursStart": "Start",
+    "quietHoursEnd": "End",
+    "dailyCreditLimit": "Daily Credit Limit",
+    "dailyTimeLimit": "Daily Time Limit",
+    "profile": "Profile",
+    "invites": "Invitations",
+    "resetPassword": "Reset Password",
+    "modes": {
+      "guided": {
+        "title": "Guided",
+        "description": "Ages 12-14 — Enhanced parental oversight"
+      },
+      "trusted": {
+        "title": "Trusted",
+        "description": "Ages 15-17 — More autonomy"
+      },
+      "adult": {
+        "title": "Adult",
+        "description": "18+ — No restrictions"
+      }
+    },
+    "saved": "Settings saved"
+  },
+  "childSettings": {
+    "tabs": {
+      "profile": "Profile",
+      "assistants": "Assistants",
+      "activity": "Activity"
+    },
+    "profile": {
+      "displayName": "Display Name",
+      "birthdate": "Date of Birth",
+      "schoolYear": "School Year"
+    },
+    "assistants": {
+      "create": "Create Assistant",
+      "maxReached": "Maximum assistants reached"
+    },
+    "stats": {
+      "weeklyActivity": "This Week's Activity",
+      "conversations": "Conversations",
+      "creditsUsed": "Credits Used",
+      "creditsRemaining": "Credits Remaining"
+    },
+    "requestCredits": "Ask for credits",
+    "requestCreditsSending": "Sending...",
+    "requestCreditsSent": "Message sent to your parents!",
+    "requestCreditsError": "Oops, try again",
+    "theme": {
+      "title": "My vibe",
+      "chooseColor": "Choose your color"
+    }
+  }
+}

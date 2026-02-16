@@ -24,11 +24,11 @@ function SignupForm() {
   const paramBirthdate = searchParams.get("birthdate");
   const paramSchoolYear = searchParams.get("schoolYear");
 
-  // Detect familia child mode: redirect points to a familia join page
-  const isFamiliaChild = redirectUrl?.startsWith("/familia/join/") ?? false;
+  // Detect mifa child mode: redirect points to a mifa join page
+  const isMifaChild = redirectUrl?.startsWith("/mifa/join/") ?? false;
 
   const [accountType, setAccountType] = useState<AccountType>(
-    isFamiliaChild
+    isMifaChild
       ? "student"
       : initialType && ["student", "trainer", "school"].includes(initialType)
         ? initialType
@@ -97,9 +97,9 @@ function SignupForm() {
     setIsLoading(true);
 
     try {
-      // Build the redirect URL, including birthdate/schoolYear for familia children
+      // Build the redirect URL, including birthdate/schoolYear for mifa children
       let finalRedirectUrl = redirectUrl || undefined;
-      if (isFamiliaChild && redirectUrl) {
+      if (isMifaChild && redirectUrl) {
         const joinParams = new URLSearchParams();
         if (paramBirthdate) joinParams.set("birthdate", paramBirthdate);
         if (paramSchoolYear) joinParams.set("schoolYear", paramSchoolYear);
@@ -113,9 +113,9 @@ function SignupForm() {
         body: JSON.stringify({
           email,
           password,
-          accountType: isFamiliaChild ? "student" : accountType,
+          accountType: isMifaChild ? "student" : accountType,
           displayName: displayName.trim() || undefined,
-          marketingConsent: isFamiliaChild ? false : marketingConsent,
+          marketingConsent: isMifaChild ? false : marketingConsent,
           redirectUrl: finalRedirectUrl,
         }),
       });
@@ -217,7 +217,7 @@ function SignupForm() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          {isFamiliaChild ? (
+          {isMifaChild ? (
             <h1 className="text-3xl font-extrabold">
               <span className="text-[var(--foreground)]">m</span><span className="text-primary-600">i</span><span className="text-[var(--foreground)]">f</span><span className="text-accent-600">a</span>
               <span className="text-[var(--muted-foreground)] font-medium text-lg ml-2">by iaiaz</span>
@@ -228,7 +228,7 @@ function SignupForm() {
             </Link>
           )}
           <p className="text-[var(--muted-foreground)] mt-2">
-            {isFamiliaChild ? t("familiaChild.subtitle") : t("subtitle")}
+            {isMifaChild ? t("mifaChild.subtitle") : t("subtitle")}
           </p>
         </div>
 
@@ -237,7 +237,7 @@ function SignupForm() {
             <h1 className="text-xl font-semibold">{t("title")}</h1>
           </CardHeader>
           <CardContent>
-            {!isFamiliaChild && (
+            {!isMifaChild && (
               <>
                 <GoogleButton mode="signup" accountType={accountType} />
                 <Divider />
@@ -251,18 +251,18 @@ function SignupForm() {
                 </div>
               )}
 
-              {/* Parental consent note for familia children */}
-              {isFamiliaChild && (
+              {/* Parental consent note for mifa children */}
+              {isMifaChild && (
                 <div className="flex gap-3 p-4 bg-accent-50 dark:bg-accent-950/30 rounded-lg border border-accent-200 dark:border-accent-800">
                   <Heart className="w-5 h-5 text-accent-500 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-accent-700 dark:text-accent-300">
-                    {t("familiaChild.parentalNote")}
+                    {t("mifaChild.parentalNote")}
                   </p>
                 </div>
               )}
 
-              {/* Account Type Selection - hidden for familia children */}
-              {!isFamiliaChild && (
+              {/* Account Type Selection - hidden for mifa children */}
+              {!isMifaChild && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium">{t("accountType.label")}</label>
                   <div className="grid grid-cols-3 gap-2">
@@ -394,8 +394,8 @@ function SignupForm() {
                 autoComplete="new-password"
               />
 
-              {/* Marketing consent checkbox - hidden for familia children (minors) */}
-              {!isFamiliaChild && (
+              {/* Marketing consent checkbox - hidden for mifa children (minors) */}
+              {!isMifaChild && (
                 <label className="flex items-start gap-3 cursor-pointer group">
                   <input
                     type="checkbox"

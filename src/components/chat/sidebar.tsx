@@ -9,10 +9,10 @@ import { createClient } from "@/lib/supabase/client";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PrivacyInfoModal } from "./privacy-info-modal";
-import { SupervisionInfoModal } from "@/components/familia/supervision-info-modal";
-import { ChildSettingsPanel } from "@/components/familia/child-settings-panel";
+import { SupervisionInfoModal } from "@/components/mifa/supervision-info-modal";
+import { ChildSettingsPanel } from "@/components/mifa/child-settings-panel";
 import type { Conversation } from "@/types";
-import { getThemeColor } from "@/lib/familia/theme";
+import { getThemeColor } from "@/lib/mifa/theme";
 import {
   Plus,
   MessageSquare,
@@ -65,7 +65,7 @@ interface ManagedClass {
   student_count: number;
 }
 
-interface FamiliaSidebarMode {
+interface MifaSidebarMode {
   accentColor: string | null;
   userName: string;
   supervisionMode: string;
@@ -76,7 +76,7 @@ interface FamiliaSidebarMode {
   creditsAllocated?: number;
 }
 
-interface FamiliaParentMode {
+interface MifaParentMode {
   orgId: string;
   orgName: string;
 }
@@ -93,9 +93,9 @@ interface SidebarProps {
   userInfo?: UserInfo;
   classes?: StudentClass[];
   managedClasses?: ManagedClass[];
-  familiaMode?: FamiliaSidebarMode;
+  mifaMode?: MifaSidebarMode;
   onAccentColorChange?: (color: string) => void;
-  familiaParentMode?: FamiliaParentMode;
+  mifaParentMode?: MifaParentMode;
 }
 
 export function Sidebar({
@@ -110,28 +110,28 @@ export function Sidebar({
   userInfo,
   classes,
   managedClasses,
-  familiaMode,
+  mifaMode,
   onAccentColorChange,
-  familiaParentMode,
+  mifaParentMode,
 }: SidebarProps) {
   const router = useRouter();
   const t = useTranslations("chat.sidebar");
-  const tSupervision = useTranslations("familia.chat.supervisionInfo");
+  const tSupervision = useTranslations("mifa.chat.supervisionInfo");
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showSupervisionInfo, setShowSupervisionInfo] = useState(false);
   const [showPreciseBalance, setShowPreciseBalance] = useState(false);
-  const [teenAccentColor, setTeenAccentColor] = useState(familiaMode?.accentColor || null);
+  const [teenAccentColor, setTeenAccentColor] = useState(mifaMode?.accentColor || null);
   const [showChildSettings, setShowChildSettings] = useState(false);
   const [creditRequestStatus, setCreditRequestStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const isOrgMember = !!orgContext;
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
 
-  // Familia teen theme
-  const teenTheme = familiaMode ? getThemeColor(teenAccentColor || "blue") : null;
+  // Mifa teen theme
+  const teenTheme = mifaMode ? getThemeColor(teenAccentColor || "blue") : null;
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -150,9 +150,9 @@ export function Sidebar({
   };
 
   // ──────────────────────────────────────────────
-  // Gen Z teen sidebar (familia mode)
+  // Gen Z teen sidebar (mifa mode)
   // ──────────────────────────────────────────────
-  const teenSidebarContent = familiaMode ? (
+  const teenSidebarContent = mifaMode ? (
     <>
       {/* Header — gradient accent bar with name */}
       <div
@@ -165,7 +165,7 @@ export function Sidebar({
           iaiaz
         </Link>
         <p className="text-sm mt-1 text-[var(--muted-foreground)]">
-          {t("teenGreeting", { name: familiaMode.userName })}
+          {t("teenGreeting", { name: mifaMode.userName })}
         </p>
       </div>
 
@@ -182,7 +182,7 @@ export function Sidebar({
                 stroke: teenTheme?.hex || "#3B82F6",
                 strokeDasharray: `${(() => {
                   // Use tracked allocated credits, or estimate if not available
-                  const totalAllocated = familiaMode.creditsAllocated || Math.ceil(Math.max(balance, 1) / 5) * 5;
+                  const totalAllocated = mifaMode.creditsAllocated || Math.ceil(Math.max(balance, 1) / 5) * 5;
                   const percentage = totalAllocated > 0 ? balance / totalAllocated : 0;
                   return percentage * 138;
                 })()} 138`,
@@ -206,10 +206,10 @@ export function Sidebar({
       </div>
 
       {/* Credit limit indicator */}
-      {familiaMode.dailyCreditLimit && (() => {
-        const isCumulative = familiaMode.cumulativeCredits;
-        const used = isCumulative ? (familiaMode.weeklyCreditsUsed || 0) : (familiaMode.dailyCreditsUsed || 0);
-        const limit = isCumulative ? familiaMode.dailyCreditLimit * 7 : familiaMode.dailyCreditLimit;
+      {mifaMode.dailyCreditLimit && (() => {
+        const isCumulative = mifaMode.cumulativeCredits;
+        const used = isCumulative ? (mifaMode.weeklyCreditsUsed || 0) : (mifaMode.dailyCreditsUsed || 0);
+        const limit = isCumulative ? mifaMode.dailyCreditLimit * 7 : mifaMode.dailyCreditLimit;
         const ratio = used / limit;
         return (
           <div className="px-4 pb-3">
@@ -246,7 +246,7 @@ export function Sidebar({
                 if (creditRequestStatus === "sending" || creditRequestStatus === "sent") return;
                 setCreditRequestStatus("sending");
                 try {
-                  const res = await fetch("/api/familia/request-credits", { method: "POST" });
+                  const res = await fetch("/api/mifa/request-credits", { method: "POST" });
                   setCreditRequestStatus(res.ok ? "sent" : "error");
                   if (res.ok) setTimeout(() => setCreditRequestStatus("idle"), 10000);
                   else setTimeout(() => setCreditRequestStatus("idle"), 3000);
@@ -367,13 +367,13 @@ export function Sidebar({
             onClick={() => setShowSupervisionInfo(true)}
             className={cn(
               "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full font-medium transition-all hover:scale-105 cursor-pointer",
-              familiaMode.supervisionMode === "guided"
+              mifaMode.supervisionMode === "guided"
                 ? "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-900/40"
                 : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/40"
             )}
           >
             <Shield className="w-3 h-3" />
-            {familiaMode.supervisionMode === "guided" ? t("teenGuided") : t("teenTrusted")}
+            {mifaMode.supervisionMode === "guided" ? t("teenGuided") : t("teenTrusted")}
           </button>
         </div>
 
@@ -391,9 +391,9 @@ export function Sidebar({
       <SupervisionInfoModal
         open={showSupervisionInfo}
         onClose={() => setShowSupervisionInfo(false)}
-        mode={familiaMode.supervisionMode as "guided" | "trusted" | "adult"}
+        mode={mifaMode.supervisionMode as "guided" | "trusted" | "adult"}
         translations={{
-          title: familiaMode.supervisionMode === "guided" ? tSupervision("guidedTitle") : tSupervision("trustedTitle"),
+          title: mifaMode.supervisionMode === "guided" ? tSupervision("guidedTitle") : tSupervision("trustedTitle"),
           whatParentsSee: tSupervision("whatParentsSee"),
           whatParentsDontSee: tSupervision("whatParentsDontSee"),
           canSee: [
@@ -408,7 +408,7 @@ export function Sidebar({
             tSupervision("cannotSee.2"),
             tSupervision("cannotSee.3"),
           ],
-          why: familiaMode.supervisionMode === "guided" ? tSupervision("guidedWhy") : tSupervision("trustedWhy"),
+          why: mifaMode.supervisionMode === "guided" ? tSupervision("guidedWhy") : tSupervision("trustedWhy"),
         }}
       />
 
@@ -429,7 +429,7 @@ export function Sidebar({
   // ──────────────────────────────────────────────
   // Family parent sidebar
   // ──────────────────────────────────────────────
-  const parentSidebarContent = familiaParentMode ? (
+  const parentSidebarContent = mifaParentMode ? (
     <>
       {/* Header — family branding */}
       <div className="p-4 border-b border-[var(--border)]">
@@ -438,10 +438,10 @@ export function Sidebar({
         </Link>
         <div className="flex items-center gap-2 mt-2">
           <Users className="w-4 h-4 text-violet-500" />
-          <span className="text-sm font-medium truncate">{familiaParentMode.orgName}</span>
+          <span className="text-sm font-medium truncate">{mifaParentMode.orgName}</span>
         </div>
         <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-medium">
-          {t("familiaParentBadge")}
+          {t("mifaParentBadge")}
         </span>
       </div>
 
@@ -508,12 +508,12 @@ export function Sidebar({
       {/* Footer */}
       <div className="p-4 border-t border-[var(--border)] space-y-1">
         <NextLink
-          href={`/${locale}/familia/dashboard`}
+          href={`/${locale}/mifa/dashboard`}
           className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm hover:bg-[var(--muted)] transition-colors text-violet-600 dark:text-violet-400 font-medium"
           onClick={() => setIsOpen(false)}
         >
           <Users className="w-4 h-4" />
-          {t("backToFamiliaDashboard")}
+          {t("backToMifaDashboard")}
         </NextLink>
         <button
           onClick={handleLogout}
@@ -529,7 +529,7 @@ export function Sidebar({
   // ──────────────────────────────────────────────
   // Standard adult sidebar
   // ──────────────────────────────────────────────
-  const sidebarContent = familiaMode ? teenSidebarContent : familiaParentMode ? parentSidebarContent : (
+  const sidebarContent = mifaMode ? teenSidebarContent : mifaParentMode ? parentSidebarContent : (
     <>
       {/* Header */}
       <div className="p-4 border-b border-[var(--border)]">
@@ -572,7 +572,7 @@ export function Sidebar({
                 </div>
               </div>
             )}
-            {canManageOrg && !familiaMode && (
+            {canManageOrg && !mifaMode && (
               <NextLink href={`/${locale}/org`}>
                 <Button variant="outline" size="sm" className="w-full mt-3">
                   <Settings className="w-4 h-4 mr-2" />
@@ -615,7 +615,7 @@ export function Sidebar({
           <Plus className="w-4 h-4 mr-2" />
           {t("newConversation")}
         </Button>
-        {!familiaMode && (
+        {!mifaMode && (
           <>
             <NextLink href={`/${locale}/create/images`} onClick={() => setIsOpen(false)} className="block mt-4">
               <Button variant="ghost" size="sm" className="w-full text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
@@ -677,8 +677,8 @@ export function Sidebar({
         )}
       </div>
 
-      {/* Classes section - hidden for familia teens */}
-      {!familiaMode && (
+      {/* Classes section - hidden for mifa teens */}
+      {!mifaMode && (
       <div className="px-2 py-2 border-t border-[var(--border)]">
         <div className="text-xs font-semibold text-[var(--muted-foreground)] px-2 py-2">
           {canManageOrg ? t("managedClasses") : t("classes")}
