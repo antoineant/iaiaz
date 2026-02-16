@@ -3550,6 +3550,12 @@
         "cta": "€1 free to try",
         "learnMore": "Learn more"
       },
+      "problem": {
+        "title": "Your kids already use AI. Do you?",
+        "stat1": "of teens use AI for homework",
+        "stat2": "of parents feel unprepared for AI",
+        "stat3": "of parents don't want to ban AI"
+      },
       "tension": {
         "title": "Sound familiar?",
         "quote1": "My son uses ChatGPT behind my back. I have no idea what he's doing.",

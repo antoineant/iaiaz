@@ -141,6 +141,27 @@ export default async function MifaLandingPage({ params }: Props) {
         </div>
       </section>
 
+      {/* Problem Statement */}
+      <section className="py-16 bg-[var(--muted)]/30">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-8">{t("problem.title")}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6">
+              <p className="text-4xl font-bold text-primary-600 mb-2">73%</p>
+              <p className="text-[var(--muted-foreground)]">{t("problem.stat1")}</p>
+            </div>
+            <div className="p-6">
+              <p className="text-4xl font-bold text-accent-600 mb-2">84%</p>
+              <p className="text-[var(--muted-foreground)]">{t("problem.stat2")}</p>
+            </div>
+            <div className="p-6">
+              <p className="text-4xl font-bold text-primary-600 mb-2">92%</p>
+              <p className="text-[var(--muted-foreground)]">{t("problem.stat3")}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5 reasons — numbered pillars with need tags */}
       <section id="features" className="py-20 bg-[var(--muted)]/30">
         <div className="max-w-3xl mx-auto px-4">

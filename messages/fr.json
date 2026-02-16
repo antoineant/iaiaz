@@ -3746,6 +3746,12 @@
         "cta": "1€ offert pour essayer",
         "learnMore": "Découvrir"
       },
+      "problem": {
+        "title": "Vos ados utilisent déjà l'IA. Et vous ?",
+        "stat1": "des ados utilisent l'IA pour leurs devoirs",
+        "stat2": "des parents se sentent dépassés",
+        "stat3": "des parents préfèrent accompagner qu'interdire"
+      },
       "tension": {
         "title": "Ce que vous ressentez",
         "quote1": "Mon fils utilise ChatGPT en cachette. Je ne sais pas ce qu'il fait.",
