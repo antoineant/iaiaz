@@ -290,6 +290,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Determine if this is a Familia user (for markup calculation)
+    const isFamiliaUser = familyInfo?.isFamilyMember === true;
+
     // Get pricing settings for cost estimation
     const pricingSettings = await getAppSettingsAdmin();
 
@@ -361,7 +364,7 @@ export async function POST(request: NextRequest) {
     // Calculate estimated cost using database pricing
     const estimatedBaseCost =
       (estimatedInputTokens * modelInfo.input_price + 500 * modelInfo.output_price) / 1_000_000;
-    const estimatedCost = estimatedBaseCost * pricingSettings.markupMultiplier;
+    const estimatedCost = estimatedBaseCost * (isFamiliaUser ? pricingSettings.familiaMarkupMultiplier : pricingSettings.markupMultiplier);
 
     // Determine credit context based on classId
     const creditContext: CreditContext = validatedClassId
@@ -511,11 +514,12 @@ export async function POST(request: NextRequest) {
               }
             }
 
-            // Calculate actual cost
+            // Calculate actual cost (use Familia markup for Familia users)
             const actualCost = await calculateCostFromDBAdmin(
               model,
               aiResponse.tokensInput,
-              aiResponse.tokensOutput
+              aiResponse.tokensOutput,
+              isFamiliaUser
             );
 
             // Calculate CO2
@@ -650,11 +654,12 @@ export async function POST(request: NextRequest) {
     // Non-streaming response (original behavior)
     const aiResponse = await callAI(model, fullMessages, familiaSystemPrompt);
 
-    // Calculate actual cost using database pricing
+    // Calculate actual cost using database pricing (use Familia markup for Familia users)
     const actualCost = await calculateCostFromDBAdmin(
       model,
       aiResponse.tokensInput,
-      aiResponse.tokensOutput
+      aiResponse.tokensOutput,
+      isFamiliaUser
     );
 
     // Calculate CO2 emissions using model's CO2 rate

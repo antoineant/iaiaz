@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { Save, RefreshCw, MessageSquare, FileText, Zap } from "lucide-react";
+import { Save, RefreshCw, MessageSquare, FileText, Zap, Users } from "lucide-react";
 
 interface AppSetting {
   id: string;
@@ -78,6 +78,7 @@ export default function SettingsPage() {
 
   // Form values
   const [markup, setMarkup] = useState(50);
+  const [familiaMarkup, setFamiliaMarkup] = useState(0);
   const [freeCredits, setFreeCredits] = useState(1.0);
   const [minBalanceWarning, setMinBalanceWarning] = useState(0.5);
 
@@ -103,6 +104,9 @@ export default function SettingsPage() {
       settingsData?.forEach((setting) => {
         if (setting.key === "markup" && setting.value.percentage) {
           setMarkup(setting.value.percentage);
+        }
+        if (setting.key === "familia_markup" && setting.value.percentage !== undefined) {
+          setFamiliaMarkup(setting.value.percentage);
         }
         if (setting.key === "free_credits" && setting.value.amount) {
           setFreeCredits(setting.value.amount);
@@ -172,6 +176,9 @@ export default function SettingsPage() {
     try {
       let err = await saveSetting("markup", { percentage: markup });
       if (err) throw new Error("Erreur lors de la sauvegarde du markup");
+
+      err = await saveSetting("familia_markup", { percentage: familiaMarkup });
+      if (err) throw new Error("Erreur lors de la sauvegarde du markup Familia");
 
       err = await saveSetting("free_credits", { amount: freeCredits });
       if (err) throw new Error("Erreur lors de la sauvegarde des crédits gratuits");
@@ -370,6 +377,80 @@ export default function SettingsPage() {
                     );
                   })}
                 </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Familia Markup */}
+        <Card>
+          <CardHeader>
+            <h2 className="font-semibold flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Markup Familia
+            </h2>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              Markup appliqué aux utilisateurs Familia (enfants & parents)
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                Pourcentage de markup Familia
+              </label>
+              <div className="flex items-center gap-4">
+                <input
+                  type="range"
+                  min="0"
+                  max="200"
+                  value={familiaMarkup}
+                  onChange={(e) => setFamiliaMarkup(parseInt(e.target.value))}
+                  className="flex-1"
+                />
+                <Input
+                  type="number"
+                  className="w-24"
+                  value={familiaMarkup}
+                  onChange={(e) => setFamiliaMarkup(parseInt(e.target.value) || 0)}
+                />
+                <span className="text-lg font-bold">%</span>
+              </div>
+            </div>
+
+            {familiaMarkup === 0 && (
+              <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
+                Les crédits Familia sont facturés au prix API (aucun markup)
+              </div>
+            )}
+
+            {recommendedModel && (
+              <div className="p-4 bg-[var(--muted)] rounded-lg">
+                <h3 className="font-medium mb-2">
+                  Exemple avec {recommendedModel.name} (Familia)
+                </h3>
+                <div className="space-y-2 text-sm">
+                  {Object.entries(USE_CASES).map(([key, useCase]) => {
+                    const cost = calculateCost(
+                      recommendedModel,
+                      useCase.inputTokens,
+                      useCase.outputTokens,
+                      familiaMarkup
+                    );
+                    return (
+                      <div key={key} className="flex justify-between items-center">
+                        <span className="text-[var(--muted-foreground)]">
+                          {useCase.name}:
+                        </span>
+                        <span className="font-medium">{cost.toFixed(4)} €</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                {recommendedModel && (
+                  <p className="text-xs text-[var(--muted-foreground)] mt-3">
+                    5€ = ~{Math.floor(5 / calculateCost(recommendedModel, USE_CASES.simpleQuestion.inputTokens, USE_CASES.simpleQuestion.outputTokens, familiaMarkup))} questions simples
+                  </p>
+                )}
               </div>
             )}
           </CardContent>

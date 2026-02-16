@@ -8,6 +8,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { SafetyAccordion } from "@/components/familia/safety-accordion";
 import { ContentAccordion } from "@/components/ui/content-accordion";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { getAppSettings, getModelsFromDB } from "@/lib/pricing-db";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -28,7 +29,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function FamiliaLandingPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("familia.landing");
+  const [t, settings, models] = await Promise.all([
+    getTranslations("familia.landing"),
+    getAppSettings(),
+    getModelsFromDB(),
+  ]);
+
+  // Calculate dynamic credit estimates based on Familia markup and recommended model
+  const recommendedModel = models.find((m) => m.is_recommended);
+  const familiaMultiplier = settings.familiaMarkupMultiplier;
+  const creditBudget = 5; // 5€ included per child
+
+  // Token estimates per use case
+  const useCaseTokens = {
+    homework: { input: 500, output: 1000 },   // complex question / homework help
+    essay: { input: 800, output: 3000 },       // dissertation / long text
+    simple: { input: 150, output: 300 },       // simple question
+  };
+
+  let estimateHomework = 40;
+  let estimateEssays = 15;
+  let estimateQuestions = 170;
+
+  if (recommendedModel) {
+    const costPerHomework =
+      ((useCaseTokens.homework.input * recommendedModel.input_price +
+        useCaseTokens.homework.output * recommendedModel.output_price) /
+        1_000_000) *
+      familiaMultiplier;
+    const costPerEssay =
+      ((useCaseTokens.essay.input * recommendedModel.input_price +
+        useCaseTokens.essay.output * recommendedModel.output_price) /
+        1_000_000) *
+      familiaMultiplier;
+    const costPerQuestion =
+      ((useCaseTokens.simple.input * recommendedModel.input_price +
+        useCaseTokens.simple.output * recommendedModel.output_price) /
+        1_000_000) *
+      familiaMultiplier;
+
+    if (costPerHomework > 0) estimateHomework = Math.floor(creditBudget / costPerHomework);
+    if (costPerEssay > 0) estimateEssays = Math.floor(creditBudget / costPerEssay);
+    if (costPerQuestion > 0) estimateQuestions = Math.floor(creditBudget / costPerQuestion);
+  }
 
   return (
     <div className="min-h-screen">
@@ -506,7 +549,7 @@ export default async function FamiliaLandingPage({ params }: Props) {
                 <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-3">
                   <BookOpen className="w-6 h-6 text-blue-600" />
                 </div>
-                <p className="text-3xl font-extrabold text-primary-600 mb-1">~40</p>
+                <p className="text-3xl font-extrabold text-primary-600 mb-1">~{estimateHomework}</p>
                 <p className="font-medium mb-1">{t("credits.homework")}</p>
                 <p className="text-xs text-[var(--muted-foreground)]">{t("credits.homeworkDesc")}</p>
               </CardContent>
@@ -516,7 +559,7 @@ export default async function FamiliaLandingPage({ params }: Props) {
                 <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-3">
                   <PenTool className="w-6 h-6 text-purple-600" />
                 </div>
-                <p className="text-3xl font-extrabold text-accent-600 mb-1">~15</p>
+                <p className="text-3xl font-extrabold text-accent-600 mb-1">~{estimateEssays}</p>
                 <p className="font-medium mb-1">{t("credits.essays")}</p>
                 <p className="text-xs text-[var(--muted-foreground)]">{t("credits.essaysDesc")}</p>
               </CardContent>
@@ -526,7 +569,7 @@ export default async function FamiliaLandingPage({ params }: Props) {
                 <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
                   <Lightbulb className="w-6 h-6 text-green-600" />
                 </div>
-                <p className="text-3xl font-extrabold text-green-600 mb-1">~170</p>
+                <p className="text-3xl font-extrabold text-green-600 mb-1">~{estimateQuestions}</p>
                 <p className="font-medium mb-1">{t("credits.questions")}</p>
                 <p className="text-xs text-[var(--muted-foreground)]">{t("credits.questionsDesc")}</p>
               </CardContent>
