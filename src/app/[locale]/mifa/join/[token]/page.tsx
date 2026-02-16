@@ -135,8 +135,8 @@ function MifaJoinInner() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950 dark:via-[var(--background)] dark:to-accent-950 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold">
-            <span className="text-[var(--foreground)]">m</span><span className="text-primary-600">i</span><span className="text-[var(--foreground)]">f</span><span className="text-accent-600">a</span>
+          <h1 className="text-4xl font-extrabold">
+            <span className="text-primary-600">m</span><span className="text-accent-600">i</span><span className="text-primary-600">f</span><span className="text-accent-600">a</span>
             <span className="text-[var(--muted-foreground)] font-medium text-lg ml-2">by iaiaz</span>
           </h1>
         </div>

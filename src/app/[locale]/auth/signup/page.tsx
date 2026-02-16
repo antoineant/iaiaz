@@ -218,8 +218,8 @@ function SignupForm() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           {isMifaChild ? (
-            <h1 className="text-3xl font-extrabold">
-              <span className="text-[var(--foreground)]">m</span><span className="text-primary-600">i</span><span className="text-[var(--foreground)]">f</span><span className="text-accent-600">a</span>
+            <h1 className="text-4xl font-extrabold">
+              <span className="text-primary-600">m</span><span className="text-accent-600">i</span><span className="text-primary-600">f</span><span className="text-accent-600">a</span>
               <span className="text-[var(--muted-foreground)] font-medium text-lg ml-2">by iaiaz</span>
             </h1>
           ) : (
