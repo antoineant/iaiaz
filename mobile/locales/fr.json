@@ -85,7 +85,10 @@
       "maitre": "Maître",
       "legende": "Légende"
     },
-    "xp": "{{xp}} XP"
+    "xp": "{{xp}} XP",
+    "generateAvatar": "Générer avec l'IA",
+    "generating": "Génération en cours...",
+    "regenerate": "Régénérer"
   },
   "history": {
     "title": "Historique",
