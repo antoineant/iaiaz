@@ -124,10 +124,10 @@ function MifaGridCard({
       <Card className="items-center py-5 relative overflow-hidden">
         <LevelBadge assistantId={item.id} color={color} />
         <View
-          className="w-16 h-16 rounded-2xl items-center justify-center mb-2"
-          style={{ backgroundColor: `${color}20` }}
+          className="w-22 h-22 rounded-2xl items-center justify-center mb-2"
+          style={{ backgroundColor: `${color}20`, width: 88, height: 88 }}
         >
-          <MifaAvatar avatar={item.avatar || "🤖"} avatarType={item.avatar_type} size={48} />
+          <MifaAvatar avatar={item.avatar || "🤖"} avatarType={item.avatar_type} size={68} />
         </View>
         <Text variant="label" className="text-center mb-1" numberOfLines={1}>
           {item.name}
