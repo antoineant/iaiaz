@@ -23,8 +23,9 @@ export function MifaAvatar({ avatar, avatarType = "emoji", size = 48, className 
     );
   }
 
-  if (avatarType === "asset") {
-    const asset = MIFA_ASSETS[avatar];
+  // Check if the avatar string is an asset key (even if avatarType wasn't set)
+  const asset = MIFA_ASSETS[avatar];
+  if (avatarType === "asset" || asset) {
     if (asset) {
       return (
         <Image
