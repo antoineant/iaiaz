@@ -896,11 +896,11 @@
           "description": "{orgName}"
         },
         "familia": {
-          "title": "Familia by iaiaz",
+          "title": "mifa by iaiaz",
           "description": "{orgName}"
         },
         "setup-familia": {
-          "title": "Familia by iaiaz",
+          "title": "mifa by iaiaz",
           "description": "Set up your family space"
         }
       }
@@ -3542,7 +3542,7 @@
         "login": "Log in"
       },
       "hero": {
-        "badge": "Familia by iaiaz",
+        "badge": "mifa by iaiaz",
         "title1": "Don't block AI.",
         "title2": "Guide it.",
         "subtitle": "The AI plan for parents who want to say yes",
@@ -3586,19 +3586,19 @@
       },
       "scenario": {
         "title": "Spot struggles before the report card",
-        "subtitle": "Familia analyzes what your children ask the AI and alerts you when something needs your attention.",
+        "subtitle": "mifa analyzes what your children ask the AI and alerts you when something needs your attention.",
         "step1title": "Emma struggles with maths",
         "step1desc": "This week, she asked 5 questions about fractions. The AI helps her, but the same topic keeps coming back.",
         "step2title": "You get an alert",
         "step2desc": "\"Emma seems to be struggling with fractions — 5 questions this week on the same chapter.\"",
         "step3title": "You help her in time",
         "step3desc": "A chat that evening, an exercise together, and Emma finally gets it. Before the test.",
-        "closing": "Without Familia, you'd never have known."
+        "closing": "Without mifa, you'd never have known."
       },
       "dashboard": {
         "title": "Your dashboard",
         "subtitle": "Everything at a glance. Who's using what, how much, and when.",
-        "mockTitle": "Familia Dashboard — The Smiths",
+        "mockTitle": "mifa Dashboard — The Smiths",
         "mockBalance": "Budget remaining",
         "mockUsed": "Used this week",
         "mockGuided": "Guided Mode",
@@ -3664,7 +3664,7 @@
         },
         "ages": {
           "q": "What ages is this for?",
-          "a": "Familia is designed for children aged 12-17, guided by their parents. Guided Mode (12-14) offers more supervision than Trusted Mode (15-17)."
+          "a": "mifa is designed for children aged 12-17, guided by their parents. Guided Mode (12-14) offers more supervision than Trusted Mode (15-17)."
         },
         "conversations": {
           "q": "Can I see my child's conversations?",
@@ -3787,7 +3787,7 @@
         "pastDue": "Your payment failed. Please update your payment information to continue."
       },
       "welcome": {
-        "title": "Welcome to Familia!",
+        "title": "Welcome to mifa!",
         "subtitle": "Your family space is ready. Here's how to get started:",
         "step1Title": "Invite your children",
         "step1Text": "Go to settings to send them an email invitation.",
@@ -3906,7 +3906,7 @@
       }
     },
     "settings": {
-      "title": "Familia Settings",
+      "title": "mifa Settings",
       "backToDashboard": "Back to dashboard",
       "inviteMember": "Invite a member",
       "namePlaceholder": "First name",

@@ -13,7 +13,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: locale === "fr" ? "Tableau de bord Familia" : "Familia Dashboard",
+    title: locale === "fr" ? "Tableau de bord mifa" : "mifa Dashboard",
   };
 }
 
@@ -177,7 +177,7 @@ export default async function FamiliaDashboardPage({ params, searchParams }: Pro
       locale={locale}
       showWelcome={welcome === "true"}
       organizationId={organizationId}
-      organizationName={org?.name || "Familia"}
+      organizationName={org?.name || "mifa"}
       subscriptionStatus={org?.subscription_status || "none"}
       subscriptionTrialEnd={org?.subscription_trial_end || null}
       creditBalance={org?.credit_balance || 0}

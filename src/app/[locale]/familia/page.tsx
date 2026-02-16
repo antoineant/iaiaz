@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: locale === "fr"
-      ? "Familia by iaiaz - L'IA en famille, en confiance"
-      : "Familia by iaiaz - AI for families, with trust",
+      ? "mifa by iaiaz - L'IA en famille, en confiance"
+      : "mifa by iaiaz - AI for families, with trust",
     description: locale === "fr"
       ? "Le plan familial pour utiliser l'IA ensemble. Controle parental, supervision adaptee a l'age, credits partages."
       : "The family plan to use AI together. Parental controls, age-appropriate supervision, shared credits.",
@@ -79,8 +79,8 @@ export default async function FamiliaLandingPage({ params }: Props) {
       <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/familia" className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-              Familia
+            <span className="text-3xl font-extrabold">
+              <span className="text-[var(--foreground)]">m</span><span className="text-primary-600">i</span><span className="text-[var(--foreground)]">f</span><span className="text-accent-600">a</span>
             </span>
             <span className="text-sm text-[var(--muted-foreground)] font-medium">
               by iaiaz
@@ -448,7 +448,7 @@ export default async function FamiliaLandingPage({ params }: Props) {
           {/* Single pricing card */}
           <Card className="border-2 border-primary-200 dark:border-primary-800 max-w-lg mx-auto">
             <CardContent className="pt-8 pb-8">
-              <h3 className="text-2xl font-bold mb-1 text-center">Familia</h3>
+              <h3 className="text-2xl font-bold mb-1 text-center">m<span className="text-primary-600">i</span>f<span className="text-accent-600">a</span></h3>
               <div className="text-center mb-2">
                 <span className="text-5xl font-extrabold">9,90&#x20AC;</span>
                 <span className="text-[var(--muted-foreground)] text-lg"> /{t("pricing.perChild")}</span>

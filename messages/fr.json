@@ -778,11 +778,11 @@
           "description": "{orgName}"
         },
         "familia": {
-          "title": "Familia by iaiaz",
+          "title": "mifa by iaiaz",
           "description": "{orgName}"
         },
         "setup-familia": {
-          "title": "Familia by iaiaz",
+          "title": "mifa by iaiaz",
           "description": "Créez votre espace famille"
         }
       }
@@ -3738,7 +3738,7 @@
         "login": "Se connecter"
       },
       "hero": {
-        "badge": "Familia by iaiaz",
+        "badge": "mifa by iaiaz",
         "title1": "L'IA en famille",
         "title2": "et en confiance.",
         "subtitle": "Pour les parents qui préfèrent accompagner plutôt qu'interdire",
@@ -3782,19 +3782,19 @@
       },
       "scenario": {
         "title": "Détectez les difficultés avant le bulletin",
-        "subtitle": "Familia analyse ce que vos enfants demandent à l'IA et vous alerte quand quelque chose mérite votre attention.",
+        "subtitle": "mifa analyse ce que vos enfants demandent à l'IA et vous alerte quand quelque chose mérite votre attention.",
         "step1title": "Emma galère en maths",
         "step1desc": "Cette semaine, elle a posé 5 questions sur les fractions. L'IA l'aide, mais le sujet revient encore et encore.",
         "step2title": "Vous recevez une alerte",
         "step2desc": "« Emma semble avoir du mal avec les fractions — 5 questions cette semaine sur le même chapitre. »",
         "step3title": "Vous l'aidez à temps",
         "step3desc": "Un échange le soir, un exercice ensemble, et Emma comprend enfin. Avant le contrôle.",
-        "closing": "Sans Familia, vous ne l'auriez jamais su."
+        "closing": "Sans mifa, vous ne l'auriez jamais su."
       },
       "dashboard": {
         "title": "Votre tableau de bord",
         "subtitle": "Tout est clair, en un coup d'œil. Qui utilise quoi, combien, et quand.",
-        "mockTitle": "Tableau de bord Familia — Famille Dupont",
+        "mockTitle": "Tableau de bord mifa — Famille Dupont",
         "mockBalance": "Budget restant",
         "mockUsed": "Utilisé cette semaine",
         "mockGuided": "Mode Encadré",
@@ -3983,7 +3983,7 @@
         "pastDue": "Votre paiement a échoué. Veuillez mettre à jour vos informations de paiement pour continuer."
       },
       "welcome": {
-        "title": "Bienvenue sur Familia !",
+        "title": "Bienvenue sur mifa !",
         "subtitle": "Votre espace famille est prêt. Voici comment démarrer :",
         "step1Title": "Invitez vos enfants",
         "step1Text": "Rendez-vous dans les réglages pour leur envoyer une invitation par email.",
@@ -4102,7 +4102,7 @@
       }
     },
     "settings": {
-      "title": "Réglages Familia",
+      "title": "Réglages mifa",
       "backToDashboard": "Retour au tableau de bord",
       "inviteMember": "Inviter un membre",
       "namePlaceholder": "Prénom",

@@ -387,16 +387,16 @@ export default function SettingsPage() {
           <CardHeader>
             <h2 className="font-semibold flex items-center gap-2">
               <Users className="w-4 h-4" />
-              Markup Familia
+              Markup mifa
             </h2>
             <p className="text-sm text-[var(--muted-foreground)]">
-              Markup appliqué aux utilisateurs Familia (enfants & parents)
+              Markup appliqué aux utilisateurs mifa (enfants & parents)
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1.5">
-                Pourcentage de markup Familia
+                Pourcentage de markup mifa
               </label>
               <div className="flex items-center gap-4">
                 <input
@@ -419,14 +419,14 @@ export default function SettingsPage() {
 
             {familiaMarkup === 0 && (
               <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
-                Les crédits Familia sont facturés au prix API (aucun markup)
+                Les crédits mifa sont facturés au prix API (aucun markup)
               </div>
             )}
 
             {recommendedModel && (
               <div className="p-4 bg-[var(--muted)] rounded-lg">
                 <h3 className="font-medium mb-2">
-                  Exemple avec {recommendedModel.name} (Familia)
+                  Exemple avec {recommendedModel.name} (mifa)
                 </h3>
                 <div className="space-y-2 text-sm">
                   {Object.entries(USE_CASES).map(([key, useCase]) => {

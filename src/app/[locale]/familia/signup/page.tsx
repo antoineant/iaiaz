@@ -166,8 +166,9 @@ function FamiliaSignupContent() {
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-            Familia by iaiaz
+          <h1 className="text-3xl font-extrabold">
+            <span className="text-[var(--foreground)]">m</span><span className="text-primary-600">i</span><span className="text-[var(--foreground)]">f</span><span className="text-accent-600">a</span>
+            <span className="text-[var(--muted-foreground)] font-medium text-lg ml-2">by iaiaz</span>
           </h1>
           <p className="text-[var(--muted-foreground)] mt-2">{t("subtitle")}</p>
         </div>
