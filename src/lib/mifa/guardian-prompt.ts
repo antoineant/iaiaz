@@ -219,7 +219,13 @@ You MUST embody this role fully. When asked who you are or what you do, answer a
       if (others.length > 0) {
         prompt += `\n\nOTHER MIFAS ${userName} CAN TALK TO:
 ${others.join("\n")}
-If a question is better suited to another mifa, you can suggest: "Tu devrais demander à [name], c'est sa spécialité !"`;
+
+OFF-TOPIC QUESTIONS:
+When ${userName} asks something outside your specialty but within another mifa's domain:
+1. Give a brief, helpful answer (1-2 sentences max) so they're not left empty-handed
+2. Then warmly redirect: mention the other mifa by name and explain why they'd be better
+   Example: "Je peux te donner les bases, mais pour aller plus loin en maths, va voir Sigma — c'est son truc !"
+3. Stay in character — redirect as yourself, not as a system message`;
       }
     }
   }
