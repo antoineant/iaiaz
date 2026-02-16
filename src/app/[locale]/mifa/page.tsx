@@ -141,18 +141,19 @@ export default async function MifaLandingPage({ params }: Props) {
         </div>
       </section>
 
-      {/* 5 needs — what parents are looking for */}
+      {/* 5 reasons — numbered pillars with need tags */}
       <section id="features" className="py-20 bg-[var(--muted)]/30">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-4">{t("why.title")}</h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-2xl mx-auto">{t("why.subtitle")}</p>
           <div className="space-y-4">
-            {["visibility", "rules", "growth", "budget", "learning"].map((key) => (
+            {["visibility", "rules", "growth", "budget", "learning"].map((key, i) => (
               <div key={key} className="flex items-start gap-5 p-5 rounded-xl border border-[var(--border)] bg-[var(--background)]">
-                <div className="flex-shrink-0">
-                  <span className="text-xs uppercase tracking-wider font-semibold text-primary-600 dark:text-primary-400">{t(`why.${key}.need`)}</span>
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/30 dark:to-accent-900/30 flex items-center justify-center">
+                  <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">{i + 1}</span>
                 </div>
-                <div className="flex-1">
+                <div>
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-primary-600 dark:text-primary-400">{t(`why.${key}.need`)}</span>
                   <h3 className="text-lg font-bold mb-1">{t(`why.${key}.title`)}</h3>
                   <p className="text-[var(--muted-foreground)]">{t(`why.${key}.desc`)}</p>
                 </div>
