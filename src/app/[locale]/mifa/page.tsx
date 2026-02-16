@@ -79,11 +79,8 @@ export default async function MifaLandingPage({ params }: Props) {
       <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/mifa" className="flex items-baseline gap-1.5">
-            <span
-              className="text-5xl font-extrabold bg-clip-text text-transparent"
-              style={{ backgroundImage: "linear-gradient(to right, #0284c7 0%, #d946ef 28%, #0284c7 52%, #d946ef 80%, #0284c7 100%)" }}
-            >
-              mifa
+            <span className="text-5xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+              m&#299;f&#257;
             </span>
             <span className="text-sm text-[var(--muted-foreground)] font-medium">
               by iaiaz
@@ -117,7 +114,7 @@ export default async function MifaLandingPage({ params }: Props) {
         <div className="max-w-6xl mx-auto px-4 py-20 sm:py-28">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
-              <span className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 bg-clip-text text-transparent">
                 {t("hero.title1")}<br />{t("hero.title2")}
               </span>
             </h1>
@@ -451,7 +448,7 @@ export default async function MifaLandingPage({ params }: Props) {
           {/* Single pricing card */}
           <Card className="border-2 border-primary-200 dark:border-primary-800 max-w-lg mx-auto">
             <CardContent className="pt-8 pb-8">
-              <h3 className="text-3xl font-extrabold mb-1 text-center"><span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(to right, #0284c7 0%, #d946ef 28%, #0284c7 52%, #d946ef 80%, #0284c7 100%)" }}>mifa</span></h3>
+              <h3 className="text-3xl font-extrabold mb-1 text-center"><span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">m&#299;f&#257;</span></h3>
               <div className="text-center mb-2">
                 <span className="text-5xl font-extrabold">9,90&#x20AC;</span>
                 <span className="text-[var(--muted-foreground)] text-lg"> /{t("pricing.perChild")}</span>
