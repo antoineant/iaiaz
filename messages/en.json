@@ -3558,26 +3558,31 @@
         "resolution": "You're not alone. And there's a solution."
       },
       "why": {
-        "title": "Why mīfā",
-        "subtitle": "Everything you need to say yes to AI, with peace of mind.",
+        "title": "What you need",
+        "subtitle": "Every family is different. But these needs, you all share.",
         "visibility": {
-          "title": "You see everything",
+          "need": "Understand",
+          "title": "Know what they're doing with AI",
           "desc": "What subjects, how long, when they're stuck. Your dashboard tells you the essentials — without spying."
         },
         "rules": {
-          "title": "Rules without fights",
+          "need": "Set boundaries",
+          "title": "Set limits without being the bad guy",
           "desc": "Quiet hours, daily budgets, content filters. The system sets the limits, not you."
         },
         "growth": {
-          "title": "It grows with them",
+          "need": "Support",
+          "title": "Give them more freedom, at their pace",
           "desc": "Guided Mode at 12, Trusted Mode at 15. You adjust autonomy as they mature."
         },
         "budget": {
-          "title": "You control the budget",
+          "need": "Control",
+          "title": "Keep spending predictable",
           "desc": "A clear plan, included credits, zero surprises. Top up when you want, for any amount."
         },
         "learning": {
-          "title": "Learn, don't cheat",
+          "need": "Protect",
+          "title": "Make sure AI actually helps them learn",
           "desc": "AI helps them understand and think. It doesn't hand them the answers."
         }
       },

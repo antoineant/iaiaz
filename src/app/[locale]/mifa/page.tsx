@@ -141,37 +141,18 @@ export default async function MifaLandingPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Parent tensions — emotional hook */}
-      <section className="py-16 bg-[var(--muted)]/30">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-10">{t("tension.title")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {["quote1", "quote2", "quote3"].map((q) => (
-              <div key={q} className="p-6 rounded-2xl bg-[var(--background)] border border-[var(--border)] shadow-sm">
-                <p className="text-lg italic leading-relaxed">
-                  &laquo;&nbsp;{t(`tension.${q}`)}&nbsp;&raquo;
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className="text-center text-lg font-semibold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-            {t("tension.resolution")}
-          </p>
-        </div>
-      </section>
-
-      {/* 5 reasons — need-based pillars */}
-      <section id="features" className="py-20">
+      {/* 5 needs — what parents are looking for */}
+      <section id="features" className="py-20 bg-[var(--muted)]/30">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-4">{t("why.title")}</h2>
           <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-2xl mx-auto">{t("why.subtitle")}</p>
           <div className="space-y-4">
-            {["visibility", "rules", "growth", "budget", "learning"].map((key, i) => (
+            {["visibility", "rules", "growth", "budget", "learning"].map((key) => (
               <div key={key} className="flex items-start gap-5 p-5 rounded-xl border border-[var(--border)] bg-[var(--background)]">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/30 dark:to-accent-900/30 flex items-center justify-center">
-                  <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">{i + 1}</span>
+                <div className="flex-shrink-0">
+                  <span className="text-xs uppercase tracking-wider font-semibold text-primary-600 dark:text-primary-400">{t(`why.${key}.need`)}</span>
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="text-lg font-bold mb-1">{t(`why.${key}.title`)}</h3>
                   <p className="text-[var(--muted-foreground)]">{t(`why.${key}.desc`)}</p>
                 </div>
