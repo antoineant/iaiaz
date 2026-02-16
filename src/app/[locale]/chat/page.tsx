@@ -109,11 +109,11 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   };
 
   // Fetch assistant info if assistantId provided
-  let assistantInfo: { id: string; name: string; avatar: string; color: string } | undefined;
+  let assistantInfo: { id: string; name: string; avatar: string; avatar_type?: "emoji" | "asset" | "generated"; color: string } | undefined;
   if (assistantId) {
     const { data: assistant } = await adminClient
       .from("custom_assistants")
-      .select("id, name, avatar, color")
+      .select("id, name, avatar, avatar_type, color")
       .eq("id", assistantId)
       .eq("user_id", user.id)
       .single();
@@ -123,6 +123,7 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
         id: assistant.id,
         name: assistant.name,
         avatar: assistant.avatar,
+        avatar_type: assistant.avatar_type,
         color: theme?.hex || "#3B82F6",
       };
     }

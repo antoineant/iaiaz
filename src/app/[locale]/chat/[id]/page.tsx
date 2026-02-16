@@ -127,11 +127,11 @@ export default async function ChatConversationPage({
   };
 
   // Build assistant info if conversation has an assistant_id
-  let assistantInfo: { id: string; name: string; avatar: string; color: string } | undefined;
+  let assistantInfo: { id: string; name: string; avatar: string; avatar_type?: "emoji" | "asset" | "generated"; color: string } | undefined;
   if (conversation.assistant_id) {
     const { data: assistant } = await adminClient
       .from("custom_assistants")
-      .select("id, name, avatar, color")
+      .select("id, name, avatar, avatar_type, color")
       .eq("id", conversation.assistant_id)
       .eq("user_id", user.id)
       .single();
@@ -141,6 +141,7 @@ export default async function ChatConversationPage({
         id: assistant.id,
         name: assistant.name,
         avatar: assistant.avatar,
+        avatar_type: assistant.avatar_type,
         color: aTheme?.hex || "#3B82F6",
       };
     }

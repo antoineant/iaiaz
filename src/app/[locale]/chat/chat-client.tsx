@@ -23,6 +23,7 @@ import { ContextLimitModal } from "@/components/chat/context-limit-modal";
 import { ContextUsageIndicator } from "@/components/chat/context-usage-indicator";
 import { MifaWelcome } from "@/components/mifa/mifa-welcome";
 import { MifaParentWelcome } from "@/components/mifa/mifa-parent-welcome";
+import { MifaAvatar } from "@/components/mifa/mifa-avatar";
 import { applyAccentColor, getThemeColor } from "@/lib/mifa/theme";
 
 interface OrgContext {
@@ -61,6 +62,7 @@ interface AssistantInfo {
   id: string;
   name: string;
   avatar: string;
+  avatar_type?: "emoji" | "asset" | "generated";
   color: string;
 }
 
@@ -605,6 +607,7 @@ export function ChatClient({
       id: assistant.id,
       name: assistant.name,
       avatar: assistant.avatar,
+      avatar_type: assistant.avatar_type,
       color: theme?.hex || "#3B82F6",
     });
   };
@@ -660,7 +663,7 @@ export function ChatClient({
             {selectedAssistant && (
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border"
                 style={{ borderColor: selectedAssistant.color, backgroundColor: `${selectedAssistant.color}15` }}>
-                <span>{selectedAssistant.avatar}</span>
+                <MifaAvatar avatar={selectedAssistant.avatar} avatarType={selectedAssistant.avatar_type} size={24} />
                 <span>{selectedAssistant.name}</span>
               </div>
             )}
@@ -768,7 +771,7 @@ export function ChatClient({
                     border: `2px solid ${selectedAssistant.color}40`
                   }}
                 >
-                  <span className="text-5xl">{selectedAssistant.avatar}</span>
+                  <MifaAvatar avatar={selectedAssistant.avatar} avatarType={selectedAssistant.avatar_type} size={64} />
                 </div>
                 <h1 className="text-2xl font-bold mb-2" style={{ color: selectedAssistant.color }}>
                   {selectedAssistant.name}
