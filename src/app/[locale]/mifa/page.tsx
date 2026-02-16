@@ -162,6 +162,24 @@ export default async function MifaLandingPage({ params }: Props) {
         </div>
       </section>
 
+      {/* Parent quotes — emotional hook */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {["quote1", "quote2", "quote3"].map((q) => (
+              <div key={q} className="p-6 rounded-2xl bg-[var(--background)] border border-[var(--border)] shadow-sm">
+                <p className="text-lg italic leading-relaxed">
+                  &laquo;&nbsp;{t(`tension.${q}`)}&nbsp;&raquo;
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-lg font-semibold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            {t("tension.resolution")}
+          </p>
+        </div>
+      </section>
+
       {/* 5 reasons — numbered pillars with need tags */}
       <section id="features" className="py-20 bg-[var(--muted)]/30">
         <div className="max-w-3xl mx-auto px-4">
