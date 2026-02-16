@@ -16,6 +16,7 @@ import type { Gauges } from "@/components/GaugeSlider";
 import { useCreateAssistant } from "@/lib/hooks/useMifa";
 import { useAccentColor } from "@/lib/AccentColorContext";
 import { ACCENT_COLORS } from "@/lib/theme";
+import { supabase } from "@/lib/supabase";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -53,9 +54,13 @@ export default function CreateAssistantScreen() {
   const handleGenerate = async () => {
     setGenerating(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch(`${API_URL}/api/mifa/assistants/generate-avatar`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({
           name: name.trim(),
           color,
