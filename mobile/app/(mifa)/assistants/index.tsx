@@ -7,6 +7,7 @@ import { Text, Card } from "@/components/ui";
 import { MifaAvatar } from "@/components/MifaAvatar";
 import { useAssistants } from "@/lib/hooks/useMifa";
 import { api } from "@/lib/api";
+import { getAccentTheme } from "@/lib/theme";
 
 interface AssistantItem {
   id: string;
@@ -116,7 +117,7 @@ function MifaGridCard({
     );
   }
 
-  const color = item.color || "#818CF8";
+  const color = getAccentTheme(item.color).hex;
 
   return (
     <TouchableOpacity onPress={onPress} className="flex-1 m-2">

@@ -24,6 +24,7 @@ import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { useAssistants } from "@/lib/hooks/useMifa";
 import { useChatSession } from "@/lib/chatSession";
 import { useAccentColor } from "@/lib/AccentColorContext";
+import { getAccentTheme } from "@/lib/theme";
 import {
   RecorderState,
   requestMicPermission,
@@ -355,7 +356,7 @@ export default function ChatConversationScreen() {
                 >
                   <View
                     className="w-10 h-10 rounded-full items-center justify-center mr-3"
-                    style={{ backgroundColor: item.color ? item.color + "20" : "#f3f4f6" }}
+                    style={{ backgroundColor: item.color ? getAccentTheme(item.color).hex + "20" : "#f3f4f6" }}
                   >
                     {item.avatar ? (
                       <MifaAvatar avatar={item.avatar} avatarType={item.avatar_type} size={28} />
@@ -386,7 +387,7 @@ export default function ChatConversationScreen() {
             {activeAssistant && (
               <View
                 className="w-16 h-16 rounded-full items-center justify-center mb-3"
-                style={{ backgroundColor: (activeAssistant.color || accent.hex) + "20" }}
+                style={{ backgroundColor: getAccentTheme(activeAssistant.color).hex + "20" }}
               >
                 <MifaAvatar avatar={activeAssistant.avatar} avatarType={activeAssistant.avatar_type} size={40} />
               </View>

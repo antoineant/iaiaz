@@ -20,6 +20,7 @@ import {
   useDeleteAssistant,
   useGenerateShareCode,
 } from "@/lib/hooks/useMifa";
+import { getAccentTheme } from "@/lib/theme";
 
 const XP_LEVELS = [
   { name: "novice", minXp: 0 },
@@ -66,7 +67,7 @@ export default function MifaDetailScreen() {
     );
   }
 
-  const color = assistant.color || "#818CF8";
+  const color = getAccentTheme(assistant.color).hex;
   const xp = xpData?.xp || 0;
   const level = getLevel(xp);
   const xpProgress = level.nextMinXp
