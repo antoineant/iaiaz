@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { Send, Mic, Square, ChevronDown, MessageCircle } from "lucide-react-native";
 import Markdown from "react-native-markdown-display";
 import { Text } from "@/components/ui";
+import { MifaAvatar } from "@/components/MifaAvatar";
 import { api } from "@/lib/api";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { useAssistants } from "@/lib/hooks/useMifa";
@@ -316,7 +317,9 @@ export default function ChatConversationScreen() {
         >
           {activeAssistant ? (
             <>
-              <Text className="text-base mr-1.5">{activeAssistant.avatar}</Text>
+              <View className="mr-1.5">
+                <MifaAvatar avatar={activeAssistant.avatar} avatarType={activeAssistant.avatar_type} size={20} />
+              </View>
               <Text variant="label" className="text-gray-800">{activeAssistant.name}</Text>
             </>
           ) : (
@@ -363,7 +366,7 @@ export default function ChatConversationScreen() {
                     style={{ backgroundColor: item.color ? item.color + "20" : "#f3f4f6" }}
                   >
                     {item.avatar ? (
-                      <Text className="text-lg">{item.avatar}</Text>
+                      <MifaAvatar avatar={item.avatar} avatarType={item.avatar_type} size={28} />
                     ) : (
                       <MessageCircle size={18} color="#6366f1" />
                     )}
@@ -393,7 +396,7 @@ export default function ChatConversationScreen() {
                 className="w-16 h-16 rounded-full items-center justify-center mb-3"
                 style={{ backgroundColor: (activeAssistant.color || "#6366f1") + "20" }}
               >
-                <Text className="text-3xl">{activeAssistant.avatar}</Text>
+                <MifaAvatar avatar={activeAssistant.avatar} avatarType={activeAssistant.avatar_type} size={40} />
               </View>
             )}
             <Text variant="title" className="text-primary-600 mb-2">

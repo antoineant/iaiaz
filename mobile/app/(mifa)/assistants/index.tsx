@@ -126,7 +126,7 @@ function MifaGridCard({
           className="w-16 h-16 rounded-2xl items-center justify-center mb-2"
           style={{ backgroundColor: `${color}20` }}
         >
-          <MifaAvatar avatar={item.avatar || "🤖"} avatarType={(item.avatarType as any) || "emoji"} size={48} />
+          <MifaAvatar avatar={item.avatar || "🤖"} avatarType={item.avatar_type} size={48} />
         </View>
         <Text variant="label" className="text-center mb-1" numberOfLines={1}>
           {item.name}
