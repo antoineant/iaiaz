@@ -1,6 +1,12 @@
+import { randomBytes } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateGauges } from "@/lib/mifa/xp-levels";
+
+function generateShareCode(): string {
+  return randomBytes(4).toString("hex").toUpperCase(); // 8-char hex
+}
 
 export async function PUT(
   request: NextRequest,
@@ -15,7 +21,7 @@ export async function PUT(
   }
 
   const body = await request.json();
-  const { name, avatar, system_prompt, purpose, color } = body;
+  const { name, avatar, system_prompt, purpose, color, gauges, share_code } = body;
 
   if (name && name.length > 50) {
     return NextResponse.json({ error: "Nom trop long (50 caractères max)" }, { status: 400 });
@@ -36,7 +42,7 @@ export async function PUT(
     .single();
 
   if (!existing) {
-    return NextResponse.json({ error: "Assistant introuvable" }, { status: 404 });
+    return NextResponse.json({ error: "Mifa introuvable" }, { status: 404 });
   }
 
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
@@ -45,6 +51,22 @@ export async function PUT(
   if (system_prompt !== undefined) updates.system_prompt = system_prompt.trim();
   if (purpose !== undefined) updates.purpose = purpose?.trim() || null;
   if (color !== undefined) updates.color = color;
+
+  // Handle gauges update
+  if (gauges !== undefined) {
+    const parsed = validateGauges(gauges);
+    if (!parsed) {
+      return NextResponse.json({ error: "Gauges invalides" }, { status: 400 });
+    }
+    updates.gauges = parsed;
+  }
+
+  // Handle share_code
+  if (share_code === "generate") {
+    updates.share_code = generateShareCode();
+  } else if (share_code === null) {
+    updates.share_code = null;
+  }
 
   const { data: updated, error } = await adminClient
     .from("custom_assistants")

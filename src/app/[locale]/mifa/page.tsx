@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
+import { MifaShowcase } from "@/components/mifa/mifa-showcase";
 import { Shield, Users, Clock, Sparkles, Heart, ArrowRight, Check, Settings, MessageSquare, CreditCard, BookOpen, Lightbulb, PenTool, AlertTriangle, TrendingUp, Moon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -196,6 +197,29 @@ export default async function MifaLandingPage({ params }: Props) {
                   <h3 className="text-lg font-bold mb-1">{t(`why.${key}.title`)}</h3>
                   <p className="text-[var(--muted-foreground)]">{t(`why.${key}.desc`)}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Meet the Mifas */}
+      <section className="py-20 bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950/30 dark:via-[var(--background)] dark:to-accent-950/30">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-3">{t("mifas.title")}</h2>
+          <p className="text-center text-[var(--muted-foreground)] mb-10 max-w-2xl mx-auto">{t("mifas.subtitle")}</p>
+
+          <MifaShowcase />
+
+          {/* Feature bullets */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {["feature1", "feature2", "feature3"].map((key, i) => (
+              <div key={key} className="text-center">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/30 dark:to-accent-900/30 flex items-center justify-center mx-auto mb-3">
+                  <span className="text-xl">{["🎛️", "⚡", "🤝"][i]}</span>
+                </div>
+                <h3 className="font-bold mb-1">{t(`mifas.${key}.title`)}</h3>
+                <p className="text-sm text-[var(--muted-foreground)]">{t(`mifas.${key}.desc`)}</p>
               </div>
             ))}
           </div>

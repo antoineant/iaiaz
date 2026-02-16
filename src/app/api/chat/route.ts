@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body: ChatRequest = await request.json();
-    const { message, model, conversationId, messages = [], attachments = [], stream = false, enableThinking = false, classId, assistantId } = body;
+    const { message, model: rawModel, conversationId, messages = [], attachments = [], stream = false, enableThinking = false, classId, assistantId } = body;
+    const model: ModelId = rawModel || "claude-sonnet-4-5";
 
     // If classId provided, validate class membership
     let validatedClassId: string | null = null;
@@ -142,8 +143,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate model from database
+    console.log("[chat] Requested model:", model, "| rawModel from body:", rawModel);
     const modelInfo = await getModelFromDBAdmin(model);
     if (!modelInfo) {
+      // Debug: list available models
+      const { data: allModels } = await adminClient.from("ai_models").select("id, is_active").order("id");
+      console.log("[chat] Available models in DB:", allModels?.map(m => `${m.id} (${m.is_active ? "active" : "inactive"})`));
       return NextResponse.json(
         { error: "Modèle invalide ou désactivé" },
         { status: 400 }
@@ -273,11 +278,11 @@ export async function POST(request: NextRequest) {
           ? calculateAge(new Date(profile.birthdate))
           : null;
 
-        let assistant: { name: string; system_prompt: string } | null = null;
+        let assistant: { name: string; system_prompt: string; gauges: import("@/types").AssistantGauges } | null = null;
         if (assistantId) {
           const { data: assistantData } = await adminClient
             .from("custom_assistants")
-            .select("name, system_prompt")
+            .select("name, system_prompt, gauges")
             .eq("id", assistantId)
             .eq("user_id", user.id)
             .single();
@@ -675,6 +680,7 @@ export async function POST(request: NextRequest) {
 
     if (!finalConversationId) {
       // Create new conversation
+      console.log("[chat] Creating new conversation for user:", user.id, "model:", model);
       const { data: newConv, error: convError } = await adminClient
         .from("conversations")
         .insert({
@@ -688,9 +694,10 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (convError) {
-        console.error("Error creating conversation:", convError);
+        console.error("[chat] Error creating conversation:", convError);
       } else {
         finalConversationId = newConv.id;
+        console.log("[chat] Created conversation:", finalConversationId);
       }
     } else {
       // Update conversation timestamp
@@ -708,7 +715,7 @@ export async function POST(request: NextRequest) {
     // Save messages to database
     if (finalConversationId) {
       // User message with file_ids
-      const { data: userMsg } = await adminClient
+      const { data: userMsg, error: userMsgErr } = await adminClient
         .from("messages")
         .insert({
           conversation_id: finalConversationId,
@@ -722,6 +729,9 @@ export async function POST(request: NextRequest) {
         .select()
         .single();
 
+      if (userMsgErr) console.error("[chat] Error saving user message:", userMsgErr);
+      else console.log("[chat] Saved user message:", userMsg?.id);
+
       // Update file records with message_id
       if (userMsg && attachments.length > 0) {
         await adminClient
@@ -731,7 +741,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Assistant message (with metadata stripped)
-      const { data: assistantMsg } = await adminClient
+      const { data: assistantMsg, error: assistantMsgErr } = await adminClient
         .from("messages")
         .insert({
           conversation_id: finalConversationId,
@@ -745,9 +755,12 @@ export async function POST(request: NextRequest) {
         .select()
         .single();
 
+      if (assistantMsgErr) console.error("[chat] Error saving assistant message:", assistantMsgErr);
+      else console.log("[chat] Saved assistant message:", assistantMsg?.id, "cost:", actualCost);
+
       // Log API usage
       if (assistantMsg) {
-        await adminClient.from("api_usage").insert({
+        const { error: usageErr } = await adminClient.from("api_usage").insert({
           user_id: user.id,
           message_id: assistantMsg.id,
           provider: modelInfo.provider,
@@ -757,6 +770,8 @@ export async function POST(request: NextRequest) {
           cost_eur: actualCost,
           co2_grams: co2Grams,
         });
+        if (usageErr) console.error("[chat] Error saving api_usage:", usageErr);
+        else console.log("[chat] Saved api_usage for user:", user.id, "cost:", actualCost);
 
         // Save activity metadata for parent analytics
         if (nonStreamMetadata && finalConversationId) {
@@ -780,8 +795,9 @@ export async function POST(request: NextRequest) {
       creditContext
     );
 
+    console.log("[chat] Credit deduction:", { success: deductResult.success, source: deductResult.source, remaining: deductResult.remaining, cost: actualCost });
     if (!deductResult.success) {
-      console.error("Error deducting credits:", deductResult.error);
+      console.error("[chat] Error deducting credits:", deductResult.error);
     }
 
     // Get updated rate limit info for response

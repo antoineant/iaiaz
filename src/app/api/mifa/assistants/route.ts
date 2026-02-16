@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getOrSeedAssistants } from "@/lib/mifa/assistants";
+import { DEFAULT_GAUGES, validateGauges } from "@/lib/mifa/xp-levels";
 
 export async function GET() {
   const supabase = await createClient();
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { name, avatar, system_prompt, purpose, color } = body;
+  const { name, avatar, avatar_type, system_prompt, purpose, color, gauges } = body;
 
   if (!name?.trim() || !system_prompt?.trim()) {
     return NextResponse.json({ error: "Nom et instructions requis" }, { status: 400 });
@@ -38,6 +39,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Instructions trop longues (2000 caractères max)" }, { status: 400 });
   }
 
+  // Validate gauges if provided
+  let validatedGauges = DEFAULT_GAUGES;
+  if (gauges) {
+    const parsed = validateGauges(gauges);
+    if (!parsed) {
+      return NextResponse.json({ error: "Gauges invalides (chaque valeur doit être entre 1 et 5)" }, { status: 400 });
+    }
+    validatedGauges = parsed;
+  }
+
   const adminClient = createAdminClient();
 
   // Count existing assistants (limit to 20)
@@ -47,7 +58,7 @@ export async function POST(request: NextRequest) {
     .eq("user_id", user.id);
 
   if ((count || 0) >= 20) {
-    return NextResponse.json({ error: "Maximum 20 assistants" }, { status: 400 });
+    return NextResponse.json({ error: "Maximum 20 mifas" }, { status: 400 });
   }
 
   const { data: assistant, error } = await adminClient
@@ -56,11 +67,13 @@ export async function POST(request: NextRequest) {
       user_id: user.id,
       name: name.trim(),
       avatar: avatar || "🤖",
+      avatar_type: avatar_type === "generated" ? "generated" : "emoji",
       system_prompt: system_prompt.trim(),
       purpose: purpose?.trim() || null,
       color: color || "blue",
       is_preset: false,
       sort_order: (count || 0) + 1,
+      gauges: validatedGauges,
     })
     .select()
     .single();

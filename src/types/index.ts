@@ -18,16 +18,27 @@ export interface Conversation {
 }
 
 // Mifa custom assistants
+export interface AssistantGauges {
+  creativity: number; // 1-5
+  patience: number;   // 1-5
+  humor: number;      // 1-5
+  rigor: number;      // 1-5
+  curiosity: number;  // 1-5
+}
+
 export interface CustomAssistant {
   id: string;
   user_id: string;
   name: string;
   avatar: string;
+  avatar_type: 'emoji' | 'asset' | 'generated';
   system_prompt: string;
   purpose: string | null;
   color: string;
   is_preset: boolean;
   sort_order: number;
+  gauges: AssistantGauges;
+  share_code: string | null;
   created_at: string;
   updated_at: string;
 }

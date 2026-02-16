@@ -146,7 +146,7 @@ export function buildMifaSystemPrompt(
   ageBracket: string,
   supervisionMode: string,
   userName: string,
-  assistant?: Pick<CustomAssistant, "name" | "system_prompt"> | null,
+  assistant?: Pick<CustomAssistant, "name" | "system_prompt" | "gauges"> | null,
   schoolYear?: string | null,
   exactAge?: number | null
 ): string {
@@ -154,6 +154,24 @@ export function buildMifaSystemPrompt(
 
   if (assistant) {
     prompt += `\n\nAdditionally, you are "${assistant.name}".\n${assistant.system_prompt}`;
+
+    if (assistant.gauges) {
+      const g = assistant.gauges;
+      const mods: string[] = [];
+      if (g.creativity >= 4) mods.push("Be creative, use metaphors and imaginative examples.");
+      else if (g.creativity <= 2) mods.push("Be factual and straightforward. Avoid tangents.");
+      if (g.patience >= 4) mods.push("Explain step by step in detail. Be thorough.");
+      else if (g.patience <= 2) mods.push("Be concise. Give short, direct answers.");
+      if (g.humor >= 4) mods.push("Use humor, jokes and fun references when appropriate.");
+      else if (g.humor <= 2) mods.push("Keep a serious, professional tone.");
+      if (g.rigor >= 4) mods.push("Maintain strict academic standards. Correct mistakes precisely.");
+      else if (g.rigor <= 2) mods.push("Be casual and encouraging. Don't be too strict.");
+      if (g.curiosity >= 4) mods.push("Ask follow-up questions. Suggest related topics to explore.");
+      else if (g.curiosity <= 2) mods.push("Stay focused on the question asked. Don't go off-topic.");
+      if (mods.length > 0) {
+        prompt += "\n\nBehavior guidelines:\n" + mods.join("\n");
+      }
+    }
   }
 
   return prompt;

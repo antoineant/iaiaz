@@ -1,0 +1,107 @@
+import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
+import { MessageCircle, Shield, ArrowRight } from "lucide-react-native";
+import { Text } from "@/components/ui";
+import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
+import { useChatSession } from "@/lib/chatSession";
+
+export default function ChatIndexScreen() {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const { data: family } = useFamilyRole();
+
+  const { session } = useChatSession();
+  const isChild = family?.role === "child";
+
+  const continueChat = () => {
+    if (!session) return;
+    router.push({
+      pathname: "/(mifa)/chat/[id]",
+      params: {
+        id: session.conversationId,
+        assistantId: session.assistantId || "",
+      },
+    });
+  };
+
+  const startNewChat = () => {
+    router.push({
+      pathname: "/(mifa)/chat/[id]",
+      params: { id: "new" },
+    });
+  };
+
+  return (
+    <ScrollView
+      className="flex-1 bg-gray-50"
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      {/* Supervision badge for children */}
+      {isChild && family?.supervisionMode && (
+        <TouchableOpacity
+          className="mx-4 mt-3 px-3 py-2 rounded-xl bg-primary-50 flex-row items-center"
+          activeOpacity={0.7}
+          onPress={() => {
+            const title = family.supervisionMode === "guided"
+              ? t("chat.guidedBadge")
+              : t("chat.trustedBadge");
+            const message = family.supervisionMode === "guided"
+              ? t("chat.guidedExplain")
+              : t("chat.trustedExplain");
+            Alert.alert(title, message);
+          }}
+        >
+          <Shield size={14} color="#6366f1" />
+          <Text variant="caption" className="ml-2 text-primary-700 flex-1">
+            {family.supervisionMode === "guided"
+              ? t("chat.guidedBadge")
+              : t("chat.trustedBadge")}
+          </Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Welcome empty state */}
+      <View className="flex-1 items-center justify-center px-6">
+        <Text variant="title" className="text-primary-600 mb-2 text-center">
+          {t("chat.assistantReady", {
+            name: family?.displayName || "",
+          })}
+        </Text>
+        <Text variant="caption" className="mb-8 text-center">
+          {t("chat.startTyping")}
+        </Text>
+
+        {session && (
+          <TouchableOpacity
+            onPress={continueChat}
+            className="bg-primary-600 rounded-2xl px-8 py-4 flex-row items-center mb-4"
+            activeOpacity={0.8}
+          >
+            {session.assistantAvatar ? (
+              <Text className="text-xl">{session.assistantAvatar}</Text>
+            ) : (
+              <MessageCircle size={22} color="#fff" />
+            )}
+            <Text variant="body" className="text-white font-semibold ml-3 text-lg flex-1">
+              {session.assistantName || t("chat.continueChat")}
+            </Text>
+            <ArrowRight size={20} color="#fff" />
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          onPress={startNewChat}
+          className={`${session ? "bg-white border border-gray-200" : "bg-primary-600"} rounded-2xl px-8 py-4 flex-row items-center`}
+          activeOpacity={0.8}
+        >
+          <MessageCircle size={22} color={session ? "#6366f1" : "#fff"} />
+          <Text variant="body" className={`${session ? "text-gray-800" : "text-white"} font-semibold ml-3 text-lg`}>
+            {session ? t("chat.newConversation") : t("chat.startChatting")}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
+}
