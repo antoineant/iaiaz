@@ -20,15 +20,31 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { name, color, purpose } = body;
+  const { name, color, purpose, gauges } = body;
 
   if (!name?.trim()) {
     return NextResponse.json({ error: "Nom requis" }, { status: 400 });
   }
 
+  // Build personality description from gauges (1-5 scale)
+  const gaugeDescriptors: string[] = [];
+  if (gauges) {
+    const describe = (val: number, low: string, high: string) =>
+      val >= 4 ? `very ${high}` : val <= 2 ? `very ${low}` : null;
+    const d = [
+      describe(gauges.creativity, "methodical", "creative"),
+      describe(gauges.patience, "fast-paced", "patient"),
+      describe(gauges.humor, "serious", "humorous"),
+      describe(gauges.rigor, "relaxed", "rigorous"),
+      describe(gauges.curiosity, "focused", "curious"),
+    ].filter(Boolean);
+    if (d.length) gaugeDescriptors.push(`Traits: ${d.join(", ")}.`);
+  }
+
   const userContext = [
     color ? `Neon accent color: ${color}.` : null,
     `Personality: ${[purpose, name].filter(Boolean).join(" / ")}.`,
+    ...gaugeDescriptors,
   ]
     .filter(Boolean)
     .join(" ");

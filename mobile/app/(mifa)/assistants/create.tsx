@@ -65,6 +65,7 @@ export default function CreateAssistantScreen() {
           name: name.trim(),
           color,
           purpose: instructions.trim().slice(0, 200),
+          gauges,
         }),
       });
       if (!res.ok) {
@@ -128,7 +129,7 @@ export default function CreateAssistantScreen() {
         <Text variant="subtitle">{name || t("mifas.namePlaceholder")}</Text>
       </View>
 
-      {/* Name */}
+      {/* 1. Name */}
       <Text variant="label" className="mb-2">
         {t("mifas.name")}
       </Text>
@@ -141,7 +142,55 @@ export default function CreateAssistantScreen() {
         maxLength={50}
       />
 
-      {/* Avatar mode toggle */}
+      {/* 2. Color */}
+      <Text variant="label" className="mb-2">
+        {t("mifas.color")}
+      </Text>
+      <Card variant="outlined" className="mb-4">
+        <View className="flex-row flex-wrap gap-2 justify-center">
+          {ACCENT_COLORS.map((c) => (
+            <TouchableOpacity
+              key={c.name}
+              onPress={() => setColor(c.name)}
+              className="items-center"
+              style={{ width: 56 }}
+            >
+              <View
+                className={`w-11 h-11 rounded-full mb-1 ${
+                  color === c.name ? "border-2 border-gray-800" : ""
+                }`}
+                style={{ backgroundColor: c.hex }}
+              />
+              <Text className="text-[9px] text-gray-500 text-center">{c.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </Card>
+
+      {/* 3. Instructions */}
+      <Text variant="label" className="mb-2">
+        {t("mifas.instructions")}
+      </Text>
+      <TextInput
+        className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-base text-gray-900 mb-4 min-h-[120px]"
+        placeholder={t("mifas.instructionsPlaceholder")}
+        placeholderTextColor="#9ca3af"
+        value={instructions}
+        onChangeText={(text) => setInstructions(text.slice(0, 2000))}
+        maxLength={2000}
+        multiline
+        textAlignVertical="top"
+      />
+
+      {/* 4. Gauges */}
+      <Text variant="label" className="mb-2">
+        {t("mifas.gauges.creativity").includes("réa") ? "Personnalité" : "Personality"}
+      </Text>
+      <Card variant="outlined" className="mb-4">
+        <GaugeGroup gauges={gauges} labels={gaugeLabels} onChange={setGauges} color={selectedColorHex} />
+      </Card>
+
+      {/* 5. Avatar (last — all context available for AI generation) */}
       <Text variant="label" className="mb-2">
         {t("mifas.avatar")}
       </Text>
@@ -168,7 +217,7 @@ export default function CreateAssistantScreen() {
 
       {/* Emoji grid */}
       {avatarMode === "emoji" && (
-        <Card variant="outlined" className="mb-4">
+        <Card variant="outlined" className="mb-6">
           <View className="flex-row flex-wrap gap-3">
             {EMOJI_SUGGESTIONS.map((emoji) => (
               <TouchableOpacity
@@ -186,7 +235,7 @@ export default function CreateAssistantScreen() {
 
       {/* AI generation */}
       {avatarMode === "generated" && (
-        <Card variant="outlined" className="mb-4">
+        <Card variant="outlined" className="mb-6">
           <View className="items-center gap-3 py-2">
             {generatedAvatarUrl ? (
               <>
@@ -204,7 +253,7 @@ export default function CreateAssistantScreen() {
                     <ActivityIndicator size="small" />
                   ) : null}
                   <Text className="text-sm text-gray-700">
-                    {generating ? t("mifas.generating") || "Generating..." : t("mifas.regenerate") || "Regenerate"}
+                    {generating ? t("mifas.generating") : t("mifas.regenerate")}
                   </Text>
                 </TouchableOpacity>
               </>
@@ -217,12 +266,12 @@ export default function CreateAssistantScreen() {
                 {generating ? (
                   <>
                     <ActivityIndicator size="large" color={selectedColorHex} />
-                    <Text className="text-sm text-gray-500">{t("mifas.generating") || "Generating..."}</Text>
+                    <Text className="text-sm text-gray-500">{t("mifas.generating")}</Text>
                   </>
                 ) : (
                   <>
                     <Text className="text-3xl">{"\u2728"}</Text>
-                    <Text className="text-sm font-medium text-gray-700">{t("mifas.generateAvatar") || "Generate with AI"}</Text>
+                    <Text className="text-sm font-medium text-gray-700">{t("mifas.generateAvatar")}</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -230,54 +279,6 @@ export default function CreateAssistantScreen() {
           </View>
         </Card>
       )}
-
-      {/* Color */}
-      <Text variant="label" className="mb-2">
-        {t("mifas.color")}
-      </Text>
-      <Card variant="outlined" className="mb-4">
-        <View className="flex-row flex-wrap gap-2 justify-center">
-          {ACCENT_COLORS.map((c) => (
-            <TouchableOpacity
-              key={c.name}
-              onPress={() => setColor(c.name)}
-              className="items-center"
-              style={{ width: 56 }}
-            >
-              <View
-                className={`w-11 h-11 rounded-full mb-1 ${
-                  color === c.name ? "border-2 border-gray-800" : ""
-                }`}
-                style={{ backgroundColor: c.hex }}
-              />
-              <Text className="text-[9px] text-gray-500 text-center">{c.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </Card>
-
-      {/* Instructions */}
-      <Text variant="label" className="mb-2">
-        {t("mifas.instructions")}
-      </Text>
-      <TextInput
-        className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-base text-gray-900 mb-4 min-h-[120px]"
-        placeholder={t("mifas.instructionsPlaceholder")}
-        placeholderTextColor="#9ca3af"
-        value={instructions}
-        onChangeText={(text) => setInstructions(text.slice(0, 2000))}
-        maxLength={2000}
-        multiline
-        textAlignVertical="top"
-      />
-
-      {/* Gauges */}
-      <Text variant="label" className="mb-2">
-        {t("mifas.gauges.creativity").includes("réa") ? "Personnalité" : "Personality"}
-      </Text>
-      <Card variant="outlined" className="mb-6">
-        <GaugeGroup gauges={gauges} labels={gaugeLabels} onChange={setGauges} color={selectedColorHex} />
-      </Card>
 
       {/* Submit */}
       <Button

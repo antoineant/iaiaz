@@ -53,6 +53,7 @@ export function AssistantWizard({ onClose, onCreated }: AssistantWizardProps) {
           name: name.trim(),
           color,
           purpose: systemPrompt.trim().slice(0, 200),
+          gauges,
         }),
       });
       if (!res.ok) {
