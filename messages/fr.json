@@ -3764,28 +3764,28 @@
         "subtitle": "Tout ce qu'il faut pour dire oui à l'IA, en toute sérénité.",
         "visibility": {
           "need": "Comprendre",
-          "title": "Vous voyez tout",
-          "desc": "Quels sujets, combien de temps, quand ils bloquent. Votre tableau de bord vous dit l'essentiel — sans espionner."
+          "title": "Vous savez ce qu'ils font",
+          "desc": "Sur quoi ils travaillent, combien de temps ils y passent, quand ils bloquent. Votre tableau de bord vous dit tout — sans avoir à leur demander."
         },
         "rules": {
           "need": "Encadrer",
-          "title": "Des règles sans conflit",
-          "desc": "Heures de coucher, budget quotidien, filtres de contenu. C'est le système qui pose les limites, pas vous."
+          "title": "C'est l'appli qui dit non",
+          "desc": "Pas d'IA après 22h, un budget par jour, des filtres de contenu. Les limites sont posées, sans que ça vienne de vous."
         },
         "growth": {
           "need": "Accompagner",
-          "title": "Ça grandit avec eux",
-          "desc": "Mode Encadré à 12 ans, Mode Confiance à 15 ans. Vous ajustez l'autonomie à mesure qu'ils grandissent."
+          "title": "L'appli s'adapte à leur âge",
+          "desc": "Encadré à 12 ans, plus libre à 15. Vous dosez l'autonomie au fur et à mesure."
         },
         "budget": {
           "need": "Maîtriser",
-          "title": "Vous maîtrisez le budget",
-          "desc": "Un forfait clair, des crédits inclus, zéro surprise. Vous rechargez quand vous voulez, au montant de votre choix."
+          "title": "Pas de mauvaise surprise",
+          "desc": "Un abonnement simple, un budget IA inclus. Quand c'est fini, vous rechargez si vous voulez."
         },
         "learning": {
           "need": "Protéger",
-          "title": "Apprendre, pas tricher",
-          "desc": "L'IA aide à comprendre et à réfléchir. Elle ne donne pas les réponses toutes faites."
+          "title": "Réfléchir sans faire de copier-coller",
+          "desc": "L'IA les guide pour comprendre. Elle ne fait pas le boulot à leur place."
         }
       },
       "scenario": {
