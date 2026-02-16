@@ -16,6 +16,7 @@ import {
 import { Text, Card, Button } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useMyStats,
   useRequestCredits,
@@ -42,9 +43,12 @@ export default function ProfileScreen() {
     "idle" | "sending" | "sent" | "error"
   >("idle");
 
+  const queryClient = useQueryClient();
   const { data: stats, refetch } = useMyStats();
   const requestCredits = useRequestCredits();
   const updateTheme = useUpdateTheme();
+
+  const currentColor = family?.accentColor || "blue";
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -71,6 +75,7 @@ export default function ProfileScreen() {
   const handleColorChange = async (color: string) => {
     try {
       await updateTheme.mutateAsync(color);
+      queryClient.invalidateQueries({ queryKey: ["familyRole"] });
     } catch (err: any) {
       Alert.alert(t("common.error"), err.message);
     }
@@ -93,7 +98,7 @@ export default function ProfileScreen() {
     >
         <View className="px-4 pt-4">
           {/* Greeting */}
-          <Card className="bg-primary-600 mb-4">
+          <Card className="mb-4" style={{ backgroundColor: ACCENT_COLORS.find((c) => c.name === currentColor)?.hex || "#6366f1" }}>
             <Text variant="title" className="text-white text-xl">
               {t("chat.greeting", { name: displayName })}
             </Text>
@@ -164,12 +169,14 @@ export default function ProfileScreen() {
               {t("childSettings.theme.chooseColor")}
             </Text>
             <View className="flex-row flex-wrap gap-3">
-              {ACCENT_COLORS.map((color) => (
+              {ACCENT_COLORS.map((c) => (
                 <TouchableOpacity
-                  key={color.name}
-                  onPress={() => handleColorChange(color.name)}
-                  className="w-10 h-10 rounded-full"
-                  style={{ backgroundColor: color.hex }}
+                  key={c.name}
+                  onPress={() => handleColorChange(c.name)}
+                  className={`w-10 h-10 rounded-full ${
+                    currentColor === c.name ? "border-[3px] border-gray-800" : ""
+                  }`}
+                  style={{ backgroundColor: c.hex }}
                 />
               ))}
             </View>

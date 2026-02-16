@@ -11,6 +11,7 @@ interface FamilyMembership {
   displayName: string | null;
   supervisionMode: string | null;
   creditsBalance: number;
+  accentColor: string | null;
 }
 
 const empty: FamilyMembership = {
@@ -20,6 +21,7 @@ const empty: FamilyMembership = {
   displayName: null,
   supervisionMode: null,
   creditsBalance: 0,
+  accentColor: null,
 };
 
 export function useFamilyRole() {
@@ -50,7 +52,7 @@ export function useFamilyRole() {
           .maybeSingle(),
         supabase
           .from("profiles")
-          .select("display_name, credits_balance, email")
+          .select("display_name, credits_balance, email, accent_color")
           .eq("id", user.id)
           .single(),
       ]);
@@ -78,6 +80,7 @@ export function useFamilyRole() {
         displayName,
         supervisionMode: membership.supervision_mode,
         creditsBalance: Number(profile?.credits_balance || 0),
+        accentColor: profile?.accent_color || null,
       };
     },
     enabled: !!user,
