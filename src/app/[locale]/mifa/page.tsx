@@ -80,7 +80,7 @@ export default async function MifaLandingPage({ params }: Props) {
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/mifa" className="flex items-baseline gap-1.5">
             <span
-              className="text-4xl font-extrabold bg-clip-text text-transparent"
+              className="text-5xl font-extrabold bg-clip-text text-transparent"
               style={{ backgroundImage: "linear-gradient(to right, #0284c7 0%, #d946ef 28%, #0284c7 52%, #d946ef 80%, #0284c7 100%)" }}
             >
               mifa
