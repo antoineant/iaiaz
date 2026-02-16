@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { FAMILIA_PLAN } from "@/lib/stripe/mifa-plans";
+import { MIFA_PLAN } from "@/lib/stripe/mifa-plans";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Nombre d'enfants invalide" }, { status: 400 });
     }
 
-    if (!FAMILIA_PLAN.priceId) {
+    if (!MIFA_PLAN.priceId) {
       return NextResponse.json(
         { error: "Prix Stripe non configure pour ce plan" },
         { status: 500 }
@@ -100,19 +100,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Build line items: first 2 children at full price, 3rd+ at credits-only price
-    const paidSeats = Math.min(childCount, FAMILIA_PLAN.maxPaidSeats);
-    const extraChildren = Math.max(0, childCount - FAMILIA_PLAN.maxPaidSeats);
+    const paidSeats = Math.min(childCount, MIFA_PLAN.maxPaidSeats);
+    const extraChildren = Math.max(0, childCount - MIFA_PLAN.maxPaidSeats);
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
       {
-        price: FAMILIA_PLAN.priceId,
+        price: MIFA_PLAN.priceId,
         quantity: paidSeats,
       },
     ];
 
-    if (extraChildren > 0 && FAMILIA_PLAN.extraChildPriceId) {
+    if (extraChildren > 0 && MIFA_PLAN.extraChildPriceId) {
       line_items.push({
-        price: FAMILIA_PLAN.extraChildPriceId,
+        price: MIFA_PLAN.extraChildPriceId,
         quantity: extraChildren,
       });
     }
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
         metadata: {
           organizationId: org.id,
           type: "mifa",
-          creditsPerChild: FAMILIA_PLAN.creditsPerChild.toString(),
+          creditsPerChild: MIFA_PLAN.creditsPerChild.toString(),
           childCount: childCount.toString(),
         },
       },

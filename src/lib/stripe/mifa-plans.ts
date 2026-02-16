@@ -3,11 +3,11 @@
 // Pricing: €9.90/child/month for first 2, €5.00/child/month for 3rd+
 // Each child includes €5 AI credits. Seat fee is €4.90 (waived from 3rd child).
 
-export const FAMILIA_PLAN = {
+export const MIFA_PLAN = {
   id: "mifa",
-  name: "Mifa",
-  priceId: process.env.STRIPE_FAMILIA_PRICE_ID || "",
-  extraChildPriceId: process.env.STRIPE_FAMILIA_EXTRA_CHILD_PRICE_ID || "",
+  name: "mifa",
+  priceId: process.env.STRIPE_MIFA_PRICE_ID || "",
+  extraChildPriceId: process.env.STRIPE_MIFA_EXTRA_CHILD_PRICE_ID || "",
   pricePerChild: 9.9, // EUR per month for first 2 children
   pricePerExtraChild: 5.0, // EUR per month for 3rd+ children (credits only, no seat fee)
   creditsPerChild: 5.0, // EUR of AI credits per child per month
@@ -26,8 +26,8 @@ export function calculateMifaPrice(childCount: number): {
   extraChildren: number;
   breakdown: { label: string; quantity: number; unitPrice: number; subtotal: number }[];
 } {
-  const paidSeats = Math.min(childCount, FAMILIA_PLAN.maxPaidSeats);
-  const extraChildren = Math.max(0, childCount - FAMILIA_PLAN.maxPaidSeats);
+  const paidSeats = Math.min(childCount, MIFA_PLAN.maxPaidSeats);
+  const extraChildren = Math.max(0, childCount - MIFA_PLAN.maxPaidSeats);
 
   const breakdown: { label: string; quantity: number; unitPrice: number; subtotal: number }[] = [];
 
@@ -35,8 +35,8 @@ export function calculateMifaPrice(childCount: number): {
     breakdown.push({
       label: "child",
       quantity: paidSeats,
-      unitPrice: FAMILIA_PLAN.pricePerChild,
-      subtotal: paidSeats * FAMILIA_PLAN.pricePerChild,
+      unitPrice: MIFA_PLAN.pricePerChild,
+      subtotal: paidSeats * MIFA_PLAN.pricePerChild,
     });
   }
 
@@ -44,8 +44,8 @@ export function calculateMifaPrice(childCount: number): {
     breakdown.push({
       label: "extraChild",
       quantity: extraChildren,
-      unitPrice: FAMILIA_PLAN.pricePerExtraChild,
-      subtotal: extraChildren * FAMILIA_PLAN.pricePerExtraChild,
+      unitPrice: MIFA_PLAN.pricePerExtraChild,
+      subtotal: extraChildren * MIFA_PLAN.pricePerExtraChild,
     });
   }
 
