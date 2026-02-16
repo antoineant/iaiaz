@@ -291,7 +291,14 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        mifaSystemPrompt = buildMifaSystemPrompt(ageBracket, supervisionMode, firstName, assistant, schoolYear, exactAge);
+        // Fetch all user's mifas for sibling awareness
+        const { data: allMifas } = await adminClient
+          .from("custom_assistants")
+          .select("name, system_prompt, gauges")
+          .eq("user_id", user.id)
+          .order("sort_order", { ascending: true });
+
+        mifaSystemPrompt = buildMifaSystemPrompt(ageBracket, supervisionMode, firstName, assistant, schoolYear, exactAge, allMifas || []);
       }
     }
 

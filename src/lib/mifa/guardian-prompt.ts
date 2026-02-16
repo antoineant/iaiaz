@@ -142,34 +142,84 @@ export function buildGuardianPrompt(
     .replace(/\{school_year_instruction\}/g, schoolYearInstruction);
 }
 
+interface SiblingMifa {
+  name: string;
+  system_prompt: string;
+  gauges?: CustomAssistant["gauges"];
+}
+
+function describeGauges(g: NonNullable<CustomAssistant["gauges"]>): string[] {
+  const mods: string[] = [];
+  if (g.creativity >= 4) mods.push("creative");
+  else if (g.creativity <= 2) mods.push("methodical");
+  if (g.patience >= 4) mods.push("patient");
+  else if (g.patience <= 2) mods.push("concise");
+  if (g.humor >= 4) mods.push("humorous");
+  else if (g.humor <= 2) mods.push("serious");
+  if (g.rigor >= 4) mods.push("rigorous");
+  else if (g.rigor <= 2) mods.push("relaxed");
+  if (g.curiosity >= 4) mods.push("curious");
+  else if (g.curiosity <= 2) mods.push("focused");
+  return mods;
+}
+
+function gaugesBehaviorInstructions(g: NonNullable<CustomAssistant["gauges"]>): string[] {
+  const mods: string[] = [];
+  if (g.creativity >= 4) mods.push("Be creative, use metaphors and imaginative examples.");
+  else if (g.creativity <= 2) mods.push("Be factual and straightforward. Avoid tangents.");
+  if (g.patience >= 4) mods.push("Explain step by step in detail. Be thorough.");
+  else if (g.patience <= 2) mods.push("Be concise. Give short, direct answers.");
+  if (g.humor >= 4) mods.push("Use humor, jokes and fun references when appropriate.");
+  else if (g.humor <= 2) mods.push("Keep a serious, professional tone.");
+  if (g.rigor >= 4) mods.push("Maintain strict academic standards. Correct mistakes precisely.");
+  else if (g.rigor <= 2) mods.push("Be casual and encouraging. Don't be too strict.");
+  if (g.curiosity >= 4) mods.push("Ask follow-up questions. Suggest related topics to explore.");
+  else if (g.curiosity <= 2) mods.push("Stay focused on the question asked. Don't go off-topic.");
+  return mods;
+}
+
 export function buildMifaSystemPrompt(
   ageBracket: string,
   supervisionMode: string,
   userName: string,
   assistant?: Pick<CustomAssistant, "name" | "system_prompt" | "gauges"> | null,
   schoolYear?: string | null,
-  exactAge?: number | null
+  exactAge?: number | null,
+  siblingMifas?: SiblingMifa[]
 ): string {
   let prompt = buildGuardianPrompt(ageBracket, supervisionMode, userName, schoolYear, exactAge);
 
   if (assistant) {
-    prompt += `\n\nAdditionally, you are "${assistant.name}".\n${assistant.system_prompt}`;
+    // Strong identity block
+    prompt += `\n\nYOUR IDENTITY:
+You are "${assistant.name}", a personal learning companion (called a "mifa") for ${userName}.
+Your specialty: ${assistant.system_prompt}
+You MUST embody this role fully. When asked who you are or what you do, answer as ${assistant.name} — not as a generic AI assistant.`;
 
     if (assistant.gauges) {
-      const g = assistant.gauges;
-      const mods: string[] = [];
-      if (g.creativity >= 4) mods.push("Be creative, use metaphors and imaginative examples.");
-      else if (g.creativity <= 2) mods.push("Be factual and straightforward. Avoid tangents.");
-      if (g.patience >= 4) mods.push("Explain step by step in detail. Be thorough.");
-      else if (g.patience <= 2) mods.push("Be concise. Give short, direct answers.");
-      if (g.humor >= 4) mods.push("Use humor, jokes and fun references when appropriate.");
-      else if (g.humor <= 2) mods.push("Keep a serious, professional tone.");
-      if (g.rigor >= 4) mods.push("Maintain strict academic standards. Correct mistakes precisely.");
-      else if (g.rigor <= 2) mods.push("Be casual and encouraging. Don't be too strict.");
-      if (g.curiosity >= 4) mods.push("Ask follow-up questions. Suggest related topics to explore.");
-      else if (g.curiosity <= 2) mods.push("Stay focused on the question asked. Don't go off-topic.");
+      const traits = describeGauges(assistant.gauges);
+      if (traits.length > 0) {
+        prompt += `\nYour personality traits: ${traits.join(", ")}.`;
+      }
+      const mods = gaugesBehaviorInstructions(assistant.gauges);
       if (mods.length > 0) {
         prompt += "\n\nBehavior guidelines:\n" + mods.join("\n");
+      }
+    }
+
+    // Sibling mifas awareness
+    if (siblingMifas && siblingMifas.length > 0) {
+      const others = siblingMifas
+        .filter((m) => m.name !== assistant.name)
+        .map((m) => {
+          const traits = m.gauges ? describeGauges(m.gauges) : [];
+          const traitStr = traits.length > 0 ? ` (${traits.join(", ")})` : "";
+          return `- ${m.name}: ${m.system_prompt.slice(0, 100)}${traitStr}`;
+        });
+      if (others.length > 0) {
+        prompt += `\n\nOTHER MIFAS ${userName} CAN TALK TO:
+${others.join("\n")}
+If a question is better suited to another mifa, you can suggest: "Tu devrais demander à [name], c'est sa spécialité !"`;
       }
     }
   }
