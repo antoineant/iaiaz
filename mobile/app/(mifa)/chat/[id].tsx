@@ -165,7 +165,9 @@ export default function ChatConversationScreen() {
   // Show assistant name in header
   useEffect(() => {
     if (activeAssistant) {
-      navigation.setOptions({ title: `${activeAssistant.avatar} ${activeAssistant.name}` });
+      const isEmoji = !activeAssistant.avatar_type || activeAssistant.avatar_type === "emoji";
+      const prefix = isEmoji ? `${activeAssistant.avatar} ` : "";
+      navigation.setOptions({ title: `${prefix}${activeAssistant.name}` });
     } else if (id === "new") {
       navigation.setOptions({ title: t("chat.newConversation") });
     }
