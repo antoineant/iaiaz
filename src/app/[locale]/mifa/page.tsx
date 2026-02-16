@@ -79,8 +79,11 @@ export default async function MifaLandingPage({ params }: Props) {
       <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/mifa" className="flex items-baseline gap-1.5">
-            <span className="text-4xl font-extrabold">
-              <span className="text-primary-600">m</span><span className="text-accent-600">i</span><span className="text-primary-600">f</span><span className="text-accent-600">a</span>
+            <span
+              className="text-4xl font-extrabold bg-clip-text text-transparent"
+              style={{ backgroundImage: "linear-gradient(to right, #0284c7 0%, #d946ef 28%, #0284c7 52%, #d946ef 80%, #0284c7 100%)" }}
+            >
+              mifa
             </span>
             <span className="text-sm text-[var(--muted-foreground)] font-medium">
               by iaiaz
@@ -448,7 +451,7 @@ export default async function MifaLandingPage({ params }: Props) {
           {/* Single pricing card */}
           <Card className="border-2 border-primary-200 dark:border-primary-800 max-w-lg mx-auto">
             <CardContent className="pt-8 pb-8">
-              <h3 className="text-3xl font-extrabold mb-1 text-center"><span className="text-primary-600">m</span><span className="text-accent-600">i</span><span className="text-primary-600">f</span><span className="text-accent-600">a</span></h3>
+              <h3 className="text-3xl font-extrabold mb-1 text-center"><span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(to right, #0284c7 0%, #d946ef 28%, #0284c7 52%, #d946ef 80%, #0284c7 100%)" }}>mifa</span></h3>
               <div className="text-center mb-2">
                 <span className="text-5xl font-extrabold">9,90&#x20AC;</span>
                 <span className="text-[var(--muted-foreground)] text-lg"> /{t("pricing.perChild")}</span>

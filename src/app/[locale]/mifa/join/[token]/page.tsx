@@ -136,7 +136,7 @@ function MifaJoinInner() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold">
-            <span className="text-primary-600">m</span><span className="text-accent-600">i</span><span className="text-primary-600">f</span><span className="text-accent-600">a</span>
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(to right, #0284c7 0%, #d946ef 28%, #0284c7 52%, #d946ef 80%, #0284c7 100%)" }}>mifa</span>
             <span className="text-[var(--muted-foreground)] font-medium text-lg ml-2">by iaiaz</span>
           </h1>
         </div>
