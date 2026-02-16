@@ -13,10 +13,10 @@ interface GaugeSliderProps {
   readonly?: boolean;
 }
 
-export function GaugeSlider({ gaugeKey, value, onChange, color = "blue", readonly = false }: GaugeSliderProps) {
+export function GaugeSlider({ gaugeKey, value, onChange, color = "cobalt", readonly = false }: GaugeSliderProps) {
   const t = useTranslations("mifa.chat.gauges");
   const theme = getThemeColor(color);
-  const hex = theme?.hex || "#818CF8";
+  const hex = theme.hex;
 
   return (
     <div className="flex items-center gap-3">

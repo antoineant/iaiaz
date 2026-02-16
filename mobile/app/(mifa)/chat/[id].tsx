@@ -23,6 +23,7 @@ import { api } from "@/lib/api";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { useAssistants } from "@/lib/hooks/useMifa";
 import { useChatSession } from "@/lib/chatSession";
+import { useAccentColor } from "@/lib/AccentColorContext";
 import {
   RecorderState,
   requestMicPermission,
@@ -42,6 +43,7 @@ function stripMifaMeta(content: string): string {
 }
 
 function TypingIndicator() {
+  const accent = useAccentColor();
   const dots = [useRef(new Animated.Value(0.3)).current, useRef(new Animated.Value(0.3)).current, useRef(new Animated.Value(0.3)).current];
 
   useEffect(() => {
@@ -65,28 +67,13 @@ function TypingIndicator() {
         {dots.map((dot, i) => (
           <Animated.View
             key={i}
-            style={{ opacity: dot, width: 8, height: 8, borderRadius: 4, backgroundColor: "#6366f1" }}
+            style={{ opacity: dot, width: 8, height: 8, borderRadius: 4, backgroundColor: accent.hex }}
           />
         ))}
       </View>
     </View>
   );
 }
-
-const mdStylesUser = {
-  body: { color: "#fff", fontSize: 15, lineHeight: 22 },
-  paragraph: { marginTop: 0, marginBottom: 4 },
-  strong: { fontWeight: "700" as const, color: "#fff" },
-  em: { fontStyle: "italic" as const },
-  heading1: { fontSize: 20, fontWeight: "700" as const, color: "#fff", marginBottom: 4 },
-  heading2: { fontSize: 18, fontWeight: "700" as const, color: "#fff", marginBottom: 4 },
-  heading3: { fontSize: 16, fontWeight: "600" as const, color: "#fff", marginBottom: 4 },
-  bullet_list: { marginBottom: 4 },
-  ordered_list: { marginBottom: 4 },
-  list_item: { marginBottom: 2 },
-  code_inline: { backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 4, paddingHorizontal: 4, fontSize: 14, color: "#fff" },
-  fence: { backgroundColor: "rgba(255,255,255,0.15)", borderRadius: 8, padding: 8, fontSize: 13, color: "#fff" },
-};
 
 const mdStylesAssistant = {
   body: { color: "#1f2937", fontSize: 15, lineHeight: 22 },
@@ -103,7 +90,7 @@ const mdStylesAssistant = {
   fence: { backgroundColor: "#f3f4f6", borderRadius: 8, padding: 8, fontSize: 13, color: "#1f2937" },
 };
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+function MessageBubble({ message, accentHex }: { message: ChatMessage; accentHex: string }) {
   const isUser = message.role === "user";
   const content = stripMifaMeta(message.content);
   return (
@@ -113,9 +100,10 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       <View
         className={`max-w-[85%] rounded-2xl px-4 py-3 ${
           isUser
-            ? "bg-primary-600 rounded-br-md"
+            ? "rounded-br-md"
             : "bg-white border border-gray-100 rounded-bl-md"
         }`}
+        style={isUser ? { backgroundColor: accentHex } : undefined}
       >
         {isUser ? (
           <Text variant="body" className="text-white">
@@ -136,6 +124,7 @@ export default function ChatConversationScreen() {
   }>();
   const { t } = useTranslation();
   const { data: family } = useFamilyRole();
+  const accent = useAccentColor();
   const navigation = useNavigation();
   const scrollRef = useRef<ScrollView>(null);
 
@@ -326,7 +315,7 @@ export default function ChatConversationScreen() {
             </>
           ) : (
             <>
-              <MessageCircle size={16} color="#6366f1" />
+              <MessageCircle size={16} color={accent.hex} />
               <Text variant="label" className="text-gray-500 ml-1.5">{t("chat.pickAssistant")}</Text>
             </>
           )}
@@ -356,12 +345,13 @@ export default function ChatConversationScreen() {
                     setSelectedAssistantId(item.id === "none" ? undefined : item.id);
                     setPickerOpen(false);
                   }}
-                  className={`flex-row items-center py-3 px-3 rounded-xl mb-1 ${
+                  className="flex-row items-center py-3 px-3 rounded-xl mb-1"
+                  style={
                     (item.id === "none" && !selectedAssistantId) ||
                     item.id === selectedAssistantId
-                      ? "bg-primary-50"
-                      : ""
-                  }`}
+                      ? { backgroundColor: accent.light }
+                      : undefined
+                  }
                 >
                   <View
                     className="w-10 h-10 rounded-full items-center justify-center mr-3"
@@ -370,7 +360,7 @@ export default function ChatConversationScreen() {
                     {item.avatar ? (
                       <MifaAvatar avatar={item.avatar} avatarType={item.avatar_type} size={28} />
                     ) : (
-                      <MessageCircle size={18} color="#6366f1" />
+                      <MessageCircle size={18} color={accent.hex} />
                     )}
                   </View>
                   <Text variant="body" className="flex-1">{item.name}</Text>
@@ -396,12 +386,12 @@ export default function ChatConversationScreen() {
             {activeAssistant && (
               <View
                 className="w-16 h-16 rounded-full items-center justify-center mb-3"
-                style={{ backgroundColor: (activeAssistant.color || "#6366f1") + "20" }}
+                style={{ backgroundColor: (activeAssistant.color || accent.hex) + "20" }}
               >
                 <MifaAvatar avatar={activeAssistant.avatar} avatarType={activeAssistant.avatar_type} size={40} />
               </View>
             )}
-            <Text variant="title" className="text-primary-600 mb-2">
+            <Text variant="title" className="mb-2" style={{ color: accent.hex }}>
               {activeAssistant
                 ? activeAssistant.name
                 : t("chat.assistantReady", { name: family?.displayName || "" })}
@@ -411,7 +401,7 @@ export default function ChatConversationScreen() {
         )}
 
         {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble key={msg.id} message={msg} accentHex={accent.hex} />
         ))}
 
         {sending && <TypingIndicator />}
@@ -428,7 +418,7 @@ export default function ChatConversationScreen() {
           </View>
         ) : recorderState === "transcribing" ? (
           <View className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 flex-row items-center">
-            <ActivityIndicator size="small" color="#6366f1" />
+            <ActivityIndicator size="small" color={accent.hex} />
             <Text variant="body" className="text-gray-500 ml-2">
               {t("chat.transcribing")}
             </Text>
@@ -461,7 +451,7 @@ export default function ChatConversationScreen() {
           ) : (
             <Mic
               size={18}
-              color={recorderState === "transcribing" ? "#d1d5db" : "#6366f1"}
+              color={recorderState === "transcribing" ? "#d1d5db" : accent.hex}
             />
           )}
         </TouchableOpacity>
@@ -471,9 +461,14 @@ export default function ChatConversationScreen() {
           disabled={!input.trim() || sending || recorderState !== "idle"}
           className={`w-11 h-11 rounded-full items-center justify-center ${
             input.trim() && !sending && recorderState === "idle"
-              ? "bg-primary-600"
+              ? ""
               : "bg-gray-200"
           }`}
+          style={
+            input.trim() && !sending && recorderState === "idle"
+              ? { backgroundColor: accent.hex }
+              : undefined
+          }
         >
           <Send
             size={18}

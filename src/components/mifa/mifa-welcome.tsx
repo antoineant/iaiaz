@@ -26,7 +26,7 @@ export function MifaWelcome({
   const t = useTranslations("mifa.chat.welcome");
   const [showWizard, setShowWizard] = useState(false);
 
-  const theme = getThemeColor(accentColor || "blue");
+  const theme = getThemeColor(accentColor || "cobalt");
   const accentHex = theme?.hex || "#3B82F6";
   const accentLight = theme?.light || "#DBEAFE";
   const accentDark = theme?.dark || "#1E3A5F";

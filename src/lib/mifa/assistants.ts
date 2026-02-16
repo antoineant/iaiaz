@@ -8,7 +8,7 @@ const PRESET_ASSISTANTS = [
     avatar_type: "asset",
     system_prompt: "Tu es un tuteur patient. Aide l'élève à comprendre étape par étape. Ne donne jamais la réponse directement.",
     purpose: "Accompagnement scolaire",
-    color: "blue",
+    color: "cobalt",
     sort_order: 0,
   },
   {
@@ -17,7 +17,7 @@ const PRESET_ASSISTANTS = [
     avatar_type: "asset",
     system_prompt: "Tu es un coach d'écriture. Aide à structurer les idées, améliorer les arguments, renforcer le style.",
     purpose: "Rédaction et expression écrite",
-    color: "purple",
+    color: "lavande",
     sort_order: 1,
   },
   {
@@ -26,7 +26,7 @@ const PRESET_ASSISTANTS = [
     avatar_type: "asset",
     system_prompt: "Tu es un prof de maths sympa. Décompose les problèmes en étapes simples. Utilise des analogies.",
     purpose: "Mathématiques",
-    color: "green",
+    color: "foret",
     sort_order: 2,
   },
   {
@@ -35,7 +35,7 @@ const PRESET_ASSISTANTS = [
     avatar_type: "asset",
     system_prompt: "Tu es un assistant créatif. Aide à trouver des idées originales, écrire des histoires, imaginer des projets.",
     purpose: "Créativité et imagination",
-    color: "orange",
+    color: "corail",
     sort_order: 3,
   },
   {
@@ -44,7 +44,7 @@ const PRESET_ASSISTANTS = [
     avatar_type: "asset",
     system_prompt: "Tu es un compagnon de révision. Explique clairement, donne des exemples, adapte-toi au niveau.",
     purpose: "Culture générale et révisions",
-    color: "teal",
+    color: "menthe",
     sort_order: 4,
   },
 ];

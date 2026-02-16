@@ -7,27 +7,39 @@ export interface ThemeColor {
   dark: string;
 }
 
-// Gen Z pastel-neon palette — vibrant, dreamy, high luminosity
+// Spectrum: girly → neutral → masculine → mono
 export const ACCENT_COLORS: ThemeColor[] = [
-  { name: "blue", hex: "#818CF8", light: "#E0E7FF", dark: "#3730A3" },    // periwinkle
-  { name: "pink", hex: "#FF6B9D", light: "#FFE4ED", dark: "#9F1239" },    // cherry blossom
-  { name: "green", hex: "#6EE7B7", light: "#D1FAE5", dark: "#065F46" },   // mint candy
-  { name: "orange", hex: "#FDBA74", light: "#FFF1E0", dark: "#9A3412" },  // peach fuzz
-  { name: "purple", hex: "#C084FC", light: "#F3E8FF", dark: "#6B21A8" },  // vivid violet
-  { name: "red", hex: "#FF6B6B", light: "#FFE5E5", dark: "#991B1B" },     // coral pop
-  { name: "teal", hex: "#5EEAD4", light: "#CCFBF1", dark: "#115E59" },    // aqua splash
-  { name: "amber", hex: "#FDE047", light: "#FEF9C3", dark: "#854D0E" },   // lemon drop
+  // Girly
+  { name: "sakura",  hex: "#F472B6", light: "#FCE7F3", dark: "#9D174D" },  // cherry blossom pink
+  { name: "lavande", hex: "#A78BFA", light: "#EDE9FE", dark: "#5B21B6" },  // dreamy lavender
+  { name: "corail",  hex: "#FB7185", light: "#FFF1F2", dark: "#BE123C" },  // warm coral rose
+
+  // Neutral
+  { name: "ocean",   hex: "#38BDF8", light: "#E0F2FE", dark: "#0369A1" },  // sky blue
+  { name: "menthe",  hex: "#2DD4BF", light: "#CCFBF1", dark: "#0F766E" },  // fresh mint teal
+  { name: "ambre",   hex: "#D97706", light: "#FEF3C7", dark: "#78350F" },  // warm amber
+
+  // Masculine
+  { name: "cobalt",  hex: "#818CF8", light: "#E0E7FF", dark: "#3730A3" },  // electric indigo
+  { name: "foret",   hex: "#10B981", light: "#D1FAE5", dark: "#065F46" },  // forest green
+  { name: "ardoise", hex: "#64748B", light: "#F1F5F9", dark: "#1E293B" },  // cool slate
+
+  // Ultra-neutral
+  { name: "mono",    hex: "#404040", light: "#F5F5F5", dark: "#171717" },  // black & white
 ];
 
 export const ALLOWED_COLORS = ACCENT_COLORS.map((c) => c.name);
 
-export function getThemeColor(name: string): ThemeColor | undefined {
-  return ACCENT_COLORS.find((c) => c.name === name);
+export const DEFAULT_THEME: ThemeColor = ACCENT_COLORS.find((c) => c.name === "cobalt")!;
+
+/** Look up a theme by name or hex value. Always returns a valid theme (defaults to cobalt). */
+export function getThemeColor(nameOrHex: string | null | undefined): ThemeColor {
+  if (!nameOrHex) return DEFAULT_THEME;
+  return ACCENT_COLORS.find((c) => c.name === nameOrHex || c.hex === nameOrHex) || DEFAULT_THEME;
 }
 
 export function applyAccentColor(color: string): Record<string, string> {
   const theme = getThemeColor(color);
-  if (!theme) return {};
   return {
     "--accent-color": theme.hex,
     "--accent-light": theme.light,

@@ -396,8 +396,8 @@ export function MifaDashboard({
               const profile = member.profiles;
               const firstName = profile?.display_name || "Member";
               const insights = getMemberInsights(member.user_id);
-              const accentColor = getThemeColor(profile?.accent_color || "blue");
-              const colorHex = accentColor?.hex || "#818CF8";
+              const accentColor = getThemeColor(profile?.accent_color);
+              const colorHex = accentColor.hex;
 
               // Usage bar: proportion of weekly spend relative to credit balance
               const maxBar = Math.max(creditBalance, 1);

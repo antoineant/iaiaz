@@ -10,6 +10,7 @@ import {
 import { Text, Card } from "@/components/ui";
 import { useChildAnalytics, useChildInsights } from "@/lib/hooks/useMifa";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
+import { useAccentColor } from "@/lib/AccentColorContext";
 import { useState, useCallback } from "react";
 
 function KpiCard({
@@ -40,6 +41,7 @@ export default function ChildAnalyticsScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const { t } = useTranslation();
   const { data: family } = useFamilyRole();
+  const accent = useAccentColor();
   const [refreshing, setRefreshing] = useState(false);
 
   const orgId = family?.orgId;
@@ -79,7 +81,7 @@ export default function ChildAnalyticsScreen() {
               label={t("childAnalytics.kpi.conversations")}
               value={String(analytics?.totalConversations || 0)}
               icon={MessageCircle}
-              color="#6366f1"
+              color={accent.hex}
             />
             <KpiCard
               label={t("childAnalytics.kpi.totalCost")}

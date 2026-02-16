@@ -11,15 +11,19 @@ import {
 } from "lucide-react-native";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { ChatSessionProvider } from "@/lib/chatSession";
+import { AccentColorProvider } from "@/lib/AccentColorContext";
+import { getAccentTheme } from "@/lib/theme";
 
 export default function MifaLayout() {
   const { t } = useTranslation();
   const { data: family, isLoading } = useFamilyRole();
 
+  const accent = getAccentTheme(family?.accentColor);
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#6366f1" />
+        <ActivityIndicator size="large" color={accent.hex} />
       </View>
     );
   }
@@ -27,10 +31,11 @@ export default function MifaLayout() {
   const isParent = family?.role === "parent";
 
   return (
+    <AccentColorProvider value={accent}>
     <ChatSessionProvider>
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#6366f1",
+        tabBarActiveTintColor: accent.hex,
         tabBarInactiveTintColor: "#9ca3af",
         tabBarStyle: {
           backgroundColor: "#fff",
@@ -118,5 +123,6 @@ export default function MifaLayout() {
       />
     </Tabs>
     </ChatSessionProvider>
+    </AccentColorProvider>
   );
 }

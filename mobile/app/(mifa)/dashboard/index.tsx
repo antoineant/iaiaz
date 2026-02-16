@@ -5,6 +5,7 @@ import { ChevronRight, CreditCard, Users, Zap } from "lucide-react-native";
 import { Text, Card } from "@/components/ui";
 import { useFamilyAnalytics } from "@/lib/hooks/useMifa";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
+import { useAccentColor } from "@/lib/AccentColorContext";
 import { useState, useCallback } from "react";
 
 function StatCard({
@@ -36,9 +37,13 @@ function StatCard({
 function MemberCard({
   member,
   onPress,
+  accentHex,
+  accentLight,
 }: {
   member: any;
   onPress: () => void;
+  accentHex: string;
+  accentLight: string;
 }) {
   const { t } = useTranslation();
   const modeKey = member.supervision_mode || "adult";
@@ -46,8 +51,11 @@ function MemberCard({
   return (
     <TouchableOpacity onPress={onPress}>
       <Card variant="outlined" className="flex-row items-center mb-2">
-        <View className="w-10 h-10 rounded-full bg-primary-100 items-center justify-center mr-3">
-          <Text className="text-lg font-bold text-primary-600">
+        <View
+          className="w-10 h-10 rounded-full items-center justify-center mr-3"
+          style={{ backgroundColor: accentLight }}
+        >
+          <Text className="text-lg font-bold" style={{ color: accentHex }}>
             {(member.display_name || member.email || "?")[0].toUpperCase()}
           </Text>
         </View>
@@ -69,6 +77,7 @@ export default function DashboardScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { data: family } = useFamilyRole();
+  const accent = useAccentColor();
   const [refreshing, setRefreshing] = useState(false);
 
   const orgId = family?.orgId;
@@ -94,10 +103,10 @@ export default function DashboardScreen() {
       >
         {/* Credit Balance */}
         <View className="px-4 pt-4">
-          <Card className="bg-primary-600">
+          <Card style={{ backgroundColor: accent.hex }}>
             <View className="flex-row items-center mb-1">
               <CreditCard size={18} color="#fff" />
-              <Text variant="label" className="text-primary-100 ml-2">
+              <Text variant="label" className="ml-2" style={{ color: accent.light }}>
                 {t("dashboard.creditBalance")}
               </Text>
             </View>
@@ -119,7 +128,7 @@ export default function DashboardScreen() {
               label={t("dashboard.members")}
               value={String(members.length)}
               icon={Users}
-              color="#6366f1"
+              color={accent.hex}
             />
             <StatCard
               label="Conversations"
@@ -144,6 +153,8 @@ export default function DashboardScreen() {
               <MemberCard
                 key={child.user_id}
                 member={child}
+                accentHex={accent.hex}
+                accentLight={accent.light}
                 onPress={() =>
                   router.push({
                     pathname: "/(mifa)/dashboard/[childId]",
@@ -166,7 +177,7 @@ export default function DashboardScreen() {
               onPress={() => router.push("/(mifa)/settings")}
             >
               <Card variant="outlined" className="items-center py-4">
-                <Text variant="label" className="text-primary-600">
+                <Text variant="label" style={{ color: accent.hex }}>
                   {t("dashboard.transferCredits")}
                 </Text>
               </Card>
@@ -176,7 +187,7 @@ export default function DashboardScreen() {
               onPress={() => router.push("/(mifa)/settings")}
             >
               <Card variant="outlined" className="items-center py-4">
-                <Text variant="label" className="text-primary-600">
+                <Text variant="label" style={{ color: accent.hex }}>
                   {t("dashboard.inviteMember")}
                 </Text>
               </Card>

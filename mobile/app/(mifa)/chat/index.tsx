@@ -5,11 +5,13 @@ import { MessageCircle, Shield, ArrowRight } from "lucide-react-native";
 import { Text } from "@/components/ui";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { useChatSession } from "@/lib/chatSession";
+import { useAccentColor } from "@/lib/AccentColorContext";
 
 export default function ChatIndexScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { data: family } = useFamilyRole();
+  const accent = useAccentColor();
 
   const { session } = useChatSession();
   const isChild = family?.role === "child";
@@ -41,7 +43,8 @@ export default function ChatIndexScreen() {
       {/* Supervision badge for children */}
       {isChild && family?.supervisionMode && (
         <TouchableOpacity
-          className="mx-4 mt-3 px-3 py-2 rounded-xl bg-primary-50 flex-row items-center"
+          className="mx-4 mt-3 px-3 py-2 rounded-xl flex-row items-center"
+          style={{ backgroundColor: accent.light }}
           activeOpacity={0.7}
           onPress={() => {
             const title = family.supervisionMode === "guided"
@@ -53,8 +56,8 @@ export default function ChatIndexScreen() {
             Alert.alert(title, message);
           }}
         >
-          <Shield size={14} color="#6366f1" />
-          <Text variant="caption" className="ml-2 text-primary-700 flex-1">
+          <Shield size={14} color={accent.hex} />
+          <Text variant="caption" className="ml-2 flex-1" style={{ color: accent.dark }}>
             {family.supervisionMode === "guided"
               ? t("chat.guidedBadge")
               : t("chat.trustedBadge")}
@@ -64,7 +67,7 @@ export default function ChatIndexScreen() {
 
       {/* Welcome empty state */}
       <View className="flex-1 items-center justify-center px-6">
-        <Text variant="title" className="text-primary-600 mb-2 text-center">
+        <Text variant="title" className="mb-2 text-center" style={{ color: accent.hex }}>
           {t("chat.assistantReady", {
             name: family?.displayName || "",
           })}
@@ -76,7 +79,8 @@ export default function ChatIndexScreen() {
         {session && (
           <TouchableOpacity
             onPress={continueChat}
-            className="bg-primary-600 rounded-2xl px-8 py-4 flex-row items-center mb-4"
+            className="rounded-2xl px-8 py-4 flex-row items-center mb-4"
+            style={{ backgroundColor: accent.hex }}
             activeOpacity={0.8}
           >
             {session.assistantAvatar ? (
@@ -93,10 +97,11 @@ export default function ChatIndexScreen() {
 
         <TouchableOpacity
           onPress={startNewChat}
-          className={`${session ? "bg-white border border-gray-200" : "bg-primary-600"} rounded-2xl px-8 py-4 flex-row items-center`}
+          className={`${session ? "bg-white border border-gray-200" : ""} rounded-2xl px-8 py-4 flex-row items-center`}
+          style={!session ? { backgroundColor: accent.hex } : undefined}
           activeOpacity={0.8}
         >
-          <MessageCircle size={22} color={session ? "#6366f1" : "#fff"} />
+          <MessageCircle size={22} color={session ? accent.hex : "#fff"} />
           <Text variant="body" className={`${session ? "text-gray-800" : "text-white"} font-semibold ml-3 text-lg`}>
             {session ? t("chat.newConversation") : t("chat.startChatting")}
           </Text>

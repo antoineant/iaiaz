@@ -12,6 +12,7 @@ import { Shield, Clock, Mail, ChevronRight } from "lucide-react-native";
 import { Text, Card, Button, Input } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
+import { useAccentColor } from "@/lib/AccentColorContext";
 import {
   useFamilyAnalytics,
   useControls,
@@ -23,6 +24,7 @@ type SupervisionMode = "guided" | "trusted" | "adult";
 
 function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
   const { t } = useTranslation();
+  const accent = useAccentColor();
   const { data: controls, refetch } = useControls(orgId, child.user_id);
   const updateControls = useUpdateControls();
 
@@ -42,8 +44,11 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
   return (
     <Card variant="outlined" className="mb-4">
       <View className="flex-row items-center mb-3">
-        <View className="w-8 h-8 rounded-full bg-primary-100 items-center justify-center mr-2">
-          <Text className="font-bold text-primary-600">
+        <View
+          className="w-8 h-8 rounded-full items-center justify-center mr-2"
+          style={{ backgroundColor: accent.light }}
+        >
+          <Text className="font-bold" style={{ color: accent.hex }}>
             {(child.display_name || "?")[0].toUpperCase()}
           </Text>
         </View>
@@ -61,9 +66,10 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
             onPress={() => handleModeChange(mode)}
             className={`flex-1 py-2 px-3 rounded-xl items-center ${
               currentMode === mode
-                ? "bg-primary-600"
+                ? ""
                 : "bg-gray-100"
             }`}
+            style={currentMode === mode ? { backgroundColor: accent.hex } : undefined}
           >
             <Text
               variant="caption"
@@ -107,6 +113,7 @@ export default function SettingsScreen() {
   const { t } = useTranslation();
   const { signOut } = useAuth();
   const { data: family } = useFamilyRole();
+  const accent = useAccentColor();
   const [refreshing, setRefreshing] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const sendInvite = useSendInvite();
@@ -149,7 +156,7 @@ export default function SettingsScreen() {
         <View className="px-4 pt-4">
           {/* Parental Controls */}
           <Text variant="subtitle" className="mb-3">
-            <Shield size={18} color="#6366f1" /> {t("settings.childControls")}
+            <Shield size={18} color={accent.hex} /> {t("settings.childControls")}
           </Text>
           {children.map((child: any) => (
             <ChildControlCard
@@ -161,7 +168,7 @@ export default function SettingsScreen() {
 
           {/* Invite */}
           <Text variant="subtitle" className="mb-3 mt-4">
-            <Mail size={18} color="#6366f1" /> {t("settings.inviteMember")}
+            <Mail size={18} color={accent.hex} /> {t("settings.inviteMember")}
           </Text>
           <Card variant="outlined" className="mb-4">
             <Input

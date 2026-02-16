@@ -41,7 +41,7 @@ export function MifaChatClient({
   const [adopting, setAdopting] = useState(false);
 
   // Apply accent color on mount
-  const theme = getThemeColor(currentColor || "blue");
+  const theme = getThemeColor(currentColor || "cobalt");
 
   const handleAssistantClick = (assistant: CustomAssistant) => {
     setSelectedAssistant(assistant);

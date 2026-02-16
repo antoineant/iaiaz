@@ -11,7 +11,7 @@ interface ThemePickerProps {
 
 export function ThemePicker({ currentColor, onSelect }: ThemePickerProps) {
   const t = useTranslations("mifa.chat");
-  const [selected, setSelected] = useState(currentColor || "blue");
+  const [selected, setSelected] = useState(currentColor || "cobalt");
   const [saving, setSaving] = useState(false);
 
   const handleSelect = async (color: ThemeColor) => {
@@ -38,20 +38,25 @@ export function ThemePicker({ currentColor, onSelect }: ThemePickerProps) {
   return (
     <div>
       <p className="text-sm font-medium mb-3">{t("chooseColor")}</p>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         {ACCENT_COLORS.map((color) => (
           <button
             key={color.name}
             onClick={() => handleSelect(color)}
             disabled={saving}
-            className={`w-10 h-10 rounded-full transition-all ${
-              selected === color.name
-                ? "ring-2 ring-offset-2 ring-gray-900 dark:ring-white scale-110"
-                : "hover:scale-105"
-            }`}
-            style={{ backgroundColor: color.hex }}
+            className="flex flex-col items-center gap-1"
             aria-label={color.name}
-          />
+          >
+            <div
+              className={`w-10 h-10 rounded-full transition-all ${
+                selected === color.name
+                  ? "ring-2 ring-offset-2 ring-gray-900 dark:ring-white scale-110"
+                  : "hover:scale-105"
+              }`}
+              style={{ backgroundColor: color.hex }}
+            />
+            <span className="text-[10px] text-[var(--muted-foreground)]">{color.name}</span>
+          </button>
         ))}
       </div>
     </div>

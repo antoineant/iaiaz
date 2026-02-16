@@ -30,7 +30,7 @@ export function AssistantWizard({ onClose, onCreated }: AssistantWizardProps) {
   const t = useTranslations("mifa.chat.wizard");
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
-  const [color, setColor] = useState("blue");
+  const [color, setColor] = useState("cobalt");
   const [systemPrompt, setSystemPrompt] = useState("");
   const [gauges, setGauges] = useState<AssistantGauges>({ ...DEFAULT_GAUGES });
   const [avatar, setAvatar] = useState("🤖");
@@ -148,18 +148,23 @@ export function AssistantWizard({ onClose, onCreated }: AssistantWizardProps) {
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">{t("colorLabel")}</label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {ACCENT_COLORS.map((c) => (
                       <button
                         key={c.name}
                         onClick={() => setColor(c.name)}
-                        className={`w-8 h-8 rounded-full transition-all ${
-                          color === c.name
-                            ? "ring-2 ring-offset-2 ring-gray-900 dark:ring-white scale-110"
-                            : "hover:scale-105"
-                        }`}
-                        style={{ backgroundColor: c.hex }}
-                      />
+                        className="flex flex-col items-center gap-0.5"
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-full transition-all ${
+                            color === c.name
+                              ? "ring-2 ring-offset-2 ring-gray-900 dark:ring-white scale-110"
+                              : "hover:scale-105"
+                          }`}
+                          style={{ backgroundColor: c.hex }}
+                        />
+                        <span className="text-[10px] text-[var(--muted-foreground)]">{c.name}</span>
+                      </button>
                     ))}
                   </div>
                 </div>

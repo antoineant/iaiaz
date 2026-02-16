@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       avatar_type: avatar_type === "generated" ? "generated" : "emoji",
       system_prompt: system_prompt.trim(),
       purpose: purpose?.trim() || null,
-      color: color || "blue",
+      color: color || "cobalt",
       is_preset: false,
       sort_order: (count || 0) + 1,
       gauges: validatedGauges,

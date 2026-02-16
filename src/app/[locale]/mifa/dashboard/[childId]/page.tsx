@@ -483,13 +483,11 @@ export default function ChildAnalyticsPage() {
   }, [childId, days, locale, t]);
 
   const accentHex = useMemo(() => {
-    const theme = getThemeColor(data?.child.accentColor || "blue");
-    return theme?.hex || "#818CF8";
+    return getThemeColor(data?.child.accentColor).hex;
   }, [data?.child.accentColor]);
 
   const accentLight = useMemo(() => {
-    const theme = getThemeColor(data?.child.accentColor || "blue");
-    return theme?.light || "#E0E7FF";
+    return getThemeColor(data?.child.accentColor).light;
   }, [data?.child.accentColor]);
 
   if (isLoading) {

@@ -42,7 +42,7 @@ export function ChildSettingsPanel({
   // Profile state
   const [avatar, setAvatar] = useState<string>("");
   const [displayName, setDisplayName] = useState("");
-  const [selectedColor, setSelectedColor] = useState(accentColor || "blue");
+  const [selectedColor, setSelectedColor] = useState(accentColor || "cobalt");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
@@ -125,9 +125,10 @@ export function ChildSettingsPanel({
       // Save accent color if changed
       if (selectedColor !== accentColor) {
         onAccentColorChange(selectedColor);
-        document.documentElement.style.setProperty("--accent-color", ACCENT_COLORS.find(c => c.name === selectedColor)?.hex || "#3B82F6");
-        document.documentElement.style.setProperty("--accent-light", ACCENT_COLORS.find(c => c.name === selectedColor)?.light || "#E0E7FF");
-        document.documentElement.style.setProperty("--accent-dark", ACCENT_COLORS.find(c => c.name === selectedColor)?.dark || "#3730A3");
+        const theme = ACCENT_COLORS.find(c => c.name === selectedColor) || ACCENT_COLORS[6]; // cobalt default
+        document.documentElement.style.setProperty("--accent-color", theme.hex);
+        document.documentElement.style.setProperty("--accent-light", theme.light);
+        document.documentElement.style.setProperty("--accent-dark", theme.dark);
         await fetch("/api/mifa/theme", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

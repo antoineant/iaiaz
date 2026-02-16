@@ -15,9 +15,9 @@ interface AssistantCardProps {
 export function AssistantCard({ assistant, onClick }: AssistantCardProps) {
   const t = useTranslations("mifa.chat.levels");
   const theme = getThemeColor(assistant.color);
-  const hex = theme?.hex || "#818CF8";
-  const light = theme?.light || "#E0E7FF";
-  const dark = theme?.dark || "#3730A3";
+  const hex = theme.hex;
+  const light = theme.light;
+  const dark = theme.dark;
 
   const [xpData, setXpData] = useState<{ xp: number; level: string } | null>(null);
 

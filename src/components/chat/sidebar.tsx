@@ -131,7 +131,7 @@ export function Sidebar({
   const canManageOrg = orgContext && ["owner", "admin", "teacher"].includes(orgContext.role);
 
   // Mifa teen theme
-  const teenTheme = mifaMode ? getThemeColor(teenAccentColor || "blue") : null;
+  const teenTheme = mifaMode ? getThemeColor(teenAccentColor || "cobalt") : null;
 
   const handleLogout = async () => {
     const supabase = createClient();

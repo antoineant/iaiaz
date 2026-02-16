@@ -616,7 +616,7 @@ export function ChatClient({
   return (
     <div
       className="flex h-screen"
-      style={mifaMode ? applyAccentColor(mifaAccentColor || "blue") : undefined}
+      style={mifaMode ? applyAccentColor(mifaAccentColor || "cobalt") : undefined}
     >
       <Sidebar
         conversations={conversations}
@@ -845,7 +845,7 @@ export function ChatClient({
           rateLimitError={rateLimitError}
           conversationId={currentConversationId}
           pricingData={pricingData}
-          accentColor={mifaMode ? (getThemeColor(mifaAccentColor || "blue")?.hex) : undefined}
+          accentColor={mifaMode ? (getThemeColor(mifaAccentColor || "cobalt")?.hex) : undefined}
           mifaMode={!!mifaMode}
         />
       </main>

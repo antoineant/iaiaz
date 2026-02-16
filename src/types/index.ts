@@ -43,7 +43,7 @@ export interface CustomAssistant {
   updated_at: string;
 }
 
-export type AccentColor = 'blue' | 'pink' | 'green' | 'orange' | 'purple' | 'red' | 'teal' | 'amber';
+export type AccentColor = 'sakura' | 'lavande' | 'corail' | 'ocean' | 'menthe' | 'ambre' | 'cobalt' | 'foret' | 'ardoise' | 'mono';
 
 export interface ConversationActivity {
   id: string;

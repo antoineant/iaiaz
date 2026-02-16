@@ -121,7 +121,7 @@ export function CreditTransferModal({
             {members.map((member) => {
               const profile = member.profiles;
               const firstName = profile?.display_name || "Member";
-              const accentColor = getThemeColor(profile?.accent_color || "blue");
+              const accentColor = getThemeColor(profile?.accent_color || "cobalt");
 
               return (
                 <div key={member.user_id} className="flex items-center gap-3">

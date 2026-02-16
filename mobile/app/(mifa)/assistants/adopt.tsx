@@ -5,11 +5,13 @@ import { useTranslation } from "react-i18next";
 import { Download } from "lucide-react-native";
 import { Text, Button } from "@/components/ui";
 import { useAdoptAssistant } from "@/lib/hooks/useMifa";
+import { useAccentColor } from "@/lib/AccentColorContext";
 
 export default function AdoptScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const adoptAssistant = useAdoptAssistant();
+  const accent = useAccentColor();
 
   const [code, setCode] = useState("");
 
@@ -28,8 +30,11 @@ export default function AdoptScreen() {
   return (
     <View className="flex-1 bg-gray-50 px-4 pt-8">
       <View className="items-center mb-8">
-        <View className="w-20 h-20 rounded-full bg-primary-100 items-center justify-center mb-4">
-          <Download size={36} color="#6366f1" />
+        <View
+          className="w-20 h-20 rounded-full items-center justify-center mb-4"
+          style={{ backgroundColor: accent.light }}
+        >
+          <Download size={36} color={accent.hex} />
         </View>
         <Text className="text-lg font-bold text-center mb-1">{t("mifas.adopt")}</Text>
         <Text className="text-sm text-gray-500 text-center">

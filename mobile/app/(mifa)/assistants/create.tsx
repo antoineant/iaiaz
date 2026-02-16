@@ -14,19 +14,10 @@ import { Text, Card, Button } from "@/components/ui";
 import { GaugeGroup, DEFAULT_GAUGES } from "@/components/GaugeSlider";
 import type { Gauges } from "@/components/GaugeSlider";
 import { useCreateAssistant } from "@/lib/hooks/useMifa";
+import { useAccentColor } from "@/lib/AccentColorContext";
+import { ACCENT_COLORS } from "@/lib/theme";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
-
-const ACCENT_COLORS = [
-  { name: "blue", hex: "#3b82f6" },
-  { name: "pink", hex: "#ec4899" },
-  { name: "green", hex: "#22c55e" },
-  { name: "orange", hex: "#f97316" },
-  { name: "purple", hex: "#a855f7" },
-  { name: "red", hex: "#ef4444" },
-  { name: "teal", hex: "#14b8a6" },
-  { name: "amber", hex: "#f59e0b" },
-];
 
 const EMOJI_SUGGESTIONS = [
   "\u{1F4DA}", "\u{1F9EE}", "\u{1F3A8}", "\u{1F3B5}", "\u{1F30D}", "\u{1F52C}", "\u{1F4DD}", "\u{1F9D1}\u{200D}\u{1F3EB}",
@@ -37,10 +28,11 @@ export default function CreateAssistantScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const createAssistant = useCreateAssistant();
+  const accent = useAccentColor();
 
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("\u{1F916}");
-  const [color, setColor] = useState("purple");
+  const [color, setColor] = useState("cobalt");
   const [instructions, setInstructions] = useState("");
   const [gauges, setGauges] = useState<Gauges>({ ...DEFAULT_GAUGES });
   const [avatarMode, setAvatarMode] = useState<"emoji" | "generated">("emoji");
@@ -48,7 +40,7 @@ export default function CreateAssistantScreen() {
   const [generating, setGenerating] = useState(false);
 
   const selectedColorHex =
-    ACCENT_COLORS.find((c) => c.name === color)?.hex || "#a855f7";
+    ACCENT_COLORS.find((c) => c.name === color)?.hex || "#818CF8";
 
   const gaugeLabels = {
     creativity: t("mifas.gauges.creativity"),
@@ -151,9 +143,8 @@ export default function CreateAssistantScreen() {
       <View className="flex-row gap-2 mb-3">
         <TouchableOpacity
           onPress={() => setAvatarMode("emoji")}
-          className={`flex-1 py-2 px-3 rounded-lg items-center ${
-            avatarMode === "emoji" ? "bg-primary-500" : "bg-gray-200"
-          }`}
+          className="flex-1 py-2 px-3 rounded-lg items-center"
+          style={{ backgroundColor: avatarMode === "emoji" ? accent.hex : "#e5e7eb" }}
         >
           <Text className={avatarMode === "emoji" ? "text-white font-medium text-sm" : "text-gray-600 text-sm"}>
             Emoji
@@ -161,9 +152,8 @@ export default function CreateAssistantScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setAvatarMode("generated")}
-          className={`flex-1 py-2 px-3 rounded-lg items-center flex-row justify-center gap-1 ${
-            avatarMode === "generated" ? "bg-primary-500" : "bg-gray-200"
-          }`}
+          className="flex-1 py-2 px-3 rounded-lg items-center flex-row justify-center gap-1"
+          style={{ backgroundColor: avatarMode === "generated" ? accent.hex : "#e5e7eb" }}
         >
           <Text className={avatarMode === "generated" ? "text-white font-medium text-sm" : "text-gray-600 text-sm"}>
             {"\u2728"} AI
@@ -179,9 +169,8 @@ export default function CreateAssistantScreen() {
               <TouchableOpacity
                 key={emoji}
                 onPress={() => setAvatar(emoji)}
-                className={`w-11 h-11 rounded-full items-center justify-center ${
-                  avatar === emoji ? "bg-primary-100" : "bg-gray-50"
-                }`}
+                className="w-11 h-11 rounded-full items-center justify-center"
+                style={{ backgroundColor: avatar === emoji ? accent.light : "#f9fafb" }}
               >
                 <Text className="text-xl">{emoji}</Text>
               </TouchableOpacity>
@@ -242,16 +231,22 @@ export default function CreateAssistantScreen() {
         {t("mifas.color")}
       </Text>
       <Card variant="outlined" className="mb-4">
-        <View className="flex-row flex-wrap gap-3">
+        <View className="flex-row flex-wrap gap-2 justify-center">
           {ACCENT_COLORS.map((c) => (
             <TouchableOpacity
               key={c.name}
               onPress={() => setColor(c.name)}
-              className={`w-10 h-10 rounded-full ${
-                color === c.name ? "border-2 border-gray-800" : ""
-              }`}
-              style={{ backgroundColor: c.hex }}
-            />
+              className="items-center"
+              style={{ width: 56 }}
+            >
+              <View
+                className={`w-11 h-11 rounded-full mb-1 ${
+                  color === c.name ? "border-2 border-gray-800" : ""
+                }`}
+                style={{ backgroundColor: c.hex }}
+              />
+              <Text className="text-[9px] text-gray-500 text-center">{c.name}</Text>
+            </TouchableOpacity>
           ))}
         </View>
       </Card>
