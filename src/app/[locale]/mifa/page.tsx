@@ -439,6 +439,67 @@ export default async function MifaLandingPage({ params }: Props) {
         </div>
       </section>
 
+      {/* Credit Explainer — before pricing to show value first */}
+      <section id="credits" className="py-20">
+        <div className="max-w-4xl mx-auto px-4">
+          <ContentAccordion
+            title={t("credits.title")}
+            subtitle={t("credits.subtitle")}
+            icon="coins"
+            iconColor="text-amber-600"
+            gradientFrom="from-amber-50/50"
+            gradientTo="to-yellow-50/50"
+            defaultOpen
+          >
+            {/* Prominent analogy callout */}
+          <div className="max-w-2xl mx-auto mb-12 p-6 rounded-2xl bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/50 dark:to-accent-950/50 border border-primary-200 dark:border-primary-800">
+            <p className="text-lg text-center leading-relaxed">
+              <strong className="font-bold">{t("credits.analogyBold")}</strong>
+              <br />
+              {t("credits.analogyRest")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card className="text-center bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+              <CardContent className="pt-6">
+                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-3">
+                  <BookOpen className="w-6 h-6 text-blue-600" />
+                </div>
+                <p className="text-4xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent mb-1">~{estimateHomework}</p>
+                <p className="font-medium mb-1">{t("credits.homework")}</p>
+                <p className="text-xs text-[var(--muted-foreground)]">{t("credits.homeworkDesc")}</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center bg-purple-50/50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800">
+              <CardContent className="pt-6">
+                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-3">
+                  <PenTool className="w-6 h-6 text-purple-600" />
+                </div>
+                <p className="text-4xl font-extrabold bg-gradient-to-r from-accent-600 to-primary-600 bg-clip-text text-transparent mb-1">~{estimateEssays}</p>
+                <p className="font-medium mb-1">{t("credits.essays")}</p>
+                <p className="text-xs text-[var(--muted-foreground)]">{t("credits.essaysDesc")}</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center bg-green-50/50 dark:bg-green-950/20 border-green-200 dark:border-green-800">
+              <CardContent className="pt-6">
+                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
+                  <Lightbulb className="w-6 h-6 text-green-600" />
+                </div>
+                <p className="text-4xl font-extrabold bg-gradient-to-r from-primary-600 to-green-600 bg-clip-text text-transparent mb-1">~{estimateQuestions}</p>
+                <p className="font-medium mb-1">{t("credits.questions")}</p>
+                <p className="text-xs text-[var(--muted-foreground)]">{t("credits.questionsDesc")}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <p className="text-sm text-[var(--muted-foreground)] max-w-xl mx-auto">{t("credits.note")}</p>
+          </div>
+          </ContentAccordion>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="py-20 bg-[var(--muted)]/30">
         <div className="max-w-3xl mx-auto px-4">
@@ -520,66 +581,6 @@ export default async function MifaLandingPage({ params }: Props) {
               </Link>
             </CardContent>
           </Card>
-        </div>
-      </section>
-
-      {/* Credit Explainer — after pricing */}
-      <section id="credits" className="py-20">
-        <div className="max-w-4xl mx-auto px-4">
-          <ContentAccordion
-            title={t("credits.title")}
-            subtitle={t("credits.subtitle")}
-            icon="coins"
-            iconColor="text-amber-600"
-            gradientFrom="from-amber-50/50"
-            gradientTo="to-yellow-50/50"
-          >
-            {/* Prominent analogy callout */}
-          <div className="max-w-2xl mx-auto mb-12 p-6 rounded-2xl bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950/50 dark:to-accent-950/50 border border-primary-200 dark:border-primary-800">
-            <p className="text-lg text-center leading-relaxed">
-              <strong className="font-bold">{t("credits.analogyBold")}</strong>
-              <br />
-              {t("credits.analogyRest")}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-3">
-                  <BookOpen className="w-6 h-6 text-blue-600" />
-                </div>
-                <p className="text-3xl font-extrabold text-primary-600 mb-1">~{estimateHomework}</p>
-                <p className="font-medium mb-1">{t("credits.homework")}</p>
-                <p className="text-xs text-[var(--muted-foreground)]">{t("credits.homeworkDesc")}</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-3">
-                  <PenTool className="w-6 h-6 text-purple-600" />
-                </div>
-                <p className="text-3xl font-extrabold text-accent-600 mb-1">~{estimateEssays}</p>
-                <p className="font-medium mb-1">{t("credits.essays")}</p>
-                <p className="text-xs text-[var(--muted-foreground)]">{t("credits.essaysDesc")}</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
-                  <Lightbulb className="w-6 h-6 text-green-600" />
-                </div>
-                <p className="text-3xl font-extrabold text-green-600 mb-1">~{estimateQuestions}</p>
-                <p className="font-medium mb-1">{t("credits.questions")}</p>
-                <p className="text-xs text-[var(--muted-foreground)]">{t("credits.questionsDesc")}</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <p className="text-sm text-[var(--muted-foreground)] max-w-xl mx-auto">{t("credits.note")}</p>
-          </div>
-          </ContentAccordion>
         </div>
       </section>
 
