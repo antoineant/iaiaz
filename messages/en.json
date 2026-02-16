@@ -3550,38 +3550,35 @@
         "cta": "€1 free to try",
         "learnMore": "Learn more"
       },
-      "problem": {
-        "title": "Your kids will use AI. How do you guide them?",
-        "stat1": "of teens use AI for homework",
-        "stat2": "of parents feel unprepared for AI",
-        "stat3": "of parents don't want to ban AI"
+      "tension": {
+        "title": "Sound familiar?",
+        "quote1": "My son uses ChatGPT behind my back. I have no idea what he's doing.",
+        "quote2": "I keep going back and forth between banning AI and letting it slide.",
+        "quote3": "I'm worried AI is just doing their homework for them.",
+        "resolution": "You're not alone. And there's a solution."
       },
-      "features": {
-        "title": "Everything to learn together",
-        "subtitle": "Tools designed for families who want to guide, not restrict.",
-        "family": {
-          "title": "Family learning",
-          "desc": "Shared credits, learn together. Explore AI as a family."
+      "why": {
+        "title": "Why mīfā",
+        "subtitle": "Everything you need to say yes to AI, with peace of mind.",
+        "visibility": {
+          "title": "You see everything",
+          "desc": "What subjects, how long, when they're stuck. Your dashboard tells you the essentials — without spying."
         },
-        "controls": {
-          "title": "Age-appropriate controls",
-          "desc": "Guided Mode (12-14) and Trusted Mode (15-17) for tailored supervision."
+        "rules": {
+          "title": "Rules without fights",
+          "desc": "Quiet hours, daily budgets, content filters. The system sets the limits, not you."
         },
-        "transparency": {
-          "title": "Homework insights",
-          "desc": "See what subjects your kids are working on, and get alerted when they're struggling. No need to ask."
+        "growth": {
+          "title": "It grows with them",
+          "desc": "Guided Mode at 12, Trusted Mode at 15. You adjust autonomy as they mature."
         },
-        "limits": {
-          "title": "Smart limits",
-          "desc": "Quiet hours, daily limits, and controlled credits for healthy usage."
+        "budget": {
+          "title": "You control the budget",
+          "desc": "A clear plan, included credits, zero surprises. Top up when you want, for any amount."
         },
-        "teen": {
-          "title": "Teen-friendly UI",
-          "desc": "A modern, fun experience designed for young users."
-        },
-        "learn": {
+        "learning": {
           "title": "Learn, don't cheat",
-          "desc": "AI provider content filters protect against inappropriate usage."
+          "desc": "AI helps them understand and think. It doesn't hand them the answers."
         }
       },
       "scenario": {

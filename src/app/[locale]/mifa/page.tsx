@@ -141,87 +141,42 @@ export default async function MifaLandingPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Problem Statement */}
+      {/* Parent tensions — emotional hook */}
       <section className="py-16 bg-[var(--muted)]/30">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8">{t("problem.title")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6">
-              <p className="text-4xl font-bold text-primary-600 mb-2">73%</p>
-              <p className="text-[var(--muted-foreground)]">{t("problem.stat1")}</p>
-            </div>
-            <div className="p-6">
-              <p className="text-4xl font-bold text-accent-600 mb-2">84%</p>
-              <p className="text-[var(--muted-foreground)]">{t("problem.stat2")}</p>
-            </div>
-            <div className="p-6">
-              <p className="text-4xl font-bold text-primary-600 mb-2">92%</p>
-              <p className="text-[var(--muted-foreground)]">{t("problem.stat3")}</p>
-            </div>
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-10">{t("tension.title")}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {["quote1", "quote2", "quote3"].map((q) => (
+              <div key={q} className="p-6 rounded-2xl bg-[var(--background)] border border-[var(--border)] shadow-sm">
+                <p className="text-lg italic leading-relaxed">
+                  &laquo;&nbsp;{t(`tension.${q}`)}&nbsp;&raquo;
+                </p>
+              </div>
+            ))}
           </div>
+          <p className="text-center text-lg font-semibold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            {t("tension.resolution")}
+          </p>
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* 5 reasons — need-based pillars */}
       <section id="features" className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">{t("features.title")}</h2>
-          <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-2xl mx-auto">{t("features.subtitle")}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6 text-primary-600" />
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4">{t("why.title")}</h2>
+          <p className="text-center text-[var(--muted-foreground)] mb-12 max-w-2xl mx-auto">{t("why.subtitle")}</p>
+          <div className="space-y-4">
+            {["visibility", "rules", "growth", "budget", "learning"].map((key, i) => (
+              <div key={key} className="flex items-start gap-5 p-5 rounded-xl border border-[var(--border)] bg-[var(--background)]">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/30 dark:to-accent-900/30 flex items-center justify-center">
+                  <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">{i + 1}</span>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">{t("features.family.title")}</h3>
-                <p className="text-[var(--muted-foreground)]">{t("features.family.desc")}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-accent-600" />
+                <div>
+                  <h3 className="text-lg font-bold mb-1">{t(`why.${key}.title`)}</h3>
+                  <p className="text-[var(--muted-foreground)]">{t(`why.${key}.desc`)}</p>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">{t("features.controls.title")}</h3>
-                <p className="text-[var(--muted-foreground)]">{t("features.controls.desc")}</p>
-              </CardContent>
-            </Card>
-            <Card className="border-2 border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/10">
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-                  <BookOpen className="w-6 h-6 text-amber-600" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t("features.transparency.title")}</h3>
-                <p className="text-[var(--muted-foreground)]">{t("features.transparency.desc")}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-4">
-                  <Clock className="w-6 h-6 text-orange-600" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t("features.limits.title")}</h3>
-                <p className="text-[var(--muted-foreground)]">{t("features.limits.desc")}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
-                  <Sparkles className="w-6 h-6 text-blue-600" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t("features.teen.title")}</h3>
-                <p className="text-[var(--muted-foreground)]">{t("features.teen.desc")}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4">
-                  <Heart className="w-6 h-6 text-purple-600" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t("features.learn.title")}</h3>
-                <p className="text-[var(--muted-foreground)]">{t("features.learn.desc")}</p>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
           </div>
         </div>
       </section>

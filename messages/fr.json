@@ -3746,38 +3746,35 @@
         "cta": "1€ offert pour essayer",
         "learnMore": "Découvrir"
       },
-      "problem": {
-        "title": "Vos ados utilisent déjà l'IA. Et vous ?",
-        "stat1": "des ados utilisent l'IA pour leurs devoirs",
-        "stat2": "des parents se sentent dépassés",
-        "stat3": "des parents préfèrent accompagner qu'interdire"
+      "tension": {
+        "title": "Ce que vous ressentez",
+        "quote1": "Mon fils utilise ChatGPT en cachette. Je ne sais pas ce qu'il fait.",
+        "quote2": "J'hésite entre interdire l'IA et laisser faire.",
+        "quote3": "J'ai peur que l'IA fasse les devoirs à sa place.",
+        "resolution": "Vous n'êtes pas seul. Et il y a une solution."
       },
-      "features": {
-        "title": "Conçu pour les familles",
-        "subtitle": "Pas besoin d'être expert en IA. On s'occupe de tout.",
-        "family": {
-          "title": "On apprend ensemble",
-          "desc": "Un seul compte, des crédits partagés. Toute la famille découvre l'IA à son rythme."
+      "why": {
+        "title": "Pourquoi mīfā",
+        "subtitle": "Tout ce qu'il faut pour dire oui à l'IA, en toute sérénité.",
+        "visibility": {
+          "title": "Vous voyez tout",
+          "desc": "Quels sujets, combien de temps, quand ils bloquent. Votre tableau de bord vous dit l'essentiel — sans espionner."
         },
-        "controls": {
-          "title": "Adapté à chaque âge",
-          "desc": "Mode Encadré pour les 12-14 ans, Mode Confiance pour les 15-17 ans. Vous choisissez le niveau d'autonomie."
+        "rules": {
+          "title": "Des règles sans conflit",
+          "desc": "Heures de coucher, budget quotidien, filtres de contenu. C'est le système qui pose les limites, pas vous."
         },
-        "transparency": {
-          "title": "Suivi des devoirs",
-          "desc": "Vous voyez sur quels sujets vos enfants travaillent, et on vous alerte quand ils bloquent. Pas besoin de leur demander."
+        "growth": {
+          "title": "Ça grandit avec eux",
+          "desc": "Mode Encadré à 12 ans, Mode Confiance à 15 ans. Vous ajustez l'autonomie à mesure qu'ils grandissent."
         },
-        "limits": {
-          "title": "Des limites saines",
-          "desc": "Heures de coucher, budget quotidien, crédits maîtrisés. Comme pour le temps d'écran."
+        "budget": {
+          "title": "Vous maîtrisez le budget",
+          "desc": "Un forfait clair, des crédits inclus, zéro surprise. Vous rechargez quand vous voulez, au montant de votre choix."
         },
-        "teen": {
-          "title": "Une interface pour eux",
-          "desc": "Moderne, simple, pensée pour les ados. Ils vont adorer."
-        },
-        "learn": {
-          "title": "Apprendre, sans tricher",
-          "desc": "L'IA est là pour les aider à comprendre, pas pour faire le travail à leur place."
+        "learning": {
+          "title": "Apprendre, pas tricher",
+          "desc": "L'IA aide à comprendre et à réfléchir. Elle ne donne pas les réponses toutes faites."
         }
       },
       "scenario": {
