@@ -90,9 +90,9 @@ function MifaGridCard({
   if (item.type === "create") {
     return (
       <TouchableOpacity onPress={onPress} className="flex-1 m-2">
-        <Card variant="outlined" className="items-center py-6 border-dashed">
-          <View className="w-14 h-14 rounded-full bg-gray-100 items-center justify-center mb-3">
-            <Plus size={24} color="#9ca3af" />
+        <Card variant="outlined" className="items-center py-5 border-dashed">
+          <View className="rounded-2xl bg-gray-100 items-center justify-center mb-2" style={{ width: 88, height: 88 }}>
+            <Plus size={32} color="#9ca3af" />
           </View>
           <Text variant="label" className="text-gray-500 text-center">
             {t("mifas.create")}
@@ -105,9 +105,9 @@ function MifaGridCard({
   if (item.type === "adopt") {
     return (
       <TouchableOpacity onPress={onPress} className="flex-1 m-2">
-        <Card variant="outlined" className="items-center py-6 border-dashed">
-          <View className="w-14 h-14 rounded-full bg-gray-100 items-center justify-center mb-3">
-            <Download size={24} color="#9ca3af" />
+        <Card variant="outlined" className="items-center py-5 border-dashed">
+          <View className="rounded-2xl bg-gray-100 items-center justify-center mb-2" style={{ width: 88, height: 88 }}>
+            <Download size={32} color="#9ca3af" />
           </View>
           <Text variant="label" className="text-gray-500 text-center">
             {t("mifas.adopt")}
