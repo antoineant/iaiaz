@@ -46,6 +46,13 @@ async function request<T>(
 
 // Mifa API client
 export const api = {
+  // Family creation (onboarding)
+  createFamily: (familyName: string) =>
+    request<{ success: boolean; organizationId: string }>("/api/mifa/create", {
+      method: "POST",
+      body: JSON.stringify({ familyName, childCount: 1, extraParentCount: 0 }),
+    }),
+
   // Analytics
   getFamilyAnalytics: async (orgId: string) => {
     const raw = await request<any>(`/api/mifa/analytics?orgId=${orgId}`);

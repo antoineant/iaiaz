@@ -278,6 +278,14 @@
     "language": "Language",
     "signOut": "Sign out"
   },
+  "onboarding": {
+    "title": "Welcome to mīfā",
+    "subtitle": "Name your family space",
+    "familyNameLabel": "Family name",
+    "familyNamePlaceholder": "e.g. Smith",
+    "createButton": "Create my space",
+    "error": "Something went wrong, please try again"
+  },
   "childSettings": {
     "tabs": {
       "profile": "Profile",

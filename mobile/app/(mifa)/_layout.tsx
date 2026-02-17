@@ -13,6 +13,7 @@ import {
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { ChatSessionProvider } from "@/lib/chatSession";
 import { AccentColorProvider } from "@/lib/AccentColorContext";
+import { CreateFamilyScreen } from "@/components/CreateFamilyScreen";
 import { SchoolSystemProvider } from "@/lib/SchoolSystemContext";
 import { getAccentTheme } from "@/lib/theme";
 
@@ -30,7 +31,16 @@ export default function MifaLayout() {
     );
   }
 
-  const isParent = family?.role === "parent";
+  // New user with no family org — show onboarding
+  if (!family?.orgId) {
+    return (
+      <AccentColorProvider value={accent}>
+        <CreateFamilyScreen />
+      </AccentColorProvider>
+    );
+  }
+
+  const isParent = family.role !== "child";
 
   return (
     <AccentColorProvider value={accent}>

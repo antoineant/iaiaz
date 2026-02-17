@@ -278,6 +278,14 @@
     "language": "Langue",
     "signOut": "Se déconnecter"
   },
+  "onboarding": {
+    "title": "Bienvenue sur mīfā",
+    "subtitle": "Donnez un nom à votre espace famille",
+    "familyNameLabel": "Nom de famille",
+    "familyNamePlaceholder": "Ex : Dupont",
+    "createButton": "Créer mon espace",
+    "error": "Une erreur est survenue, réessayez"
+  },
   "childSettings": {
     "tabs": {
       "profile": "Profil",
