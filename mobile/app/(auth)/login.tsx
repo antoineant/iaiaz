@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { useAuth } from "@/lib/auth";
-import { Button, Input, Text } from "@/components/ui";
+import { Button, Input, MifaLogo, Text } from "@/components/ui";
 import { useTranslation } from "react-i18next";
 
 export default function LoginScreen() {
@@ -56,10 +56,8 @@ export default function LoginScreen() {
       >
         <View className="flex-1 justify-center px-6 py-12">
           <View className="items-center mb-12">
-            <Text variant="title" className="text-primary-600 text-3xl">
-              Mifa
-            </Text>
-            <Text variant="caption" className="mt-2">
+            <MifaLogo size="lg" />
+            <Text variant="caption" className="mt-3">
               {t("auth.subtitle")}
             </Text>
           </View>

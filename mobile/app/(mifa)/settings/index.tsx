@@ -1,7 +1,7 @@
 import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Globe, GraduationCap, Palette } from "lucide-react-native";
-import { Text, Card, Button } from "@/components/ui";
+import { Text, Card, Button, MifaLogo } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { useUpdateTheme } from "@/lib/hooks/useMifa";
@@ -138,9 +138,13 @@ export default function SettingsScreen() {
         </Card>
 
         {/* Sign Out */}
-        <Button variant="outline" onPress={signOut} className="mb-8">
+        <Button variant="outline" onPress={signOut} className="mb-6">
           {t("settings.signOut")}
         </Button>
+
+        <View className="items-center mb-8 opacity-40">
+          <MifaLogo size="sm" />
+        </View>
       </View>
     </ScrollView>
   );

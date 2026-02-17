@@ -11,11 +11,15 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#6366f1"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.iaia.mifa"
+      "bundleIdentifier": "com.iaia.mifa",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "mifa needs microphone access to transcribe voice messages."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,19 +28,15 @@
       },
       "package": "com.iaia.mifa"
     },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store",
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#6366f1"
-        }
-      ]
-    ],
+    "plugins": [],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8cb49b3e-9bb8-42e5-9df8-52713ddef22a"
+      }
     }
   }
 }

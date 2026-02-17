@@ -119,9 +119,10 @@ function MessageBubble({ message, accentHex }: { message: ChatMessage; accentHex
 }
 
 export default function ChatConversationScreen() {
-  const { id, assistantId: initialAssistantId } = useLocalSearchParams<{
+  const { id, assistantId: initialAssistantId, initialMessage } = useLocalSearchParams<{
     id: string;
     assistantId?: string;
+    initialMessage?: string;
   }>();
   const { t } = useTranslation();
   const { data: family } = useFamilyRole();
@@ -140,6 +141,7 @@ export default function ChatConversationScreen() {
   );
   const [pickerOpen, setPickerOpen] = useState(false);
   const [recorderState, setRecorderState] = useState<RecorderState>("idle");
+  const initialMessageSent = useRef(false);
   const recordingRef = useRef<Audio.Recording | null>(null);
   const { data: assistantsData } = useAssistants();
   const { startSession } = useChatSession();
@@ -191,8 +193,8 @@ export default function ChatConversationScreen() {
     }
   };
 
-  const sendMessage = useCallback(async () => {
-    const text = input.trim();
+  const sendMessage = useCallback(async (overrideText?: string) => {
+    const text = (overrideText || input).trim();
     if (!text || sending) return;
 
     const userMessage: ChatMessage = {
@@ -260,6 +262,14 @@ export default function ChatConversationScreen() {
       setSending(false);
     }
   }, [input, sending, conversationId, selectedAssistantId]);
+
+  // Auto-send initial message from suggestion chip
+  useEffect(() => {
+    if (initialMessage && id === "new" && !initialMessageSent.current) {
+      initialMessageSent.current = true;
+      sendMessage(initialMessage);
+    }
+  }, [initialMessage, sendMessage]);
 
   const toggleRecording = useCallback(async () => {
     if (recorderState === "transcribing") return;
@@ -433,7 +443,7 @@ export default function ChatConversationScreen() {
             onChangeText={setInput}
             multiline
             editable={!sending}
-            onSubmitEditing={sendMessage}
+            onSubmitEditing={() => sendMessage()}
             blurOnSubmit={false}
           />
         )}

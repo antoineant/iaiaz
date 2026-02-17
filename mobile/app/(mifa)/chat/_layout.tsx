@@ -15,8 +15,7 @@ export default function ChatLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: greeting,
-          headerLargeTitle: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen
