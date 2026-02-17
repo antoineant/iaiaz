@@ -4174,7 +4174,12 @@
       "statusRevoked": "Révoquée",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordSent": "Email de réinitialisation envoyé à {email}",
-      "resetPasswordError": "Échec de l'envoi de l'email"
+      "resetPasswordError": "Échec de l'envoi de l'email",
+      "removeChild": "Retirer l'enfant",
+      "removeChildConfirm": "Voulez-vous vraiment retirer {name} de la famille ? Vous pourrez le/la réinviter plus tard.",
+      "removeChildCancel": "Annuler",
+      "removeChildSuccess": "Enfant retiré de la famille",
+      "removeChildError": "Échec du retrait"
     },
     "childSettings": {
       "title": "Mon espace",

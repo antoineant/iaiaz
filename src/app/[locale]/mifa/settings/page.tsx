@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X, KeyRound } from "lucide-react";
+import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X, KeyRound, UserMinus } from "lucide-react";
 
 const SCHOOL_YEAR_OPTIONS = [
   "6eme", "5eme", "4eme", "3eme",
@@ -73,6 +73,8 @@ function MifaSettingsContent() {
   const [resending, setResending] = useState<string | null>(null);
   const [resettingPassword, setResettingPassword] = useState<string | null>(null);
   const [resetMsg, setResetMsg] = useState<Record<string, string>>({});
+  const [confirmRemoveChild, setConfirmRemoveChild] = useState<string | null>(null);
+  const [removingChild, setRemovingChild] = useState<string | null>(null);
 
   // Local edits: keyed by user_id
   const [edits, setEdits] = useState<Record<string, Partial<ChildControl["controls"]>>>({});
@@ -278,6 +280,28 @@ function MifaSettingsContent() {
       setResetMsg((prev) => ({ ...prev, [childUserId]: t("resetPasswordError") }));
     } finally {
       setResettingPassword(null);
+    }
+  };
+
+  const removeChild = async (childUserId: string) => {
+    setRemovingChild(childUserId);
+    try {
+      const res = await fetch("/api/mifa/remove-child", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ childUserId }),
+      });
+      if (res.ok) {
+        setConfirmRemoveChild(null);
+        await loadData();
+      } else {
+        const data = await res.json();
+        setResetMsg((prev) => ({ ...prev, [childUserId]: data.error || t("removeChildError") }));
+      }
+    } catch {
+      setResetMsg((prev) => ({ ...prev, [childUserId]: t("removeChildError") }));
+    } finally {
+      setRemovingChild(null);
     }
   };
 
@@ -632,7 +656,7 @@ function MifaSettingsContent() {
                       </div>
                     </div>
 
-                    {/* Reset Password */}
+                    {/* Reset Password & Remove Child */}
                     <div className="sm:col-span-2 pt-3 border-t border-[var(--border)]">
                       <div className="flex items-center gap-3">
                         <Button
@@ -648,6 +672,41 @@ function MifaSettingsContent() {
                           )}
                           {t("resetPassword")}
                         </Button>
+                        {confirmRemoveChild !== child.user_id ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setConfirmRemoveChild(child.user_id)}
+                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                          >
+                            <UserMinus className="w-4 h-4 mr-2" />
+                            {t("removeChild")}
+                          </Button>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeChild(child.user_id)}
+                              disabled={removingChild === child.user_id}
+                              className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                            >
+                              {removingChild === child.user_id ? (
+                                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                              ) : (
+                                <UserMinus className="w-4 h-4 mr-2" />
+                              )}
+                              {t("removeChildConfirm", { name: child.display_name })}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setConfirmRemoveChild(null)}
+                            >
+                              {t("removeChildCancel")}
+                            </Button>
+                          </div>
+                        )}
                       </div>
                       {resetMsg[child.user_id] && (
                         <p className="text-sm mt-2 text-[var(--muted-foreground)]">{resetMsg[child.user_id]}</p>

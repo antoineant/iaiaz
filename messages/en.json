@@ -3978,7 +3978,12 @@
       "statusRevoked": "Revoked",
       "resetPassword": "Reset password",
       "resetPasswordSent": "Password reset email sent to {email}",
-      "resetPasswordError": "Failed to send reset email"
+      "resetPasswordError": "Failed to send reset email",
+      "removeChild": "Remove child",
+      "removeChildConfirm": "Are you sure you want to remove {name} from the family? This action can be undone by re-inviting them.",
+      "removeChildCancel": "Cancel",
+      "removeChildSuccess": "Child removed from the family",
+      "removeChildError": "Failed to remove child"
     },
     "childSettings": {
       "title": "My space",
