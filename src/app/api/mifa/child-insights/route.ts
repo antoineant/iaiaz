@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
       .select("user_id, supervision_mode")
       .eq("organization_id", orgId)
       .eq("user_id", childId)
+      .eq("status", "active")
       .single();
 
     if (!childMembership) {

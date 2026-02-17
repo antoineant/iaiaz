@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
       .select("user_id, role, supervision_mode")
       .eq("organization_id", orgId)
       .eq("user_id", childId)
+      .eq("status", "active")
       .single();
 
     if (!childMembership) {

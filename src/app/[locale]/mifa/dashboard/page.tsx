@@ -53,6 +53,7 @@ export default async function MifaDashboardPage({ params, searchParams }: Props)
     .from("organization_members")
     .select("user_id, role, supervision_mode")
     .eq("organization_id", organizationId)
+    .eq("status", "active")
     .order("role", { ascending: true });
 
   // Fetch profiles separately
