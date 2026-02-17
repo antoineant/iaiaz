@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { X, Pencil, Trash2, Plus, Check, ChevronUp, ChevronDown } from "lucide-react";
 import { ACCENT_COLORS, type ThemeColor } from "@/lib/mifa/theme";
 import { AssistantWizard } from "./assistant-wizard";
+import { MifaAvatar } from "./mifa-avatar";
 import type { CustomAssistant } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -400,7 +401,7 @@ export function ChildSettingsPanel({
                       /* Display mode */
                       <>
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl">{a.avatar}</span>
+                          <MifaAvatar avatar={a.avatar} avatarType={a.avatar_type} size={32} />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <span className="font-medium text-sm truncate">

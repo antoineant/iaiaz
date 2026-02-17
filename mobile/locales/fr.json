@@ -4,7 +4,9 @@
     "email": "Email",
     "password": "Mot de passe",
     "signIn": "Se connecter",
-    "fillAllFields": "Veuillez remplir tous les champs"
+    "fillAllFields": "Veuillez remplir tous les champs",
+    "or": "ou",
+    "continueWithGoogle": "Continuer avec Google"
   },
   "common": {
     "buttons": {
@@ -24,6 +26,8 @@
   "tabs": {
     "chat": "Chat",
     "dashboard": "Famille",
+    "stats": "Stats",
+    "family": "Famille",
     "settings": "Réglages",
     "profile": "Mon espace",
     "assistants": "Mifas",
@@ -114,13 +118,21 @@
       "title": "Bienvenue dans mifa !",
       "subtitle": "Votre espace famille est prêt."
     },
+    "alerts": "Alertes",
+    "weeklyCost": "{{cost}}€ cette semaine",
     "transfer": {
       "title": "Transférer des crédits",
-      "amount": "Montant",
+      "orgBalance": "Solde famille",
+      "childBalance": "Solde actuel",
+      "amount": "Montant (€)",
+      "total": "Total à transférer",
+      "remaining": "Solde restant",
+      "button": "Transférer",
       "to": "Vers",
       "confirm": "Confirmer le transfert",
-      "success": "Crédits transférés avec succès",
-      "error": "Erreur lors du transfert"
+      "success": "Crédits transférés avec succès !",
+      "error": "Erreur lors du transfert",
+      "exceedsBalance": "Le total dépasse le solde disponible"
     },
     "subscription": {
       "active": "Abonnement actif",
@@ -137,10 +149,52 @@
       "dailyAvg": "Moy. quotidienne",
       "struggleRatio": "Taux de difficulté"
     },
+    "period": {
+      "7d": "7 jours",
+      "14d": "14 jours",
+      "30d": "30 jours"
+    },
     "sections": {
       "activity": "Activité récente",
       "subjects": "Matières étudiées",
-      "usage": "Utilisation"
+      "usage": "Utilisation",
+      "dailyActivity": "Activité quotidienne",
+      "activityTypes": "Types d'activité",
+      "topTopics": "Sujets principaux",
+      "heatmap": "Carte d'utilisation",
+      "flags": "Alertes de sécurité",
+      "recentConversations": "Conversations récentes"
+    },
+    "heatmap": {
+      "morning": "Matin",
+      "afternoon": "Après-midi",
+      "evening": "Soir",
+      "night": "Nuit",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mer",
+      "thu": "Jeu",
+      "fri": "Ven",
+      "sat": "Sam",
+      "sun": "Dim"
+    },
+    "flags": {
+      "content_policy": "Contenu signalé",
+      "difficulty": "Difficulté",
+      "late_usage": "Usage tardif",
+      "noFlags": "Aucune alerte"
+    },
+    "activityTypes": {
+      "homework": "Devoirs",
+      "revision": "Révisions",
+      "creative": "Créatif",
+      "essay": "Rédaction",
+      "general": "Général"
+    },
+    "conversations": {
+      "messages": "{{count}} message",
+      "messages_plural": "{{count}} messages",
+      "struggle": "Difficulté"
     },
     "insights": {
       "title": "Observations",
@@ -156,10 +210,38 @@
     "quietHoursStart": "Début",
     "quietHoursEnd": "Fin",
     "dailyCreditLimit": "Limite de crédits quotidienne",
+    "dailyCreditLimitInput": "Limite quotidienne (€)",
+    "unlimited": "Illimité",
     "dailyTimeLimit": "Limite de temps quotidienne",
+    "cumulativeCredits": "Crédits cumulables",
+    "cumulativeCreditsDesc": "Les crédits non utilisés sont reportés (max 7 jours)",
+    "saveControls": "Enregistrer les réglages",
     "profile": "Profil",
     "invites": "Invitations",
+    "inviteName": "Nom",
+    "inviteRole": "Rôle",
+    "inviteRoleChild": "Enfant",
+    "inviteRoleParent": "Parent",
+    "pendingInvites": "Invitations envoyées",
+    "resend": "Renvoyer",
+    "revoke": "Révoquer",
+    "revokeConfirm": "Révoquer cette invitation ?",
+    "inviteStatus": {
+      "pending": "En attente",
+      "accepted": "Acceptée",
+      "expired": "Expirée",
+      "revoked": "Révoquée"
+    },
+    "noInvites": "Aucune invitation",
+    "inviteResent": "Invitation renvoyée",
+    "inviteRevoked": "Invitation révoquée",
     "resetPassword": "Réinitialiser le mot de passe",
+    "childProfile": {
+      "title": "Profil de l'enfant",
+      "displayName": "Surnom",
+      "birthdate": "Date de naissance",
+      "schoolYear": "Année scolaire"
+    },
     "modes": {
       "guided": {
         "title": "Encadré",
@@ -174,7 +256,15 @@
         "description": "18+ — Aucune restriction"
       }
     },
-    "saved": "Réglages sauvegardés"
+    "schoolSystem": "Système scolaire",
+    "schoolSystems": { "fr": "France", "uk": "Royaume-Uni" },
+    "schoolYears": {
+      "fr": { "6eme": "6ème", "5eme": "5ème", "4eme": "4ème", "3eme": "3ème", "seconde": "Seconde", "premiere": "Première", "terminale": "Terminale", "superieur": "Supérieur" },
+      "uk": { "6eme": "Year 7", "5eme": "Year 8", "4eme": "Year 9", "3eme": "Year 10", "seconde": "Year 11", "premiere": "Year 12", "terminale": "Year 13", "superieur": "University" }
+    },
+    "saved": "Réglages sauvegardés",
+    "language": "Langue",
+    "signOut": "Se déconnecter"
   },
   "childSettings": {
     "tabs": {

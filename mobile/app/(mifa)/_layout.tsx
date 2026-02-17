@@ -3,15 +3,17 @@ import { useTranslation } from "react-i18next";
 import { View, ActivityIndicator } from "react-native";
 import {
   MessageCircle,
-  LayoutDashboard,
+  BarChart3,
   Settings,
   User,
   Sparkles,
   Clock,
+  Users,
 } from "lucide-react-native";
 import { useFamilyRole } from "@/lib/hooks/useFamilyRole";
 import { ChatSessionProvider } from "@/lib/chatSession";
 import { AccentColorProvider } from "@/lib/AccentColorContext";
+import { SchoolSystemProvider } from "@/lib/SchoolSystemContext";
 import { getAccentTheme } from "@/lib/theme";
 
 export default function MifaLayout() {
@@ -32,8 +34,10 @@ export default function MifaLayout() {
 
   return (
     <AccentColorProvider value={accent}>
+    <SchoolSystemProvider>
     <ChatSessionProvider>
     <Tabs
+      initialRouteName={isParent ? "dashboard" : "chat"}
       screenOptions={{
         tabBarActiveTintColor: accent.hex,
         tabBarInactiveTintColor: "#9ca3af",
@@ -56,6 +60,40 @@ export default function MifaLayout() {
         },
       }}
     >
+      {/* Parent tabs: Stats, Family, Settings, Chat */}
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: t("tabs.stats"),
+          headerShown: false,
+          href: isParent ? undefined : null,
+          tabBarIcon: ({ color, size }) => (
+            <BarChart3 size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="family"
+        options={{
+          title: t("tabs.family"),
+          headerShown: false,
+          href: isParent ? undefined : null,
+          tabBarIcon: ({ color, size }) => (
+            <Users size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: t("tabs.settings"),
+          headerShown: false,
+          href: isParent ? undefined : null,
+          tabBarIcon: ({ color, size }) => (
+            <Settings size={size} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="chat"
         options={{
@@ -66,12 +104,14 @@ export default function MifaLayout() {
           ),
         }}
       />
+
+      {/* Child-only tabs */}
       <Tabs.Screen
         name="assistants"
         options={{
           title: t("tabs.assistants"),
           headerShown: false,
-          href: isParent ? null : undefined, // Hide for parents
+          href: isParent ? null : undefined,
           tabBarIcon: ({ color, size }) => (
             <Sparkles size={size} color={color} />
           ),
@@ -82,31 +122,9 @@ export default function MifaLayout() {
         options={{
           title: t("tabs.history"),
           headerShown: false,
-          href: isParent ? null : undefined, // Hide for parents
+          href: isParent ? null : undefined,
           tabBarIcon: ({ color, size }) => (
             <Clock size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="dashboard"
-        options={{
-          title: t("tabs.dashboard"),
-          headerShown: false,
-          href: isParent ? undefined : null, // Hide for children
-          tabBarIcon: ({ color, size }) => (
-            <LayoutDashboard size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: t("tabs.settings"),
-          headerShown: false,
-          href: isParent ? undefined : null, // Hide for children
-          tabBarIcon: ({ color, size }) => (
-            <Settings size={size} color={color} />
           ),
         }}
       />
@@ -115,7 +133,7 @@ export default function MifaLayout() {
         options={{
           title: t("tabs.profile"),
           headerShown: false,
-          href: isParent ? null : undefined, // Hide for parents
+          href: isParent ? null : undefined,
           tabBarIcon: ({ color, size }) => (
             <User size={size} color={color} />
           ),
@@ -123,6 +141,7 @@ export default function MifaLayout() {
       />
     </Tabs>
     </ChatSessionProvider>
+    </SchoolSystemProvider>
     </AccentColorProvider>
   );
 }

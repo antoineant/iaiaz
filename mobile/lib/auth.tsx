@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { Session, User } from "@supabase/supabase-js";
+import * as WebBrowser from "expo-web-browser";
 import { supabase } from "./supabase";
 
 interface AuthContextType {
@@ -14,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signInWithGoogle: () => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -22,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signIn: async () => ({}),
+  signInWithGoogle: async () => ({}),
   signOut: async () => {},
 });
 
@@ -53,6 +56,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   }, []);
 
+  const signInWithGoogle = useCallback(async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        skipBrowserRedirect: true,
+        redirectTo: "mifa://google-auth",
+      },
+    });
+    if (error || !data.url) return { error: error?.message ?? "No OAuth URL" };
+
+    const result = await WebBrowser.openAuthSessionAsync(
+      data.url,
+      "mifa://google-auth"
+    );
+
+    if (result.type !== "success" || !result.url) {
+      return { error: "Sign in cancelled" };
+    }
+
+    const fragment = result.url.split("#")[1];
+    if (!fragment) return { error: "No auth tokens in response" };
+
+    const params: Record<string, string> = {};
+    for (const pair of fragment.split("&")) {
+      const [key, value] = pair.split("=");
+      params[key] = decodeURIComponent(value);
+    }
+
+    const accessToken = params["access_token"];
+    const refreshToken = params["refresh_token"];
+    if (!accessToken || !refreshToken) {
+      return { error: "Missing tokens in response" };
+    }
+
+    const { error: sessionError } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+
+    if (sessionError) return { error: sessionError.message };
+    return {};
+  }, []);
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
@@ -64,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: session?.user ?? null,
         loading,
         signIn,
+        signInWithGoogle,
         signOut,
       }}
     >

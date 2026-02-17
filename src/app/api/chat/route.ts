@@ -30,6 +30,31 @@ import { isModelAllowedForUser } from "@/lib/org";
 import { checkMifaPreConditions, logContentFlag, getFamilyOrgInfo } from "@/lib/mifa/content-filter";
 import { buildMifaSystemPrompt, buildParentSystemPrompt, parseMifaMetadata, createMifaMetaStripper } from "@/lib/mifa/guardian-prompt";
 import { calculateAge } from "@/lib/mifa/age-verification";
+import { sendLowCreditsEmail } from "@/lib/email";
+
+const LOW_CREDIT_THRESHOLD = 0.5; // €
+
+/** Fire-and-forget low credit email if balance drops below threshold (personal credits only) */
+async function checkLowCredits(userId: string, remaining: number | undefined, source: string | undefined) {
+  if (source !== "personal" || remaining === undefined || remaining >= LOW_CREDIT_THRESHOLD) return;
+  try {
+    const admin = createAdminClient();
+    const { data: profile } = await admin
+      .from("profiles")
+      .select("email, low_credit_notified_at")
+      .eq("id", userId)
+      .single();
+    if (!profile?.email) return;
+    // Only send once per 24h
+    const lastNotified = profile.low_credit_notified_at ? new Date(profile.low_credit_notified_at) : null;
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    if (lastNotified && lastNotified > oneDayAgo) return;
+    await admin.from("profiles").update({ low_credit_notified_at: new Date().toISOString() }).eq("id", userId);
+    await sendLowCreditsEmail(profile.email, remaining);
+  } catch {
+    // Non-blocking
+  }
+}
 
 interface ChatRequest {
   message: string;
@@ -597,6 +622,8 @@ export async function POST(request: NextRequest) {
               creditContext
             );
 
+            checkLowCredits(user.id, deductResult.remaining, deductResult.source).catch(() => {});
+
             // Get rate limit info
             const tier = getModelTier(model);
             const limits = getTierLimits(tier);
@@ -806,6 +833,8 @@ export async function POST(request: NextRequest) {
     if (!deductResult.success) {
       console.error("[chat] Error deducting credits:", deductResult.error);
     }
+
+    checkLowCredits(user.id, deductResult.remaining, deductResult.source).catch(() => {});
 
     // Get updated rate limit info for response
     const tier = getModelTier(model);

@@ -74,10 +74,18 @@ export async function GET() {
         .sort((a, b) => b.count - a.count);
     }
 
+    // Get current balance
+    const { data: profile } = await admin
+      .from("profiles")
+      .select("credits_balance")
+      .eq("id", user.id)
+      .single();
+
     return NextResponse.json({
       conversations: conversations.length,
       subjects,
       creditsUsed: Math.round(creditsUsed * 10000) / 10000,
+      creditsBalance: Number(profile?.credits_balance || 0),
     });
   } catch (error) {
     console.error("My stats error:", error);

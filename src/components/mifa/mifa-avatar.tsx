@@ -13,13 +13,18 @@ interface MifaAvatarProps {
 export function MifaAvatar({ avatar, avatarType = "emoji", size = 48, className = "" }: MifaAvatarProps) {
   if (avatarType === "generated" && avatar) {
     return (
-      <Image
-        src={avatar}
-        alt="Mifa avatar"
-        width={size}
-        height={size}
-        className={`rounded-full object-cover ${className}`}
-      />
+      <div
+        className={`rounded-full overflow-hidden flex-shrink-0 ${className}`}
+        style={{ width: size, height: size }}
+      >
+        <Image
+          src={avatar}
+          alt="Mifa avatar"
+          width={size}
+          height={size}
+          className="w-full h-full object-cover"
+        />
+      </div>
     );
   }
 

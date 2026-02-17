@@ -2,7 +2,6 @@ import { Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { supabase } from "./supabase";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -47,21 +46,23 @@ export async function registerForPushNotifications(): Promise<string | null> {
   return token;
 }
 
-export async function savePushToken(token: string) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return;
-
-  await supabase
-    .from("profiles")
-    .update({ push_token: token })
-    .eq("id", user.id);
+async function savePushToken(token: string) {
+  // Save via API (bypasses RLS via admin client on server)
+  const { api } = await import("./api");
+  await api.savePushToken(token);
+  console.log("📱 Push token saved via API");
 }
 
 export async function setupNotifications() {
-  const token = await registerForPushNotifications();
-  if (token) {
-    await savePushToken(token);
+  try {
+    const token = await registerForPushNotifications();
+    if (token) {
+      console.log("📱 Got push token:", token.substring(0, 30) + "...");
+      await savePushToken(token);
+    } else {
+      console.log("📱 No push token obtained");
+    }
+  } catch (err) {
+    console.error("📱 setupNotifications error:", err);
   }
 }

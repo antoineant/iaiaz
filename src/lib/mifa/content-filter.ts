@@ -2,6 +2,7 @@
 // No keyword lists: AI providers handle moderation, we surface it to parents
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPushToUsers } from "@/lib/push";
 
 export type FlagType = "content_policy" | "parent_review" | "excessive_usage";
 
@@ -69,6 +70,47 @@ export async function logContentFlag(
     flag_type: flagType,
     flag_reason: reason,
   });
+
+  // Notify parents if notification_on_flagged_content is enabled
+  try {
+    const { data: controls } = await adminClient
+      .from("parental_controls")
+      .select("notification_on_flagged_content")
+      .eq("organization_id", orgId)
+      .eq("child_user_id", userId)
+      .single();
+
+    if (controls?.notification_on_flagged_content !== false) {
+      // Get child name
+      const { data: childProfile } = await adminClient
+        .from("profiles")
+        .select("display_name")
+        .eq("id", userId)
+        .single();
+
+      const childName = childProfile?.display_name || "Votre enfant";
+
+      // Get parent IDs
+      const { data: parents } = await adminClient
+        .from("organization_members")
+        .select("user_id")
+        .eq("organization_id", orgId)
+        .in("role", ["owner", "admin"])
+        .neq("user_id", userId);
+
+      const parentIds = parents?.map((p) => p.user_id) || [];
+
+      if (parentIds.length > 0) {
+        sendPushToUsers(parentIds, {
+          title: "Alerte contenu",
+          body: `Un message de ${childName} a été bloqué par le filtre de sécurité.`,
+          data: { type: "content_flag", childId: userId, flagType },
+        }).catch((err) => console.error("📱 Push failed for content flag:", err));
+      }
+    }
+  } catch {
+    // Non-blocking: don't fail if notification fails
+  }
 }
 
 /**

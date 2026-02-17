@@ -8,7 +8,7 @@ export default function SettingsLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: t("settings.title"),
+          title: t("tabs.settings"),
           headerLargeTitle: true,
         }}
       />

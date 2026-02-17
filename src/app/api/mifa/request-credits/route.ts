@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/email";
+import { sendPushToUsers } from "@/lib/push";
 
 export async function POST() {
   try {
@@ -78,6 +79,13 @@ export async function POST() {
       console.error("Credit request email error:", result.error);
       return NextResponse.json({ error: "Erreur d'envoi" }, { status: 500 });
     }
+
+    // Push notification to parents (fire-and-forget)
+    sendPushToUsers(parentIds, {
+      title: `${childName} a besoin de crédits`,
+      body: `Solde actuel : ${balance.toFixed(2)}€. Ouvrez l'app pour transférer des crédits.`,
+      data: { type: "credit_request", childId: user.id },
+    }).catch((err) => console.error("📱 Push failed for credit request:", err));
 
     return NextResponse.json({ ok: true });
   } catch (error) {

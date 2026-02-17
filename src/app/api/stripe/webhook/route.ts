@@ -143,6 +143,54 @@ async function handlePersonalPurchase(
 
   console.log(`Successfully added ${credits}€ credits to user ${userId}`);
 
+  // If user is a family org owner, also sync credits to the org pool
+  const { data: familyMembership } = await adminClient
+    .from("organization_members")
+    .select("organization_id")
+    .eq("user_id", userId)
+    .eq("role", "owner")
+    .eq("status", "active")
+    .single();
+
+  if (familyMembership) {
+    const { data: familyOrg } = await adminClient
+      .from("organizations")
+      .select("id, type, credit_balance")
+      .eq("id", familyMembership.organization_id)
+      .eq("type", "family")
+      .single();
+
+    if (familyOrg) {
+      const newOrgBalance = (familyOrg.credit_balance || 0) + parseFloat(credits);
+      await adminClient
+        .from("organizations")
+        .update({
+          credit_balance: newOrgBalance,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", familyOrg.id);
+
+      // Log the transaction in org
+      await adminClient.from("organization_transactions").insert({
+        organization_id: familyOrg.id,
+        user_id: userId,
+        type: "purchase",
+        amount: parseFloat(credits),
+        description: `Achat pack ${packId} (sync personnel)`,
+        stripe_payment_id: paymentIntentId,
+        receipt_url: receiptUrl,
+      });
+
+      // Keep personal balance in sync with org
+      await adminClient
+        .from("profiles")
+        .update({ credits_balance: newOrgBalance })
+        .eq("id", userId);
+
+      console.log(`Synced ${credits}€ to family org ${familyOrg.id}, new org balance: ${newOrgBalance}€`);
+    }
+  }
+
   // Send purchase confirmation email
   const customerEmail = session.customer_details?.email;
   if (customerEmail) {

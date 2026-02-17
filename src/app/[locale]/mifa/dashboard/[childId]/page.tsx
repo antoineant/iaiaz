@@ -827,7 +827,7 @@ export default function ChildAnalyticsPage() {
                           color: color,
                         }}
                       >
-                        {tp.topic}
+                        {tp.topic.replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase())}
                         {tp.struggleRatio > 0.3 && (
                           <AlertTriangle className="w-3 h-3 text-amber-500" />
                         )}

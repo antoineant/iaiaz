@@ -73,10 +73,15 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { childUserId, settings } = body as {
+    const { childUserId, orgId: _orgId, settings: nestedSettings, ...topLevelSettings } = body as {
       childUserId: string;
-      settings: Partial<ParentalControlSettings>;
+      orgId?: string;
+      settings?: Partial<ParentalControlSettings>;
+      [key: string]: any;
     };
+
+    // Support both { settings: {...} } and { ...settings } (flat) from mobile client
+    const settings: Partial<ParentalControlSettings> = nestedSettings || topLevelSettings;
 
     if (!childUserId) {
       return NextResponse.json({ error: "childUserId requis" }, { status: 400 });

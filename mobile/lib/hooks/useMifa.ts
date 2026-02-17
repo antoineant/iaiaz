@@ -12,11 +12,12 @@ export function useFamilyAnalytics(orgId: string | undefined) {
 
 export function useChildAnalytics(
   orgId: string | undefined,
-  childId: string | undefined
+  childId: string | undefined,
+  days?: number
 ) {
   return useQuery({
-    queryKey: ["childAnalytics", orgId, childId],
-    queryFn: () => api.getChildAnalytics(orgId!, childId!),
+    queryKey: ["childAnalytics", orgId, childId, days],
+    queryFn: () => api.getChildAnalytics(orgId!, childId!, days),
     enabled: !!orgId && !!childId,
   });
 }
@@ -36,6 +37,7 @@ export function useMyStats() {
   return useQuery({
     queryKey: ["myStats"],
     queryFn: () => api.getMyStats(),
+    refetchInterval: 30_000, // Poll every 30s so balance stays fresh
   });
 }
 
@@ -186,16 +188,50 @@ export function useChildProfile(
 
 // Invites
 export function useSendInvite() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       orgId,
       email,
       role,
+      name,
     }: {
       orgId: string;
       email: string;
       role: string;
-    }) => api.sendInvite(orgId, email, role),
+      name?: string;
+    }) => api.sendInvite(orgId, email, role, name),
+    onSuccess: (_, { orgId }) => {
+      queryClient.invalidateQueries({ queryKey: ["invites", orgId] });
+    },
+  });
+}
+
+export function useInvites(orgId: string | undefined) {
+  return useQuery({
+    queryKey: ["invites", orgId],
+    queryFn: () => api.getInvites(orgId!),
+    enabled: !!orgId,
+  });
+}
+
+export function useResendInvite() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (inviteId: string) => api.resendInvite(inviteId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invites"] });
+    },
+  });
+}
+
+export function useRevokeInvite() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (inviteId: string) => api.revokeInvite(inviteId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invites"] });
+    },
   });
 }
 

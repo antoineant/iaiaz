@@ -69,7 +69,7 @@ export async function upsertParentalControls(
   }
 
   // Also update supervision_mode on organization_members for quick lookups
-  if (settings.supervision_mode) {
+  if (settings?.supervision_mode) {
     await adminClient
       .from("organization_members")
       .update({ supervision_mode: settings.supervision_mode })

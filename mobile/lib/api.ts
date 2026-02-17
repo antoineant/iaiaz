@@ -30,6 +30,10 @@ async function request<T>(
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        // Session expired — sign out to force re-login
+        supabase.auth.signOut().catch(() => {});
+      }
       throw new Error(body.error || `Request failed: ${res.status}`);
     }
 
@@ -43,25 +47,102 @@ async function request<T>(
 // Mifa API client
 export const api = {
   // Analytics
-  getFamilyAnalytics: (orgId: string) =>
-    request<any>(`/api/mifa/analytics?orgId=${orgId}`),
+  getFamilyAnalytics: async (orgId: string) => {
+    const raw = await request<any>(`/api/mifa/analytics?orgId=${orgId}`);
+    return {
+      creditBalance: raw.credit_balance,
+      totalMembers: raw.total_members,
+      parents: raw.parents,
+      children: raw.children,
+      usagePeriod: raw.usage_period,
+      members: (raw.member_usage || []).map((m: any) => ({
+        ...m,
+        weekly_cost: m.usage_amount || 0,
+      })),
+      flaggedCount: raw.flagged_count,
+      pendingInvites: raw.pending_invites,
+      totalConversations: (raw.member_usage || []).reduce(
+        (sum: number, m: any) => sum + (m.transaction_count || 0),
+        0
+      ),
+    };
+  },
 
-  getChildAnalytics: (orgId: string, childId: string) =>
-    request<any>(
-      `/api/mifa/child-analytics?orgId=${orgId}&childId=${childId}`
-    ),
+  getChildAnalytics: async (orgId: string, childId: string, days?: number) => {
+    const raw = await request<any>(
+      `/api/mifa/child-analytics?orgId=${orgId}&childId=${childId}${days ? `&days=${days}` : ""}`
+    );
+    const totalConversations = raw.totals?.conversations || 0;
+    const totalCost = raw.totals?.cost || 0;
+    const periodDays = raw.period?.days || days || 7;
+
+    // Compute struggle ratio from subject breakdown
+    const totalActivities = (raw.subjectBreakdown || []).reduce(
+      (s: number, sb: any) => s + (sb.count || 0), 0
+    );
+    const totalStruggles = (raw.subjectBreakdown || []).reduce(
+      (s: number, sb: any) => s + (sb.struggleCount || 0), 0
+    );
+
+    return {
+      childName: raw.child?.displayName || "...",
+      supervisionMode: raw.child?.supervisionMode,
+      ageBracket: raw.child?.ageBracket,
+      totalConversations,
+      totalCost,
+      dailyAvg: periodDays > 0 ? totalCost / periodDays : 0,
+      struggleRatio: totalActivities > 0 ? totalStruggles / totalActivities : 0,
+      dailyActivity: (raw.dailyActivity || []).map((d: any) => ({
+        date: d.date,
+        count: d.messages || 0,
+        messageCount: d.messages || 0,
+        conversations: d.conversations,
+        cost: d.cost,
+      })),
+      activityTypes: raw.activityTypes || [],
+      topTopics: (raw.topTopics || []).map((t: any) => {
+        const label = t.topic.replace(/_/g, " ").replace(/^\w/, (c: string) => c.toUpperCase());
+        return {
+        name: label,
+        topic: label,
+        subject: t.subject,
+        count: t.count,
+        struggle: t.struggleRatio > 0.3,
+        hasStruggle: t.struggleRatio > 0.3,
+      };
+      }),
+      usageHeatmap: raw.usageHeatmap || [],
+      flags: (raw.flags || []).map((f: any) => ({
+        type: f.flagType,
+        reason: f.flagReason,
+        created_at: f.createdAt,
+        dismissed: f.dismissed,
+      })),
+      recentConversations: (raw.recentConversations || []).map((c: any) => ({
+        ...c,
+        date: c.createdAt,
+        created_at: c.createdAt,
+      })),
+      subjects: (raw.subjectBreakdown || []).map((s: any) => ({
+        name: s.subject,
+        count: s.count,
+        struggleCount: s.struggleCount,
+      })),
+    };
+  },
 
   getChildInsights: (orgId: string, childId: string) =>
-    request<any>(
-      `/api/mifa/child-insights?orgId=${orgId}&childId=${childId}`
-    ),
+    request<any>(`/api/mifa/child-insights`, {
+      method: "POST",
+      body: JSON.stringify({ childId }),
+    }),
 
   getMyStats: () => request<any>(`/api/mifa/my-stats`),
 
   // Controls
   getControls: (orgId: string, childId: string) =>
     request<any>(
-      `/api/mifa/controls?orgId=${orgId}&childUserId=${childId}`
+      `/api/mifa/controls?orgId=${orgId}&childId=${childId}`
     ),
 
   updateControls: (
@@ -132,7 +213,7 @@ export const api = {
   // Child Profile
   getChildProfile: (orgId: string, childId: string) =>
     request<any>(
-      `/api/mifa/child-profile?orgId=${orgId}&childUserId=${childId}`
+      `/api/mifa/child-profile?orgId=${orgId}&childId=${childId}`
     ),
 
   updateChildProfile: (
@@ -142,14 +223,38 @@ export const api = {
   ) =>
     request<any>(`/api/mifa/child-profile`, {
       method: "PUT",
-      body: JSON.stringify({ orgId, childUserId: childId, ...data }),
+      body: JSON.stringify({ orgId, childUserId: childId, profile: data }),
     }),
 
   // Invites
-  sendInvite: (orgId: string, email: string, role: string) =>
+  sendInvite: (orgId: string, email: string, role: string, name?: string) =>
     request<any>(`/api/mifa/invite`, {
       method: "POST",
-      body: JSON.stringify({ orgId, email, role }),
+      body: JSON.stringify({ orgId, email, role, name }),
+    }),
+
+  getInvites: async (orgId: string) => {
+    const res = await request<{ invites: any[] }>(`/api/mifa/invite?orgId=${orgId}`);
+    return res.invites;
+  },
+
+  resendInvite: (inviteId: string) =>
+    request<any>(`/api/mifa/invite`, {
+      method: "PATCH",
+      body: JSON.stringify({ inviteId }),
+    }),
+
+  revokeInvite: (inviteId: string) =>
+    request<any>(`/api/mifa/invite`, {
+      method: "DELETE",
+      body: JSON.stringify({ inviteId }),
+    }),
+
+  // Push token
+  savePushToken: (token: string) =>
+    request<any>(`/api/mifa/push-token`, {
+      method: "PUT",
+      body: JSON.stringify({ token }),
     }),
 
   // Theme

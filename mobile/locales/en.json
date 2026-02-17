@@ -4,7 +4,9 @@
     "email": "Email",
     "password": "Password",
     "signIn": "Sign in",
-    "fillAllFields": "Please fill in all fields"
+    "fillAllFields": "Please fill in all fields",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google"
   },
   "common": {
     "buttons": {
@@ -24,6 +26,8 @@
   "tabs": {
     "chat": "Chat",
     "dashboard": "Family",
+    "stats": "Stats",
+    "family": "Family",
     "settings": "Settings",
     "profile": "My space",
     "assistants": "Mifas",
@@ -114,13 +118,21 @@
       "title": "Welcome to mifa!",
       "subtitle": "Your family space is ready."
     },
+    "alerts": "Alerts",
+    "weeklyCost": "{{cost}}€ this week",
     "transfer": {
       "title": "Transfer Credits",
-      "amount": "Amount",
+      "orgBalance": "Family Balance",
+      "childBalance": "Current balance",
+      "amount": "Amount (€)",
+      "total": "Total to transfer",
+      "remaining": "Remaining balance",
+      "button": "Transfer",
       "to": "To",
       "confirm": "Confirm Transfer",
-      "success": "Credits transferred successfully",
-      "error": "Error transferring credits"
+      "success": "Credits transferred successfully!",
+      "error": "Error transferring credits",
+      "exceedsBalance": "Total exceeds available balance"
     },
     "subscription": {
       "active": "Active subscription",
@@ -137,10 +149,52 @@
       "dailyAvg": "Daily Avg",
       "struggleRatio": "Struggle Ratio"
     },
+    "period": {
+      "7d": "7 days",
+      "14d": "14 days",
+      "30d": "30 days"
+    },
     "sections": {
       "activity": "Recent Activity",
       "subjects": "Subjects Studied",
-      "usage": "Usage"
+      "usage": "Usage",
+      "dailyActivity": "Daily Activity",
+      "activityTypes": "Activity Types",
+      "topTopics": "Top Topics",
+      "heatmap": "Usage Heatmap",
+      "flags": "Safety Alerts",
+      "recentConversations": "Recent Conversations"
+    },
+    "heatmap": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "night": "Night",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "flags": {
+      "content_policy": "Content flagged",
+      "difficulty": "Difficulty",
+      "late_usage": "Late usage",
+      "noFlags": "No alerts"
+    },
+    "activityTypes": {
+      "homework": "Homework",
+      "revision": "Revision",
+      "creative": "Creative",
+      "essay": "Essay",
+      "general": "General"
+    },
+    "conversations": {
+      "messages": "{{count}} message",
+      "messages_plural": "{{count}} messages",
+      "struggle": "Struggling"
     },
     "insights": {
       "title": "Observations",
@@ -156,10 +210,38 @@
     "quietHoursStart": "Start",
     "quietHoursEnd": "End",
     "dailyCreditLimit": "Daily Credit Limit",
+    "dailyCreditLimitInput": "Daily limit (€)",
+    "unlimited": "Unlimited",
     "dailyTimeLimit": "Daily Time Limit",
+    "cumulativeCredits": "Cumulative Credits",
+    "cumulativeCreditsDesc": "Unused daily credits roll over (max 7 days)",
+    "saveControls": "Save Settings",
     "profile": "Profile",
     "invites": "Invitations",
+    "inviteName": "Name",
+    "inviteRole": "Role",
+    "inviteRoleChild": "Child",
+    "inviteRoleParent": "Parent",
+    "pendingInvites": "Sent Invitations",
+    "resend": "Resend",
+    "revoke": "Revoke",
+    "revokeConfirm": "Revoke this invitation?",
+    "inviteStatus": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "revoked": "Revoked"
+    },
+    "noInvites": "No invitations",
+    "inviteResent": "Invitation resent",
+    "inviteRevoked": "Invitation revoked",
     "resetPassword": "Reset Password",
+    "childProfile": {
+      "title": "Child Profile",
+      "displayName": "Display Name",
+      "birthdate": "Date of Birth",
+      "schoolYear": "School Year"
+    },
     "modes": {
       "guided": {
         "title": "Guided",
@@ -174,7 +256,15 @@
         "description": "18+ — No restrictions"
       }
     },
-    "saved": "Settings saved"
+    "schoolSystem": "School system",
+    "schoolSystems": { "fr": "France", "uk": "UK" },
+    "schoolYears": {
+      "fr": { "6eme": "6ème", "5eme": "5ème", "4eme": "4ème", "3eme": "3ème", "seconde": "Seconde", "premiere": "Première", "terminale": "Terminale", "superieur": "Higher education" },
+      "uk": { "6eme": "Year 7", "5eme": "Year 8", "4eme": "Year 9", "3eme": "Year 10", "seconde": "Year 11", "premiere": "Year 12", "terminale": "Year 13", "superieur": "University" }
+    },
+    "saved": "Settings saved",
+    "language": "Language",
+    "signOut": "Sign out"
   },
   "childSettings": {
     "tabs": {

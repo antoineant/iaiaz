@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
+import { sendPushToUser } from "@/lib/push";
 
 export async function POST(request: Request) {
   try {
@@ -37,12 +38,17 @@ export async function POST(request: Request) {
     const organizationId = membership.organization_id;
     const orgBalance = (membership.organizations as any)?.credit_balance || 0;
 
-    // Parse request body
-    const { transfers } = await request.json();
+    // Parse request body — supports both batch { transfers: [...] } and single { childUserId, amount }
+    const body = await request.json();
+    let transfers: Array<{ userId: string; amount: number }>;
 
-    if (!Array.isArray(transfers) || transfers.length === 0) {
+    if (Array.isArray(body.transfers) && body.transfers.length > 0) {
+      transfers = body.transfers;
+    } else if (body.childUserId && body.amount) {
+      transfers = [{ userId: body.childUserId, amount: Number(body.amount) }];
+    } else {
       return NextResponse.json(
-        { error: "Invalid transfers array" },
+        { error: "Invalid transfers" },
         { status: 400 }
       );
     }
@@ -129,6 +135,13 @@ export async function POST(request: Request) {
       }
 
       console.log(`  ✓ New balance: ${newBalance}€`);
+
+      // Push notification to child
+      sendPushToUser(userId, {
+        title: "Crédits reçus !",
+        body: `Tu as reçu ${amount.toFixed(2)}€ de crédits. Ton solde est de ${newBalance.toFixed(2)}€.`,
+        data: { type: "credit_transfer", amount },
+      }).catch((err) => console.error("📱 Push failed for transfer:", err));
     }
 
     // Deduct from organization balance
