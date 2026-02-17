@@ -51,6 +51,21 @@ export default async function ChooseWorkspacePage({ params }: Props) {
     redirect(`/${locale}${intent}`);
   }
 
+  // Check for pending family invites — ensures child always reaches the join page
+  const { data: pendingInvite } = await supabase
+    .from("organization_invites")
+    .select("token, organization:organizations!inner(type)")
+    .eq("email", user.email!)
+    .eq("status", "pending")
+    .eq("organizations.type", "family")
+    .gt("expires_at", new Date().toISOString())
+    .limit(1)
+    .maybeSingle();
+
+  if (pendingInvite) {
+    redirect(`/${locale}/mifa/join/${pendingInvite.token}`);
+  }
+
   // Fetch all org memberships
   const { data: memberships } = await supabase
     .from("organization_members")

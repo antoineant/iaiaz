@@ -42,6 +42,23 @@ export default async function ChatPage({ params, searchParams }: ChatPageProps) 
   const familyInfo = await getFamilyOrgInfo(user.id);
   const isMifaChild = familyInfo?.isFamilyMember && familyInfo.role !== "owner" && familyInfo.role !== "admin";
 
+  // Safety net: if user has a pending family invite, redirect to accept it
+  if (!familyInfo?.isFamilyMember) {
+    const { data: pendingInvite } = await supabase
+      .from("organization_invites")
+      .select("token, organization:organizations!inner(type)")
+      .eq("email", user.email!)
+      .eq("status", "pending")
+      .eq("organizations.type", "family")
+      .gt("expires_at", new Date().toISOString())
+      .limit(1)
+      .maybeSingle();
+
+    if (pendingInvite) {
+      redirect(`/${locale}/mifa/join/${pendingInvite.token}`);
+    }
+  }
+
   // Check if user is a family owner/admin (no redirect — parents can use Study mode from /chat)
   const isMifaParent = familyInfo?.isFamilyMember && (familyInfo.role === "owner" || familyInfo.role === "admin");
 
