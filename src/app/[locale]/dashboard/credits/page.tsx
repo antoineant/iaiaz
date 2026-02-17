@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ const MAX_CUSTOM_AMOUNT = 100;
 
 export default function CreditsPage() {
   const t = useTranslations("credits");
+  const locale = useLocale();
 
   const [selectedPack, setSelectedPack] = useState<string>("regular");
   const [customAmount, setCustomAmount] = useState<number>(15);
@@ -48,8 +49,8 @@ export default function CreditsPage() {
 
     try {
       const body = isCustom
-        ? { customAmount }
-        : { packId: selectedPack };
+        ? { customAmount, locale }
+        : { packId: selectedPack, locale };
 
       const response = await fetch("/api/stripe/checkout", {
         method: "POST",

@@ -6,8 +6,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
 });
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    const body = await request.json().catch(() => ({}));
+    const locale = body.locale;
+    const localePrefix = locale && locale !== "fr" ? `/${locale}` : "";
+
     const supabase = await createClient();
 
     // Get user
@@ -55,7 +59,8 @@ export async function POST() {
     // Create Stripe Customer Portal session
     const session = await stripe.billingPortal.sessions.create({
       customer: org.subscription_stripe_customer_id,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/org/subscription`,
+      locale: (locale as Stripe.BillingPortal.SessionCreateParams["locale"]) || "auto",
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/org/subscription`,
     });
 
     return NextResponse.json({ url: session.url });

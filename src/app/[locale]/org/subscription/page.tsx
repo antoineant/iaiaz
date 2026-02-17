@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,7 @@ interface MemberCount {
 
 export default function OrgSubscriptionPage() {
   const t = useTranslations("org.subscription");
+  const locale = useLocale();
   const [orgInfo, setOrgInfo] = useState<OrgInfo | null>(null);
   const [memberCount, setMemberCount] = useState<MemberCount>({ students: 0, total: 0 });
   const [isLoading, setIsLoading] = useState(true);
@@ -126,6 +127,7 @@ export default function OrgSubscriptionPage() {
           planId: selectedPlan,
           billingPeriod,
           seatCount,
+          locale,
         }),
       });
 
@@ -150,6 +152,8 @@ export default function OrgSubscriptionPage() {
     try {
       const response = await fetch("/api/stripe/portal", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locale }),
       });
 
       const data = await response.json();

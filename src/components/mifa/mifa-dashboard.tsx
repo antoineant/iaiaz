@@ -104,7 +104,7 @@ export function MifaDashboard({
       const res = await fetch("/api/stripe/checkout/mifa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ childCount: Math.max(childCount, 1), organizationId }),
+        body: JSON.stringify({ childCount: Math.max(childCount, 1), organizationId, locale }),
       });
       const data = await res.json();
       if (data.url) {

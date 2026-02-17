@@ -25,7 +25,8 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body = await request.json();
-    const { packId, customAmount } = body;
+    const { packId, customAmount, locale } = body;
+    const localePrefix = locale && locale !== "fr" ? `/${locale}` : "";
 
     let productName: string;
     let productDescription: string;
@@ -85,9 +86,10 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "payment",
+      locale: locale || "auto",
       allow_promotion_codes: true,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/credits/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/credits`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/dashboard/credits/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/dashboard/credits`,
       customer_email: user.email,
       metadata: {
         userId: user.id,

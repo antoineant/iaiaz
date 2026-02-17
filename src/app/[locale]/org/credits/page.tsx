@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -93,6 +93,7 @@ function calculateOrgDiscount(amount: number): { price: number; discount: number
 
 export default function OrgCreditsPage() {
   const t = useTranslations("org.credits");
+  const locale = useLocale();
   const [orgInfo, setOrgInfo] = useState<OrgCreditsInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPack, setSelectedPack] = useState<string | null>(null);
@@ -175,7 +176,7 @@ export default function OrgCreditsPage() {
       const response = await fetch("/api/stripe/checkout/organization", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ ...body, locale }),
       });
 
       const data = await response.json();

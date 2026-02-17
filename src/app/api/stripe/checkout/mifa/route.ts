@@ -21,10 +21,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { childCount, organizationId } = body as {
+    const { childCount, organizationId, locale } = body as {
       childCount: number;
       organizationId: string;
+      locale?: string;
     };
+    const localePrefix = locale && locale !== "fr" ? `/${locale}` : "";
 
     if (!childCount || childCount < 1) {
       return NextResponse.json({ error: "Nombre d'enfants invalide" }, { status: 400 });
@@ -123,9 +125,10 @@ export async function POST(request: NextRequest) {
       payment_method_types: ["card"],
       line_items,
       mode: "subscription",
+      locale: (locale as Stripe.Checkout.SessionCreateParams["locale"]) || "auto",
       allow_promotion_codes: true,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/mifa/dashboard?welcome=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/mifa/dashboard`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/mifa/dashboard?welcome=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/mifa/dashboard`,
       subscription_data: {
         metadata: {
           organizationId: org.id,

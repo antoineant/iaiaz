@@ -93,7 +93,8 @@ export async function POST(request: NextRequest) {
 
     // Parse request
     const body = await request.json();
-    const { planId, billingPeriod = "monthly", seatCount } = body;
+    const { planId, billingPeriod = "monthly", seatCount, locale } = body;
+    const localePrefix = locale && locale !== "fr" ? `/${locale}` : "";
 
     // Get plan
     const plan = getSubscriptionPlan(planId);
@@ -189,8 +190,9 @@ export async function POST(request: NextRequest) {
       ],
       mode: "subscription",
       allow_promotion_codes: true,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/org/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/org/subscription`,
+      locale: (locale as Stripe.Checkout.SessionCreateParams["locale"]) || "auto",
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/org/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}${localePrefix}/org/subscription`,
       subscription_data: {
         metadata: {
           organizationId: org.id,
