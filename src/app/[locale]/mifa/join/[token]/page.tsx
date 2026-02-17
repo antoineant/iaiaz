@@ -116,7 +116,7 @@ function MifaJoinInner() {
     // Redirect after 2 seconds
     setTimeout(() => {
       if (data.role === "student") {
-        router.push("/chat");
+        router.push("/mifa/chat");
       } else {
         router.push("/mifa/dashboard");
       }
