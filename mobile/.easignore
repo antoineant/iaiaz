@@ -1,0 +1,4 @@
+# Exclude pnpm files so EAS falls back to npm (flat node_modules)
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.npmrc

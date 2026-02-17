@@ -4,12 +4,7 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "base": {
-      "node": "22.20.0",
-      "pnpm": "10.23.0"
-    },
     "development": {
-      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
@@ -17,14 +12,12 @@
       }
     },
     "preview": {
-      "extends": "base",
       "distribution": "internal",
       "ios": {
         "simulator": false
       }
     },
     "production": {
-      "extends": "base",
       "distribution": "store",
       "autoIncrement": true
     }
