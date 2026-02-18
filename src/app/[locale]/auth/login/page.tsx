@@ -59,11 +59,8 @@ function LoginForm() {
       return;
     }
 
-    if (hasExplicitRedirect) {
-      router.push(redirect);
-    } else {
-      router.push("/auth/choose-workspace");
-    }
+    // Always route through choose-workspace to enforce family child routing
+    router.push("/auth/choose-workspace");
     router.refresh();
   };
 

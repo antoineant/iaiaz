@@ -41,16 +41,6 @@ export default async function ChooseWorkspacePage({ params }: Props) {
     redirect(`/${locale}/auth/accept-terms?redirect=/auth/choose-workspace`);
   }
 
-  // Read intent cookie (set by GoogleButton or callback)
-  const cookieStore = await cookies();
-  const intentCookie = cookieStore.get("auth_redirect_after")?.value;
-  const intent = intentCookie ? decodeURIComponent(intentCookie) : null;
-
-  // Auto-redirect for specific intents (not generic /chat)
-  if (intent && intent !== "/chat") {
-    redirect(`/${locale}${intent}`);
-  }
-
   // Check for pending family invites — ensures child always reaches the join page
   const { data: pendingInvite } = await supabase
     .from("organization_invites")
@@ -66,11 +56,37 @@ export default async function ChooseWorkspacePage({ params }: Props) {
     redirect(`/${locale}/mifa/join/${pendingInvite.token}`);
   }
 
-  // Fetch all org memberships
+  // Fetch all org memberships (before intent check — family children always go to /mifa/chat)
   const { data: memberships } = await supabase
     .from("organization_members")
     .select("organization_id, role, organizations(id, name, type)")
     .eq("user_id", user.id);
+
+  // Family child check takes priority over any intent/redirect
+  if (memberships) {
+    for (const m of memberships) {
+      const org = m.organizations as unknown as {
+        id: string;
+        name: string;
+        type: string;
+      } | null;
+      if (!org) continue;
+
+      if (org.type === "family" && m.role !== "owner" && m.role !== "admin") {
+        redirect(`/${locale}/mifa/chat`);
+      }
+    }
+  }
+
+  // Read intent cookie (set by GoogleButton or callback)
+  const cookieStore = await cookies();
+  const intentCookie = cookieStore.get("auth_redirect_after")?.value;
+  const intent = intentCookie ? decodeURIComponent(intentCookie) : null;
+
+  // Auto-redirect for specific intents (not generic /chat)
+  if (intent && intent !== "/chat") {
+    redirect(`/${locale}${intent}`);
+  }
 
   // Build workspace list
   const workspaces: Workspace[] = [];
@@ -93,6 +109,7 @@ export default async function ChooseWorkspacePage({ params }: Props) {
       if (!org) continue;
 
       if (org.type === "family") {
+        // Children already redirected above — only owners/admins reach here
         if (m.role === "owner" || m.role === "admin") {
           workspaces.push({
             id: `mifa-${org.id}`,

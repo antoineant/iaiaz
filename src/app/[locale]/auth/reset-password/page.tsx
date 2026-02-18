@@ -61,9 +61,9 @@ export default function ResetPasswordPage() {
     setIsSuccess(true);
     setIsLoading(false);
 
-    // Redirect to chat after 2 seconds
+    // Redirect through workspace chooser to ensure correct routing
     setTimeout(() => {
-      router.push("/chat");
+      router.push("/auth/choose-workspace");
     }, 2000);
   };
 

@@ -129,8 +129,7 @@ export async function middleware(request: NextRequest) {
 
   if (isAuthPath && user) {
     const url = request.nextUrl.clone();
-    const redirect = url.searchParams.get("redirect") || `${localePathPrefix}/chat`;
-    url.pathname = redirect;
+    url.pathname = `${localePathPrefix}/auth/choose-workspace`;
     url.search = "";
     return NextResponse.redirect(url);
   }
