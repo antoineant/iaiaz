@@ -85,11 +85,17 @@ export default async function ChooseWorkspacePage({ params }: Props) {
   const intent = intentCookie ? decodeURIComponent(intentCookie) : null;
 
   // First-time users with no orgs and service not yet chosen → choose-service
+  // Also catch incomplete setup (e.g. chose mifa but didn't finish family creation)
   const { data: profile } = await supabase
     .from("profiles")
-    .select("needs_service_selection")
+    .select("needs_service_selection, pending_setup")
     .eq("id", user.id)
     .single();
+
+  // Incomplete setup → redirect back to the pending step
+  if (profile?.pending_setup === "mifa") {
+    redirect(`/${locale}/mifa/setup`);
+  }
 
   if (profile?.needs_service_selection && (!memberships || memberships.length === 0)) {
     // Extract intent param from cookie URL if it points to choose-service

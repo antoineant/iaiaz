@@ -126,10 +126,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Sync parent's personal balance with org balance
+    // Sync parent's personal balance with org balance + clear pending setup
     await adminClient
       .from("profiles")
-      .update({ credits_balance: welcomeCredit })
+      .update({ credits_balance: welcomeCredit, pending_setup: null })
       .eq("id", user.id);
 
     // Log the welcome credit transaction
