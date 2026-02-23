@@ -121,6 +121,7 @@ export async function GET(request: Request) {
 
       // Transfer intent from user_metadata to cookie (email signup flow)
       // GoogleButton already sets the cookie for OAuth flows; this handles email confirmation flows
+      // Also read ?next= param as fallback (in case cookie was lost)
       let intentToStore: string | null = null;
       if (data.user.user_metadata?.redirect_after_confirm) {
         intentToStore = data.user.user_metadata.redirect_after_confirm;
@@ -129,6 +130,9 @@ export async function GET(request: Request) {
         await adminClient.auth.admin.updateUserById(data.user.id, {
           user_metadata: { redirect_after_confirm: null },
         });
+      } else if (searchParams.get("next")) {
+        intentToStore = searchParams.get("next");
+        console.log("[auth/callback] Using ?next= param as intent fallback:", intentToStore);
       }
 
       // Helper to set intent cookie on response

@@ -59,6 +59,11 @@ function LoginForm() {
       return;
     }
 
+    // Preserve redirect intent in cookie so choose-workspace can read it
+    if (hasExplicitRedirect) {
+      document.cookie = `auth_redirect_after=${encodeURIComponent(redirect)}; path=/; max-age=600; SameSite=Lax`;
+    }
+
     // Always route through choose-workspace to enforce family child routing
     router.push("/auth/choose-workspace");
     router.refresh();

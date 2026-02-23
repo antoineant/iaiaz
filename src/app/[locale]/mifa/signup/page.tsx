@@ -242,7 +242,7 @@ function MifaSignupContent() {
                   <div className="mt-4 text-center text-sm text-[var(--muted-foreground)]">
                     {t("alreadyHaveAccount")}{" "}
                     <Link
-                      href={{ pathname: "/auth/login", query: { redirect: `/${locale}/mifa/signup` } } as never}
+                      href={{ pathname: "/auth/login", query: { redirect: "/mifa/signup" } } as never}
                       className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
                     >
                       {t("loginLink")}

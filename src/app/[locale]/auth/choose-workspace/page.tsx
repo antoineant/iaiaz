@@ -60,7 +60,8 @@ export default async function ChooseWorkspacePage({ params }: Props) {
   const { data: memberships } = await supabase
     .from("organization_members")
     .select("organization_id, role, organizations(id, name, type)")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .eq("status", "active");
 
   // Family child check takes priority over any intent/redirect
   if (memberships) {
