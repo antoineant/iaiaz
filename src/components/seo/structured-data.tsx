@@ -204,6 +204,96 @@ export function WebsiteSchema({ locale = "fr" }: LocaleProps) {
   );
 }
 
+// Mifa Product/Service structured data
+const mifaLocalizedContent = {
+  fr: {
+    name: "mifa by iaiaz — IA familiale avec contrôle parental",
+    description:
+      "Plateforme d'IA familiale avec supervision adaptée à l'âge. Contrôle parental, crédits partagés, heures calmes. Essai gratuit 7 jours.",
+    features: [
+      "Contrôle parental intelligent",
+      "Supervision adaptée à l'âge (guidé, confiance, adulte)",
+      "Crédits partagés en famille",
+      "Heures calmes configurables",
+      "Tableau de bord parent avec insights",
+      "Filtrage de contenu automatique",
+    ],
+  },
+  en: {
+    name: "mifa by iaiaz — Family AI with Parental Controls",
+    description:
+      "Family AI platform with age-adaptive supervision. Parental controls, shared credits, quiet hours. 7-day free trial.",
+    features: [
+      "Smart parental controls",
+      "Age-adaptive supervision (guided, trusted, adult)",
+      "Shared family credits",
+      "Configurable quiet hours",
+      "Parent dashboard with insights",
+      "Automatic content filtering",
+    ],
+  },
+};
+
+export function MifaProductSchema({ locale = "fr" }: LocaleProps) {
+  const content =
+    mifaLocalizedContent[locale as keyof typeof mifaLocalizedContent] ||
+    mifaLocalizedContent.fr;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: content.name,
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "Web, iOS",
+    description: content.description,
+    url: "https://www.iaiaz.com/mifa",
+    offers: {
+      "@type": "Offer",
+      price: "9.90",
+      priceCurrency: "EUR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: "9.90",
+        priceCurrency: "EUR",
+        billingIncrement: "P1M",
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: "1",
+          unitText: locale === "fr" ? "enfant" : "child",
+        },
+      },
+      availability: "https://schema.org/InStock",
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "FR",
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnNotPermitted",
+      },
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      ratingCount: "25",
+      bestRating: "5",
+      worstRating: "1",
+    },
+    featureList: content.features,
+    publisher: {
+      "@type": "Organization",
+      name: "BAJURIAN SAS",
+      url: "https://www.iaiaz.com",
+    },
+  };
+
+  return (
+    <Script
+      id="mifa-product-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 // Breadcrumb structured data
 interface BreadcrumbItem {
   name: string;

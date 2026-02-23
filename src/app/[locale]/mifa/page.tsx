@@ -10,6 +10,7 @@ import { SafetyAccordion } from "@/components/mifa/safety-accordion";
 import { ContentAccordion } from "@/components/ui/content-accordion";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getAppSettings, getModelsFromDB } from "@/lib/pricing-db";
+import { MifaProductSchema, FAQSchema, BreadcrumbSchema } from "@/components/seo/structured-data";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -17,13 +18,46 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.iaiaz.com").replace(/\/$/, "");
+
+  const isFr = locale === "fr";
+  const title = isFr
+    ? "mifa by iaiaz — Contrôle parental IA | IA sécurisée pour enfants et familles"
+    : "mifa by iaiaz — AI Parental Controls | Safe AI for Kids & Families";
+  const description = isFr
+    ? "La première plateforme française d'IA familiale avec supervision adaptée à l'âge. Contrôle parental, crédits partagés, heures calmes. Essai gratuit 7 jours."
+    : "The first family AI platform with age-adaptive supervision. Parental controls, shared credits, quiet hours. 7-day free trial.";
+
+  const url = isFr ? `${baseUrl}/mifa` : `${baseUrl}/en/mifa`;
+
   return {
-    title: locale === "fr"
-      ? "mifa by iaiaz - L'IA en famille, en confiance"
-      : "mifa by iaiaz - AI for families, with trust",
-    description: locale === "fr"
-      ? "Le plan mifal pour utiliser l'IA ensemble. Controle parental, supervision adaptee a l'age, credits partages."
-      : "The family plan to use AI together. Parental controls, age-appropriate supervision, shared credits.",
+    title,
+    description,
+    keywords: isFr
+      ? ["contrôle parental IA", "IA pour enfants", "IA famille", "chatbot enfant sécurisé", "supervision IA enfant", "IA éducative famille", "alternative ChatGPT enfant", "mifa", "iaiaz"]
+      : ["AI parental controls", "safe AI for kids", "family AI chat", "kid-safe AI chatbot", "AI supervision for children", "age-appropriate AI", "ChatGPT family alternative", "mifa", "iaiaz"],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "iaiaz",
+      locale: isFr ? "fr_FR" : "en_US",
+      alternateLocale: isFr ? "en_US" : "fr_FR",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: url,
+      languages: {
+        "fr-FR": `${baseUrl}/mifa`,
+        en: `${baseUrl}/en/mifa`,
+        "x-default": `${baseUrl}/mifa`,
+      },
+    },
   };
 }
 
@@ -74,8 +108,24 @@ export default async function MifaLandingPage({ params }: Props) {
     if (costPerQuestion > 0) estimateQuestions = Math.floor(creditBudget / costPerQuestion);
   }
 
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.iaiaz.com").replace(/\/$/, "");
+  const pageUrl = locale === "fr" ? `${baseUrl}/mifa` : `${baseUrl}/en/mifa`;
+
+  const faqKeys = ["safety", "ages", "conversations", "cancel", "topup"] as const;
+  const faqs = faqKeys.map((key) => ({
+    question: t(`faq.${key}.q`),
+    answer: t(`faq.${key}.a`),
+  }));
+
   return (
-    <div className="min-h-screen">
+    <>
+      <MifaProductSchema locale={locale} />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema items={[
+        { name: "iaiaz", url: baseUrl },
+        { name: "mifa", url: pageUrl },
+      ]} />
+      <article className="min-h-screen">
       {/* Mifa Header */}
       <header className="border-b border-[var(--border)] bg-[var(--background)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -633,6 +683,7 @@ export default async function MifaLandingPage({ params }: Props) {
       </section>
 
       <Footer />
-    </div>
+      </article>
+    </>
   );
 }
