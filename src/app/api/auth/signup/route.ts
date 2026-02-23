@@ -226,10 +226,14 @@ export async function POST(request: NextRequest) {
     // 6. Send confirmation email
     // admin.createUser doesn't send confirmation email, so we trigger it using resend
     // This uses the same SMTP flow that works from the login page
+    const origin = new URL(request.url).origin;
     const supabase = await createClient();
     const { error: emailError } = await supabase.auth.resend({
       type: "signup",
       email,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+      },
     });
 
     if (emailError) {
