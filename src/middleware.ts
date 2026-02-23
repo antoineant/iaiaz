@@ -76,6 +76,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
+  // Legacy signup redirects
+  if (pathnameWithoutLocale === "/auth/signup/business") {
+    const url = request.nextUrl.clone();
+    url.pathname = `${localePathPrefix}/auth/signup`;
+    url.searchParams.set("intent", "business");
+    return NextResponse.redirect(url, 301);
+  }
+
+  if (pathnameWithoutLocale === "/mifa/signup") {
+    const url = request.nextUrl.clone();
+    url.pathname = `${localePathPrefix}/auth/signup`;
+    url.searchParams.set("intent", "mifa");
+    return NextResponse.redirect(url, 301);
+  }
+
   // Set up Supabase client with the response from intl middleware
   let response = intlResponse;
 

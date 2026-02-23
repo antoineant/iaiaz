@@ -764,17 +764,6 @@
     "signup": {
       "title": "Sign up",
       "subtitle": "Create your account and get $1 free credit",
-      "accountType": {
-        "label": "Account type",
-        "student": "Student",
-        "studentDesc": "To use AI",
-        "trainer": "Trainer",
-        "trainerDesc": "To create classes",
-        "school": "School",
-        "schoolDesc": "To manage trainers and classes",
-        "business": "Business",
-        "businessDesc": "For your teams"
-      },
       "displayName": "Display name",
       "displayNamePlaceholder": "Your name (optional)",
       "email": "Email",
@@ -809,22 +798,6 @@
         "subtitle": "Create your account to join your family",
         "parentalNote": "Your parent invited you to join the family on iaiaz. This account will be supervised by your parent."
       }
-    },
-    "signupBusiness": {
-      "title": "Business Account",
-      "subtitle": "AI for your teams, without overpaying",
-      "trialNote": "14-day free trial",
-      "companyName": "Company name",
-      "companyNamePlaceholder": "Acme Inc.",
-      "email": "Work email",
-      "emailPlaceholder": "you@company.com",
-      "submit": "Create my business account",
-      "includes": "Included in trial:",
-      "benefit1": "€10 free AI credits",
-      "benefit2": "All models (Claude, GPT-5, Gemini, Mistral)",
-      "benefit3": "Dashboard and team management",
-      "notBusiness": "Not a business?",
-      "personalSignup": "Create a personal account"
     },
     "forgotPassword": {
       "title": "Forgot password",
@@ -904,6 +877,37 @@
           "description": "Set up your family space"
         }
       }
+    },
+    "chooseService": {
+      "title": "How would you like to use iaiaz?",
+      "subtitle": "Choose your workspace to get started",
+      "services": {
+        "study": {
+          "title": "Study",
+          "description": "Your personal AI assistant for studying"
+        },
+        "teach": {
+          "title": "Teach",
+          "description": "Create classes and track your students"
+        },
+        "school": {
+          "title": "School",
+          "description": "Manage AI for your educational institution"
+        },
+        "business": {
+          "title": "Business",
+          "description": "AI for your professional teams"
+        },
+        "mifa": {
+          "title": "Family (mīfā)",
+          "description": "A supervised AI space for your children"
+        }
+      },
+      "orgName": "Organization name",
+      "orgNamePlaceholder": "My organization",
+      "confirm": "Continue",
+      "loading": "Loading...",
+      "error": "An error occurred. Please try again."
     }
   },
   "join": {

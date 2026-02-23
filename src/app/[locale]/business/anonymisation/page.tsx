@@ -117,7 +117,7 @@ export default async function AnonymisationPage({ params }: Props) {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <NextLink href="/auth/signup/business">
+              <NextLink href="/auth/signup?intent=business">
                 <Button size="lg" className="bg-green-600 hover:bg-green-700">
                   <Download className="w-5 h-5 mr-2" />
                   {t("hero.cta")}
@@ -481,7 +481,7 @@ export default async function AnonymisationPage({ params }: Props) {
                 {t("cta.subtitle")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <NextLink href="/auth/signup/business">
+                <NextLink href="/auth/signup?intent=business">
                   <Button size="lg" className="bg-green-600 hover:bg-green-700">
                     {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>

@@ -101,7 +101,7 @@ export default async function MifaLandingPage({ params }: Props) {
             <Link href="/auth/login" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
               {t("nav.login")}
             </Link>
-            <Link href="/mifa/signup">
+            <Link href={{ pathname: "/auth/signup", query: { intent: "mifa" } } as never}>
               <Button size="sm" className="bg-primary-600 hover:bg-primary-700 text-white">
                 {t("hero.cta")}
               </Button>
@@ -126,7 +126,7 @@ export default async function MifaLandingPage({ params }: Props) {
               {t("hero.description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/mifa/signup">
+              <Link href={{ pathname: "/auth/signup", query: { intent: "mifa" } } as never}>
                 <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white px-8 py-3 text-lg">
                   {t("hero.cta")}
                   <ArrowRight className="w-5 h-5 ml-2" />
@@ -573,7 +573,7 @@ export default async function MifaLandingPage({ params }: Props) {
 
               <p className="text-xs text-center text-[var(--muted-foreground)] mb-4">{t("pricing.creditsRollover")}</p>
 
-              <Link href="/mifa/signup" className="block">
+              <Link href={{ pathname: "/auth/signup", query: { intent: "mifa" } } as never} className="block">
                 <Button className="w-full bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white text-lg py-3">
                   {t("pricing.cta")}
                   <ArrowRight className="w-5 h-5 ml-2" />
@@ -623,7 +623,7 @@ export default async function MifaLandingPage({ params }: Props) {
         <div className="max-w-3xl mx-auto px-4 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">{t("cta.title")}</h2>
           <p className="text-xl mb-8 text-white/80">{t("cta.subtitle")}</p>
-          <Link href="/mifa/signup">
+          <Link href={{ pathname: "/auth/signup", query: { intent: "mifa" } } as never}>
             <Button size="lg" className="bg-white text-primary-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
               {t("cta.button")}
               <ArrowRight className="w-5 h-5 ml-2" />

@@ -174,7 +174,7 @@ export default async function TarifsEtablissementsPage({ params }: Props) {
                     : "14-day free trial. Cancel anytime."}
                 </p>
 
-                <NextLink href="/auth/signup?type=school">
+                <NextLink href="/auth/signup?intent=school">
                   <Button className="w-full" size="lg">
                     {locale === "fr" ? "Commencer l'essai gratuit" : "Start free trial"}
                   </Button>
@@ -340,7 +340,7 @@ export default async function TarifsEtablissementsPage({ params }: Props) {
               : "Create your school workspace and get a 14-day free trial."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <NextLink href="/auth/signup?type=school">
+            <NextLink href="/auth/signup?intent=school">
               <Button size="lg">
                 {locale === "fr" ? "Créer mon espace établissement" : "Create school workspace"}
                 <ArrowRight className="w-5 h-5 ml-2" />

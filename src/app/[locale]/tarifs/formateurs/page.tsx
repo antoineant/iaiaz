@@ -139,7 +139,7 @@ export default async function TarifsFormateursPage({ params }: Props) {
                     : "14-day free trial. Cancel anytime."}
                 </p>
 
-                <NextLink href="/auth/signup?type=trainer">
+                <NextLink href="/auth/signup?intent=teach">
                   <Button className="w-full" size="lg">
                     {locale === "fr" ? "Commencer l'essai gratuit" : "Start free trial"}
                   </Button>
@@ -293,7 +293,7 @@ export default async function TarifsFormateursPage({ params }: Props) {
               : "Create your trainer account and get a 14-day free trial."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <NextLink href="/auth/signup?type=trainer">
+            <NextLink href="/auth/signup?intent=teach">
               <Button size="lg">
                 {locale === "fr" ? "Créer mon compte formateur" : "Create trainer account"}
                 <ArrowRight className="w-5 h-5 ml-2" />

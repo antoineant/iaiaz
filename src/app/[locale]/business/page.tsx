@@ -152,7 +152,7 @@ export default async function BusinessPage({ params }: Props) {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-                <NextLink href="/auth/signup/business">
+                <NextLink href="/auth/signup?intent=business">
                   <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white px-8 py-3 text-lg">
                     <Sparkles className="w-5 h-5 mr-2" />
                     {t("hero.cta")}
@@ -527,7 +527,7 @@ export default async function BusinessPage({ params }: Props) {
                       {t("pricing.business.feature4")}
                     </li>
                   </ul>
-                  <NextLink href="/auth/signup/business" className="block">
+                  <NextLink href="/auth/signup?intent=business" className="block">
                     <Button variant="outline" className="w-full">{t("pricing.cta")}</Button>
                   </NextLink>
                 </CardContent>
@@ -567,7 +567,7 @@ export default async function BusinessPage({ params }: Props) {
                       {t("pricing.pro.feature5")}
                     </li>
                   </ul>
-                  <NextLink href="/auth/signup/business" className="block">
+                  <NextLink href="/auth/signup?intent=business" className="block">
                     <Button className="w-full">{t("pricing.cta")}</Button>
                   </NextLink>
                 </CardContent>
@@ -679,7 +679,7 @@ export default async function BusinessPage({ params }: Props) {
               {t("cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <NextLink href="/auth/signup/business">
+              <NextLink href="/auth/signup?intent=business">
                 <Button size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
                   {t("cta.button")} <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>

@@ -646,17 +646,6 @@
     "signup": {
       "title": "Inscription",
       "subtitle": "Créez votre compte et recevez 1€ de crédits gratuits",
-      "accountType": {
-        "label": "Type de compte",
-        "student": "Étudiant",
-        "studentDesc": "Pour utiliser l'IA",
-        "trainer": "Formateur",
-        "trainerDesc": "Pour créer des classes",
-        "school": "Établissement",
-        "schoolDesc": "Pour gérer formateurs et classes",
-        "business": "Entreprise",
-        "businessDesc": "Pour vos équipes"
-      },
       "displayName": "Nom d'affichage",
       "displayNamePlaceholder": "Votre nom (optionnel)",
       "email": "Email",
@@ -691,22 +680,6 @@
         "subtitle": "Crée ton compte pour rejoindre ta famille",
         "parentalNote": "Ton parent t'a invité(e) à rejoindre la famille sur iaiaz. Ce compte sera supervisé par ton parent."
       }
-    },
-    "signupBusiness": {
-      "title": "Compte Entreprise",
-      "subtitle": "L'IA pour vos équipes, sans surpayer",
-      "trialNote": "14 jours d'essai gratuit",
-      "companyName": "Nom de l'entreprise",
-      "companyNamePlaceholder": "Acme Inc.",
-      "email": "Email professionnel",
-      "emailPlaceholder": "vous@entreprise.com",
-      "submit": "Créer mon compte entreprise",
-      "includes": "Inclus dans l'essai :",
-      "benefit1": "10€ de crédits IA offerts",
-      "benefit2": "Tous les modèles (Claude, GPT-5, Gemini, Mistral)",
-      "benefit3": "Tableau de bord et gestion d'équipe",
-      "notBusiness": "Pas une entreprise ?",
-      "personalSignup": "Créer un compte personnel"
     },
     "forgotPassword": {
       "title": "Mot de passe oublié",
@@ -786,6 +759,37 @@
           "description": "Créez votre espace famille"
         }
       }
+    },
+    "chooseService": {
+      "title": "Comment souhaitez-vous utiliser iaiaz ?",
+      "subtitle": "Choisissez votre espace pour commencer",
+      "services": {
+        "study": {
+          "title": "Étudier",
+          "description": "Votre assistant IA personnel pour étudier"
+        },
+        "teach": {
+          "title": "Enseigner",
+          "description": "Créez des classes et suivez vos élèves"
+        },
+        "school": {
+          "title": "Établissement",
+          "description": "Gérez l'IA pour votre établissement scolaire"
+        },
+        "business": {
+          "title": "Entreprise",
+          "description": "L'IA pour vos équipes professionnelles"
+        },
+        "mifa": {
+          "title": "Famille (mīfā)",
+          "description": "Un espace IA supervisé pour vos enfants"
+        }
+      },
+      "orgName": "Nom de l'organisation",
+      "orgNamePlaceholder": "Mon organisation",
+      "confirm": "Continuer",
+      "loading": "Chargement...",
+      "error": "Une erreur est survenue. Veuillez réessayer."
     }
   },
   "join": {

@@ -9,31 +9,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
-import { Check, User, GraduationCap, Building2, Mail, RefreshCw, Clock, Heart } from "lucide-react";
+import { Mail, RefreshCw, Clock, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-
-type AccountType = "student" | "trainer" | "school";
 
 function SignupForm() {
   const t = useTranslations("auth.signup");
   const searchParams = useSearchParams();
 
-  // Read initial account type and redirect from URL params
-  const initialType = searchParams.get("type") as AccountType | null;
+  // Read redirect and intent from URL params
   const redirectUrl = searchParams.get("redirect");
+  const intent = searchParams.get("intent");
+  // Backward compat: ?type=trainer → intent=teach, ?type=school → intent=school
+  const legacyType = searchParams.get("type");
   const paramBirthdate = searchParams.get("birthdate");
   const paramSchoolYear = searchParams.get("schoolYear");
 
   // Detect mifa child mode: redirect points to a mifa join page
   const isMifaChild = redirectUrl?.startsWith("/mifa/join/") ?? false;
 
-  const [accountType, setAccountType] = useState<AccountType>(
-    isMifaChild
-      ? "student"
-      : initialType && ["student", "trainer", "school"].includes(initialType)
-        ? initialType
-        : "student"
-  );
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -97,14 +90,25 @@ function SignupForm() {
     setIsLoading(true);
 
     try {
-      // Build the redirect URL, including birthdate/schoolYear for mifa children
-      let finalRedirectUrl = redirectUrl || undefined;
+      // Build the redirect URL
+      let finalRedirectUrl: string | undefined;
       if (isMifaChild && redirectUrl) {
+        // For mifa children, preserve birthdate/schoolYear in the join URL
         const joinParams = new URLSearchParams();
         if (paramBirthdate) joinParams.set("birthdate", paramBirthdate);
         if (paramSchoolYear) joinParams.set("schoolYear", paramSchoolYear);
         const qs = joinParams.toString();
         finalRedirectUrl = qs ? `${redirectUrl}?${qs}` : redirectUrl;
+      } else if (redirectUrl) {
+        finalRedirectUrl = redirectUrl;
+      } else {
+        // Resolve intent (from ?intent= or legacy ?type=)
+        const resolvedIntent = intent || (legacyType === "trainer" ? "teach" : legacyType) || undefined;
+        if (resolvedIntent) {
+          finalRedirectUrl = `/auth/choose-service?intent=${resolvedIntent}`;
+        } else {
+          finalRedirectUrl = "/auth/choose-service";
+        }
       }
 
       const response = await fetch("/api/auth/signup", {
@@ -113,7 +117,7 @@ function SignupForm() {
         body: JSON.stringify({
           email,
           password,
-          accountType: isMifaChild ? "student" : accountType,
+          accountType: "student",
           displayName: displayName.trim() || undefined,
           marketingConsent: isMifaChild ? false : marketingConsent,
           redirectUrl: finalRedirectUrl,
@@ -239,7 +243,7 @@ function SignupForm() {
           <CardContent>
             {!isMifaChild && (
               <>
-                <GoogleButton mode="signup" accountType={accountType} />
+                <GoogleButton mode="signup" intent={intent || (legacyType === "trainer" ? "teach" : legacyType) || undefined} />
                 <Divider />
               </>
             )}
@@ -261,96 +265,7 @@ function SignupForm() {
                 </div>
               )}
 
-              {/* Account Type Selection - hidden for mifa children */}
-              {!isMifaChild && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">{t("accountType.label")}</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setAccountType("student")}
-                      className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                        accountType === "student"
-                          ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                          : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                        accountType === "student"
-                          ? "bg-primary-600 text-white"
-                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                      }`}>
-                        <User className="w-5 h-5" />
-                      </div>
-                      <p className="font-medium text-sm">{t("accountType.student")}</p>
-                      <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                        {t("accountType.studentDesc")}
-                      </p>
-                      {accountType === "student" && (
-                        <div className="absolute top-2 right-2">
-                          <Check className="w-4 h-4 text-primary-600" />
-                        </div>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setAccountType("trainer")}
-                      className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                        accountType === "trainer"
-                          ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                          : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                        accountType === "trainer"
-                          ? "bg-primary-600 text-white"
-                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                      }`}>
-                        <GraduationCap className="w-5 h-5" />
-                      </div>
-                      <p className="font-medium text-sm">{t("accountType.trainer")}</p>
-                      <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                        {t("accountType.trainerDesc")}
-                      </p>
-                      {accountType === "trainer" && (
-                        <div className="absolute top-2 right-2">
-                          <Check className="w-4 h-4 text-primary-600" />
-                        </div>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setAccountType("school")}
-                      className={`relative p-3 rounded-lg border-2 transition-all text-center ${
-                        accountType === "school"
-                          ? "border-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                          : "border-[var(--border)] hover:border-[var(--muted-foreground)]"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                        accountType === "school"
-                          ? "bg-primary-600 text-white"
-                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
-                      }`}>
-                        <Building2 className="w-5 h-5" />
-                      </div>
-                      <p className="font-medium text-sm">{t("accountType.school")}</p>
-                      <p className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
-                        {t("accountType.schoolDesc")}
-                      </p>
-                      {accountType === "school" && (
-                        <div className="absolute top-2 right-2">
-                          <Check className="w-4 h-4 text-primary-600" />
-                        </div>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Display Name (optional but encouraged for trainers) */}
+              {/* Display Name */}
               <Input
                 id="displayName"
                 type="text"

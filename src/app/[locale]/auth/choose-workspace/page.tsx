@@ -84,6 +84,26 @@ export default async function ChooseWorkspacePage({ params }: Props) {
   const intentCookie = cookieStore.get("auth_redirect_after")?.value;
   const intent = intentCookie ? decodeURIComponent(intentCookie) : null;
 
+  // First-time users with no orgs and service not yet chosen → choose-service
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("needs_service_selection")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.needs_service_selection && (!memberships || memberships.length === 0)) {
+    // Extract intent param from cookie URL if it points to choose-service
+    let intentParam = "";
+    if (intent?.includes("/auth/choose-service")) {
+      // Cookie already points to choose-service, redirect directly
+      redirect(`/${locale}${intent}`);
+    } else if (intent && intent !== "/chat") {
+      // Pass generic intent as query param
+      intentParam = `?intent=${encodeURIComponent(intent)}`;
+    }
+    redirect(`/${locale}/auth/choose-service${intentParam}`);
+  }
+
   // Auto-redirect for specific intents (not generic /chat)
   if (intent && intent !== "/chat") {
     redirect(`/${locale}${intent}`);

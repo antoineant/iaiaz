@@ -12,7 +12,7 @@ import {
 interface SignupRequest {
   email: string;
   password: string;
-  accountType?: "student" | "trainer" | "school" | "business";
+  accountType?: string; // Always stored as "student" regardless of input
   displayName?: string;
   marketingConsent?: boolean;
   redirectUrl?: string;
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
         password,
         email_confirm: false, // Require email confirmation
         user_metadata: {
-          account_type: accountType || "student",
+          account_type: "student",
           display_name: displayName || undefined,
           marketing_consent: marketingConsent || false,
           redirect_after_confirm: redirectUrl || undefined,

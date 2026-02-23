@@ -6,11 +6,11 @@ import { createClient } from "@/lib/supabase/client";
 
 interface GoogleButtonProps {
   mode: "login" | "signup";
-  accountType?: "student" | "trainer" | "school" | "business";
+  intent?: string;
   redirectAfter?: string;
 }
 
-export function GoogleButton({ mode, accountType, redirectAfter }: GoogleButtonProps) {
+export function GoogleButton({ mode, intent, redirectAfter }: GoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("auth.google");
   const locale = useLocale();
@@ -19,16 +19,16 @@ export function GoogleButton({ mode, accountType, redirectAfter }: GoogleButtonP
     setIsLoading(true);
     const supabase = createClient();
 
-    // Build redirect URL with locale and account type for signup
+    // Build redirect URL with locale
     let redirectTo = `${window.location.origin}/${locale}/auth/callback`;
     const params = new URLSearchParams();
-    if (mode === "signup" && accountType) {
-      params.set("account_type", accountType);
-    }
-    if (redirectAfter) {
-      params.set("next", redirectAfter);
+
+    // Resolve redirect: explicit redirectAfter, or build from intent
+    const effectiveRedirect = redirectAfter || (intent ? `/auth/choose-service?intent=${intent}` : undefined);
+    if (effectiveRedirect) {
+      params.set("next", effectiveRedirect);
       // Store in cookie as fallback (Supabase may strip query params on redirect)
-      document.cookie = `auth_redirect_after=${encodeURIComponent(redirectAfter)}; path=/; max-age=600; SameSite=Lax`;
+      document.cookie = `auth_redirect_after=${encodeURIComponent(effectiveRedirect)}; path=/; max-age=600; SameSite=Lax`;
     }
     if (params.toString()) {
       redirectTo += `?${params.toString()}`;

@@ -6,13 +6,11 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const error_description = searchParams.get("error_description");
-  const accountType = searchParams.get("account_type"); // For Google OAuth signup
 
   console.log("[auth/callback] Starting callback", {
     hasCode: !!code,
     error_description,
     origin,
-    accountType,
   });
 
   // Handle OAuth errors from provider
@@ -47,77 +45,8 @@ export async function GET(request: Request) {
         hasProfile: !!profile,
         termsAccepted: !!profile?.terms_accepted_at,
         currentAccountType: profile?.account_type,
-        requestedAccountType: accountType,
         error: profileError?.message,
       });
-
-      // If user signed up via Google with a specific account type (trainer/school/business),
-      // update their profile since the DB trigger defaults to 'student'
-      if (
-        accountType &&
-        ["trainer", "school", "business"].includes(accountType) &&
-        profile &&
-        profile.account_type === "student"
-      ) {
-        console.log("[auth/callback] Upgrading account type from student to:", accountType);
-
-        // Update profile account type
-        const { error: updateError } = await adminClient
-          .from("profiles")
-          .update({ account_type: accountType })
-          .eq("id", data.user.id);
-
-        if (updateError) {
-          console.error("[auth/callback] Failed to update account type:", updateError);
-        } else {
-          // Create organization for trainer/school/business (mimics DB trigger behavior)
-          // Organization types: individual (trainer), training_center (school), business
-          let orgType: string;
-          let initialCredits: number;
-
-          if (accountType === "school") {
-            orgType = "training_center";
-            initialCredits = 10; // Schools get 10€
-          } else if (accountType === "business") {
-            orgType = "business";
-            initialCredits = 10; // Businesses get 10€
-          } else {
-            orgType = "individual";
-            initialCredits = 5; // Trainers get 5€
-          }
-
-          const { data: newOrg, error: orgError } = await adminClient
-            .from("organizations")
-            .insert({
-              name: data.user.user_metadata?.full_name || data.user.email?.split("@")[0] || "Mon organisation",
-              type: orgType,
-              owner_id: data.user.id,
-              credit_balance: initialCredits,
-            })
-            .select("id")
-            .single();
-
-          if (orgError) {
-            console.error("[auth/callback] Failed to create organization:", orgError);
-          } else if (newOrg) {
-            // Add user as owner of the organization
-            const { error: memberError } = await adminClient
-              .from("organization_members")
-              .insert({
-                organization_id: newOrg.id,
-                user_id: data.user.id,
-                role: "owner",
-                display_name: data.user.user_metadata?.full_name || data.user.email?.split("@")[0],
-              });
-
-            if (memberError) {
-              console.error("[auth/callback] Failed to add owner to organization:", memberError);
-            } else {
-              console.log("[auth/callback] Created organization and added owner:", newOrg.id);
-            }
-          }
-        }
-      }
 
       // Transfer intent from user_metadata to cookie (email signup flow)
       // GoogleButton already sets the cookie for OAuth flows; this handles email confirmation flows
