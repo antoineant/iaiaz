@@ -97,7 +97,8 @@ export default async function ChooseWorkspacePage({ params }: Props) {
     redirect(`/${locale}/mifa/setup`);
   }
 
-  if (profile?.needs_service_selection && (!memberships || memberships.length === 0)) {
+  // Treat null as true (new users whose profile was created before the column existed)
+  if (profile?.needs_service_selection !== false && (!memberships || memberships.length === 0)) {
     // Extract intent param from cookie URL if it points to choose-service
     let intentParam = "";
     if (intent?.includes("/auth/choose-service")) {
