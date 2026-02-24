@@ -16,6 +16,7 @@ import {
   CreditCard,
   Zap,
   Shield,
+  Heart,
   ArrowRight,
   Check,
   MessageSquare,
@@ -395,6 +396,31 @@ export default async function HomePage({ params }: Props) {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* For Families Banner */}
+      <section className="py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          <Card className="border-2 border-pink-200 dark:border-pink-800/50 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-950/20 dark:to-rose-950/20">
+            <CardContent className="py-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                <div className="w-12 h-12 rounded-full bg-pink-100 dark:bg-pink-900/40 flex items-center justify-center flex-shrink-0">
+                  <Heart className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="text-lg font-bold mb-1">{t("forFamilies.title")}</h3>
+                  <p className="text-sm text-[var(--muted-foreground)]">{t("forFamilies.description")}</p>
+                </div>
+                <Link href="/mifa">
+                  <Button variant="outline" className="border-pink-300 dark:border-pink-700 text-pink-700 dark:text-pink-300 hover:bg-pink-100 dark:hover:bg-pink-900/30 flex-shrink-0">
+                    {t("forFamilies.cta")}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

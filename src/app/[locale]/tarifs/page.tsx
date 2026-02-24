@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { GraduationCap, Building2, Users, ArrowRight } from "lucide-react";
+import { GraduationCap, Building2, Users, Heart, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -66,7 +66,7 @@ export default async function TarifsPage({ params }: Props) {
         </div>
 
         {/* Audience Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {/* Students */}
           <Link href="/tarifs/etudiants" className="group">
             <Card className="h-full transition-all hover:shadow-lg hover:border-primary-500 dark:hover:border-primary-400">
@@ -134,6 +134,30 @@ export default async function TarifsPage({ params }: Props) {
                 </p>
                 <span className="inline-flex items-center gap-1 text-sm text-orange-600 dark:text-orange-400 font-medium group-hover:gap-2 transition-all">
                   {t("trainers.cta")} <ArrowRight className="w-4 h-4" />
+                </span>
+              </CardContent>
+            </Card>
+          </Link>
+
+          {/* Families */}
+          <Link href="/mifa" className="group">
+            <Card className="h-full transition-all hover:shadow-lg hover:border-pink-500 dark:hover:border-pink-400">
+              <CardContent className="pt-8 pb-6 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/40 dark:to-rose-900/40 flex items-center justify-center">
+                  <Heart className="w-8 h-8 text-pink-600 dark:text-pink-400" />
+                </div>
+                <h2 className="text-xl font-bold mb-2">{t("families.title")}</h2>
+                <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                  {t("families.description")}
+                </p>
+                <div className="text-2xl font-bold text-pink-600 dark:text-pink-400 mb-2">
+                  {t("families.price")}
+                </div>
+                <p className="text-xs text-[var(--muted-foreground)] mb-4">
+                  {t("families.priceNote")}
+                </p>
+                <span className="inline-flex items-center gap-1 text-sm text-pink-600 dark:text-pink-400 font-medium group-hover:gap-2 transition-all">
+                  {t("families.cta")} <ArrowRight className="w-4 h-4" />
                 </span>
               </CardContent>
             </Card>

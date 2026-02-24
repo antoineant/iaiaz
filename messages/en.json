@@ -88,6 +88,27 @@
       "keywords": "ai anonymization, chatgpt gdpr, ai confidential data, data protection ai, secure enterprise chatgpt, confidential ai, local anonymization, gdpr ai enterprise, data privacy ai",
       "ogTitle": "AI Anonymization - Use ChatGPT and Claude Risk-Free",
       "ogDescription": "Our app anonymizes your data locally before sending to AI. Zero leakage of personal data or trade secrets."
+    },
+    "protegerEnfantsIa": {
+      "title": "Protecting Children from AI — 5 Essential Rules for Parents | 2026",
+      "description": "How to protect your children from AI risks? Dangers, parental controls, practical rules and tool comparison. Complete guide for parents.",
+      "keywords": "protect children AI, AI parental controls, AI dangers children, ChatGPT children, AI and minors, child safety artificial intelligence",
+      "ogTitle": "Protecting Children from AI — 5 Rules for Parents",
+      "ogDescription": "AI risks for children, practical rules and parental control tools comparison. Complete 2026 guide."
+    },
+    "iaFamilleGuide": {
+      "title": "Family AI — The Complete Guide for Parents | 2026",
+      "description": "How to use artificial intelligence as a family? Homework, creativity, languages: practical guide by age (12-14, 15-17, 18+). Best practices and tools.",
+      "keywords": "family AI, parent AI guide, children artificial intelligence, AI homework kids, ChatGPT family, AI education parents",
+      "ogTitle": "Family AI — Complete Guide for Parents 2026",
+      "ogDescription": "Homework, creativity, languages: how to use AI as a family based on your children's age. Practical guide and best practices."
+    },
+    "alternativeChatgptFamille": {
+      "title": "ChatGPT Alternative for Families — 2026 Comparison | mifa vs ChatGPT",
+      "description": "Why ChatGPT isn't built for families and what alternatives exist. ChatGPT vs Gemini vs mifa comparison: parental controls, pricing, features.",
+      "keywords": "ChatGPT alternative family, family AI, ChatGPT for families, ChatGPT children alternative, ChatGPT parental controls, mifa family AI",
+      "ogTitle": "ChatGPT Family Alternative — mifa vs ChatGPT vs Gemini 2026",
+      "ogDescription": "ChatGPT has no parental controls. Discover mifa, the AI alternative designed for families with built-in parental supervision."
     }
   },
   "common": {
@@ -226,6 +247,11 @@
       "questionsWithGemini": "~3000+ with Gemini Flash",
       "noCommitment": "No commitment • No credit card"
     },
+    "forFamilies": {
+      "title": "mifa — AI for the whole family",
+      "description": "Give your children supervised AI access with parental controls, usage limits and age-appropriate supervision.",
+      "cta": "Discover mifa"
+    },
     "footer": {
       "tagline": "Affordable AI Access, Zero commitment",
       "tagline1": "Artificial Intelligence",
@@ -241,7 +267,12 @@
       "cgu": "Terms",
       "cgv": "Sales",
       "privacy": "Privacy",
-      "cookies": "Cookies"
+      "cookies": "Cookies",
+      "blog": "Blog",
+      "blogComparatif": "ChatGPT vs Claude",
+      "blogProtegerEnfants": "Protecting children from AI",
+      "blogGuideParents": "Family AI parent guide",
+      "blogAlternativeFamille": "ChatGPT alternative for families"
     }
   },
   "chat": {
@@ -1603,6 +1634,13 @@
       "price": "$4.90/month",
       "priceNote": "per class",
       "cta": "View trainer pricing"
+    },
+    "families": {
+      "title": "Families",
+      "description": "Supervised AI for your children with built-in parental controls",
+      "price": "From $0.01",
+      "priceNote": "per question • parental supervision included",
+      "cta": "Discover mifa"
     },
     "note": "All our pricing is transparent with no commitment. Your credits never expire.",
     "breadcrumb": {
@@ -3535,6 +3573,354 @@
       "tip3": "Include timing: slow motion, fast paced, time-lapse effect",
       "tip4": "Add visual style: film grain, color grading, lighting style",
       "tip5": "Mention camera work: tracking shot, pan, zoom, static"
+    }
+  },
+  "protegerEnfantsIa": {
+    "hero": {
+      "badge": "Parent Guide 2026",
+      "title": "Protecting Your Children from AI",
+      "subtitle": "Artificial intelligence is everywhere in our children's lives. Here are the real risks, best practices and tools to keep your children safe.",
+      "updated": "Updated February 2026"
+    },
+    "whyKids": {
+      "title": "Why kids are using AI",
+      "p1": "In 2026, artificial intelligence is part of children's and teenagers' daily lives. ChatGPT, Gemini, Snapchat My AI... chatbots are just a few clicks away on their phones or computers.",
+      "p2": "Uses vary widely: homework help, translation, writing, image creation, casual conversations. According to a recent study, over 50% of 12-17 year olds have already used a generative AI tool.",
+      "p3": "The problem? These tools were not designed for minors. No built-in parental controls, no age adaptation, no usage limits. Parents often feel helpless facing this new digital reality."
+    },
+    "risks": {
+      "title": "4 Risks of AI for Children",
+      "inappropriateContent": {
+        "title": "Inappropriate Content",
+        "description": "Generative AIs can produce violent, sexual or shocking content. Despite filters, workarounds exist ('jailbreaks'). A curious child can get age-inappropriate answers in just a few messages."
+      },
+      "misinformation": {
+        "title": "Misinformation and Hallucinations",
+        "description": "AIs 'hallucinate': they confidently make up facts. A child doing homework may unknowingly incorporate false information. Without developed critical thinking, it's hard to tell fact from fiction."
+      },
+      "dataPrivacy": {
+        "title": "Privacy and Personal Data",
+        "description": "Children easily share personal information in their AI conversations: name, school, address, photos. This data can be stored and used to train models, without parental consent."
+      },
+      "overReliance": {
+        "title": "Over-reliance and Loss of Autonomy",
+        "description": "Using AI for everything — homework, thinking, creativity — can harm cognitive development. Children risk losing the habit of searching, thinking and formulating their own ideas."
+      }
+    },
+    "rules": {
+      "title": "5 Rules to Protect Your Children",
+      "rule1": {
+        "title": "Install an AI Parental Control Tool",
+        "description": "Use a platform that offers real AI-adapted parental controls: conversation monitoring, usage limits, content filtering. Traditional tools (internet parental controls) are not enough for AI."
+      },
+      "rule2": {
+        "title": "Adapt Supervision to Age",
+        "description": "A 12-year-old and a 17-year-old don't have the same needs. Use guided mode for younger children (question validation) and trusted mode for older teens (activity tracking without reading messages)."
+      },
+      "rule3": {
+        "title": "Set Time Limits",
+        "description": "AI shouldn't be accessible 24/7. Set quiet hours (during school, at night, at mealtimes) to prevent excessive use and preserve family routines."
+      },
+      "rule4": {
+        "title": "Teach Critical Thinking",
+        "description": "Teach your children that AI can be wrong. Encourage them to verify information, cross-check sources and never share personal information in a chatbot."
+      },
+      "rule5": {
+        "title": "Limit Budget and Usage",
+        "description": "With a shared credit system, you stay in control of how much AI is consumed. This encourages responsible use and prevents misuse (intensive night use, dependency)."
+      }
+    },
+    "comparison": {
+      "title": "AI Parental Control Tools Comparison",
+      "feature": "Feature",
+      "rows": {
+        "parentalControls": "Parental controls",
+        "chatgptParental": "None",
+        "googleParental": "Basic (Family Link)",
+        "mifaParental": "Complete and built-in",
+        "ageAdaptation": "Age adaptation",
+        "chatgptAge": "No",
+        "googleAge": "Limited",
+        "mifaAge": "3 modes (guided, trusted, adult)",
+        "creditControl": "Credit control",
+        "chatgptCredit": "No",
+        "googleCredit": "No",
+        "mifaCredit": "Shared credits with limits",
+        "quietHours": "Quiet hours",
+        "chatgptQuiet": "No",
+        "googleQuiet": "Yes (via Family Link)",
+        "mifaQuiet": "Yes, configurable",
+        "parentDashboard": "Parent dashboard",
+        "chatgptDashboard": "No",
+        "googleDashboard": "Basic",
+        "mifaDashboard": "Detailed with insights",
+        "pricing": "Pricing",
+        "chatgptPricing": "$20/month per person",
+        "googlePricing": "Free (limited)",
+        "mifaPricing": "From $0.01/question"
+      },
+      "note": "For a detailed comparison, see our article",
+      "linkText": "ChatGPT Alternative for Families"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "At what age can a child use AI?",
+        "answer": "Most AI platforms (ChatGPT, Gemini, Claude) require a minimum age of 13 in their terms of service. However, even at 13, parental supervision is still recommended. With mifa, you can adjust supervision level by age: guided (12-14), trusted (15-17), or adult (18+)."
+      },
+      "q2": {
+        "question": "Is ChatGPT dangerous for children?",
+        "answer": "ChatGPT was not designed for children. It has no parental controls, no age adaptation and no usage limits. A child could potentially access inappropriate content or share personal information. It's not 'dangerous' per se, but without supervision, risks exist."
+      },
+      "q3": {
+        "question": "How can I know what my child is asking the AI?",
+        "answer": "On standard ChatGPT or Gemini, it's impossible without looking directly at your child's screen. Mainstream platforms don't offer any parental monitoring tools. mifa solves this with a parent dashboard showing activity (topics covered, usage frequency) without violating the child's privacy."
+      },
+      "q4": {
+        "question": "Is traditional parental control software enough for AI?",
+        "answer": "No. Traditional parental control software (Qustodio, Family Link) can block access to a site, but they don't control what happens inside an AI conversation. You need a tool specifically designed for AI, that filters content, adapts responses and monitors usage."
+      },
+      "q5": {
+        "question": "What is the best parental control tool for AI?",
+        "answer": "As of today, mifa by iaiaz is one of the only solutions that integrates parental controls directly into the AI platform. Age-adaptive supervision, shared credits, quiet hours, parent dashboard: everything is designed for safe family use. Free 7-day trial."
+      }
+    },
+    "cta": {
+      "title": "Protect Your Children with mifa",
+      "subtitle": "mifa is the family AI with built-in parental controls. Age-adaptive supervision, shared credits, quiet hours. Everything you need to use AI as a family, with peace of mind.",
+      "feature1": "Built-in parental controls",
+      "feature2": "Age-adaptive supervision",
+      "feature3": "7-day free trial",
+      "button": "Discover mifa",
+      "note": "7-day free trial • No commitment"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "blog": "Blog",
+      "article": "Protecting Children from AI"
+    }
+  },
+  "iaFamilleGuide": {
+    "hero": {
+      "badge": "Parent Guide 2026",
+      "title": "Family AI: the complete guide for parents",
+      "subtitle": "How to use artificial intelligence as a family? Homework, creativity, languages: best practices by age and the right tools.",
+      "updated": "Updated February 2026"
+    },
+    "intro": {
+      "title": "AI is already in your kids' lives",
+      "p1": "Whether through social media, search engines, or school tools, artificial intelligence is already part of your children's daily lives. TikTok, Instagram, YouTube: their recommendation algorithms are powered by AI. Google and Bing now include AI-generated answers. Even some textbooks offer AI-assisted interactive exercises.",
+      "p2": "Rather than banning it — which would be as futile as banning the Internet in the 2000s — the challenge for parents is to guide their children toward smart, supervised use of these tools. AI can become a tremendous educational ally, as long as the right rules are in place.",
+      "p3": "To learn more about specific risks, check out our article",
+      "crossLink": "Protecting Children from AI: 5 Essential Rules"
+    },
+    "benefits": {
+      "title": "What AI can do for your family",
+      "homework": {
+        "title": "Homework help",
+        "desc": "AI can explain a math concept differently, help structure an essay, or check a grammar exercise. It doesn't give the answer outright: it guides the child through their thinking, like a patient tutor available 24/7."
+      },
+      "creativity": {
+        "title": "Creativity",
+        "desc": "Writing a story, imagining a role-play scenario, composing a song, creating images: AI stimulates creativity by offering a writing and brainstorming partner that's always available. A wonderful outlet for children's self-expression."
+      },
+      "languages": {
+        "title": "Language learning",
+        "desc": "Conversing in French, Spanish, or German with a patient AI that corrects without judging. Children can practice at their own pace, ask grammar questions, and build vocabulary in a fun, pressure-free context."
+      },
+      "curiosity": {
+        "title": "Curiosity and general knowledge",
+        "desc": "'Why is the sky blue?', 'How do volcanoes work?': AI answers children's endless questions in an age-appropriate way. It encourages natural curiosity and turns every question into a learning opportunity."
+      }
+    },
+    "ageGroups": {
+      "title": "Best practices by age group",
+      "guided": {
+        "title": "Guided Mode",
+        "age": "Ages 12-14",
+        "point1": "Co-usage: parents use AI together with the child, not instead of them",
+        "point2": "Clear time limits: for example, 30 minutes per day maximum",
+        "point3": "Sensitive topic restrictions: no violent or inappropriate content"
+      },
+      "trusted": {
+        "title": "Trusted Mode",
+        "age": "Ages 15-17",
+        "point1": "More autonomy: the teen uses AI independently for their projects",
+        "point2": "Weekly reviews: parents check the history once a week",
+        "point3": "No sensitive topics: inappropriate themes remain filtered"
+      },
+      "adult": {
+        "title": "Adult Mode",
+        "age": "Ages 18+",
+        "point1": "Full autonomy: the adult child manages their usage freely",
+        "point2": "Cost-sharing: the family can share a common AI budget",
+        "point3": "Cross-generational exchange: parents and children use the same tools"
+      }
+    },
+    "solution": {
+      "title": "Choosing the right AI solution for your family",
+      "p1": "Most AI chatbots (ChatGPT, Claude, Gemini) are designed for individual adult use. They offer no parental controls, no age-adaptive supervision, and no shared credit management. Letting a child use ChatGPT alone is like giving them unrestricted Internet access.",
+      "p2": "That's why dedicated family AI solutions are essential. Here's what a good family AI solution should offer:",
+      "mifa": {
+        "title": "mifa by iaiaz — AI designed for families",
+        "point1": "Built-in parental controls with age-adaptive supervision (guided, trusted, adult)",
+        "point2": "Configurable quiet hours to prevent late-night usage",
+        "point3": "Shared family credits with daily limits per child",
+        "point4": "Parent dashboard with activity overview for each child"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": {
+        "question": "At what age can a child start using AI?",
+        "answer": "Most AI services (ChatGPT, Claude, Gemini) require users to be at least 13 in their terms of service. With a solution like mifa, children from age 12 can use AI in a supervised, age-appropriate environment."
+      },
+      "q2": {
+        "question": "Will AI replace school learning?",
+        "answer": "No. AI is a complementary tool, not a substitute. It helps understand, rephrase, and explore, but it doesn't replace the teacher or the student's personal effort. Used well, it strengthens learning."
+      },
+      "q3": {
+        "question": "How can I prevent my child from cheating with AI?",
+        "answer": "The key is education, not prohibition. Explain to your child that copy-pasting an AI answer is cheating, but asking AI to explain a concept is learning. mifa's guided mode (ages 12-14) enables exactly this kind of support."
+      },
+      "q4": {
+        "question": "Is my child's data protected?",
+        "answer": "On mainstream platforms (ChatGPT, Claude), conversations may be used to train models. With mifa, data is hosted in Europe, is not used for training, and parents control access."
+      },
+      "q5": {
+        "question": "How much does AI cost for a family?",
+        "answer": "A ChatGPT Plus subscription costs $20/month per person, or $80/month for a family of 4. With mifa, the family plan starts at $9.90/month per child, credits are shared, and you only pay for what you use."
+      }
+    },
+    "cta": {
+      "title": "Give your family a caring AI experience",
+      "subtitle": "With mifa, your children discover AI in a safe, educational environment. Parental controls, shared credits, age-adaptive supervision.",
+      "button": "Discover mifa",
+      "note": "7-day free trial • No commitment"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "blog": "Blog",
+      "article": "Family AI: parent guide"
+    }
+  },
+  "alternativeChatgptFamille": {
+    "hero": {
+      "badge": "Family Guide 2026",
+      "title": "ChatGPT Alternative for Families",
+      "subtitle": "ChatGPT isn't designed for family use. Find out why and which alternative to choose for your children in 2026.",
+      "updated": "Updated February 2026"
+    },
+    "problems": {
+      "title": "Why ChatGPT isn't built for families",
+      "intro": "ChatGPT is a powerful tool, but it was designed for adult professionals. Here's what's missing for family use.",
+      "p1": {
+        "title": "No parental controls",
+        "desc": "ChatGPT offers no parental dashboard. There's no way to know what your child asks the AI or to supervise their conversations."
+      },
+      "p2": {
+        "title": "No age-appropriate mode",
+        "desc": "A 12-year-old and an adult receive exactly the same responses. No adaptation of content or tone based on age."
+      },
+      "p3": {
+        "title": "No usage monitoring",
+        "desc": "No time limits, no quiet hours, no quotas. Your child can use ChatGPT without any restriction, day or night."
+      },
+      "p4": {
+        "title": "No content filtering for minors",
+        "desc": "While ChatGPT has general filters, there are no specific protections for minors. Inappropriate content can slip through."
+      }
+    },
+    "needs": {
+      "title": "What parents actually need",
+      "intro": "A family AI must give parents the visibility and control needed for their children to use it safely.",
+      "n1": {
+        "title": "Parental dashboard",
+        "desc": "See each child's activity at a glance: number of conversations, topics discussed, any alerts."
+      },
+      "n2": {
+        "title": "Age-based supervision",
+        "desc": "Different modes based on age: guided (12-14), trusted (15-17), adult (18+). The supervision level adapts to maturity."
+      },
+      "n3": {
+        "title": "Usage limits and quiet hours",
+        "desc": "Set daily credit quotas and time windows when AI is accessible. No more uncontrolled late-night usage."
+      },
+      "n4": {
+        "title": "Content safety",
+        "desc": "Minor-specific filters and an alert system for parents when sensitive content is detected."
+      }
+    },
+    "comparison": {
+      "title": "Comparison: ChatGPT vs Gemini vs mifa",
+      "intro": "How do the main AI tools compare for family use?",
+      "feature": "Feature",
+      "parentalControls": "Parental controls",
+      "ageModes": "Age-based modes",
+      "usageLimits": "Usage limits",
+      "multiModel": "Multi-model AI",
+      "price": "Price",
+      "chatgptPrice": "$20/mo (subscription)",
+      "geminiPrice": "$20/mo (subscription)",
+      "mifaPrice": "Pay-per-use from $0.01",
+      "note": "Comparison made in February 2026. Features may evolve."
+    },
+    "features": {
+      "title": "Why mifa is the ideal alternative",
+      "intro": "mifa was built from the ground up for families. Every feature addresses a real parental need.",
+      "f1": {
+        "title": "Built-in protection",
+        "desc": "Native parental supervision with 3 age-adapted levels. Parents stay in control without stifling their children's curiosity."
+      },
+      "f2": {
+        "title": "The whole family together",
+        "desc": "One family account for all your children. Each has their own space with personalized rules based on their age and needs."
+      },
+      "f3": {
+        "title": "Quiet hours and quotas",
+        "desc": "Set access time windows and daily credit limits for each child. The AI respects your family rules."
+      },
+      "f4": {
+        "title": "Pay-per-use",
+        "desc": "No $20/month subscription per person. Buy shared credits for the whole family. You only pay for what you actually use."
+      },
+      "crossLink": "Can't decide between GPT-5 and Claude?",
+      "crossLinkText": "Check out our ChatGPT vs Claude comparison"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "Is ChatGPT dangerous for children?",
+        "answer": "ChatGPT isn't dangerous per se, but it wasn't designed for minors. Without parental controls, a child can access inappropriate content or develop dependency. That's why a family AI with parental supervision, like mifa, is recommended."
+      },
+      "q2": {
+        "question": "What's the difference between mifa and ChatGPT?",
+        "answer": "ChatGPT is a general-purpose AI for adults. mifa is a family AI with built-in parental controls: age-based supervision (12-14, 15-17, 18+), quiet hours, credit quotas, parental dashboard and alerts. Plus, mifa gives access to multiple AI models (GPT-5, Claude, Gemini) instead of just one."
+      },
+      "q3": {
+        "question": "How much does mifa cost compared to ChatGPT?",
+        "answer": "ChatGPT Plus costs $20/month per user, meaning $60/month for a family of 3. mifa works on a pay-per-use basis: you buy credits shared by the whole family, starting from $0.01 per question. Most families spend between $5 and $15/month."
+      },
+      "q4": {
+        "question": "Can my child bypass mifa's parental controls?",
+        "answer": "mifa's parental controls are managed server-side, not on the child's device. Quiet hours, quotas and supervision levels are enforced by our system and cannot be modified by the child. Only the parent with their account can adjust the settings."
+      },
+      "q5": {
+        "question": "Which AI models are available on mifa?",
+        "answer": "mifa provides access to the best models: GPT-5 (OpenAI), Claude (Anthropic), Gemini (Google) and Mistral. Your child can choose the model best suited to their question, all under your parental supervision."
+      }
+    },
+    "cta": {
+      "badge": "Protect your children",
+      "title": "The family AI that reassures parents",
+      "subtitle": "Give your children access to AI with the parental controls you need. Age-based supervision, quiet hours, and pay-per-use pricing.",
+      "button": "Discover mifa",
+      "note": "No subscription • Built-in parental controls"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "blog": "Blog",
+      "article": "ChatGPT Alternative for Families"
     }
   },
   "mifa": {

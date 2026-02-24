@@ -2,16 +2,18 @@
 
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 export function Footer() {
   const t = useTranslations("home");
   const tNav = useTranslations("common.nav");
+  const locale = useLocale();
 
   return (
     <footer className="border-t border-[var(--border)] py-12 px-4 mt-16">
       <div className="max-w-6xl mx-auto">
         {/* Main footer content */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block">
@@ -59,6 +61,33 @@ export function Footer() {
                 <Link href="/business" className="hover:text-[var(--foreground)] transition-colors">
                   {tNav("business")}
                 </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Blog links */}
+          <div>
+            <h3 className="font-semibold text-sm mb-3">{t("footer.blog")}</h3>
+            <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
+              <li>
+                <a href={locale === "fr" ? "/blog/chatgpt-vs-claude-comparatif" : "/en/blog/chatgpt-vs-claude-comparison"} className="hover:text-[var(--foreground)] transition-colors">
+                  {t("footer.blogComparatif")}
+                </a>
+              </li>
+              <li>
+                <a href={locale === "fr" ? "/blog/proteger-enfants-ia" : "/en/blog/protect-children-ai"} className="hover:text-[var(--foreground)] transition-colors">
+                  {t("footer.blogProtegerEnfants")}
+                </a>
+              </li>
+              <li>
+                <a href={locale === "fr" ? "/blog/ia-famille-guide-parents" : "/en/blog/family-ai-parent-guide"} className="hover:text-[var(--foreground)] transition-colors">
+                  {t("footer.blogGuideParents")}
+                </a>
+              </li>
+              <li>
+                <a href={locale === "fr" ? "/blog/alternative-chatgpt-famille" : "/en/blog/chatgpt-alternative-family"} className="hover:text-[var(--foreground)] transition-colors">
+                  {t("footer.blogAlternativeFamille")}
+                </a>
               </li>
             </ul>
           </div>

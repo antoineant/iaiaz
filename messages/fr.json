@@ -102,6 +102,27 @@
       "keywords": "chatgpt vs claude, comparatif chatgpt claude, gpt-5 vs claude, claude vs gpt, meilleure ia 2026, chatgpt ou claude",
       "ogTitle": "ChatGPT vs Claude 2026 - Le Comparatif Définitif",
       "ogDescription": "GPT-5 ou Claude ? Comparez performances, prix et cas d'usage. Notre verdict + solution pour utiliser les deux."
+    },
+    "protegerEnfantsIa": {
+      "title": "Protéger ses enfants de l'IA — 5 règles essentielles pour les parents | 2026",
+      "description": "Comment protéger vos enfants face à l'intelligence artificielle ? Risques, contrôle parental IA, règles pratiques et outils comparés. Guide complet pour parents.",
+      "keywords": "protéger enfants IA, contrôle parental IA, dangers IA enfants, ChatGPT enfants, IA et mineurs, sécurité enfants intelligence artificielle",
+      "ogTitle": "Protéger ses enfants de l'IA — 5 règles pour les parents",
+      "ogDescription": "Risques de l'IA pour les enfants, règles pratiques et comparatif des outils de contrôle parental. Guide complet 2026."
+    },
+    "iaFamilleGuide": {
+      "title": "IA en famille — Le guide complet pour les parents | 2026",
+      "description": "Comment utiliser l'intelligence artificielle en famille ? Devoirs, créativité, langues : guide pratique par âge (12-14, 15-17, 18+). Bonnes pratiques et outils.",
+      "keywords": "IA famille, guide parents IA, enfants intelligence artificielle, IA devoirs enfants, ChatGPT famille, IA éducation parents",
+      "ogTitle": "IA en famille — Guide complet pour les parents 2026",
+      "ogDescription": "Devoirs, créativité, langues : comment utiliser l'IA en famille selon l'âge de vos enfants. Guide pratique et bonnes pratiques."
+    },
+    "alternativeChatgptFamille": {
+      "title": "Alternative ChatGPT pour les familles — Comparatif 2026 | mifa vs ChatGPT",
+      "description": "Pourquoi ChatGPT n'est pas adapté aux familles et quelles alternatives existent. Comparatif ChatGPT vs Gemini vs mifa : contrôle parental, prix, fonctionnalités.",
+      "keywords": "alternative ChatGPT famille, IA familiale, ChatGPT pour famille, ChatGPT enfants alternative, contrôle parental ChatGPT, mifa IA famille",
+      "ogTitle": "Alternative ChatGPT famille — mifa vs ChatGPT vs Gemini 2026",
+      "ogDescription": "ChatGPT n'a pas de contrôle parental. Découvrez mifa, l'alternative IA conçue pour les familles avec supervision parentale intégrée."
     }
   },
   "common": {
@@ -240,6 +261,11 @@
       "questionsWithGemini": "~3000+ avec Gemini Flash",
       "noCommitment": "Sans engagement • Sans carte bancaire"
     },
+    "forFamilies": {
+      "title": "mifa — L'IA pour toute la famille",
+      "description": "Offrez à vos enfants un accès encadré à l'IA avec contrôle parental, limites d'usage et supervision adaptée à leur âge.",
+      "cta": "Découvrir mifa"
+    },
     "footer": {
       "tagline": "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
       "tagline1": "Intelligence Artificielle",
@@ -255,7 +281,12 @@
       "cgu": "CGU",
       "cgv": "CGV",
       "privacy": "Confidentialité",
-      "cookies": "Cookies"
+      "cookies": "Cookies",
+      "blog": "Blog",
+      "blogComparatif": "ChatGPT vs Claude",
+      "blogProtegerEnfants": "Protéger ses enfants de l'IA",
+      "blogGuideParents": "Guide IA pour parents",
+      "blogAlternativeFamille": "Alternative ChatGPT famille"
     }
   },
   "chat": {
@@ -1485,6 +1516,13 @@
       "price": "4,90€/mois",
       "priceNote": "par classe",
       "cta": "Voir les tarifs formateurs"
+    },
+    "families": {
+      "title": "Familles",
+      "description": "L'IA encadrée pour vos enfants avec contrôle parental intégré",
+      "price": "À partir de 0.01€",
+      "priceNote": "par question • supervision parentale incluse",
+      "cta": "Découvrir mifa"
     },
     "note": "Tous nos tarifs sont transparents et sans engagement. Vos crédits n'expirent jamais.",
     "breadcrumb": {
@@ -3731,6 +3769,354 @@
       "home": "Accueil",
       "blog": "Blog",
       "article": "ChatGPT vs Claude"
+    }
+  },
+  "protegerEnfantsIa": {
+    "hero": {
+      "badge": "Guide parents 2026",
+      "title": "Protéger ses enfants face à l'IA",
+      "subtitle": "L'intelligence artificielle est partout dans la vie de nos enfants. Voici les risques réels, les bonnes pratiques et les outils pour accompagner vos enfants en toute sécurité.",
+      "updated": "Mis à jour en février 2026"
+    },
+    "whyKids": {
+      "title": "Pourquoi les enfants utilisent l'IA",
+      "p1": "En 2026, l'intelligence artificielle fait partie du quotidien des enfants et adolescents. ChatGPT, Gemini, Snapchat My AI… les chatbots sont accessibles en quelques clics sur leur téléphone ou leur ordinateur.",
+      "p2": "Les usages sont variés : aide aux devoirs, traduction, rédaction, création d'images, conversations « pour s'amuser ». Selon une étude récente, plus de 50 % des 12-17 ans ont déjà utilisé un outil d'IA générative.",
+      "p3": "Le problème ? Ces outils n'ont pas été conçus pour les mineurs. Aucun contrôle parental intégré, aucune adaptation à l'âge, aucune limite d'usage. Les parents se retrouvent souvent démunis face à cette nouvelle réalité numérique."
+    },
+    "risks": {
+      "title": "Les 4 risques de l'IA pour les enfants",
+      "inappropriateContent": {
+        "title": "Contenu inapproprié",
+        "description": "Les IA génératives peuvent produire des textes à caractère violent, sexuel ou choquant. Malgré les filtres, des contournements existent (« jailbreaks »). Un enfant curieux peut obtenir des réponses inadaptées à son âge en quelques messages."
+      },
+      "misinformation": {
+        "title": "Désinformation et hallucinations",
+        "description": "Les IA « hallucinent » : elles inventent des faits avec assurance. Un enfant qui fait ses devoirs peut intégrer des informations fausses sans le savoir. Sans esprit critique développé, il est difficile de distinguer le vrai du faux."
+      },
+      "dataPrivacy": {
+        "title": "Vie privée et données personnelles",
+        "description": "Les enfants partagent facilement des informations personnelles dans leurs conversations avec l'IA : nom, école, adresse, photos. Ces données peuvent être stockées et utilisées pour entraîner les modèles, sans consentement parental."
+      },
+      "overReliance": {
+        "title": "Dépendance et perte d'autonomie",
+        "description": "Utiliser l'IA pour tout faire — devoirs, réflexion, créativité — peut nuire au développement cognitif. L'enfant risque de perdre l'habitude de chercher, de réfléchir et de formuler ses propres idées."
+      }
+    },
+    "rules": {
+      "title": "5 règles pour protéger vos enfants",
+      "rule1": {
+        "title": "Installer un outil de contrôle parental IA",
+        "description": "Utilisez une plateforme qui offre un vrai contrôle parental adapté à l'IA : supervision des conversations, limites d'usage, filtrage de contenu. Les outils classiques (contrôle parental Internet) ne suffisent pas pour l'IA."
+      },
+      "rule2": {
+        "title": "Adapter la supervision à l'âge",
+        "description": "Un enfant de 12 ans et un adolescent de 17 ans n'ont pas les mêmes besoins. Privilégiez un mode guidé pour les plus jeunes (validation des questions) et un mode confiance pour les plus grands (suivi de l'activité sans lecture des messages)."
+      },
+      "rule3": {
+        "title": "Définir des plages horaires",
+        "description": "L'IA ne devrait pas être accessible 24h/24. Configurez des heures calmes (pendant les cours, la nuit, les repas) pour éviter une utilisation excessive et préserver les routines familiales."
+      },
+      "rule4": {
+        "title": "Éduquer à l'esprit critique",
+        "description": "Apprenez à vos enfants que l'IA peut se tromper. Encouragez-les à vérifier les informations, à croiser les sources et à ne jamais partager d'informations personnelles dans un chatbot."
+      },
+      "rule5": {
+        "title": "Limiter le budget et l'usage",
+        "description": "Avec un système de crédits partagés, vous gardez le contrôle sur la quantité d'IA consommée. Cela encourage une utilisation raisonnée et évite les dérives (utilisation nocturne intensive, dépendance)."
+      }
+    },
+    "comparison": {
+      "title": "Comparatif des outils de contrôle parental IA",
+      "feature": "Fonctionnalité",
+      "rows": {
+        "parentalControls": "Contrôle parental",
+        "chatgptParental": "Aucun",
+        "googleParental": "Basique (Family Link)",
+        "mifaParental": "Complet et intégré",
+        "ageAdaptation": "Adaptation à l'âge",
+        "chatgptAge": "Non",
+        "googleAge": "Limité",
+        "mifaAge": "3 modes (guidé, confiance, adulte)",
+        "creditControl": "Contrôle des crédits",
+        "chatgptCredit": "Non",
+        "googleCredit": "Non",
+        "mifaCredit": "Crédits partagés avec limites",
+        "quietHours": "Heures calmes",
+        "chatgptQuiet": "Non",
+        "googleQuiet": "Oui (via Family Link)",
+        "mifaQuiet": "Oui, configurables",
+        "parentDashboard": "Tableau de bord parent",
+        "chatgptDashboard": "Non",
+        "googleDashboard": "Basique",
+        "mifaDashboard": "Détaillé avec insights",
+        "pricing": "Tarif",
+        "chatgptPricing": "20€/mois par personne",
+        "googlePricing": "Gratuit (limité)",
+        "mifaPricing": "Dès 0,01€/question"
+      },
+      "note": "Pour un comparatif détaillé, consultez notre article",
+      "linkText": "Alternative ChatGPT pour les familles"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "À partir de quel âge un enfant peut-il utiliser l'IA ?",
+        "answer": "La plupart des plateformes d'IA (ChatGPT, Gemini, Claude) exigent un âge minimum de 13 ans dans leurs conditions d'utilisation. Cependant, même à 13 ans, une supervision parentale reste recommandée. Avec mifa, vous pouvez adapter le niveau de supervision selon l'âge : guidé (12-14 ans), confiance (15-17 ans), ou adulte (18+)."
+      },
+      "q2": {
+        "question": "ChatGPT est-il dangereux pour les enfants ?",
+        "answer": "ChatGPT n'a pas été conçu pour les enfants. Il n'intègre aucun contrôle parental, aucune adaptation à l'âge et aucune limite d'usage. Un enfant peut potentiellement accéder à du contenu inapproprié ou partager des informations personnelles. Ce n'est pas « dangereux » en soi, mais sans supervision, les risques existent."
+      },
+      "q3": {
+        "question": "Comment savoir ce que mon enfant demande à l'IA ?",
+        "answer": "Sur ChatGPT ou Gemini standard, c'est impossible sans regarder directement l'écran de votre enfant. Les plateformes grand public ne proposent aucun outil de suivi parental. mifa résout ce problème avec un tableau de bord parent qui montre l'activité (thèmes abordés, fréquence d'usage) sans violer la vie privée de l'enfant."
+      },
+      "q4": {
+        "question": "Un contrôle parental classique suffit-il pour l'IA ?",
+        "answer": "Non. Les logiciels de contrôle parental classiques (Qustodio, Family Link) peuvent bloquer l'accès à un site, mais ils ne contrôlent pas ce qui se passe à l'intérieur d'une conversation IA. Vous avez besoin d'un outil spécifiquement conçu pour l'IA, qui filtre le contenu, adapte les réponses et surveille l'usage."
+      },
+      "q5": {
+        "question": "Quel est le meilleur outil de contrôle parental pour l'IA ?",
+        "answer": "À ce jour, mifa by iaiaz est l'une des seules solutions qui intègre un contrôle parental directement dans la plateforme IA. Supervision adaptée à l'âge, crédits partagés, heures calmes, tableau de bord parent : tout est conçu pour un usage familial sécurisé. Essai gratuit 7 jours."
+      }
+    },
+    "cta": {
+      "title": "Protégez vos enfants avec mifa",
+      "subtitle": "mifa est l'IA familiale avec contrôle parental intégré. Supervision adaptée à l'âge, crédits partagés, heures calmes. Tout ce qu'il faut pour utiliser l'IA en famille, en toute sérénité.",
+      "feature1": "Contrôle parental intégré",
+      "feature2": "Supervision adaptée à l'âge",
+      "feature3": "7 jours d'essai gratuit",
+      "button": "Découvrir mifa",
+      "note": "Essai gratuit 7 jours • Sans engagement"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "blog": "Blog",
+      "article": "Protéger ses enfants de l'IA"
+    }
+  },
+  "iaFamilleGuide": {
+    "hero": {
+      "badge": "Guide parents 2026",
+      "title": "IA en famille : le guide complet pour les parents",
+      "subtitle": "Comment utiliser l'intelligence artificielle en famille ? Devoirs, créativité, langues : bonnes pratiques par âge et outils adaptés.",
+      "updated": "Mis à jour en février 2026"
+    },
+    "intro": {
+      "title": "L'IA est déjà dans la vie de vos enfants",
+      "p1": "Que ce soit via les réseaux sociaux, les moteurs de recherche ou les outils scolaires, l'intelligence artificielle fait déjà partie du quotidien de vos enfants. TikTok, Instagram, YouTube : leurs algorithmes de recommandation sont pilotés par l'IA. Google et Bing intègrent des réponses générées par IA. Même certains manuels scolaires proposent des exercices interactifs assistés par IA.",
+      "p2": "Plutôt que de l'interdire — ce qui serait aussi vain qu'interdire Internet dans les années 2000 — l'enjeu pour les parents est d'accompagner leurs enfants dans un usage intelligent et encadré de ces outils. L'IA peut devenir un formidable allié éducatif, à condition de poser les bonnes règles.",
+      "p3": "Pour en savoir plus sur les risques spécifiques, consultez notre article",
+      "crossLink": "Protéger ses enfants de l'IA : 5 règles essentielles"
+    },
+    "benefits": {
+      "title": "Ce que l'IA peut apporter à votre famille",
+      "homework": {
+        "title": "Aide aux devoirs",
+        "desc": "L'IA peut expliquer un concept de maths autrement, aider à structurer une dissertation ou vérifier un exercice de grammaire. Elle ne donne pas la réponse toute faite : elle guide l'enfant dans sa réflexion, comme un tuteur patient et disponible 24h/24."
+      },
+      "creativity": {
+        "title": "Créativité",
+        "desc": "Écrire une histoire, imaginer un scénario de jeu de rôle, composer une chanson, créer des images : l'IA stimule la créativité en offrant un partenaire d'écriture et de brainstorming toujours disponible. Un formidable terrain d'expression pour les enfants."
+      },
+      "languages": {
+        "title": "Apprentissage des langues",
+        "desc": "Converser en anglais, espagnol ou allemand avec une IA patiente qui corrige sans juger. L'enfant peut pratiquer à son rythme, poser des questions sur la grammaire et enrichir son vocabulaire dans un contexte ludique et sans pression."
+      },
+      "curiosity": {
+        "title": "Curiosité et culture générale",
+        "desc": "« Pourquoi le ciel est bleu ? », « Comment fonctionnent les volcans ? » : l'IA répond aux questions infinies des enfants de façon adaptée à leur âge. Elle encourage la curiosité naturelle et transforme chaque question en opportunité d'apprentissage."
+      }
+    },
+    "ageGroups": {
+      "title": "Bonnes pratiques par tranche d'âge",
+      "guided": {
+        "title": "Mode Guidé",
+        "age": "12-14 ans",
+        "point1": "Usage accompagné : le parent utilise l'IA avec l'enfant, pas à sa place",
+        "point2": "Limites de temps claires : par exemple 30 min/jour maximum",
+        "point3": "Restriction des sujets sensibles : pas de contenus violents ou inadaptés"
+      },
+      "trusted": {
+        "title": "Mode Confiance",
+        "age": "15-17 ans",
+        "point1": "Plus d'autonomie : l'adolescent utilise l'IA seul pour ses projets",
+        "point2": "Revue hebdomadaire : le parent consulte l'historique une fois par semaine",
+        "point3": "Pas de sujets sensibles : les thématiques inappropriées restent filtrées"
+      },
+      "adult": {
+        "title": "Mode Adulte",
+        "age": "18 ans et +",
+        "point1": "Autonomie complète : l'enfant majeur gère son usage librement",
+        "point2": "Partage des coûts : la famille peut partager un budget IA commun",
+        "point3": "Échanges entre générations : parents et enfants utilisent les mêmes outils"
+      }
+    },
+    "solution": {
+      "title": "Choisir la bonne solution IA pour sa famille",
+      "p1": "La plupart des chatbots IA (ChatGPT, Claude, Gemini) sont conçus pour un usage individuel adulte. Ils ne proposent ni contrôle parental, ni supervision adaptée à l'âge, ni gestion de crédits partagés. Laisser un enfant seul sur ChatGPT, c'est comme lui donner accès à Internet sans aucun filtre.",
+      "p2": "C'est pourquoi des solutions familiales dédiées sont essentielles. Voici ce que devrait offrir une bonne solution IA familiale :",
+      "mifa": {
+        "title": "mifa by iaiaz — l'IA pensée pour les familles",
+        "point1": "Contrôle parental intégré avec supervision adaptée à l'âge (guidé, confiance, adulte)",
+        "point2": "Heures calmes configurables pour éviter l'usage nocturne",
+        "point3": "Crédits partagés en famille avec limites quotidiennes par enfant",
+        "point4": "Tableau de bord parent avec aperçu de l'activité de chaque enfant"
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "À partir de quel âge un enfant peut-il utiliser l'IA ?",
+        "answer": "La plupart des services d'IA (ChatGPT, Claude, Gemini) requièrent 13 ans minimum dans leurs conditions d'utilisation. Avec une solution comme mifa, les enfants dès 12 ans peuvent utiliser l'IA dans un cadre supervisé et adapté à leur âge."
+      },
+      "q2": {
+        "question": "L'IA va-t-elle remplacer l'apprentissage scolaire ?",
+        "answer": "Non. L'IA est un outil complémentaire, pas un substitut. Elle aide à comprendre, reformuler et explorer, mais ne remplace ni l'enseignant, ni l'effort personnel de l'élève. Bien utilisée, elle renforce l'apprentissage."
+      },
+      "q3": {
+        "question": "Comment éviter que mon enfant triche avec l'IA ?",
+        "answer": "La clé est l'éducation, pas l'interdiction. Expliquez à votre enfant que copier-coller une réponse IA est de la triche, mais que demander à l'IA d'expliquer un concept est de l'apprentissage. Le mode guidé (12-14 ans) de mifa permet justement cet accompagnement."
+      },
+      "q4": {
+        "question": "Les données de mon enfant sont-elles protégées ?",
+        "answer": "Sur les plateformes grand public (ChatGPT, Claude), les conversations peuvent être utilisées pour entraîner les modèles. Avec mifa, les données sont hébergées en Europe, ne sont pas utilisées pour l'entraînement, et les parents contrôlent l'accès."
+      },
+      "q5": {
+        "question": "Combien coûte l'IA pour une famille ?",
+        "answer": "Un abonnement ChatGPT Plus coûte 20€/mois par personne, soit 80€/mois pour une famille de 4. Avec mifa, l'abonnement familial démarre à 9,90€/mois par enfant, les crédits sont partagés et vous ne payez que ce que vous consommez."
+      }
+    },
+    "cta": {
+      "title": "Offrez à votre famille une IA bienveillante",
+      "subtitle": "Avec mifa, vos enfants découvrent l'IA dans un cadre sûr et éducatif. Contrôle parental, crédits partagés, supervision adaptée à l'âge.",
+      "button": "Découvrir mifa",
+      "note": "Essai gratuit 7 jours • Sans engagement"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "blog": "Blog",
+      "article": "IA en famille : guide parents"
+    }
+  },
+  "alternativeChatgptFamille": {
+    "hero": {
+      "badge": "Guide famille 2026",
+      "title": "Alternative ChatGPT pour les familles",
+      "subtitle": "ChatGPT n'est pas conçu pour un usage familial. Découvrez pourquoi et quelle alternative choisir pour vos enfants en 2026.",
+      "updated": "Mis à jour en février 2026"
+    },
+    "problems": {
+      "title": "Pourquoi ChatGPT n'est pas adapté aux familles",
+      "intro": "ChatGPT est un outil puissant, mais il a été conçu pour des adultes professionnels. Voici ce qui manque pour un usage familial.",
+      "p1": {
+        "title": "Aucun contrôle parental",
+        "desc": "ChatGPT ne propose aucun tableau de bord parental. Impossible de savoir ce que votre enfant demande à l'IA ni de superviser ses conversations."
+      },
+      "p2": {
+        "title": "Pas de mode adapté à l'âge",
+        "desc": "Un enfant de 12 ans et un adulte reçoivent exactement les mêmes réponses. Aucune adaptation du contenu ou du ton selon l'âge."
+      },
+      "p3": {
+        "title": "Aucun suivi d'utilisation",
+        "desc": "Pas de limites de temps, pas d'heures calmes, pas de quotas. Votre enfant peut utiliser ChatGPT sans aucune restriction, jour et nuit."
+      },
+      "p4": {
+        "title": "Pas de filtrage du contenu pour les mineurs",
+        "desc": "Bien que ChatGPT ait des filtres généraux, il n'existe pas de protection spécifique pour les mineurs. Des contenus inappropriés peuvent passer."
+      }
+    },
+    "needs": {
+      "title": "Ce dont les parents ont vraiment besoin",
+      "intro": "Une IA familiale doit offrir aux parents la visibilité et le contrôle nécessaires pour un usage serein par leurs enfants.",
+      "n1": {
+        "title": "Tableau de bord parental",
+        "desc": "Voir l'activité de chaque enfant en un coup d'œil : nombre de conversations, sujets abordés, alertes éventuelles."
+      },
+      "n2": {
+        "title": "Supervision adaptée à l'âge",
+        "desc": "Des modes différents selon l'âge : guidé (12-14 ans), confiance (15-17 ans), adulte (18+). Le niveau de supervision s'adapte à la maturité."
+      },
+      "n3": {
+        "title": "Limites d'utilisation et heures calmes",
+        "desc": "Définir des quotas journaliers de crédits et des plages horaires pendant lesquelles l'IA est accessible. Fini l'utilisation nocturne incontrôlée."
+      },
+      "n4": {
+        "title": "Sécurité du contenu",
+        "desc": "Des filtres spécifiques aux mineurs et un système d'alertes pour les parents en cas de contenu sensible détecté."
+      }
+    },
+    "comparison": {
+      "title": "Comparatif : ChatGPT vs Gemini vs mifa",
+      "intro": "Comment les principales IA se comparent-elles pour un usage familial ?",
+      "feature": "Fonctionnalité",
+      "parentalControls": "Contrôle parental",
+      "ageModes": "Modes par âge",
+      "usageLimits": "Limites d'utilisation",
+      "multiModel": "Multi-modèles IA",
+      "price": "Prix",
+      "chatgptPrice": "20€/mois (abonnement)",
+      "geminiPrice": "20€/mois (abonnement)",
+      "mifaPrice": "Paiement à l'usage dès 0.01€",
+      "note": "Comparaison effectuée en février 2026. Les fonctionnalités peuvent évoluer."
+    },
+    "features": {
+      "title": "Pourquoi mifa est l'alternative idéale",
+      "intro": "mifa a été conçue dès le départ pour les familles. Chaque fonctionnalité répond à un besoin réel des parents.",
+      "f1": {
+        "title": "Protection intégrée",
+        "desc": "Supervision parentale native avec 3 niveaux adaptés à l'âge. Les parents gardent le contrôle sans brider la curiosité de leurs enfants."
+      },
+      "f2": {
+        "title": "Toute la famille réunie",
+        "desc": "Un seul compte famille pour tous vos enfants. Chacun a son propre espace avec des règles personnalisées selon son âge et ses besoins."
+      },
+      "f3": {
+        "title": "Heures calmes et quotas",
+        "desc": "Définissez des plages horaires d'accès et des limites de crédits quotidiennes pour chaque enfant. L'IA respecte vos règles familiales."
+      },
+      "f4": {
+        "title": "Paiement à l'usage",
+        "desc": "Pas d'abonnement à 20€/mois par personne. Achetez des crédits partagés par toute la famille. Vous ne payez que ce que vous utilisez réellement."
+      },
+      "crossLink": "Vous hésitez entre GPT-5 et Claude ?",
+      "crossLinkText": "Consultez notre comparatif ChatGPT vs Claude"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "ChatGPT est-il dangereux pour les enfants ?",
+        "answer": "ChatGPT n'est pas dangereux en soi, mais il n'est pas conçu pour les mineurs. Sans contrôle parental, un enfant peut accéder à des contenus inadaptés ou développer une dépendance. C'est pourquoi une IA familiale avec supervision parentale, comme mifa, est recommandée."
+      },
+      "q2": {
+        "question": "Quelle est la différence entre mifa et ChatGPT ?",
+        "answer": "ChatGPT est une IA généraliste pour adultes. mifa est une IA familiale avec contrôle parental intégré : supervision par âge (12-14, 15-17, 18+), heures calmes, quotas de crédits, tableau de bord parental et alertes. De plus, mifa donne accès à plusieurs modèles IA (GPT-5, Claude, Gemini) au lieu d'un seul."
+      },
+      "q3": {
+        "question": "Combien coûte mifa par rapport à ChatGPT ?",
+        "answer": "ChatGPT Plus coûte 20€/mois par utilisateur, soit 60€/mois pour une famille de 3. mifa fonctionne au paiement à l'usage : vous achetez des crédits partagés par toute la famille, à partir de 0.01€ par question. La plupart des familles dépensent entre 5€ et 15€/mois."
+      },
+      "q4": {
+        "question": "Mon enfant peut-il contourner le contrôle parental de mifa ?",
+        "answer": "Les contrôles parentaux de mifa sont gérés côté serveur, pas sur l'appareil de l'enfant. Les heures calmes, quotas et niveaux de supervision sont appliqués par notre système et ne peuvent pas être modifiés par l'enfant. Seul le parent avec son compte peut ajuster les paramètres."
+      },
+      "q5": {
+        "question": "Quels modèles d'IA sont disponibles sur mifa ?",
+        "answer": "mifa donne accès aux meilleurs modèles : GPT-5 (OpenAI), Claude (Anthropic), Gemini (Google) et Mistral. Votre enfant peut choisir le modèle le plus adapté à sa question, le tout sous votre supervision parentale."
+      }
+    },
+    "cta": {
+      "badge": "Protégez vos enfants",
+      "title": "L'IA familiale qui rassure les parents",
+      "subtitle": "Offrez à vos enfants l'accès à l'IA avec le contrôle parental dont vous avez besoin. Supervision par âge, heures calmes et paiement à l'usage.",
+      "button": "Découvrir mifa",
+      "note": "Sans abonnement • Contrôle parental intégré"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "blog": "Blog",
+      "article": "Alternative ChatGPT famille"
     }
   },
   "mifa": {
