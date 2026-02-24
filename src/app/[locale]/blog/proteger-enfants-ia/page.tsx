@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = "https://www.iaiaz.com";
   const frPath = "/blog/proteger-enfants-ia";
-  const enPath = "/en/blog/protect-children-ai";
+  const enPath = "/en/blog/proteger-enfants-ia";
 
   return {
     title: t("title"),
@@ -70,7 +70,7 @@ export default async function ProtegerEnfantsIaPage({ params }: Props) {
   const breadcrumbItems = [
     { name: t("breadcrumb.home"), url: locale === "fr" ? baseUrl : `${baseUrl}/en` },
     { name: t("breadcrumb.blog"), url: locale === "fr" ? `${baseUrl}/blog` : `${baseUrl}/en/blog` },
-    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/proteger-enfants-ia` : `${baseUrl}/en/blog/protect-children-ai` },
+    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/proteger-enfants-ia` : `${baseUrl}/en/blog/proteger-enfants-ia` },
   ];
 
   const riskIcons = [
@@ -217,7 +217,7 @@ export default async function ProtegerEnfantsIaPage({ params }: Props) {
           <p className="text-sm text-[var(--muted-foreground)] mt-4 text-center">
             {t("comparison.note")}{" "}
             <a
-              href={locale === "fr" ? "/blog/alternative-chatgpt-famille" : "/en/blog/chatgpt-alternative-family"}
+              href={locale === "fr" ? "/blog/alternative-chatgpt-famille" : "/en/blog/alternative-chatgpt-famille"}
               className="text-pink-600 hover:underline"
             >
               {t("comparison.linkText")}

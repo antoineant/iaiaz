@@ -70,22 +70,22 @@ export function Footer() {
             <h3 className="font-semibold text-sm mb-3">{t("footer.blog")}</h3>
             <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
               <li>
-                <a href={locale === "fr" ? "/blog/chatgpt-vs-claude-comparatif" : "/en/blog/chatgpt-vs-claude-comparison"} className="hover:text-[var(--foreground)] transition-colors">
+                <a href={locale === "fr" ? "/blog/chatgpt-vs-claude-comparatif" : "/en/blog/chatgpt-vs-claude-comparatif"} className="hover:text-[var(--foreground)] transition-colors">
                   {t("footer.blogComparatif")}
                 </a>
               </li>
               <li>
-                <a href={locale === "fr" ? "/blog/proteger-enfants-ia" : "/en/blog/protect-children-ai"} className="hover:text-[var(--foreground)] transition-colors">
+                <a href={locale === "fr" ? "/blog/proteger-enfants-ia" : "/en/blog/proteger-enfants-ia"} className="hover:text-[var(--foreground)] transition-colors">
                   {t("footer.blogProtegerEnfants")}
                 </a>
               </li>
               <li>
-                <a href={locale === "fr" ? "/blog/ia-famille-guide-parents" : "/en/blog/family-ai-parent-guide"} className="hover:text-[var(--foreground)] transition-colors">
+                <a href={locale === "fr" ? "/blog/ia-famille-guide-parents" : "/en/blog/ia-famille-guide-parents"} className="hover:text-[var(--foreground)] transition-colors">
                   {t("footer.blogGuideParents")}
                 </a>
               </li>
               <li>
-                <a href={locale === "fr" ? "/blog/alternative-chatgpt-famille" : "/en/blog/chatgpt-alternative-family"} className="hover:text-[var(--foreground)] transition-colors">
+                <a href={locale === "fr" ? "/blog/alternative-chatgpt-famille" : "/en/blog/alternative-chatgpt-famille"} className="hover:text-[var(--foreground)] transition-colors">
                   {t("footer.blogAlternativeFamille")}
                 </a>
               </li>

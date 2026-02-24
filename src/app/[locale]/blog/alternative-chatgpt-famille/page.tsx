@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = "https://www.iaiaz.com";
   const frPath = "/blog/alternative-chatgpt-famille";
-  const enPath = "/en/blog/chatgpt-alternative-family";
+  const enPath = "/en/blog/alternative-chatgpt-famille";
 
   return {
     title: t("title"),
@@ -71,12 +71,12 @@ export default async function AlternativeChatgptFamillePage({ params }: Props) {
   const breadcrumbItems = [
     { name: t("breadcrumb.home"), url: locale === "fr" ? baseUrl : `${baseUrl}/en` },
     { name: t("breadcrumb.blog"), url: locale === "fr" ? `${baseUrl}/blog` : `${baseUrl}/en/blog` },
-    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/alternative-chatgpt-famille` : `${baseUrl}/en/blog/chatgpt-alternative-family` },
+    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/alternative-chatgpt-famille` : `${baseUrl}/en/blog/alternative-chatgpt-famille` },
   ];
 
   const comparatifLink = locale === "fr"
     ? "/blog/chatgpt-vs-claude-comparatif"
-    : "/en/blog/chatgpt-vs-claude-comparison";
+    : "/en/blog/chatgpt-vs-claude-comparatif";
 
   return (
     <div className="min-h-screen">

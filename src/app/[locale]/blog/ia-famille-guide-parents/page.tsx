@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = "https://www.iaiaz.com";
   const frPath = "/blog/ia-famille-guide-parents";
-  const enPath = "/en/blog/family-ai-parent-guide";
+  const enPath = "/en/blog/ia-famille-guide-parents";
 
   return {
     title: t("title"),
@@ -71,10 +71,10 @@ export default async function IaFamilleGuidePage({ params }: Props) {
   const breadcrumbItems = [
     { name: t("breadcrumb.home"), url: locale === "fr" ? baseUrl : `${baseUrl}/en` },
     { name: t("breadcrumb.blog"), url: locale === "fr" ? `${baseUrl}/blog` : `${baseUrl}/en/blog` },
-    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/ia-famille-guide-parents` : `${baseUrl}/en/blog/family-ai-parent-guide` },
+    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/ia-famille-guide-parents` : `${baseUrl}/en/blog/ia-famille-guide-parents` },
   ];
 
-  const protegerEnfantsUrl = locale === "fr" ? "/blog/proteger-enfants-ia" : "/en/blog/protect-children-ai";
+  const protegerEnfantsUrl = locale === "fr" ? "/blog/proteger-enfants-ia" : "/en/blog/proteger-enfants-ia";
 
   return (
     <div className="min-h-screen">

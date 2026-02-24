@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const baseUrl = "https://www.iaiaz.com";
   const frPath = "/blog/chatgpt-vs-claude-comparatif";
-  const enPath = "/en/blog/chatgpt-vs-claude-comparison";
+  const enPath = "/en/blog/chatgpt-vs-claude-comparatif";
 
   return {
     title: t("title"),
@@ -70,7 +70,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
   const breadcrumbItems = [
     { name: t("breadcrumb.home"), url: locale === "fr" ? baseUrl : `${baseUrl}/en` },
     { name: t("breadcrumb.blog"), url: locale === "fr" ? `${baseUrl}/blog` : `${baseUrl}/en/blog` },
-    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/chatgpt-vs-claude-comparatif` : `${baseUrl}/en/blog/chatgpt-vs-claude-comparison` },
+    { name: t("breadcrumb.article"), url: locale === "fr" ? `${baseUrl}/blog/chatgpt-vs-claude-comparatif` : `${baseUrl}/en/blog/chatgpt-vs-claude-comparatif` },
   ];
 
   return (
