@@ -823,6 +823,7 @@
         "emailInUse": "This email is already in use",
         "disposableEmail": "Please use a valid email address (temporary emails are not accepted)",
         "tooManyAttempts": "Too many signup attempts. Please try again later.",
+        "invalidDisplayName": "Please enter a valid name",
         "generic": "An error occurred. Please try again."
       },
       "mifaChild": {

@@ -5,6 +5,7 @@ import {
   extractEmailDomain,
   matchesDisposablePattern,
   isValidEmailFormat,
+  isValidDisplayName,
   getClientIP,
   type SignupRateLimitResult,
 } from "@/lib/signup-validation";
@@ -48,6 +49,16 @@ export async function POST(request: NextRequest) {
         {
           error: "Le mot de passe doit contenir au moins 6 caractères",
           code: "PASSWORD_TOO_SHORT",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (displayName && !isValidDisplayName(displayName)) {
+      return NextResponse.json(
+        {
+          error: "Please enter a valid name",
+          code: "INVALID_DISPLAY_NAME",
         },
         { status: 400 }
       );

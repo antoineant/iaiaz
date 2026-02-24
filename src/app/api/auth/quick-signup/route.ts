@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isValidDisplayName } from "@/lib/signup-validation";
 
 interface QuickSignupRequest {
   firstName: string;
@@ -26,6 +27,15 @@ export async function POST(request: NextRequest) {
       console.log("[quick-signup] Missing fields");
       return NextResponse.json(
         { error: "All fields are required", code: "MISSING_FIELDS" },
+        { status: 400 }
+      );
+    }
+
+    // Validate display name parts
+    if (!isValidDisplayName(firstName) || !isValidDisplayName(lastName)) {
+      console.log("[quick-signup] Invalid display name");
+      return NextResponse.json(
+        { error: "Please enter a valid name", code: "INVALID_DISPLAY_NAME" },
         { status: 400 }
       );
     }

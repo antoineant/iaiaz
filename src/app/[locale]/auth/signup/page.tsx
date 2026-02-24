@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
 import { Mail, RefreshCw, Clock, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { isValidDisplayName } from "@/lib/signup-validation";
 
 function SignupForm() {
   const t = useTranslations("auth.signup");
@@ -38,6 +39,7 @@ function SignupForm() {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isResending, setIsResending] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
+  const [displayNameError, setDisplayNameError] = useState("");
 
   // Cooldown timer
   useEffect(() => {
@@ -87,6 +89,11 @@ function SignupForm() {
       return;
     }
 
+    if (displayName.trim() && !isValidDisplayName(displayName.trim())) {
+      setError(t("errors.invalidDisplayName"));
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -128,7 +135,9 @@ function SignupForm() {
 
       if (!response.ok) {
         // Handle specific error codes with translations
-        if (data.code === "DISPOSABLE_EMAIL") {
+        if (data.code === "INVALID_DISPLAY_NAME") {
+          setError(t("errors.invalidDisplayName"));
+        } else if (data.code === "DISPOSABLE_EMAIL") {
           setError(t("errors.disposableEmail"));
         } else if (data.code === "RATE_LIMITED") {
           setError(t("errors.tooManyAttempts"));
@@ -266,15 +275,30 @@ function SignupForm() {
               )}
 
               {/* Display Name */}
-              <Input
-                id="displayName"
-                type="text"
-                label={t("displayName")}
-                placeholder={t("displayNamePlaceholder")}
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                autoComplete="name"
-              />
+              <div>
+                <Input
+                  id="displayName"
+                  type="text"
+                  label={t("displayName")}
+                  placeholder={t("displayNamePlaceholder")}
+                  value={displayName}
+                  onChange={(e) => {
+                    setDisplayName(e.target.value);
+                    if (displayNameError) setDisplayNameError("");
+                  }}
+                  onBlur={() => {
+                    if (displayName.trim() && !isValidDisplayName(displayName.trim())) {
+                      setDisplayNameError(t("errors.invalidDisplayName"));
+                    } else {
+                      setDisplayNameError("");
+                    }
+                  }}
+                  autoComplete="name"
+                />
+                {displayNameError && (
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1">{displayNameError}</p>
+                )}
+              </div>
 
               <Input
                 id="email"

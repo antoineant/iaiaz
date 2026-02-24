@@ -705,6 +705,7 @@
         "emailInUse": "Cet email est déjà utilisé",
         "disposableEmail": "Veuillez utiliser une adresse email valide (les emails temporaires ne sont pas acceptés)",
         "tooManyAttempts": "Trop de tentatives d'inscription. Veuillez réessayer plus tard.",
+        "invalidDisplayName": "Merci d'entrer un nom valide",
         "generic": "Une erreur est survenue. Veuillez réessayer."
       },
       "mifaChild": {
