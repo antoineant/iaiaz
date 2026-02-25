@@ -22,11 +22,8 @@ function validateMessageContent(text: string): string | null {
   if (text.length > MAX_MESSAGE_LENGTH) {
     return `Message too long (${text.length} characters, maximum ${MAX_MESSAGE_LENGTH})`;
   }
-  if (text.length > 100) {
-    const uniqueRatio = new Set(text).size / text.length;
-    if (uniqueRatio < 0.01) {
-      return "Invalid message (repetitive content detected)";
-    }
+  if (text.length > 100 && new Set(text).size < 15) {
+    return "Invalid message (repetitive content detected)";
   }
   return null;
 }
