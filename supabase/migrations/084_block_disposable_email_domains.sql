@@ -5,6 +5,7 @@ INSERT INTO public.blocked_email_domains (domain) VALUES
   -- Domains used in Feb 2026 attack
   ('qqamm.xyz'),
   ('meteormail.me'),
+  ('qq.com'),
   -- Common disposable email services
   ('yopmail.com'),
   ('yopmail.fr'),
