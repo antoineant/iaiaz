@@ -33,6 +33,20 @@ import { calculateAge } from "@/lib/mifa/age-verification";
 import { sendLowCreditsEmail } from "@/lib/email";
 
 const LOW_CREDIT_THRESHOLD = 0.5; // €
+const MAX_MESSAGE_LENGTH = 15_000;
+
+function validateMessageContent(text: string): string | null {
+  if (text.length > MAX_MESSAGE_LENGTH) {
+    return `Message trop long (${text.length} caractères, maximum ${MAX_MESSAGE_LENGTH})`;
+  }
+  if (text.length > 100) {
+    const uniqueRatio = new Set(text).size / text.length;
+    if (uniqueRatio < 0.01) {
+      return "Message invalide (contenu répétitif détecté)";
+    }
+  }
+  return null;
+}
 
 /** Fire-and-forget low credit email if balance drops below threshold (personal credits only) */
 async function checkLowCredits(userId: string, remaining: number | undefined, source: string | undefined) {
@@ -165,6 +179,23 @@ export async function POST(request: NextRequest) {
         { error: "Message ou fichier requis" },
         { status: 400 }
       );
+    }
+
+    // Validate message content (length + repetition)
+    if (message) {
+      const msgError = validateMessageContent(message);
+      if (msgError) {
+        return NextResponse.json({ error: msgError }, { status: 400 });
+      }
+    }
+    for (const m of messages) {
+      const histError = validateMessageContent(m.content);
+      if (histError) {
+        return NextResponse.json(
+          { error: "Un message de l'historique est invalide: " + histError },
+          { status: 400 }
+        );
+      }
     }
 
     // Validate model from database

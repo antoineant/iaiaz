@@ -16,6 +16,21 @@ import {
   getEffectiveBalance,
 } from "@/lib/credits";
 
+const MAX_MESSAGE_LENGTH = 15_000;
+
+function validateMessageContent(text: string): string | null {
+  if (text.length > MAX_MESSAGE_LENGTH) {
+    return `Message too long (${text.length} characters, maximum ${MAX_MESSAGE_LENGTH})`;
+  }
+  if (text.length > 100) {
+    const uniqueRatio = new Set(text).size / text.length;
+    if (uniqueRatio < 0.01) {
+      return "Invalid message (repetitive content detected)";
+    }
+  }
+  return null;
+}
+
 // CORS headers for desktop app
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -91,6 +106,26 @@ export async function POST(request: NextRequest) {
         { error: "Message or attachments required", code: "MISSING_MESSAGE" },
         { status: 400, headers: corsHeaders }
       );
+    }
+
+    // Validate message content (length + repetition)
+    if (message) {
+      const msgError = validateMessageContent(message);
+      if (msgError) {
+        return NextResponse.json(
+          { error: msgError, code: "INVALID_MESSAGE" },
+          { status: 400, headers: corsHeaders }
+        );
+      }
+    }
+    for (const m of messages) {
+      const histError = validateMessageContent(m.content);
+      if (histError) {
+        return NextResponse.json(
+          { error: "Invalid message in history: " + histError, code: "INVALID_MESSAGE" },
+          { status: 400, headers: corsHeaders }
+        );
+      }
     }
 
     // Validate model
