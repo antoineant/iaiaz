@@ -12,6 +12,12 @@ const DISPOSABLE_PATTERNS = [
   /mailinator/i,
   /disposable/i,
   /temporary/i,
+  /^nada\./i,
+  /^burner/i,
+  /^yopmail/i,
+  /mail\.me$/i,    // meteormail.me etc.
+  /mail\.ws$/i,
+  /mail\.xyz$/i,   // random disposable .xyz domains
 ];
 
 /**
