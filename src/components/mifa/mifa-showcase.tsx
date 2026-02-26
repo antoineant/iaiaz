@@ -46,14 +46,14 @@ export function MifaShowcase() {
   const [flipped, setFlipped] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-wrap justify-center gap-5 mb-10">
+    <div className="flex flex-wrap justify-center gap-3 sm:gap-5 mb-10">
       {MIFA_CARDS.map((card) => {
         const isFlipped = flipped === card.key;
 
         return (
           <div
             key={card.key}
-            className="w-[calc(50%-10px)] md:w-[calc(33.333%-14px)] cursor-pointer"
+            className="w-[calc(50%-6px)] sm:w-[calc(50%-10px)] md:w-[calc(33.333%-14px)] cursor-pointer"
             style={{ perspective: "800px" }}
             onClick={() => setFlipped(isFlipped ? null : card.key)}
           >
@@ -66,7 +66,7 @@ export function MifaShowcase() {
             >
               {/* Front */}
               <div
-                className="rounded-2xl p-5 text-center border-2 hover:shadow-lg hover:scale-105 transition-all"
+                className="rounded-2xl p-3 sm:p-5 text-center border-2 hover:shadow-lg hover:scale-105 transition-all"
                 style={{
                   backfaceVisibility: "hidden",
                   borderColor: `${card.color}80`,
@@ -78,11 +78,11 @@ export function MifaShowcase() {
                   alt=""
                   width={110}
                   height={110}
-                  className="mx-auto mb-3 rounded-full"
+                  className="mx-auto mb-2 sm:mb-3 rounded-full w-20 h-20 sm:w-[110px] sm:h-[110px]"
                 />
                 <p className="font-bold text-base mb-0.5">{t(`${card.key}.name`)}</p>
                 <p className="text-sm text-[var(--muted-foreground)]">{t(`${card.key}.role`)}</p>
-                <div className="flex gap-1 mt-3 justify-center">
+                <div className="flex gap-1 mt-2 sm:mt-3 justify-center">
                   {[card.gauges.creativity, card.gauges.patience, card.gauges.humor].map((v, i) => (
                     <div key={i} className="flex gap-0.5">
                       {[1, 2, 3, 4, 5].map((n) => (
@@ -99,7 +99,7 @@ export function MifaShowcase() {
 
               {/* Back */}
               <div
-                className="absolute inset-0 rounded-2xl p-5 border-2 flex flex-col justify-center"
+                className="absolute inset-0 rounded-2xl p-3 sm:p-5 border-2 flex flex-col justify-center"
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
@@ -144,9 +144,9 @@ export function MifaShowcase() {
       {/* Create your own CTA card */}
       <Link
         href="/mifa"
-        className="w-[calc(50%-10px)] md:w-[calc(33.333%-14px)] no-underline"
+        className="w-[calc(50%-6px)] sm:w-[calc(50%-10px)] md:w-[calc(33.333%-14px)] no-underline"
       >
-        <div className="rounded-2xl p-5 text-center border-2 border-dashed border-[var(--muted-foreground)]/30 hover:border-[var(--muted-foreground)]/60 hover:shadow-lg hover:scale-105 transition-all flex flex-col items-center justify-center h-full min-h-[200px] bg-[var(--muted)]/30">
+        <div className="rounded-2xl p-3 sm:p-5 text-center border-2 border-dashed border-[var(--muted-foreground)]/30 hover:border-[var(--muted-foreground)]/60 hover:shadow-lg hover:scale-105 transition-all flex flex-col items-center justify-center h-full min-h-[200px] bg-[var(--muted)]/30">
           <div className="w-16 h-16 rounded-full bg-[var(--muted)] flex items-center justify-center mb-3">
             <Plus className="w-8 h-8 text-[var(--muted-foreground)]" />
           </div>
