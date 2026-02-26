@@ -99,7 +99,7 @@ export function MifaShowcase() {
 
               {/* Back */}
               <div
-                className="absolute inset-0 rounded-2xl p-3 sm:p-5 border-2 flex flex-col justify-center"
+                className="absolute inset-0 rounded-2xl p-3 sm:p-5 border-2 flex flex-col justify-center overflow-hidden"
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
@@ -109,22 +109,22 @@ export function MifaShowcase() {
                 }}
               >
                 <p className="font-bold text-base mb-1 text-center">{t(`${card.key}.name`)}</p>
-                <p className="text-xs text-[var(--muted-foreground)] mb-4 text-center leading-relaxed">
+                <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] mb-2 sm:mb-4 text-center leading-relaxed line-clamp-3 sm:line-clamp-none">
                   {t(`${card.key}.desc`)}
                 </p>
-                <div className="space-y-2">
+                <div className="space-y-1 sm:space-y-2">
                   {GAUGE_KEYS.map((gauge) => {
                     const value = card.gauges[gauge];
                     return (
                       <div key={gauge} className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-medium w-16 text-right text-[var(--muted-foreground)]">
+                        <span className="text-[9px] sm:text-[10px] font-medium w-12 sm:w-16 text-right text-[var(--muted-foreground)]">
                           {t(`gaugeLabels.${gauge}`)}
                         </span>
                         <div className="flex-1 flex gap-0.5">
                           {[1, 2, 3, 4, 5].map((n) => (
                             <div
                               key={n}
-                              className="h-2 flex-1 rounded-full"
+                              className="h-1.5 sm:h-2 flex-1 rounded-full"
                               style={{
                                 backgroundColor: n <= value ? card.color : `${card.color}15`,
                               }}
