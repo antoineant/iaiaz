@@ -19,6 +19,7 @@ import {
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { createClient } from "@/lib/supabase/client";
+import { Turnstile } from "react-turnstile";
 
 interface ClassInfo {
   success: boolean;
@@ -69,6 +70,9 @@ function ClassSignupContent() {
     lastName: "",
     email: "",
   });
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   useEffect(() => {
     const loadClassInfo = async () => {
@@ -106,6 +110,7 @@ function ClassSignupContent() {
           lastName: formData.lastName,
           email: formData.email,
           classToken: token,
+          turnstileToken: turnstileToken || undefined,
         }),
       });
 
@@ -306,6 +311,15 @@ function ClassSignupContent() {
                 </div>
               )}
 
+              {turnstileSiteKey && (
+                <Turnstile
+                  sitekey={turnstileSiteKey}
+                  onVerify={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                  onError={() => setTurnstileToken(null)}
+                />
+              )}
+
               <Button
                 type="submit"
                 className="w-full"
@@ -313,7 +327,8 @@ function ClassSignupContent() {
                   isSubmitting ||
                   !formData.firstName ||
                   !formData.lastName ||
-                  !formData.email
+                  !formData.email ||
+                  (!!turnstileSiteKey && !turnstileToken)
                 }
               >
                 {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

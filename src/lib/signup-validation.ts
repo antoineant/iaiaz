@@ -20,6 +20,28 @@ const DISPOSABLE_PATTERNS = [
   /mail\.xyz$/i,   // random disposable .xyz domains
 ];
 
+// TLDs commonly used for throwaway/disposable domains
+// Legitimate providers use .com, .fr, .net, .org, .edu, etc.
+const SUSPICIOUS_TLDS = new Set([
+  "shop", "xyz", "top", "buzz", "click", "link", "site", "online",
+  "fun", "icu", "rest", "surf", "monster", "uno", "cyou", "cfd",
+  "sbs", "lol", "mom", "bond", "bid", "gdn", "pw",
+]);
+
+// Well-known legitimate email providers — always allowed regardless of TLD checks
+const TRUSTED_EMAIL_DOMAINS = new Set([
+  // Major providers
+  "gmail.com", "outlook.com", "outlook.fr", "hotmail.com", "hotmail.fr",
+  "yahoo.com", "yahoo.fr", "live.com", "live.fr", "msn.com",
+  "icloud.com", "me.com", "mac.com", "protonmail.com", "proton.me",
+  // French providers
+  "orange.fr", "wanadoo.fr", "free.fr", "sfr.fr", "laposte.net",
+  "bbox.fr", "numericable.fr",
+  // Education
+  "edu", "ac-paris.fr", "ac-versailles.fr", "ac-lyon.fr",
+  "univ-paris1.fr", "sorbonne-universite.fr",
+]);
+
 /**
  * Extract domain from email address
  */
@@ -34,6 +56,47 @@ export function extractEmailDomain(email: string): string {
  */
 export function matchesDisposablePattern(domain: string): boolean {
   return DISPOSABLE_PATTERNS.some((pattern) => pattern.test(domain));
+}
+
+/**
+ * Check if email uses a suspicious TLD with a non-trusted domain.
+ * Blocks random throwaway domains like "qemvbbi.shop" while allowing
+ * legitimate services on those TLDs if they're in the trusted list.
+ */
+export function hasSuspiciousTLD(domain: string): boolean {
+  if (TRUSTED_EMAIL_DOMAINS.has(domain)) return false;
+  const tld = domain.split(".").pop() || "";
+  return SUSPICIOUS_TLDS.has(tld);
+}
+
+/**
+ * Check if the local part of an email (before @) looks like random gibberish.
+ * Catches patterns like "bxk25qn4", "m4h363d9", "03955934".
+ * Real emails are usually name-based: "jean.dupont", "marie42", etc.
+ */
+export function hasGibberishLocalPart(email: string): boolean {
+  const local = email.split("@")[0]?.toLowerCase() || "";
+  if (local.length < 6) return false; // too short to judge
+
+  // Strip dots/underscores/hyphens (common in real emails)
+  const cleaned = local.replace(/[._-]/g, "");
+
+  // Purely numeric
+  if (/^\d+$/.test(cleaned)) return true;
+
+  // High digit ratio in short local parts: "bxk25qn4" = 3 digits / 8 chars = 0.375
+  const digitCount = (cleaned.match(/\d/g) || []).length;
+  const letterCount = (cleaned.match(/[a-z]/g) || []).length;
+  if (cleaned.length >= 6 && cleaned.length <= 12) {
+    // Mix of letters and digits with no recognizable pattern
+    if (digitCount >= 2 && letterCount >= 2 && digitCount / cleaned.length > 0.3) {
+      // Check for vowels — real names have them, random strings often don't
+      const vowelCount = (cleaned.match(/[aeiou]/g) || []).length;
+      if (vowelCount / letterCount < 0.2) return true;
+    }
+  }
+
+  return false;
 }
 
 /**

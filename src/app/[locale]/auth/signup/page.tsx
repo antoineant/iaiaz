@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
@@ -12,6 +12,7 @@ import { GoogleButton, Divider } from "@/components/auth/google-button";
 import { Mail, RefreshCw, Clock, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { isValidDisplayName } from "@/lib/signup-validation";
+import { Turnstile } from "react-turnstile";
 
 function SignupForm() {
   const t = useTranslations("auth.signup");
@@ -40,6 +41,9 @@ function SignupForm() {
   const [isResending, setIsResending] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
   const [displayNameError, setDisplayNameError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   // Cooldown timer
   useEffect(() => {
@@ -128,6 +132,7 @@ function SignupForm() {
           displayName: displayName.trim() || undefined,
           marketingConsent: isMifaChild ? false : marketingConsent,
           redirectUrl: finalRedirectUrl,
+          turnstileToken: turnstileToken || undefined,
         }),
       });
 
@@ -135,7 +140,10 @@ function SignupForm() {
 
       if (!response.ok) {
         // Handle specific error codes with translations
-        if (data.code === "INVALID_DISPLAY_NAME") {
+        if (data.code === "CAPTCHA_FAILED") {
+          setError(data.error || t("errors.generic"));
+          setTurnstileToken(null); // Reset so widget re-renders
+        } else if (data.code === "INVALID_DISPLAY_NAME") {
           setError(t("errors.invalidDisplayName"));
         } else if (data.code === "DISPOSABLE_EMAIL") {
           setError(t("errors.disposableEmail"));
@@ -348,10 +356,20 @@ function SignupForm() {
                 </label>
               )}
 
+              {turnstileSiteKey && (
+                <Turnstile
+                  sitekey={turnstileSiteKey}
+                  onVerify={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                  onError={() => setTurnstileToken(null)}
+                />
+              )}
+
               <Button
                 type="submit"
                 className="w-full"
                 isLoading={isLoading}
+                disabled={isLoading || (!!turnstileSiteKey && !turnstileToken)}
               >
                 {t("submit")}
               </Button>

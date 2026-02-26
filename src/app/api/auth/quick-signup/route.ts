@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isValidDisplayName } from "@/lib/signup-validation";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 interface QuickSignupRequest {
   firstName: string;
   lastName: string;
   email: string;
   classToken: string;
+  turnstileToken?: string;
 }
 
 /**
@@ -18,9 +20,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: QuickSignupRequest = await request.json();
-    const { firstName, lastName, email, classToken } = body;
+    const { firstName, lastName, email, classToken, turnstileToken } = body;
 
     console.log("[quick-signup] Received:", { firstName, lastName, email: email?.substring(0, 5) + "...", classToken: classToken?.substring(0, 8) + "..." });
+
+    // 0. Verify Turnstile CAPTCHA (first check — blocks bots before any DB work)
+    const turnstileResult = await verifyTurnstileToken(turnstileToken);
+    if (!turnstileResult.success) {
+      return NextResponse.json(
+        { error: turnstileResult.error, code: "CAPTCHA_FAILED" },
+        { status: 400 }
+      );
+    }
 
     // Validate required fields
     if (!firstName || !lastName || !email || !classToken) {

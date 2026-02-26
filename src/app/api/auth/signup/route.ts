@@ -4,11 +4,14 @@ import { createClient } from "@/lib/supabase/server";
 import {
   extractEmailDomain,
   matchesDisposablePattern,
+  hasSuspiciousTLD,
+  hasGibberishLocalPart,
   isValidEmailFormat,
   isValidDisplayName,
   getClientIP,
   type SignupRateLimitResult,
 } from "@/lib/signup-validation";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 interface SignupRequest {
   email: string;
@@ -17,6 +20,7 @@ interface SignupRequest {
   displayName?: string;
   marketingConsent?: boolean;
   redirectUrl?: string;
+  turnstileToken?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -24,9 +28,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: SignupRequest = await request.json();
-    const { email, password, accountType, displayName, marketingConsent, redirectUrl } = body;
+    const { email, password, accountType, displayName, marketingConsent, redirectUrl, turnstileToken } = body;
 
     console.log("[signup] Email:", email?.substring(0, 5) + "...", "AccountType:", accountType);
+
+    // 0. Verify Turnstile CAPTCHA (first check — blocks bots before any DB work)
+    const turnstileResult = await verifyTurnstileToken(turnstileToken);
+    if (!turnstileResult.success) {
+      return NextResponse.json(
+        { error: turnstileResult.error, code: "CAPTCHA_FAILED" },
+        { status: 400 }
+      );
+    }
 
     // Basic validation
     if (!email || !password) {
@@ -114,6 +127,46 @@ export async function POST(request: NextRequest) {
         p_user_agent: userAgent,
         p_status: "blocked_email",
         p_block_reason: "Disposable email pattern detected",
+      });
+
+      return NextResponse.json(
+        {
+          error:
+            "Veuillez utiliser une adresse email valide (les emails temporaires ne sont pas acceptés)",
+          code: "DISPOSABLE_EMAIL",
+        },
+        { status: 400 }
+      );
+    }
+
+    // 2b. Check suspicious TLD (cheap throwaway domains like .shop, .xyz, .top)
+    if (hasSuspiciousTLD(emailDomain)) {
+      await adminClient.rpc("log_signup_attempt", {
+        p_email: email,
+        p_ip_address: clientIP,
+        p_user_agent: userAgent,
+        p_status: "blocked_email",
+        p_block_reason: `Suspicious TLD: ${emailDomain}`,
+      });
+
+      return NextResponse.json(
+        {
+          error:
+            "Veuillez utiliser une adresse email valide (les emails temporaires ne sont pas acceptés)",
+          code: "DISPOSABLE_EMAIL",
+        },
+        { status: 400 }
+      );
+    }
+
+    // 2c. Check gibberish local part (random strings like "bxk25qn4@...")
+    if (hasGibberishLocalPart(email)) {
+      await adminClient.rpc("log_signup_attempt", {
+        p_email: email,
+        p_ip_address: clientIP,
+        p_user_agent: userAgent,
+        p_status: "blocked_email",
+        p_block_reason: "Gibberish email local part",
       });
 
       return NextResponse.json(

@@ -2,10 +2,11 @@
 -- Also adds common disposable domain patterns
 
 INSERT INTO public.blocked_email_domains (domain) VALUES
-  -- Domains used in Feb 2026 attack
+  -- Domains used in Feb 2026 attacks
   ('qqamm.xyz'),
   ('meteormail.me'),
   ('qq.com'),
+  ('qemvbbi.shop'),
   -- Common disposable email services
   ('yopmail.com'),
   ('yopmail.fr'),
