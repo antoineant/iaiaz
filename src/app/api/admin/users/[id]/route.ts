@@ -133,8 +133,17 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .eq("parent_user_id", id);
 
     if (childCount && childCount > 0) {
+      const { data: children } = await adminClient
+        .from("profiles")
+        .select("id, email, display_name, account_type")
+        .eq("parent_user_id", id);
+
       return NextResponse.json(
-        { error: `Cannot delete: user has ${childCount} child account(s). Remove children first.` },
+        {
+          error: `Cannot delete: user has ${childCount} child account(s). Remove children first.`,
+          code: "HAS_CHILDREN",
+          children: children || [],
+        },
         { status: 400 }
       );
     }

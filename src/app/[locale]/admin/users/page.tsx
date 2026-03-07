@@ -32,6 +32,8 @@ export default function UsersPage() {
   const [creditAmount, setCreditAmount] = useState("");
   const [deletingUser, setDeletingUser] = useState<Profile | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [blockedChildren, setBlockedChildren] = useState<Array<{ id: string; email: string; display_name: string | null }>>([]);
+  const [deletingChildId, setDeletingChildId] = useState<string | null>(null);
   const [resendingEmail, setResendingEmail] = useState<string | null>(null);
   const [cleanupPreview, setCleanupPreview] = useState<{ users: Array<{ id: string; email: string; reason: string }>; inactiveDays: number } | null>(null);
   const [isCleaningUp, setIsCleaningUp] = useState(false);
@@ -278,17 +280,43 @@ export default function UsersPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Erreur lors de la suppression");
+        if (data.code === "HAS_CHILDREN" && data.children) {
+          setBlockedChildren(data.children);
+        } else {
+          setError(data.error || "Erreur lors de la suppression");
+        }
         return;
       }
 
       setSuccess(`Utilisateur ${deletingUser.email} supprimé avec succès`);
       setDeletingUser(null);
+      setBlockedChildren([]);
       fetchUsers();
     } catch {
       setError("Erreur lors de la suppression de l'utilisateur");
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const deleteChild = async (childId: string) => {
+    setDeletingChildId(childId);
+    try {
+      const response = await fetch(`/api/admin/users/${childId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setBlockedChildren((prev) => prev.filter((c) => c.id !== childId));
+        fetchUsers();
+      } else {
+        const data = await response.json();
+        setError(data.error || "Erreur lors de la suppression de l'enfant");
+      }
+    } catch {
+      setError("Erreur lors de la suppression de l'enfant");
+    } finally {
+      setDeletingChildId(null);
     }
   };
 
@@ -708,21 +736,53 @@ export default function UsersPage() {
                 </p>
               </div>
 
-              <p className="text-sm text-[var(--muted-foreground)] mt-4">
-                Toutes les données associées seront supprimées :
-              </p>
-              <ul className="text-sm text-[var(--muted-foreground)] list-disc list-inside mt-1">
-                <li>Conversations et messages</li>
-                <li>Fichiers uploadés</li>
-                <li>Historique des crédits</li>
-                <li>Appartenances aux organisations</li>
-              </ul>
+              {blockedChildren.length > 0 ? (
+                <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg">
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
+                    Ce parent a {blockedChildren.length} compte(s) enfant(s). Supprimez-les d&apos;abord :
+                  </p>
+                  <div className="space-y-2">
+                    {blockedChildren.map((child) => (
+                      <div key={child.id} className="flex items-center justify-between bg-[var(--background)] rounded-lg p-2.5">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">{child.display_name || child.email}</p>
+                          <p className="text-xs text-[var(--muted-foreground)] truncate">{child.email}</p>
+                        </div>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => deleteChild(child.id)}
+                          disabled={deletingChildId === child.id}
+                        >
+                          {deletingChildId === child.id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-3 h-3" />
+                          )}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-[var(--muted-foreground)] mt-4">
+                    Toutes les données associées seront supprimées :
+                  </p>
+                  <ul className="text-sm text-[var(--muted-foreground)] list-disc list-inside mt-1">
+                    <li>Conversations et messages</li>
+                    <li>Fichiers uploadés</li>
+                    <li>Historique des crédits</li>
+                    <li>Appartenances aux organisations</li>
+                  </ul>
+                </>
+              )}
             </div>
 
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                onClick={() => setDeletingUser(null)}
+                onClick={() => { setDeletingUser(null); setBlockedChildren([]); }}
                 className="flex-1"
                 disabled={isDeleting}
               >
@@ -731,7 +791,7 @@ export default function UsersPage() {
               <Button
                 variant="danger"
                 onClick={deleteUser}
-                disabled={isDeleting}
+                disabled={isDeleting || blockedChildren.length > 0}
                 className="flex-1"
               >
                 {isDeleting ? (
