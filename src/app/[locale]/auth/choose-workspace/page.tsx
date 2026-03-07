@@ -30,18 +30,23 @@ export default async function ChooseWorkspacePage({ params }: Props) {
     redirect(`/${locale}/auth/login`);
   }
 
-  // Check if user has accepted terms
-  const { data: termsCheck } = await supabase
+  // Check terms + account type in a single query
+  const { data: profileCheck } = await supabase
     .from("profiles")
-    .select("terms_accepted_at")
+    .select("terms_accepted_at, account_type")
     .eq("id", user.id)
     .single();
 
-  if (!termsCheck?.terms_accepted_at) {
+  if (!profileCheck?.terms_accepted_at) {
     redirect(`/${locale}/auth/accept-terms?redirect=/auth/choose-workspace`);
   }
 
-  // Check for pending family invites — ensures child always reaches the join page
+  // Child accounts always go straight to mifa chat — no workspace choice needed
+  if (profileCheck?.account_type === "child") {
+    redirect(`/${locale}/mifa/chat`);
+  }
+
+  // Check for pending family invites — ensures invited co-parents reach the join page
   const { data: pendingInvite } = await supabase
     .from("organization_invites")
     .select("token, organization:organizations!inner(type)")
@@ -56,28 +61,12 @@ export default async function ChooseWorkspacePage({ params }: Props) {
     redirect(`/${locale}/mifa/join/${pendingInvite.token}`);
   }
 
-  // Fetch all org memberships (before intent check — family children always go to /mifa/chat)
+  // Fetch all org memberships
   const { data: memberships } = await supabase
     .from("organization_members")
     .select("organization_id, role, organizations(id, name, type)")
     .eq("user_id", user.id)
     .eq("status", "active");
-
-  // Family child check takes priority over any intent/redirect
-  if (memberships) {
-    for (const m of memberships) {
-      const org = m.organizations as unknown as {
-        id: string;
-        name: string;
-        type: string;
-      } | null;
-      if (!org) continue;
-
-      if (org.type === "family" && m.role !== "owner" && m.role !== "admin") {
-        redirect(`/${locale}/mifa/chat`);
-      }
-    }
-  }
 
   // Read intent cookie (set by GoogleButton or callback)
   const cookieStore = await cookies();

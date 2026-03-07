@@ -52,13 +52,24 @@ export function useFamilyRole() {
           .maybeSingle(),
         supabase
           .from("profiles")
-          .select("display_name, credits_balance, email, accent_color")
+          .select("display_name, credits_balance, email, accent_color, account_type")
           .eq("id", user.id)
           .single(),
       ]);
 
       const membership = membershipResult.data;
       const profile = profileResult.data;
+
+      // Direct account_type check — child accounts always have this set
+      if (!membership && profile?.account_type === "child") {
+        return {
+          ...empty,
+          role: "child" as const,
+          displayName: profile.display_name || user.email?.split("@")[0] || null,
+          creditsBalance: Number(profile.credits_balance || 0),
+          accentColor: profile.accent_color || null,
+        };
+      }
 
       if (!membership) return empty;
 

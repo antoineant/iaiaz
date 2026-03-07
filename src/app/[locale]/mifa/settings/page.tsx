@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X, KeyRound, UserMinus } from "lucide-react";
+import { ArrowLeft, Loader2, Save, UserPlus, Shield, User, Mail, Clock, CheckCircle, XCircle, RotateCw, X, KeyRound, UserMinus, Copy, Check } from "lucide-react";
 
 const SCHOOL_YEAR_OPTIONS = [
   "6eme", "5eme", "4eme", "3eme",
@@ -65,9 +65,17 @@ function MifaSettingsContent() {
   const [saving, setSaving] = useState<string | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
-  const [inviteRole, setInviteRole] = useState<"admin" | "student">("student");
   const [inviting, setInviting] = useState(false);
   const [inviteMsg, setInviteMsg] = useState("");
+
+  // Add Child form state
+  const [childName, setChildName] = useState("");
+  const [childBirthdate, setChildBirthdate] = useState("");
+  const [childSchoolYear, setChildSchoolYear] = useState("");
+  const [addingChild, setAddingChild] = useState(false);
+  const [addChildMsg, setAddChildMsg] = useState("");
+  const [childCredentials, setChildCredentials] = useState<{ username: string; password: string; name: string } | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [invites, setInvites] = useState<MifaInvite[]>([]);
   const [revoking, setRevoking] = useState<string | null>(null);
   const [resending, setResending] = useState<string | null>(null);
@@ -193,6 +201,47 @@ function MifaSettingsContent() {
     }
   };
 
+  const addChild = async () => {
+    setAddingChild(true);
+    setAddChildMsg("");
+    try {
+      const res = await fetch("/api/mifa/add-child", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: childName,
+          birthdate: childBirthdate,
+          schoolYear: childSchoolYear || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setChildCredentials({
+          username: data.child.username,
+          password: data.child.password,
+          name: data.child.name,
+        });
+        setChildName("");
+        setChildBirthdate("");
+        setChildSchoolYear("");
+        await loadData();
+      } else {
+        setAddChildMsg(data.error || t("addChildError"));
+      }
+    } catch {
+      setAddChildMsg(t("addChildError"));
+    } finally {
+      setAddingChild(false);
+    }
+  };
+
+  const copyToClipboard = async (text: string, field: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
   const sendInvite = async () => {
     setInviting(true);
     setInviteMsg("");
@@ -203,7 +252,7 @@ function MifaSettingsContent() {
         body: JSON.stringify({
           email: inviteEmail,
           name: inviteName,
-          role: inviteRole,
+          role: "admin",
           locale,
         }),
       });
@@ -403,12 +452,117 @@ function MifaSettingsContent() {
 
       <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
 
-      {/* Invite New Member */}
+      {/* Add Child */}
       <Card className="mb-8">
         <CardHeader>
           <h2 className="font-semibold flex items-center gap-2">
             <UserPlus className="w-5 h-5" />
-            {t("inviteMember")}
+            {t("addChild")}
+          </h2>
+          <p className="text-sm text-[var(--muted-foreground)]">{t("addChildDesc")}</p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+            <input
+              type="text"
+              value={childName}
+              onChange={(e) => setChildName(e.target.value)}
+              placeholder={t("childName")}
+              className="px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-sm"
+            />
+            <input
+              type="date"
+              value={childBirthdate}
+              onChange={(e) => setChildBirthdate(e.target.value)}
+              max={new Date().toISOString().split("T")[0]}
+              className="px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-sm"
+            />
+            <select
+              value={childSchoolYear}
+              onChange={(e) => setChildSchoolYear(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-sm"
+            >
+              <option value="">{t("schoolYear")}</option>
+              {SCHOOL_YEAR_OPTIONS.map((yr) => (
+                <option key={yr} value={yr}>{t(`schoolYears.${yr}`)}</option>
+              ))}
+            </select>
+          </div>
+          <Button
+            onClick={addChild}
+            disabled={addingChild || !childName.trim() || !childBirthdate}
+            size="sm"
+            className="bg-primary-600 hover:bg-primary-700 text-white"
+          >
+            {addingChild ? <Loader2 className="w-4 h-4 animate-spin" /> : t("addChildButton")}
+          </Button>
+          {addChildMsg && (
+            <p className="text-sm mt-2 text-red-600">{addChildMsg}</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Child Credentials Modal */}
+      {childCredentials && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-[var(--background)] rounded-2xl max-w-md w-full p-8 shadow-xl">
+            <div className="text-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
+                <Check className="w-6 h-6 text-green-600" />
+              </div>
+              <h2 className="text-xl font-bold">{t("childCredentials")}</h2>
+              <p className="text-sm text-[var(--muted-foreground)] mt-1">{childCredentials.name}</p>
+            </div>
+
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-4">
+              <p className="text-sm text-amber-800 dark:text-amber-200">{t("childCredentialsWarning")}</p>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center justify-between bg-[var(--muted)] rounded-lg p-3">
+                <div>
+                  <p className="text-xs text-[var(--muted-foreground)]">{t("childUsername")}</p>
+                  <p className="font-mono font-semibold">{childCredentials.username}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => copyToClipboard(childCredentials.username, "username")}
+                >
+                  {copiedField === "username" ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
+              <div className="flex items-center justify-between bg-[var(--muted)] rounded-lg p-3">
+                <div>
+                  <p className="text-xs text-[var(--muted-foreground)]">{t("childPassword")}</p>
+                  <p className="font-mono font-semibold">{childCredentials.password}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => copyToClipboard(childCredentials.password, "password")}
+                >
+                  {copiedField === "password" ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => setChildCredentials(null)}
+              className="w-full"
+            >
+              {t("closeCredentials")}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Invite Co-Parent */}
+      <Card className="mb-8">
+        <CardHeader>
+          <h2 className="font-semibold flex items-center gap-2">
+            <Mail className="w-5 h-5" />
+            {t("inviteParent")}
           </h2>
         </CardHeader>
         <CardContent>
@@ -428,24 +582,14 @@ function MifaSettingsContent() {
               className="px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-sm"
             />
           </div>
-          <div className="flex items-center gap-3">
-            <select
-              value={inviteRole}
-              onChange={(e) => setInviteRole(e.target.value as "admin" | "student")}
-              className="px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-sm"
-            >
-              <option value="student">{t("roleChild")}</option>
-              <option value="admin">{t("roleParent")}</option>
-            </select>
-            <Button
-              onClick={sendInvite}
-              disabled={inviting || !inviteEmail.trim() || !inviteName.trim()}
-              size="sm"
-              className="bg-primary-600 hover:bg-primary-700 text-white"
-            >
-              {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : t("sendInvite")}
-            </Button>
-          </div>
+          <Button
+            onClick={sendInvite}
+            disabled={inviting || !inviteEmail.trim() || !inviteName.trim()}
+            size="sm"
+            className="bg-primary-600 hover:bg-primary-700 text-white"
+          >
+            {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : t("sendInvite")}
+          </Button>
           {inviteMsg && (
             <p className="text-sm mt-2 text-[var(--muted-foreground)]">{inviteMsg}</p>
           )}

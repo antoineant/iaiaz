@@ -46,6 +46,31 @@ async function request<T>(
 
 // Mifa API client
 export const api = {
+  // Signup (no auth required)
+  signup: (data: {
+    email: string;
+    password: string;
+    displayName?: string;
+    redirectUrl?: string;
+  }) =>
+    request<{ success: boolean; message: string }>("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+        displayName: data.displayName,
+        accountType: "student",
+        redirectUrl: data.redirectUrl,
+      }),
+    }),
+
+  // Service selection (auto-called for mobile users)
+  chooseService: (service: string) =>
+    request<{ redirect: string }>("/api/auth/choose-service", {
+      method: "POST",
+      body: JSON.stringify({ service }),
+    }),
+
   // Family creation (onboarding)
   createFamily: (familyName: string) =>
     request<{ success: boolean; organizationId: string }>("/api/mifa/create", {
@@ -202,6 +227,24 @@ export const api = {
     request<any>(`/api/mifa/assistants/${id}`, {
       method: "PUT",
       body: JSON.stringify({ share_code: "generate" }),
+    }),
+
+  // Add child (parent creates child account directly)
+  addChild: (data: { name: string; birthdate: string; schoolYear?: string }) =>
+    request<{
+      success: boolean;
+      child: {
+        id: string;
+        name: string;
+        username: string;
+        password: string;
+        email: string;
+        supervisionMode: string;
+        ageBracket: string;
+      };
+    }>("/api/mifa/add-child", {
+      method: "POST",
+      body: JSON.stringify(data),
     }),
 
   // Credits

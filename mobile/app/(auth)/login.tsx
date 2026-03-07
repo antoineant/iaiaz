@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
+import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
 import { Button, Input, MifaLogo, Text } from "@/components/ui";
 import { useTranslation } from "react-i18next";
@@ -15,7 +16,10 @@ import { useTranslation } from "react-i18next";
 export default function LoginScreen() {
   const { signIn, signInWithGoogle } = useAuth();
   const { t } = useTranslation();
+  const router = useRouter();
+  const [isChildMode, setIsChildMode] = useState(false);
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -32,13 +36,14 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    const loginEmail = isChildMode ? `${username}@mifa.iaiaz.com` : email;
+    if ((!isChildMode && !email) || (isChildMode && !username) || !password) {
       setError(t("auth.fillAllFields"));
       return;
     }
     setLoading(true);
     setError("");
-    const result = await signIn(email, password);
+    const result = await signIn(loginEmail, password);
     if (result.error) {
       setError(result.error);
     }
@@ -58,20 +63,51 @@ export default function LoginScreen() {
           <View className="items-center mb-12">
             <MifaLogo size="lg" />
             <Text variant="caption" className="mt-3">
-              {t("auth.subtitle")}
+              {isChildMode ? t("auth.childLoginSubtitle") : t("auth.subtitle")}
             </Text>
           </View>
 
+          {/* Parent/Child toggle */}
+          <View className="flex-row bg-gray-100 rounded-xl p-1 mb-6">
+            <TouchableOpacity
+              onPress={() => { setIsChildMode(false); setError(""); }}
+              className={`flex-1 py-2.5 rounded-lg items-center ${!isChildMode ? "bg-white shadow-sm" : ""}`}
+            >
+              <Text className={`text-sm font-semibold ${!isChildMode ? "text-indigo-600" : "text-gray-500"}`}>
+                {t("auth.switchToParent")}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => { setIsChildMode(true); setError(""); }}
+              className={`flex-1 py-2.5 rounded-lg items-center ${isChildMode ? "bg-white shadow-sm" : ""}`}
+            >
+              <Text className={`text-sm font-semibold ${isChildMode ? "text-indigo-600" : "text-gray-500"}`}>
+                {t("auth.switchToChild")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <View className="gap-4">
-            <Input
-              label={t("auth.email")}
-              value={email}
-              onChangeText={setEmail}
-              placeholder="email@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-            />
+            {isChildMode ? (
+              <Input
+                label={t("auth.username")}
+                value={username}
+                onChangeText={setUsername}
+                placeholder={t("auth.usernamePlaceholder")}
+                autoCapitalize="none"
+                autoComplete="username"
+              />
+            ) : (
+              <Input
+                label={t("auth.email")}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="email@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+              />
+            )}
 
             <Input
               label={t("auth.password")}
@@ -92,46 +128,62 @@ export default function LoginScreen() {
               {t("auth.signIn")}
             </Button>
 
-            <View className="flex-row items-center my-4">
-              <View className="flex-1 h-px bg-gray-200" />
-              <Text variant="caption" className="mx-4 text-gray-400">
-                {t("auth.or")}
-              </Text>
-              <View className="flex-1 h-px bg-gray-200" />
-            </View>
+            {!isChildMode && (
+              <>
+                <View className="flex-row items-center my-4">
+                  <View className="flex-1 h-px bg-gray-200" />
+                  <Text variant="caption" className="mx-4 text-gray-400">
+                    {t("auth.or")}
+                  </Text>
+                  <View className="flex-1 h-px bg-gray-200" />
+                </View>
 
-            <TouchableOpacity
-              onPress={handleGoogleLogin}
-              disabled={googleLoading}
-              className="flex-row items-center justify-center border border-gray-300 rounded-xl py-3 px-4"
-              activeOpacity={0.7}
-            >
-              {googleLoading ? (
-                <ActivityIndicator size="small" color="#4285F4" />
-              ) : (
-                <Svg width={20} height={20} viewBox="0 0 24 24">
-                  <Path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4"
-                  />
-                  <Path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  />
-                  <Path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05"
-                  />
-                  <Path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335"
-                  />
-                </Svg>
-              )}
-              <Text className="ml-3 text-base font-medium text-gray-700">
-                {t("auth.continueWithGoogle")}
-              </Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleGoogleLogin}
+                  disabled={googleLoading}
+                  className="flex-row items-center justify-center border border-gray-300 rounded-xl py-3 px-4"
+                  activeOpacity={0.7}
+                >
+                  {googleLoading ? (
+                    <ActivityIndicator size="small" color="#4285F4" />
+                  ) : (
+                    <Svg width={20} height={20} viewBox="0 0 24 24">
+                      <Path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        fill="#4285F4"
+                      />
+                      <Path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853"
+                      />
+                      <Path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                        fill="#FBBC05"
+                      />
+                      <Path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        fill="#EA4335"
+                      />
+                    </Svg>
+                  )}
+                  <Text className="ml-3 text-base font-medium text-gray-700">
+                    {t("auth.continueWithGoogle")}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => router.push("/(auth)/signup")}
+                  className="items-center mt-4"
+                >
+                  <Text variant="caption" className="text-gray-500">
+                    {t("auth.noAccount")}{" "}
+                    <Text className="text-indigo-600 font-semibold">
+                      {t("auth.createAccount")}
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </ScrollView>

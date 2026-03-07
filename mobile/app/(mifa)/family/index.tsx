@@ -6,6 +6,7 @@ import {
   Alert,
   Switch,
   RefreshControl,
+  Share,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -18,6 +19,9 @@ import {
   ChevronDown,
   User,
   CreditCard,
+  UserPlus,
+  Copy,
+  Check,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { Text, Card, Button, Input } from "@/components/ui";
@@ -501,15 +505,98 @@ function InvitesList({ orgId }: { orgId: string }) {
   );
 }
 
+function ChildCredentialsModal({
+  credentials,
+  onClose,
+}: {
+  credentials: { name: string; username: string; password: string };
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const accent = useAccentColor();
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const copyToClipboard = async (text: string, field: string) => {
+    await Share.share({ message: text });
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  return (
+    <View className="absolute inset-0 z-50 items-center justify-center bg-black/50 px-6">
+      <View className="bg-white rounded-2xl w-full max-w-sm p-6">
+        <View className="items-center mb-4">
+          <View
+            className="w-12 h-12 rounded-full items-center justify-center mb-2"
+            style={{ backgroundColor: accent.light }}
+          >
+            <Check size={24} color={accent.hex} />
+          </View>
+          <Text variant="subtitle">{t("settings.childCredentials")}</Text>
+          <Text variant="caption" className="mt-1">{credentials.name}</Text>
+        </View>
+
+        <View className="bg-amber-50 rounded-xl p-3 mb-4">
+          <Text variant="caption" className="text-amber-800 text-center">
+            {t("settings.childCredentialsWarning")}
+          </Text>
+        </View>
+
+        <View className="mb-4">
+          <View className="bg-gray-50 rounded-xl p-3 mb-2 flex-row items-center justify-between">
+            <View>
+              <Text variant="caption" className="text-gray-500">{t("settings.childUsername")}</Text>
+              <Text className="font-mono font-bold text-base">{credentials.username}</Text>
+            </View>
+            <TouchableOpacity onPress={() => copyToClipboard(credentials.username, "username")}>
+              {copiedField === "username" ? (
+                <Check size={20} color="#16a34a" />
+              ) : (
+                <Copy size={20} color="#6b7280" />
+              )}
+            </TouchableOpacity>
+          </View>
+          <View className="bg-gray-50 rounded-xl p-3 flex-row items-center justify-between">
+            <View>
+              <Text variant="caption" className="text-gray-500">{t("settings.childPassword")}</Text>
+              <Text className="font-mono font-bold text-base">{credentials.password}</Text>
+            </View>
+            <TouchableOpacity onPress={() => copyToClipboard(credentials.password, "password")}>
+              {copiedField === "password" ? (
+                <Check size={20} color="#16a34a" />
+              ) : (
+                <Copy size={20} color="#6b7280" />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Button onPress={onClose} style={{ backgroundColor: accent.hex }}>
+          {t("settings.closeCredentials")}
+        </Button>
+      </View>
+    </View>
+  );
+}
+
 export default function FamilyScreen() {
   const { t } = useTranslation();
   const { data: family } = useFamilyRole();
   const accent = useAccentColor();
+  const { schoolSystem } = useSchoolSystem();
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+
+  // Add child state
+  const [childName, setChildName] = useState("");
+  const [childBirthdate, setChildBirthdate] = useState("");
+  const [childSchoolYear, setChildSchoolYear] = useState("");
+  const [addingChild, setAddingChild] = useState(false);
+  const [childCredentials, setChildCredentials] = useState<{ name: string; username: string; password: string } | null>(null);
+
+  // Invite co-parent state
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
-  const [inviteRole, setInviteRole] = useState<"student" | "admin">("student");
   const sendInvite = useSendInvite();
 
   const orgId = family?.orgId;
@@ -524,157 +611,211 @@ export default function FamilyScreen() {
   const children =
     analytics?.members?.filter((m: any) => m.role === "student") || [];
 
-  const handleInvite = async () => {
+  const schoolYears = [
+    "6eme", "5eme", "4eme", "3eme",
+    "seconde", "premiere", "terminale", "superieur",
+  ];
+
+  const handleAddChild = async () => {
+    if (!childName.trim() || !childBirthdate) return;
+    setAddingChild(true);
+    try {
+      const { api } = await import("@/lib/api");
+      const result = await api.addChild({
+        name: childName,
+        birthdate: childBirthdate,
+        schoolYear: childSchoolYear || undefined,
+      });
+      setChildCredentials({
+        name: result.child.name,
+        username: result.child.username,
+        password: result.child.password,
+      });
+      setChildName("");
+      setChildBirthdate("");
+      setChildSchoolYear("");
+      refetch();
+    } catch (err: any) {
+      Alert.alert(t("common.error"), err.message || t("settings.addChildError"));
+    }
+    setAddingChild(false);
+  };
+
+  const handleInviteParent = async () => {
     if (!inviteEmail || !orgId) return;
     try {
       await sendInvite.mutateAsync({
         orgId,
         email: inviteEmail,
-        role: inviteRole,
+        role: "admin",
         name: inviteName || undefined,
       });
       setInviteEmail("");
       setInviteName("");
-      Alert.alert(t("settings.inviteMember"), t("settings.inviteResent"));
+      Alert.alert(t("settings.inviteParent"), t("settings.inviteResent"));
     } catch (err: any) {
       Alert.alert(t("common.error"), err.message);
     }
   };
 
   return (
-    <ScrollView
-      className="flex-1 bg-gray-50"
-      contentInsetAdjustmentBehavior="automatic"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <View className="px-4 pt-4">
-        {/* Transfer Credits Button */}
-        <TouchableOpacity
-          onPress={() => router.push("/family/transfer")}
-          className="mb-5 rounded-2xl overflow-hidden"
-          style={{ backgroundColor: accent.hex }}
-          activeOpacity={0.85}
-        >
-          <View className="flex-row items-center justify-between px-5 py-4">
-            <View className="flex-row items-center">
-              <CreditCard size={22} color="#fff" />
-              <Text variant="subtitle" className="text-white ml-3">
-                {t("dashboard.transferCredits")}
+    <View className="flex-1">
+      <ScrollView
+        className="flex-1 bg-gray-50"
+        contentInsetAdjustmentBehavior="automatic"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View className="px-4 pt-4">
+          {/* Transfer Credits Button */}
+          <TouchableOpacity
+            onPress={() => router.push("/family/transfer")}
+            className="mb-5 rounded-2xl overflow-hidden"
+            style={{ backgroundColor: accent.hex }}
+            activeOpacity={0.85}
+          >
+            <View className="flex-row items-center justify-between px-5 py-4">
+              <View className="flex-row items-center">
+                <CreditCard size={22} color="#fff" />
+                <Text variant="subtitle" className="text-white ml-3">
+                  {t("dashboard.transferCredits")}
+                </Text>
+              </View>
+              <Text variant="body" className="text-white font-bold text-lg">
+                {Number(analytics?.creditBalance || 0).toFixed(2)}€
               </Text>
             </View>
-            <Text variant="body" className="text-white font-bold text-lg">
-              {Number(analytics?.creditBalance || 0).toFixed(2)}€
+          </TouchableOpacity>
+
+          {/* Add Child */}
+          <Text variant="subtitle" className="mb-3">
+            <UserPlus size={18} color={accent.hex} /> {t("settings.addChild")}
+          </Text>
+          <Card variant="outlined" className="mb-4">
+            <Text variant="caption" className="text-gray-500 mb-3">
+              {t("settings.addChildDesc")}
             </Text>
-          </View>
-        </TouchableOpacity>
-
-        {/* Parental Controls */}
-        <Text variant="subtitle" className="mb-3">
-          <Shield size={18} color={accent.hex} /> {t("settings.childControls")}
-        </Text>
-        {children.map((child: any) => (
-          <ChildControlCard
-            key={child.user_id}
-            child={child}
-            orgId={orgId!}
-          />
-        ))}
-
-        {/* Invite */}
-        <Text variant="subtitle" className="mb-3 mt-4">
-          <Mail size={18} color={accent.hex} /> {t("settings.inviteMember")}
-        </Text>
-        <Card variant="outlined" className="mb-4">
-          <Input
-            label={t("settings.inviteName")}
-            value={inviteName}
-            onChangeText={setInviteName}
-            placeholder="..."
-            autoCapitalize="words"
-          />
-          <View className="mt-3">
             <Input
-              label={t("auth.email")}
-              value={inviteEmail}
-              onChangeText={setInviteEmail}
-              placeholder="email@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
+              label={t("settings.childName")}
+              value={childName}
+              onChangeText={setChildName}
+              placeholder="..."
+              autoCapitalize="words"
             />
-          </View>
-          <View className="mt-3">
-            <Text variant="label" className="mb-1.5">
-              {t("settings.inviteRole")}
-            </Text>
-            <View className="flex-row gap-2">
-              <TouchableOpacity
-                onPress={() => setInviteRole("student")}
-                className={`flex-1 py-2 rounded-xl items-center ${
-                  inviteRole === "student" ? "" : "bg-gray-100"
-                }`}
-                style={
-                  inviteRole === "student"
-                    ? { backgroundColor: accent.hex }
-                    : undefined
-                }
-              >
-                <Text
-                  variant="caption"
-                  className={`font-semibold ${
-                    inviteRole === "student"
-                      ? "text-white"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {t("settings.inviteRoleChild")}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setInviteRole("admin")}
-                className={`flex-1 py-2 rounded-xl items-center ${
-                  inviteRole === "admin" ? "" : "bg-gray-100"
-                }`}
-                style={
-                  inviteRole === "admin"
-                    ? { backgroundColor: accent.hex }
-                    : undefined
-                }
-              >
-                <Text
-                  variant="caption"
-                  className={`font-semibold ${
-                    inviteRole === "admin"
-                      ? "text-white"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {t("settings.inviteRoleParent")}
-                </Text>
-              </TouchableOpacity>
+            <View className="mt-3">
+              <Input
+                label={t("settings.childProfile.birthdate")}
+                value={childBirthdate}
+                onChangeText={setChildBirthdate}
+                placeholder="YYYY-MM-DD"
+                keyboardType="numbers-and-punctuation"
+              />
             </View>
-          </View>
-          <Button
-            onPress={handleInvite}
-            loading={sendInvite.isPending}
-            className="mt-3"
-            style={{ backgroundColor: accent.hex }}
-          >
-            {t("common.buttons.send")}
-          </Button>
-        </Card>
+            <View className="mt-3">
+              <Text variant="label" className="mb-1.5">
+                {t("settings.childProfile.schoolYear")}
+              </Text>
+              <View className="flex-row flex-wrap gap-2">
+                {schoolYears.map((y) => (
+                  <TouchableOpacity
+                    key={y}
+                    onPress={() => setChildSchoolYear(childSchoolYear === y ? "" : y)}
+                    className={`px-3 py-1.5 rounded-xl ${
+                      childSchoolYear === y ? "" : "bg-gray-100"
+                    }`}
+                    style={
+                      childSchoolYear === y
+                        ? { backgroundColor: accent.hex }
+                        : undefined
+                    }
+                  >
+                    <Text
+                      variant="caption"
+                      className={`font-semibold ${
+                        childSchoolYear === y ? "text-white" : "text-gray-600"
+                      }`}
+                    >
+                      {t(`settings.schoolYears.${schoolSystem}.${y}`)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+            <Button
+              onPress={handleAddChild}
+              loading={addingChild}
+              className="mt-3"
+              disabled={!childName.trim() || !childBirthdate}
+              style={{ backgroundColor: accent.hex }}
+            >
+              {t("settings.addChildButton")}
+            </Button>
+          </Card>
 
-        {/* Pending Invites */}
-        {orgId && (
-          <>
-            <Text variant="subtitle" className="mb-3">
-              {t("settings.pendingInvites")}
-            </Text>
-            <InvitesList orgId={orgId} />
-          </>
-        )}
-      </View>
-    </ScrollView>
+          {/* Parental Controls */}
+          <Text variant="subtitle" className="mb-3">
+            <Shield size={18} color={accent.hex} /> {t("settings.childControls")}
+          </Text>
+          {children.map((child: any) => (
+            <ChildControlCard
+              key={child.user_id}
+              child={child}
+              orgId={orgId!}
+            />
+          ))}
+
+          {/* Invite Co-Parent */}
+          <Text variant="subtitle" className="mb-3 mt-4">
+            <Mail size={18} color={accent.hex} /> {t("settings.inviteParent")}
+          </Text>
+          <Card variant="outlined" className="mb-4">
+            <Input
+              label={t("settings.inviteName")}
+              value={inviteName}
+              onChangeText={setInviteName}
+              placeholder="..."
+              autoCapitalize="words"
+            />
+            <View className="mt-3">
+              <Input
+                label={t("auth.email")}
+                value={inviteEmail}
+                onChangeText={setInviteEmail}
+                placeholder="email@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+            <Button
+              onPress={handleInviteParent}
+              loading={sendInvite.isPending}
+              className="mt-3"
+              style={{ backgroundColor: accent.hex }}
+            >
+              {t("common.buttons.send")}
+            </Button>
+          </Card>
+
+          {/* Pending Invites */}
+          {orgId && (
+            <>
+              <Text variant="subtitle" className="mb-3">
+                {t("settings.pendingInvites")}
+              </Text>
+              <InvitesList orgId={orgId} />
+            </>
+          )}
+        </View>
+      </ScrollView>
+
+      {/* Credentials Modal (overlay) */}
+      {childCredentials && (
+        <ChildCredentialsModal
+          credentials={childCredentials}
+          onClose={() => setChildCredentials(null)}
+        />
+      )}
+    </View>
   );
 }

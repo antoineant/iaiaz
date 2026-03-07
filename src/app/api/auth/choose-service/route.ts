@@ -101,12 +101,16 @@ export async function POST(request: NextRequest) {
         break;
 
       case "mifa":
-        // Mark pending setup — needs_service_selection stays false but
+        // Set account_type to parent + mark pending setup.
         // pending_setup tracks that family creation is incomplete.
         // Cleared by /api/mifa/create on success.
         await adminClient
           .from("profiles")
-          .update({ needs_service_selection: false, pending_setup: "mifa" })
+          .update({
+            account_type: "parent",
+            needs_service_selection: false,
+            pending_setup: "mifa",
+          })
           .eq("id", user.id);
         redirect = "/mifa/setup";
         break;

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 
 export type OrgRole = "owner" | "admin" | "teacher" | "student";
-export type AccountType = "student" | "trainer" | "admin";
+export type AccountType = "student" | "trainer" | "parent" | "child" | "admin";
 
 /**
  * Get the current user's account type

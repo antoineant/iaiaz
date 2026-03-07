@@ -12,7 +12,7 @@ interface Profile {
   id: string;
   email: string;
   display_name: string | null;
-  account_type: "student" | "trainer" | "school" | "business" | "admin";
+  account_type: "student" | "trainer" | "school" | "business" | "parent" | "child" | "admin";
   credits_balance: number;
   is_admin: boolean;
   created_at: string;

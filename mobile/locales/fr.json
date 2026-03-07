@@ -22,7 +22,13 @@
     "noAccount": "Pas encore de compte ?",
     "alreadyHaveAccount": "Deja un compte ?",
     "or": "ou",
-    "continueWithGoogle": "Continuer avec Google"
+    "continueWithGoogle": "Continuer avec Google",
+    "childLogin": "Connexion enfant",
+    "childLoginSubtitle": "Connecte-toi avec les identifiants donnes par tes parents",
+    "username": "Identifiant",
+    "usernamePlaceholder": "ex: emma.a1b2",
+    "switchToChild": "Je suis un enfant",
+    "switchToParent": "Je suis un parent"
   },
   "common": {
     "buttons": {
@@ -231,6 +237,19 @@
   },
   "settings": {
     "title": "Réglages famille",
+    "addChild": "Ajouter un enfant",
+    "addChildDesc": "Créez un compte pour votre enfant. Aucun email nécessaire.",
+    "childName": "Prénom de l'enfant",
+    "addChildButton": "Ajouter",
+    "addChildSuccess": "Enfant ajouté !",
+    "addChildError": "Erreur lors de l'ajout",
+    "childCredentials": "Identifiants de connexion",
+    "childCredentialsWarning": "Notez bien ces identifiants !",
+    "childUsername": "Identifiant",
+    "childPassword": "Mot de passe",
+    "copied": "Copié !",
+    "closeCredentials": "J'ai noté, fermer",
+    "inviteParent": "Inviter un co-parent",
     "inviteMember": "Inviter un membre",
     "childControls": "Contrôle parental",
     "supervisionMode": "Mode de supervision",
