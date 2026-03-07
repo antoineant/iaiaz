@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { Search, Plus, Minus, Shield, User, GraduationCap, Building2, Briefcase, Trash2, Loader2, X, Mail, MailCheck, MailX, RefreshCw } from "lucide-react";
+import { Search, Plus, Minus, Shield, User, Users, Baby, GraduationCap, Building2, Briefcase, Trash2, Loader2, X, Mail, MailCheck, MailX, RefreshCw } from "lucide-react";
 
 interface Profile {
   id: string;
@@ -531,9 +531,11 @@ export default function UsersPage() {
                 trainer: { icon: GraduationCap, label: "Formateur", bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-700 dark:text-green-400" },
                 school: { icon: Building2, label: "Établissement", bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-700 dark:text-orange-400" },
                 business: { icon: Briefcase, label: "Entreprise", bg: "bg-cyan-100 dark:bg-cyan-900/30", text: "text-cyan-700 dark:text-cyan-400" },
+                parent: { icon: Users, label: "Parent", bg: "bg-pink-100 dark:bg-pink-900/30", text: "text-pink-700 dark:text-pink-400" },
+                child: { icon: Baby, label: "Enfant", bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-700 dark:text-indigo-400" },
                 admin: { icon: Shield, label: "Admin", bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-400" },
               };
-              const config = accountTypeConfig[accountType as keyof typeof accountTypeConfig];
+              const config = accountTypeConfig[accountType as keyof typeof accountTypeConfig] || accountTypeConfig.student;
               const TypeIcon = config.icon;
 
               return (
