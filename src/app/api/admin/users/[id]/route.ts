@@ -126,6 +126,19 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   }
 
   try {
+    // 0. Block deletion if parent with active children
+    const { count: childCount } = await adminClient
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("parent_user_id", id);
+
+    if (childCount && childCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete: user has ${childCount} child account(s). Remove children first.` },
+        { status: 400 }
+      );
+    }
+
     // 1. Delete user's files from storage buckets
     const buckets = ["chat-attachments", "avatars"];
 
@@ -140,7 +153,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       }
     }
 
-    // 2. Clear parent_user_id references (children pointing to this user)
+    // 2. Clear parent_user_id references (children pointing to this user — safety net)
     await adminClient
       .from("profiles")
       .update({ parent_user_id: null })

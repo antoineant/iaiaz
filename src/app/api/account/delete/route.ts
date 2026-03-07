@@ -16,6 +16,19 @@ export async function DELETE() {
   const adminClient = createAdminClient();
 
   try {
+    // 0. Block deletion if parent with active children
+    const { count: childCount } = await adminClient
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("parent_user_id", id);
+
+    if (childCount && childCount > 0) {
+      return NextResponse.json(
+        { error: "Vous devez d'abord retirer tous vos enfants avant de supprimer votre compte" },
+        { status: 400 }
+      );
+    }
+
     // 1. Delete user's files from storage buckets
     const buckets = ["chat-attachments", "avatars"];
 
