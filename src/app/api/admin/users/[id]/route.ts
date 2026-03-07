@@ -140,7 +140,23 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       }
     }
 
-    // 2. Delete organization-related data that might not cascade
+    // 2. Clear parent_user_id references (children pointing to this user)
+    await adminClient
+      .from("profiles")
+      .update({ parent_user_id: null })
+      .eq("parent_user_id", id);
+
+    // 3. Delete organization-related data that might not cascade
+    // Delete parental controls for this user (as child or parent)
+    await adminClient
+      .from("parental_controls")
+      .delete()
+      .eq("child_user_id", id);
+    await adminClient
+      .from("parental_controls")
+      .delete()
+      .eq("updated_by", id);
+
     // Delete organization transactions for this user
     await adminClient
       .from("organization_transactions")
@@ -153,7 +169,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .delete()
       .eq("user_id", id);
 
-    // 3. Delete from auth.users - this cascades to profiles and all related tables
+    // 4. Delete from auth.users - this cascades to profiles and all related tables
     const { error: authError } = await adminClient.auth.admin.deleteUser(id);
 
     if (authError) {

@@ -28,13 +28,28 @@ export async function DELETE() {
       }
     }
 
-    // 2. Nullify organization_invites.invited_by references
+    // 2. Clear parent_user_id references + invites
+    await adminClient
+      .from("profiles")
+      .update({ parent_user_id: null })
+      .eq("parent_user_id", id);
+
     await adminClient
       .from("organization_invites")
       .update({ invited_by: null })
       .eq("invited_by", id);
 
-    // 3. Delete organization-related data that might not cascade
+    // 3. Delete parental controls
+    await adminClient
+      .from("parental_controls")
+      .delete()
+      .eq("child_user_id", id);
+    await adminClient
+      .from("parental_controls")
+      .delete()
+      .eq("updated_by", id);
+
+    // 5. Delete organization-related data that might not cascade
     await adminClient
       .from("organization_transactions")
       .delete()
@@ -45,7 +60,7 @@ export async function DELETE() {
       .delete()
       .eq("user_id", id);
 
-    // 4. Delete from auth.users — cascades to profiles and all related tables
+    // 6. Delete from auth.users — cascades to profiles and all related tables
     const { error: authError } = await adminClient.auth.admin.deleteUser(id);
 
     if (authError) {
