@@ -148,7 +148,7 @@ export default async function MifaLandingPage({ params }: Props) {
               {t("nav.safety")}
             </a>
             <LanguageSwitcher />
-            <Link href="/auth/login" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+            <Link href="/mifa/login" className="hidden sm:block text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
               {t("nav.login")}
             </Link>
             <Link href={{ pathname: "/auth/signup", query: { intent: "mifa" } } as never}>

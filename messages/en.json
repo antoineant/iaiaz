@@ -774,17 +774,11 @@
     "or": "or",
     "login": {
       "title": "Login",
-      "titleChild": "Child Login",
       "subtitle": "Sign in to your account",
-      "modeParent": "Parent / Adult",
-      "modeChild": "Child",
       "email": "Email",
       "password": "Password",
       "emailPlaceholder": "your@email.com",
       "passwordPlaceholder": "••••••••",
-      "childUsername": "Username",
-      "childUsernamePlaceholder": "name.xxxx",
-      "childLoginHint": "Ask your parents for your username and password.",
       "forgotPassword": "Forgot password?",
       "submit": "Sign in",
       "noAccount": "Don't have an account?",
@@ -794,7 +788,6 @@
       "confirmationSent": "Confirmation email sent! Check your inbox.",
       "errors": {
         "invalidCredentials": "Invalid email or password",
-        "invalidChildCredentials": "Invalid username or password",
         "emailNotConfirmed": "Your email has not been confirmed",
         "confirmationRequired": "Please confirm your email address to sign in."
       }
@@ -4323,6 +4316,29 @@
         "noActivityDesc": "This child hasn't used AI yet during this period.",
         "noTopics": "No topics detected yet",
         "noFlags": "No flags — all clear!"
+      }
+    },
+    "login": {
+      "subtitle": "Family login",
+      "modeParent": "Parent",
+      "modeChild": "Child",
+      "titleParent": "Parent Login",
+      "titleChild": "Child Login",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "childUsername": "Username",
+      "childUsernamePlaceholder": "name.xxxx",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create a mifa account",
+      "childLoginHint": "Ask your parents for your username and password.",
+      "loading": "Loading...",
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "invalidChildCredentials": "Invalid username or password"
       }
     },
     "settings": {

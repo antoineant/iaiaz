@@ -656,17 +656,11 @@
     "or": "ou",
     "login": {
       "title": "Connexion",
-      "titleChild": "Connexion enfant",
       "subtitle": "Connectez-vous à votre compte",
-      "modeParent": "Parent / Adulte",
-      "modeChild": "Enfant",
       "email": "Email",
       "password": "Mot de passe",
       "emailPlaceholder": "votre@email.com",
       "passwordPlaceholder": "••••••••",
-      "childUsername": "Identifiant",
-      "childUsernamePlaceholder": "prenom.xxxx",
-      "childLoginHint": "Demande ton identifiant et mot de passe à tes parents.",
       "forgotPassword": "Mot de passe oublié ?",
       "submit": "Se connecter",
       "noAccount": "Pas encore de compte ?",
@@ -676,7 +670,6 @@
       "confirmationSent": "Email de confirmation envoyé ! Vérifiez votre boîte de réception.",
       "errors": {
         "invalidCredentials": "Email ou mot de passe incorrect",
-        "invalidChildCredentials": "Identifiant ou mot de passe incorrect",
         "emailNotConfirmed": "Votre email n'a pas été confirmé",
         "confirmationRequired": "Veuillez confirmer votre adresse email pour vous connecter."
       }
@@ -4519,6 +4512,29 @@
         "noActivityDesc": "Cet enfant n'a pas encore utilisé l'IA pendant cette période.",
         "noTopics": "Aucun sujet détecté pour le moment",
         "noFlags": "Aucune alerte — tout va bien !"
+      }
+    },
+    "login": {
+      "subtitle": "Connexion famille",
+      "modeParent": "Parent",
+      "modeChild": "Enfant",
+      "titleParent": "Connexion parent",
+      "titleChild": "Connexion enfant",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "childUsername": "Identifiant",
+      "childUsernamePlaceholder": "prenom.xxxx",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte mifa",
+      "childLoginHint": "Demande ton identifiant et mot de passe à tes parents.",
+      "loading": "Chargement...",
+      "errors": {
+        "invalidCredentials": "Email ou mot de passe incorrect",
+        "invalidChildCredentials": "Identifiant ou mot de passe incorrect"
       }
     },
     "settings": {
