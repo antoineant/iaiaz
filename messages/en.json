@@ -795,6 +795,7 @@
     "signup": {
       "title": "Sign up",
       "subtitle": "Create your account and get $1 free credit",
+      "mifaSubtitle": "Create your mifa parent account",
       "displayName": "Display name",
       "displayNamePlaceholder": "Your name (optional)",
       "email": "Email",

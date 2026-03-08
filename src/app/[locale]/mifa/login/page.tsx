@@ -194,22 +194,18 @@ export default function MifaLoginPage() {
       <div className="w-full max-w-md">
         {/* Mifa Branding Header */}
         <div className="text-center mb-8">
-          <Link href="/mifa" className="inline-flex flex-col items-center gap-3">
+          <Link href="/mifa" className="inline-flex flex-col items-center gap-2">
             <Image
               src="/mifa-logo.png"
-              alt="mifa"
-              width={64}
-              height={64}
-              className="rounded-2xl shadow-lg"
+              alt="mifa by iaiaz"
+              width={180}
+              height={70}
+              className="h-14 w-auto"
+              priority
             />
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-4xl font-extrabold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-                m&#299;f&#257;
-              </span>
-              <span className="text-sm text-[var(--muted-foreground)] font-medium">
-                by iaiaz
-              </span>
-            </div>
+            <span className="text-sm text-[var(--muted-foreground)] font-medium">
+              by iaiaz
+            </span>
           </Link>
           <p className="text-[var(--muted-foreground)] mt-2">
             {t("subtitle")}

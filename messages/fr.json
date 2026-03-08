@@ -677,6 +677,7 @@
     "signup": {
       "title": "Inscription",
       "subtitle": "Créez votre compte et recevez 1€ de crédits gratuits",
+      "mifaSubtitle": "Créez votre compte parent mifa",
       "displayName": "Nom d'affichage",
       "displayNamePlaceholder": "Votre nom (optionnel)",
       "email": "Email",

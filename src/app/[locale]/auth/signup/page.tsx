@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GoogleButton, Divider } from "@/components/auth/google-button";
 import { Mail, RefreshCw, Clock, Heart } from "lucide-react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { isValidDisplayName } from "@/lib/signup-validation";
 import { Turnstile } from "react-turnstile";
@@ -234,22 +235,33 @@ function SignupForm() {
     );
   }
 
+  const isMifaIntent = intent === "mifa" || isMifaChild;
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className={`min-h-screen flex items-center justify-center px-4 py-12 ${isMifaIntent ? "bg-gradient-to-br from-primary-50/50 via-white to-accent-50/50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950" : ""}`}>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          {isMifaChild ? (
-            <h1 className="text-4xl font-extrabold">
-              <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">m&#299;f&#257;</span>
-              <span className="text-[var(--muted-foreground)] font-medium text-lg ml-2">by iaiaz</span>
-            </h1>
+          {isMifaIntent ? (
+            <Link href="/mifa" className="inline-flex flex-col items-center gap-2">
+              <Image
+                src="/mifa-logo.png"
+                alt="mifa by iaiaz"
+                width={180}
+                height={70}
+                className="h-14 w-auto"
+                priority
+              />
+              <span className="text-sm text-[var(--muted-foreground)] font-medium">
+                by iaiaz
+              </span>
+            </Link>
           ) : (
             <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400">
               iaiaz
             </Link>
           )}
           <p className="text-[var(--muted-foreground)] mt-2">
-            {isMifaChild ? t("mifaChild.subtitle") : t("subtitle")}
+            {isMifaChild ? t("mifaChild.subtitle") : isMifaIntent ? t("mifaSubtitle") : t("subtitle")}
           </p>
         </div>
 
@@ -378,7 +390,7 @@ function SignupForm() {
             <div className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
               {t("hasAccount")}{" "}
               <NextLink
-                href={redirectUrl ? `/auth/login?redirect=${encodeURIComponent(redirectUrl)}` : "/auth/login"}
+                href={isMifaIntent ? "/mifa/login" : redirectUrl ? `/auth/login?redirect=${encodeURIComponent(redirectUrl)}` : "/auth/login"}
                 className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
               >
                 {t("login")}
