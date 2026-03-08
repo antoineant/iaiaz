@@ -105,8 +105,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Normalize date format: accept DD/MM/YYYY or DD-MM-YYYY and convert to YYYY-MM-DD
+    let normalizedBirthdate = birthdate;
+    const ddmmyyyy = birthdate.match(/^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{4})$/);
+    if (ddmmyyyy) {
+      const [, dd, mm, yyyy] = ddmmyyyy;
+      normalizedBirthdate = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+    }
+
+    // Validate it's a valid ISO date
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(normalizedBirthdate)) {
+      return NextResponse.json(
+        { error: "Format de date invalide (attendu: AAAA-MM-JJ)" },
+        { status: 400 }
+      );
+    }
+
     // Validate age
-    const birthdateObj = new Date(birthdate);
+    const birthdateObj = new Date(normalizedBirthdate + "T00:00:00");
     const validation = validateBirthdate(birthdateObj);
     if (!validation.valid) {
       return NextResponse.json(
@@ -151,7 +167,7 @@ export async function POST(request: NextRequest) {
     const { error: profileError } = await adminClient
       .from("profiles")
       .update({
-        birthdate,
+        birthdate: normalizedBirthdate,
         school_year: schoolYear || null,
         needs_service_selection: false,
       })

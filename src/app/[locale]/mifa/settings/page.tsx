@@ -321,7 +321,12 @@ function MifaSettingsContent() {
       });
       const data = await res.json();
       if (res.ok) {
-        setResetMsg((prev) => ({ ...prev, [childUserId]: t("resetPasswordSent", { email: data.email }) }));
+        const child = children.find((c) => c.user_id === childUserId);
+        setChildCredentials({
+          username: data.username,
+          password: data.password,
+          name: child?.display_name || "",
+        });
       } else {
         setResetMsg((prev) => ({ ...prev, [childUserId]: data.error || t("resetPasswordError") }));
       }
@@ -814,7 +819,7 @@ function MifaSettingsContent() {
                           ) : (
                             <KeyRound className="w-4 h-4 mr-2" />
                           )}
-                          {t("resetPassword")}
+                          {t("regenerateCredentials")}
                         </Button>
                         {confirmRemoveChild !== child.user_id ? (
                           <Button

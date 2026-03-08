@@ -283,10 +283,13 @@
     "inviteResent": "Invitation renvoyée",
     "inviteRevoked": "Invitation révoquée",
     "resetPassword": "Réinitialiser le mot de passe",
+    "regenerateCredentials": "Voir / Régénérer les identifiants",
+    "resetPasswordError": "Échec de la régénération",
     "childProfile": {
       "title": "Profil de l'enfant",
       "displayName": "Surnom",
       "birthdate": "Date de naissance",
+      "selectBirthdate": "Sélectionner une date",
       "schoolYear": "Année scolaire"
     },
     "modes": {

@@ -67,6 +67,8 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
   );
   const updateControls = useUpdateControls();
   const [expanded, setExpanded] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
+  const [credentialsModal, setCredentialsModal] = useState<{ name: string; username: string; password: string } | null>(null);
 
   const [quietStart, setQuietStart] = useState("");
   const [quietEnd, setQuietEnd] = useState("");
@@ -76,6 +78,8 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
 
   const [displayName, setDisplayName] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [birthdateObj, setBirthdateObj] = useState<Date | null>(null);
+  const [showBirthdatePicker, setShowBirthdatePicker] = useState(false);
   const [schoolYear, setSchoolYear] = useState("");
   const [profileExpanded, setProfileExpanded] = useState(false);
 
@@ -98,6 +102,7 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
     if (p) {
       setDisplayName(p.display_name || "");
       setBirthdate(p.birthdate || "");
+      setBirthdateObj(p.birthdate ? new Date(p.birthdate + "T00:00:00") : null);
       setSchoolYear(p.school_year || "");
     }
   }, [profile]);
@@ -161,6 +166,22 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
     setSaving(false);
   };
 
+  const handleRegenerateCredentials = async () => {
+    setRegenerating(true);
+    try {
+      const { api } = await import("@/lib/api");
+      const result = await api.resetChildPassword(child.user_id);
+      setCredentialsModal({
+        name: child.display_name || "",
+        username: result.username,
+        password: result.password,
+      });
+    } catch (err: any) {
+      Alert.alert(t("common.error"), err.message || t("settings.resetPasswordError"));
+    }
+    setRegenerating(false);
+  };
+
   const schoolYears = [
     "6eme",
     "5eme",
@@ -173,6 +194,13 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
   ];
 
   return (
+    <>
+    {credentialsModal && (
+      <ChildCredentialsModal
+        credentials={credentialsModal}
+        onClose={() => setCredentialsModal(null)}
+      />
+    )}
     <Card variant="outlined" className="mb-4">
       <View className="flex-row items-center mb-3">
         <View
@@ -335,13 +363,35 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
             />
           </View>
           <View className="mb-3">
-            <Input
-              label={t("settings.childProfile.birthdate")}
-              value={birthdate}
-              onChangeText={setBirthdate}
-              placeholder="YYYY-MM-DD"
-              keyboardType="numbers-and-punctuation"
-            />
+            <Text variant="label" className="mb-1.5">
+              {t("settings.childProfile.birthdate")}
+            </Text>
+            <TouchableOpacity
+              onPress={() => setShowBirthdatePicker(true)}
+              className="px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
+            >
+              <Text variant="body" className={birthdate ? "text-gray-900" : "text-gray-400"}>
+                {birthdateObj
+                  ? birthdateObj.toLocaleDateString()
+                  : t("settings.childProfile.selectBirthdate")}
+              </Text>
+            </TouchableOpacity>
+            {showBirthdatePicker && (
+              <DateTimePicker
+                value={birthdateObj || new Date(2014, 0, 1)}
+                mode="date"
+                display="spinner"
+                maximumDate={new Date()}
+                minimumDate={new Date(2000, 0, 1)}
+                onChange={(_: DateTimePickerEvent, date?: Date) => {
+                  setShowBirthdatePicker(false);
+                  if (date) {
+                    setBirthdateObj(date);
+                    setBirthdate(date.toISOString().split("T")[0]);
+                  }
+                }}
+              />
+            )}
           </View>
           <View className="mb-3">
             <Text variant="label" className="mb-1.5">
@@ -379,7 +429,20 @@ function ChildControlCard({ child, orgId }: { child: any; orgId: string }) {
           </Button>
         </View>
       )}
+
+      {/* Regenerate Credentials */}
+      <TouchableOpacity
+        onPress={handleRegenerateCredentials}
+        disabled={regenerating}
+        className="flex-row items-center py-3 mt-2 border-t border-gray-100"
+      >
+        <CreditCard size={16} color={accent.hex} />
+        <Text variant="label" className="ml-2" style={{ color: accent.hex }}>
+          {regenerating ? t("common.loading") : t("settings.regenerateCredentials")}
+        </Text>
+      </TouchableOpacity>
     </Card>
+    </>
   );
 }
 
@@ -590,6 +653,8 @@ export default function FamilyScreen() {
   // Add child state
   const [childName, setChildName] = useState("");
   const [childBirthdate, setChildBirthdate] = useState("");
+  const [childBirthdateObj, setChildBirthdateObj] = useState<Date | null>(null);
+  const [showChildDatePicker, setShowChildDatePicker] = useState(false);
   const [childSchoolYear, setChildSchoolYear] = useState("");
   const [addingChild, setAddingChild] = useState(false);
   const [childCredentials, setChildCredentials] = useState<{ name: string; username: string; password: string } | null>(null);
@@ -633,6 +698,7 @@ export default function FamilyScreen() {
       });
       setChildName("");
       setChildBirthdate("");
+      setChildBirthdateObj(null);
       setChildSchoolYear("");
       refetch();
     } catch (err: any) {
@@ -704,13 +770,35 @@ export default function FamilyScreen() {
               autoCapitalize="words"
             />
             <View className="mt-3">
-              <Input
-                label={t("settings.childProfile.birthdate")}
-                value={childBirthdate}
-                onChangeText={setChildBirthdate}
-                placeholder="YYYY-MM-DD"
-                keyboardType="numbers-and-punctuation"
-              />
+              <Text variant="label" className="mb-1.5">
+                {t("settings.childProfile.birthdate")}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowChildDatePicker(true)}
+                className="px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
+              >
+                <Text variant="body" className={childBirthdate ? "text-gray-900" : "text-gray-400"}>
+                  {childBirthdateObj
+                    ? childBirthdateObj.toLocaleDateString()
+                    : t("settings.childProfile.selectBirthdate")}
+                </Text>
+              </TouchableOpacity>
+              {showChildDatePicker && (
+                <DateTimePicker
+                  value={childBirthdateObj || new Date(2014, 0, 1)}
+                  mode="date"
+                  display="spinner"
+                  maximumDate={new Date()}
+                  minimumDate={new Date(2000, 0, 1)}
+                  onChange={(_: DateTimePickerEvent, date?: Date) => {
+                    setShowChildDatePicker(false);
+                    if (date) {
+                      setChildBirthdateObj(date);
+                      setChildBirthdate(date.toISOString().split("T")[0]);
+                    }
+                  }}
+                />
+              )}
             </View>
             <View className="mt-3">
               <Text variant="label" className="mb-1.5">

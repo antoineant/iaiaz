@@ -41,18 +41,39 @@ export async function DELETE() {
       }
     }
 
-    // 2. Clear parent_user_id references + invites
+    // 2. Clear parent_user_id references
     await adminClient
       .from("profiles")
       .update({ parent_user_id: null })
       .eq("parent_user_id", id);
 
+    // 3. Clear nullable FK references that may block auth.users deletion
+    await adminClient
+      .from("blocked_email_domains")
+      .update({ created_by: null })
+      .eq("created_by", id);
+    await adminClient
+      .from("app_settings")
+      .update({ updated_by: null })
+      .eq("updated_by", id);
+    await adminClient
+      .from("organization_classes")
+      .update({ created_by: null })
+      .eq("created_by", id);
+    await adminClient
+      .from("provider_budget_alerts")
+      .update({ acknowledged_by: null })
+      .eq("acknowledged_by", id);
+    await adminClient
+      .from("conversation_flags")
+      .update({ reviewed_by: null })
+      .eq("reviewed_by", id);
     await adminClient
       .from("organization_invites")
       .update({ invited_by: null })
       .eq("invited_by", id);
 
-    // 3. Delete parental controls
+    // 4. Delete rows owned by user in tables without cascade
     await adminClient
       .from("parental_controls")
       .delete()
@@ -61,13 +82,14 @@ export async function DELETE() {
       .from("parental_controls")
       .delete()
       .eq("updated_by", id);
-
-    // 5. Delete organization-related data that might not cascade
+    await adminClient
+      .from("conversation_flags")
+      .delete()
+      .eq("user_id", id);
     await adminClient
       .from("organization_transactions")
       .delete()
       .eq("user_id", id);
-
     await adminClient
       .from("organization_members")
       .delete()

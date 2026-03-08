@@ -247,6 +247,16 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
+  // Reset child password (regenerate credentials)
+  resetChildPassword: (childUserId: string) =>
+    request<{ success: boolean; username: string; password: string }>(
+      "/api/mifa/reset-password",
+      {
+        method: "POST",
+        body: JSON.stringify({ childUserId }),
+      }
+    ),
+
   // Credits
   transferCredits: (orgId: string, childId: string, amount: number) =>
     request<any>(`/api/mifa/transfer-credits`, {

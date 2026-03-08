@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import crypto from "crypto";
+
+function generatePassword(): string {
+  const words = ["Mifa", "Star", "Luna", "Nova", "Ciel", "Soleil", "Pixel", "Astro"];
+  const word = words[Math.floor(Math.random() * words.length)];
+  const digits = crypto.randomInt(100, 999);
+  const special = ["!", "#", "+", "="][Math.floor(Math.random() * 4)];
+  return `${word}-${digits}${special}`;
+}
 
 export async function POST(request: Request) {
   try {
@@ -55,23 +64,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Child not in family" }, { status: 403 });
     }
 
-    // Get child's email
+    // Get child's auth info
     const { data: childUser, error: userError } = await adminClient.auth.admin.getUserById(childUserId);
     if (userError || !childUser?.user?.email) {
       return NextResponse.json({ error: "Could not find child account" }, { status: 404 });
     }
 
-    // Send password reset email via the standard Supabase flow
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-      childUser.user.email
-    );
+    // Generate new password and update via admin API
+    const newPassword = generatePassword();
+    const { error: updateError } = await adminClient.auth.admin.updateUserById(childUserId, {
+      password: newPassword,
+    });
 
-    if (resetError) {
-      console.error("Password reset error:", resetError);
-      return NextResponse.json({ error: "Failed to send reset email" }, { status: 500 });
+    if (updateError) {
+      console.error("Password update error:", updateError);
+      return NextResponse.json({ error: "Failed to reset password" }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, email: childUser.user.email });
+    // Extract username from email (remove @mifa.iaiaz.com)
+    const username = childUser.user.email.replace(/@mifa\.iaiaz\.com$/, "");
+
+    return NextResponse.json({
+      success: true,
+      username,
+      password: newPassword,
+    });
   } catch (err) {
     console.error("Reset password error:", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
