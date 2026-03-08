@@ -124,6 +124,7 @@ export const pathnames = {
   '/legal/privacy': '/legal/privacy',
   '/legal/cookies': '/legal/cookies',
   '/mifa': '/mifa',
+  '/mifa/login': '/mifa/login',
   '/mifa/signup': '/mifa/signup',
   '/mifa/setup': '/mifa/setup',
   '/mifa/dashboard': '/mifa/dashboard',
