@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
-import { locales, defaultLocale, localePrefix } from "@/i18n/config";
+import { locales, defaultLocale, localePrefix, pathnames } from "@/i18n/config";
 
 interface CookieToSet {
   name: string;
@@ -9,13 +9,14 @@ interface CookieToSet {
   options?: Record<string, unknown>;
 }
 
-// Create the next-intl middleware
-// Note: We don't pass pathnames here to allow all dynamic routes to work.
-// The pathnames config in navigation.ts is only used for Link component translations.
+// Create the next-intl middleware with pathnames so English URL aliases
+// (e.g. /pricing, /compare, /students) are rewritten to filesystem paths
+// (e.g. /tarifs, /comparatif, /etudiants).
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale,
   localePrefix,
+  pathnames,
 });
 
 // Helper to extract locale from pathname
