@@ -35,7 +35,7 @@ const RECOMMENDED_MODELS = [
   {
     id: "quick",
     icon: Zap,
-    modelIds: ["mistral-small-latest", "gpt-4o-mini", "gemini-2.0-flash"],
+    modelIds: ["mistral-small-latest", "gpt-5.4-nano", "gemini-2.0-flash"],
     color: "from-green-500 to-emerald-500",
     bgColor: "bg-green-50 dark:bg-green-900/20",
     borderColor: "border-green-200 dark:border-green-800",
@@ -43,7 +43,7 @@ const RECOMMENDED_MODELS = [
   {
     id: "smart",
     icon: Brain,
-    modelIds: ["claude-sonnet-4-20250514", "gpt-4o", "gemini-1.5-pro"],
+    modelIds: ["claude-sonnet-4-20250514", "gpt-5.4-mini", "gemini-1.5-pro"],
     color: "from-purple-500 to-violet-500",
     bgColor: "bg-purple-50 dark:bg-purple-900/20",
     borderColor: "border-purple-200 dark:border-purple-800",
@@ -51,7 +51,7 @@ const RECOMMENDED_MODELS = [
   {
     id: "code",
     icon: Code,
-    modelIds: ["claude-sonnet-4-20250514", "gpt-4o", "codestral-latest"],
+    modelIds: ["claude-sonnet-4-20250514", "gpt-5.4", "codestral-latest"],
     color: "from-blue-500 to-cyan-500",
     bgColor: "bg-blue-50 dark:bg-blue-900/20",
     borderColor: "border-blue-200 dark:border-blue-800",
@@ -59,7 +59,7 @@ const RECOMMENDED_MODELS = [
   {
     id: "creative",
     icon: Palette,
-    modelIds: ["gpt-4o", "claude-sonnet-4-20250514", "gemini-1.5-pro"],
+    modelIds: ["gpt-5.4-mini", "claude-sonnet-4-20250514", "gemini-1.5-pro"],
     color: "from-pink-500 to-rose-500",
     bgColor: "bg-pink-50 dark:bg-pink-900/20",
     borderColor: "border-pink-200 dark:border-pink-800",

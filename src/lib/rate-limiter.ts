@@ -24,12 +24,11 @@ export interface RateLimitStatus {
 const FALLBACK_TIERS: Record<string, ModelTier> = {
   // Premium models (3 req/min)
   "claude-opus-4-6": "premium",
-  "gpt-5.2": "premium",
-  "gpt-5-pro": "premium",
+  "gpt-5.4": "premium",
   "gemini-2.5-pro-preview-06-05": "premium",
 
   // Economy models (20 req/min)
-  "gpt-5-nano": "economy",
+  "gpt-5.4-nano": "economy",
   "gemini-2.0-flash": "economy",
   "gemini-1.5-flash": "economy",
   "mistral-small-latest": "economy",
@@ -37,9 +36,7 @@ const FALLBACK_TIERS: Record<string, ModelTier> = {
   // Standard models (10 req/min)
   "claude-sonnet-4-20250514": "standard",
   "claude-3-5-haiku-20241022": "standard",
-  "gpt-5.1": "standard",
-  "gpt-5": "standard",
-  "gpt-5-mini": "standard",
+  "gpt-5.4-mini": "standard",
   "gemini-1.5-pro": "standard",
   "mistral-large-latest": "standard",
   "mistral-medium-latest": "standard",
@@ -155,7 +152,7 @@ export async function getRateLimitErrorMessage(
 
   const tierName =
     tier === "premium"
-      ? "premium (Claude Opus, GPT-5)"
+      ? "premium (Claude Opus, GPT-5.4)"
       : tier === "economy"
         ? "économiques"
         : "standard";
@@ -177,7 +174,7 @@ export function getRateLimitErrorMessageSync(
 
   const tierName =
     tier === "premium"
-      ? "premium (Claude Opus, GPT-5)"
+      ? "premium (Claude Opus, GPT-5.4)"
       : tier === "economy"
         ? "économiques"
         : "standard";
