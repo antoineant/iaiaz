@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getAllModels } from "@/lib/models";
 
 // Initialize Resend client lazily to avoid build errors when API key is not set
 let resendClient: Resend | null = null;
@@ -66,11 +67,60 @@ export async function sendEmail(options: SendEmailOptions): Promise<EmailResult>
 /**
  * Send welcome email after signup confirmation
  */
+// Default provider list used as fallback if DB fetch fails
+const DEFAULT_PROVIDER_LINES_HTML = [
+  '<li style="margin-bottom: 8px;"><strong>Claude</strong> (Anthropic) - Excellent pour la rédaction et l\'analyse</li>',
+  '<li style="margin-bottom: 8px;"><strong>GPT-5.4</strong> (OpenAI) - Le modèle polyvalent par excellence</li>',
+  '<li style="margin-bottom: 8px;"><strong>Gemini</strong> (Google) - Puissant pour le raisonnement</li>',
+  '<li style="margin-bottom: 8px;"><strong>Mistral</strong> - Le champion français, rapide et efficace</li>',
+];
+
+const DEFAULT_PROVIDER_LINES_TEXT = [
+  "- Claude (Anthropic) - Excellent pour la rédaction et l'analyse",
+  "- GPT-5.4 (OpenAI) - Le modèle polyvalent par excellence",
+  "- Gemini (Google) - Puissant pour le raisonnement",
+  "- Mistral - Le champion français, rapide et efficace",
+];
+
+async function getProviderLines(): Promise<{ html: string[]; text: string[] }> {
+  try {
+    const models = await getAllModels();
+    const modelList = Object.values(models);
+    if (modelList.length === 0) {
+      return { html: DEFAULT_PROVIDER_LINES_HTML, text: DEFAULT_PROVIDER_LINES_TEXT };
+    }
+
+    // Deduplicate by provider, pick one model per provider (prefer those with taglines)
+    const seenProviders = new Set<string>();
+    const html: string[] = [];
+    const text: string[] = [];
+
+    for (const model of modelList) {
+      if (seenProviders.has(model.provider)) continue;
+      seenProviders.add(model.provider);
+
+      const tagline = model.display_config?.provider_tagline_fr;
+      if (tagline) {
+        html.push(`<li style="margin-bottom: 8px;"><strong>${tagline.split(" - ")[0]}</strong> - ${tagline.split(" - ").slice(1).join(" - ")}</li>`);
+        text.push(`- ${tagline}`);
+      } else {
+        html.push(`<li style="margin-bottom: 8px;"><strong>${model.name}</strong> (${model.provider})</li>`);
+        text.push(`- ${model.name} (${model.provider})`);
+      }
+    }
+
+    return { html, text };
+  } catch {
+    return { html: DEFAULT_PROVIDER_LINES_HTML, text: DEFAULT_PROVIDER_LINES_TEXT };
+  }
+}
+
 export async function sendWelcomeEmail(
   to: string,
   userName?: string
 ): Promise<EmailResult> {
   const name = userName || "cher utilisateur";
+  const providers = await getProviderLines();
 
   return sendEmail({
     to,
@@ -98,10 +148,7 @@ export async function sendWelcomeEmail(
   </p>
 
   <ul style="margin-bottom: 24px; padding-left: 20px;">
-    <li style="margin-bottom: 8px;"><strong>Claude</strong> (Anthropic) - Excellent pour la rédaction et l'analyse</li>
-    <li style="margin-bottom: 8px;"><strong>GPT-5.4</strong> (OpenAI) - Le modèle polyvalent par excellence</li>
-    <li style="margin-bottom: 8px;"><strong>Gemini</strong> (Google) - Puissant pour le raisonnement</li>
-    <li style="margin-bottom: 8px;"><strong>Mistral</strong> - Le champion français, rapide et efficace</li>
+    ${providers.html.join("\n    ")}
   </ul>
 
   <div style="text-align: center; margin: 32px 0;">
@@ -134,10 +181,7 @@ export async function sendWelcomeEmail(
 Votre compte est maintenant activé et vous disposez de 1€ de crédits offerts pour découvrir nos modèles d'IA.
 
 Avec iaiaz, vous avez accès à :
-- Claude (Anthropic) - Excellent pour la rédaction et l'analyse
-- GPT-5.4 (OpenAI) - Le modèle polyvalent par excellence
-- Gemini (Google) - Puissant pour le raisonnement
-- Mistral - Le champion français, rapide et efficace
+${providers.text.join("\n")}
 
 Commencer une conversation : https://www.iaiaz.com/chat
 

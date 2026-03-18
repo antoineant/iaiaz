@@ -11,6 +11,18 @@ import { createAdminClient } from "@/lib/supabase/admin";
 // TYPES
 // ============================================================================
 
+export interface DisplayConfig {
+  hero_card?: {
+    order: number;
+    badge_key: string;
+    color_theme: "primary" | "emerald" | "blue";
+    description_key: string;
+  };
+  recommended_for?: string[];
+  provider_tagline_fr?: string;
+  provider_tagline_en?: string;
+}
+
 export interface ModelConfig {
   id: string;
   name: string;
@@ -32,6 +44,7 @@ export interface ModelConfig {
   system_role: string | null;
   display_order: number;
   co2_per_million_tokens: number;
+  display_config: DisplayConfig;
 }
 
 export interface ModelSettings {
@@ -110,6 +123,7 @@ export async function getAllModels(): Promise<Record<string, ModelConfig>> {
       system_role: model.system_role,
       display_order: model.display_order || 100,
       co2_per_million_tokens: parseFloat(model.co2_per_million_tokens || "0.5"),
+      display_config: model.display_config || {},
     };
   }
 
@@ -165,6 +179,55 @@ export async function getModelSettings(): Promise<ModelSettings> {
 export function invalidateModelCache(): void {
   modelsCache = null;
   settingsCache = null;
+}
+
+// ============================================================================
+// DISPLAY HELPERS
+// ============================================================================
+
+/**
+ * Token assumptions for usage estimates:
+ * - simple: 200 input + 300 output (short Q&A)
+ * - complex: 500 input + 1000 output (detailed explanation)
+ * - essay: 500 input + 3000 output (long-form writing)
+ */
+export function calculateUsageEstimates(
+  inputPrice: number,
+  outputPrice: number,
+  markupMultiplier: number
+): { simple: number; complex: number; essay: number } {
+  const costPerMessage = (inputTokens: number, outputTokens: number) =>
+    ((inputTokens * inputPrice + outputTokens * outputPrice) / 1_000_000) * markupMultiplier;
+
+  const simpleCost = costPerMessage(200, 300);
+  const complexCost = costPerMessage(500, 1000);
+  const essayCost = costPerMessage(500, 3000);
+
+  return {
+    simple: simpleCost > 0 ? Math.floor(1 / simpleCost) : 0,
+    complex: complexCost > 0 ? Math.floor(1 / complexCost) : 0,
+    essay: essayCost > 0 ? Math.floor(1 / essayCost) : 0,
+  };
+}
+
+/**
+ * Get models configured for hero card display, sorted by order
+ */
+export function getHeroModels<T extends { display_config?: DisplayConfig }>(
+  models: T[]
+): T[] {
+  return models
+    .filter((m) => m.display_config?.hero_card)
+    .sort((a, b) => (a.display_config!.hero_card!.order - b.display_config!.hero_card!.order));
+}
+
+/**
+ * Get unique provider names from active models
+ */
+export function getActiveProviderNames<T extends { provider: string }>(
+  models: T[]
+): string[] {
+  return [...new Set(models.map((m) => m.provider))];
 }
 
 // ============================================================================

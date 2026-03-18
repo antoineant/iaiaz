@@ -30,41 +30,38 @@ function getPriceTier(pricePerMToken: number): { tier: string; label: string } {
   return { tier: "€€€€", label: "ultra" };
 }
 
-// Recommended model configurations
-const RECOMMENDED_MODELS = [
-  {
-    id: "quick",
+// Use case display config (icons, colors per category)
+const USE_CASE_CONFIG: Record<string, {
+  icon: typeof Zap;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+}> = {
+  quick: {
     icon: Zap,
-    modelIds: ["mistral-small-latest", "gpt-5.4-nano", "gemini-3.1-flash-lite-preview"],
     color: "from-green-500 to-emerald-500",
     bgColor: "bg-green-50 dark:bg-green-900/20",
     borderColor: "border-green-200 dark:border-green-800",
   },
-  {
-    id: "smart",
+  smart: {
     icon: Brain,
-    modelIds: ["claude-sonnet-4-20250514", "gpt-5.4-mini", "gemini-3-flash-preview"],
     color: "from-purple-500 to-violet-500",
     bgColor: "bg-purple-50 dark:bg-purple-900/20",
     borderColor: "border-purple-200 dark:border-purple-800",
   },
-  {
-    id: "code",
+  code: {
     icon: Code,
-    modelIds: ["claude-sonnet-4-20250514", "gpt-5.4", "codestral-latest"],
     color: "from-blue-500 to-cyan-500",
     bgColor: "bg-blue-50 dark:bg-blue-900/20",
     borderColor: "border-blue-200 dark:border-blue-800",
   },
-  {
-    id: "creative",
+  creative: {
     icon: Palette,
-    modelIds: ["gpt-5.4-mini", "claude-sonnet-4-20250514", "gemini-3-flash-preview"],
     color: "from-pink-500 to-rose-500",
     bgColor: "bg-pink-50 dark:bg-pink-900/20",
     borderColor: "border-pink-200 dark:border-pink-800",
   },
-];
+};
 
 const STORAGE_KEY = "iaia_hide_model_picker";
 const PREFERRED_MODEL_KEY = "iaia_preferred_model";
@@ -79,13 +76,11 @@ export function ModelPickerOverlay({
   const t = useTranslations("chat.modelPicker");
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
-  // Find a model from the recommended list that exists in available models
-  const findAvailableModel = (modelIds: string[]) => {
-    for (const id of modelIds) {
-      const model = pricingData.models.find((m) => m.id === id && m.is_active);
-      if (model) return model;
-    }
-    return null;
+  // Find the best model for a use case category from DB display_config
+  const findRecommendedModel = (categoryId: string) => {
+    return pricingData.models.find(
+      (m) => m.is_active && m.display_config?.recommended_for?.includes(categoryId)
+    ) ?? null;
   };
 
   const handleSelect = (modelId: string) => {
@@ -169,35 +164,35 @@ export function ModelPickerOverlay({
 
         {/* Recommended Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {RECOMMENDED_MODELS.map((rec) => {
-            const model = findAvailableModel(rec.modelIds);
+          {Object.entries(USE_CASE_CONFIG).map(([categoryId, cfg]) => {
+            const model = findRecommendedModel(categoryId);
             if (!model) return null;
 
             const tier = getPriceTier(model.input_price);
-            const Icon = rec.icon;
+            const Icon = cfg.icon;
 
             return (
               <button
-                key={rec.id}
+                key={categoryId}
                 onClick={() => handleSelect(model.id)}
                 className={cn(
                   "p-4 rounded-xl border-2 transition-all text-left hover:scale-[1.02]",
-                  rec.bgColor,
-                  rec.borderColor,
+                  cfg.bgColor,
+                  cfg.borderColor,
                   "hover:shadow-md"
                 )}
               >
                 <div
                   className={cn(
                     "w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center mb-3",
-                    rec.color
+                    cfg.color
                   )}
                 >
                   <Icon className="w-5 h-5 text-white" />
                 </div>
-                <div className="font-medium text-sm mb-1">{t(`${rec.id}.title`)}</div>
+                <div className="font-medium text-sm mb-1">{t(`${categoryId}.title`)}</div>
                 <div className="text-xs text-[var(--muted-foreground)] mb-2">
-                  {t(`${rec.id}.description`)}
+                  {t(`${categoryId}.description`)}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-[var(--muted-foreground)]">

@@ -20,6 +20,19 @@ export interface DBModel {
     images?: boolean;
     pdf?: boolean;
   };
+  display_config?: DisplayConfig;
+}
+
+export interface DisplayConfig {
+  hero_card?: {
+    order: number;
+    badge_key: string;
+    color_theme: "primary" | "emerald" | "blue";
+    description_key: string;
+  };
+  recommended_for?: string[];
+  provider_tagline_fr?: string;
+  provider_tagline_en?: string;
 }
 
 export interface AppSettings {

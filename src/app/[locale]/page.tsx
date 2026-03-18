@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CREDIT_PACKS } from "@/lib/pricing";
 import { getPricingData } from "@/lib/pricing-db";
+import { calculateUsageEstimates, getHeroModels, getActiveProviderNames } from "@/lib/models";
 import { FAQSection } from "@/components/seo/faq-section";
 import {
   OrganizationSchema,
@@ -50,8 +51,15 @@ export default async function HomePage({ params }: Props) {
   return (
     <div className="min-h-screen">
       {/* Structured Data for SEO */}
-      <OrganizationSchema locale={locale} />
-      <ProductSchema locale={locale} />
+      {(() => {
+        const providerNames = getActiveProviderNames(allModels);
+        return (
+          <>
+            <OrganizationSchema locale={locale} providerNames={providerNames} />
+            <ProductSchema locale={locale} providerNames={providerNames} />
+          </>
+        );
+      })()}
       <WebsiteSchema locale={locale} />
 
       <Header />
@@ -105,113 +113,76 @@ export default async function HomePage({ params }: Props) {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Claude Sonnet - Recommended */}
-            <Card className="relative overflow-hidden border-2 border-primary-500 shadow-lg">
-              <div className="absolute top-0 left-0 right-0 bg-primary-600 text-white text-center py-1 text-sm font-medium">
-                {t("value.recommended")}
-              </div>
-              <CardContent className="pt-10 pb-6">
-                <h3 className="text-xl font-bold text-center">Claude Sonnet 4</h3>
-                <p className="text-sm text-[var(--muted-foreground)] text-center mb-6">
-                  {t("value.claudeDesc")}
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-primary-50 dark:bg-primary-950/30 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                      <span className="text-sm">{t("value.simpleQuestions")}</span>
-                    </div>
-                    <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">~67</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <HelpCircle className="w-5 h-5 text-[var(--muted-foreground)]" />
-                      <span className="text-sm">{t("value.complexQuestions")}</span>
-                    </div>
-                    <span className="text-2xl font-bold">~20</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
-                      <span className="text-sm">{t("value.essays")}</span>
-                    </div>
-                    <span className="text-2xl font-bold">~7</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {(() => {
+              const heroModels = getHeroModels(allModels);
+              const colorThemes = {
+                primary: {
+                  border: "border-primary-500",
+                  badgeBg: "bg-primary-600",
+                  highlight: "bg-primary-50 dark:bg-primary-950/30",
+                  iconColor: "text-primary-600 dark:text-primary-400",
+                  numberColor: "text-primary-600 dark:text-primary-400",
+                },
+                emerald: {
+                  border: "border-emerald-500",
+                  badgeBg: "bg-emerald-600",
+                  highlight: "bg-emerald-50 dark:bg-emerald-950/30",
+                  iconColor: "text-emerald-600 dark:text-emerald-400",
+                  numberColor: "text-emerald-600 dark:text-emerald-400",
+                },
+                blue: {
+                  border: "border-blue-500",
+                  badgeBg: "bg-blue-600",
+                  highlight: "bg-blue-50 dark:bg-blue-950/30",
+                  iconColor: "text-blue-600 dark:text-blue-400",
+                  numberColor: "text-blue-600 dark:text-blue-400",
+                },
+              };
 
-            {/* GPT-5 - OpenAI */}
-            <Card className="relative overflow-hidden border-2 border-emerald-500 shadow-lg">
-              <div className="absolute top-0 left-0 right-0 bg-emerald-600 text-white text-center py-1 text-sm font-medium">
-                {t("value.new")}
-              </div>
-              <CardContent className="pt-10 pb-6">
-                <h3 className="text-xl font-bold text-center">GPT-5.4</h3>
-                <p className="text-sm text-[var(--muted-foreground)] text-center mb-6">
-                  {t("value.gptDesc")}
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-sm">{t("value.simpleQuestions")}</span>
-                    </div>
-                    <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">~100</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <HelpCircle className="w-5 h-5 text-[var(--muted-foreground)]" />
-                      <span className="text-sm">{t("value.complexQuestions")}</span>
-                    </div>
-                    <span className="text-2xl font-bold">~30</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
-                      <span className="text-sm">{t("value.essays")}</span>
-                    </div>
-                    <span className="text-2xl font-bold">~10</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              return heroModels.map((model) => {
+                const cfg = model.display_config!.hero_card!;
+                const theme = colorThemes[cfg.color_theme];
+                const estimates = calculateUsageEstimates(model.input_price, model.output_price, markupMultiplier);
+                const formatEstimate = (n: number) => n >= 1000 ? `~${n}+` : `~${n}`;
 
-            {/* Gemini Flash - Economy */}
-            <Card className="relative overflow-hidden border-2 border-blue-500 shadow-lg">
-              <div className="absolute top-0 left-0 right-0 bg-blue-600 text-white text-center py-1 text-sm font-medium">
-                {t("value.ultraEconomic")}
-              </div>
-              <CardContent className="pt-10 pb-6">
-                <h3 className="text-xl font-bold text-center">Gemini 3 Flash</h3>
-                <p className="text-sm text-[var(--muted-foreground)] text-center mb-6">
-                  {t("value.geminiDesc")}
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      <span className="text-sm">{t("value.simpleQuestions")}</span>
+                return (
+                  <Card key={model.id} className={`relative overflow-hidden border-2 ${theme.border} shadow-lg`}>
+                    <div className={`absolute top-0 left-0 right-0 ${theme.badgeBg} text-white text-center py-1 text-sm font-medium`}>
+                      {t(`value.${cfg.badge_key}`)}
                     </div>
-                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">~3000+</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <HelpCircle className="w-5 h-5 text-[var(--muted-foreground)]" />
-                      <span className="text-sm">{t("value.complexQuestions")}</span>
-                    </div>
-                    <span className="text-2xl font-bold">~900+</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
-                      <span className="text-sm">{t("value.essays")}</span>
-                    </div>
-                    <span className="text-2xl font-bold">~300+</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                    <CardContent className="pt-10 pb-6">
+                      <h3 className="text-xl font-bold text-center">{model.name}</h3>
+                      <p className="text-sm text-[var(--muted-foreground)] text-center mb-6">
+                        {t(`value.${cfg.description_key}`)}
+                      </p>
+                      <div className="space-y-4">
+                        <div className={`flex items-center justify-between p-3 ${theme.highlight} rounded-lg`}>
+                          <div className="flex items-center gap-2">
+                            <MessageSquare className={`w-5 h-5 ${theme.iconColor}`} />
+                            <span className="text-sm">{t("value.simpleQuestions")}</span>
+                          </div>
+                          <span className={`text-2xl font-bold ${theme.numberColor}`}>{formatEstimate(estimates.simple)}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <HelpCircle className="w-5 h-5 text-[var(--muted-foreground)]" />
+                            <span className="text-sm">{t("value.complexQuestions")}</span>
+                          </div>
+                          <span className="text-2xl font-bold">{formatEstimate(estimates.complex)}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-[var(--muted)] rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
+                            <span className="text-sm">{t("value.essays")}</span>
+                          </div>
+                          <span className="text-2xl font-bold">{formatEstimate(estimates.essay)}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              });
+            })()}
           </div>
 
           <div className="text-center mt-8">

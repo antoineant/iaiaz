@@ -2,48 +2,56 @@ import Script from "next/script";
 
 interface LocaleProps {
   locale?: string;
+  providerNames?: string[];
 }
 
-// Locale-specific content
-const localizedContent = {
-  fr: {
-    orgDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement. Accédez aux meilleurs modèles d'IA sans abonnement.",
-    productDescription: "Plateforme d'accès aux modèles d'IA (Claude, GPT-5.4, Gemini 3, Mistral) sans abonnement. Payez uniquement ce que vous utilisez.",
-    websiteDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
-    freeCredits: "1€ de crédits offerts à l'inscription",
-    starterPack: "5€ de crédits",
-    regularPack: "10€ de crédits - Le plus populaire",
-    powerPack: "20€ de crédits",
-    features: [
-      "Accès à Claude, GPT-5.4, Gemini 3, Mistral",
-      "Pas d'abonnement",
-      "Paiement à l'usage",
-      "Crédits sans expiration",
-      "Interface en français",
-      "Données hébergées en Europe",
-    ],
-  },
-  en: {
-    orgDescription: "Affordable AI Access, Zero commitment. Access the best AI models without subscription.",
-    productDescription: "Platform for accessing AI models (Claude, GPT-5.4, Gemini 3, Mistral) without subscription. Pay only for what you use.",
-    websiteDescription: "Affordable AI Access, Zero commitment",
-    freeCredits: "$1 free credit on signup",
-    starterPack: "$5 in credits",
-    regularPack: "$10 in credits - Most popular",
-    powerPack: "$20 in credits",
-    features: [
-      "Access to Claude, GPT-5.4, Gemini 3, Mistral",
-      "No subscription",
-      "Pay as you go",
-      "Credits never expire",
-      "Simple interface",
-      "Data hosted in Europe",
-    ],
-  },
-};
+// Build localized content, optionally with dynamic provider names
+function getLocalizedContent(providerNames?: string[]) {
+  const providerList = providerNames?.length
+    ? providerNames.join(", ")
+    : "Claude, GPT-5.4, Gemini 3, Mistral";
+
+  return {
+    fr: {
+      orgDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement. Accédez aux meilleurs modèles d'IA sans abonnement.",
+      productDescription: `Plateforme d'accès aux modèles d'IA (${providerList}) sans abonnement. Payez uniquement ce que vous utilisez.`,
+      websiteDescription: "Intelligence Artificielle Intelligemment Accessible, Zéro engagement",
+      freeCredits: "1€ de crédits offerts à l'inscription",
+      starterPack: "5€ de crédits",
+      regularPack: "10€ de crédits - Le plus populaire",
+      powerPack: "20€ de crédits",
+      features: [
+        `Accès à ${providerList}`,
+        "Pas d'abonnement",
+        "Paiement à l'usage",
+        "Crédits sans expiration",
+        "Interface en français",
+        "Données hébergées en Europe",
+      ],
+    },
+    en: {
+      orgDescription: "Affordable AI Access, Zero commitment. Access the best AI models without subscription.",
+      productDescription: `Platform for accessing AI models (${providerList}) without subscription. Pay only for what you use.`,
+      websiteDescription: "Affordable AI Access, Zero commitment",
+      freeCredits: "$1 free credit on signup",
+      starterPack: "$5 in credits",
+      regularPack: "$10 in credits - Most popular",
+      powerPack: "$20 in credits",
+      features: [
+        `Access to ${providerList}`,
+        "No subscription",
+        "Pay as you go",
+        "Credits never expire",
+        "Simple interface",
+        "Data hosted in Europe",
+      ],
+    },
+  };
+}
 
 // Organization structured data
-export function OrganizationSchema({ locale = "fr" }: LocaleProps) {
+export function OrganizationSchema({ locale = "fr", providerNames }: LocaleProps) {
+  const localizedContent = getLocalizedContent(providerNames);
   const content = localizedContent[locale as keyof typeof localizedContent] || localizedContent.fr;
 
   const schema = {
@@ -80,7 +88,8 @@ export function OrganizationSchema({ locale = "fr" }: LocaleProps) {
 }
 
 // Product/Service structured data
-export function ProductSchema({ locale = "fr" }: LocaleProps) {
+export function ProductSchema({ locale = "fr", providerNames }: LocaleProps) {
+  const localizedContent = getLocalizedContent(providerNames);
   const content = localizedContent[locale as keyof typeof localizedContent] || localizedContent.fr;
   const currency = locale === "en" ? "USD" : "EUR";
 
@@ -178,6 +187,7 @@ export function FAQSchema({ faqs }: { faqs: FAQItem[] }) {
 
 // WebSite structured data with search
 export function WebsiteSchema({ locale = "fr" }: LocaleProps) {
+  const localizedContent = getLocalizedContent();
   const content = localizedContent[locale as keyof typeof localizedContent] || localizedContent.fr;
   const baseUrl = "https://www.iaiaz.com";
 
