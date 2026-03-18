@@ -93,43 +93,33 @@ export const MODEL_PRICING = {
     capabilities: { images: true, pdf: false },
   },
 
-  // ===== GOOGLE GEMINI =====
-  "gemini-2.5-pro": {
-    name: "Gemini 2.5 Pro",
+  // ===== GOOGLE GEMINI 3 =====
+  "gemini-3.1-pro-preview": {
+    name: "Gemini 3.1 Pro",
     provider: "Google",
-    input: 1.25,
-    output: 10.0,
-    description: "Le plus puissant de Google. Excellent raisonnement et pensée adaptative.",
+    input: 2.0,
+    output: 12.0,
+    description: "Le plus puissant de Google. Excellent raisonnement, contexte 1M tokens.",
     recommended: false,
     category: "premium",
     capabilities: { images: true, pdf: true },
   },
-  "gemini-2.5-flash": {
-    name: "Gemini 2.5 Flash",
+  "gemini-3-flash-preview": {
+    name: "Gemini 3 Flash",
     provider: "Google",
-    input: 0.15,
-    output: 0.6,
+    input: 0.50,
+    output: 3.0,
     description: "Rapide et performant. Bon équilibre qualité/prix.",
     recommended: false,
     category: "balanced",
     capabilities: { images: true, pdf: true },
   },
-  "gemini-2.0-flash": {
-    name: "Gemini 2.0 Flash",
+  "gemini-3.1-flash-lite-preview": {
+    name: "Gemini 3.1 Flash Lite",
     provider: "Google",
-    input: 0.1,
-    output: 0.4,
-    description: "Ultra rapide et économique. Idéal pour les tâches courantes.",
-    recommended: false,
-    category: "fast",
-    capabilities: { images: true, pdf: true },
-  },
-  "gemini-2.0-flash-lite": {
-    name: "Gemini 2.0 Flash Lite",
-    provider: "Google",
-    input: 0.075,
-    output: 0.3,
-    description: "Le plus économique. Parfait pour les petites tâches.",
+    input: 0.25,
+    output: 1.50,
+    description: "Ultra économique. Parfait pour les tâches simples et rapides.",
     recommended: false,
     category: "economy",
     capabilities: { images: true, pdf: true },

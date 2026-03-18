@@ -34,7 +34,7 @@ const studentProfiles = [
   { name: "Isabelle Laurent", aiSkill: "high", engagement: "low" },
 ];
 
-const models = ["gpt-5.4-mini", "claude-sonnet-4-20250514", "gemini-2.0-flash"];
+const models = ["gpt-5.4-mini", "claude-sonnet-4-20250514", "gemini-3-flash-preview"];
 
 // Sample prompts by skill level
 const highSkillPrompts = [

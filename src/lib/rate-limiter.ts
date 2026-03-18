@@ -25,19 +25,18 @@ const FALLBACK_TIERS: Record<string, ModelTier> = {
   // Premium models (3 req/min)
   "claude-opus-4-6": "premium",
   "gpt-5.4": "premium",
-  "gemini-2.5-pro-preview-06-05": "premium",
+  "gemini-3.1-pro-preview": "premium",
 
   // Economy models (20 req/min)
   "gpt-5.4-nano": "economy",
-  "gemini-2.0-flash": "economy",
-  "gemini-1.5-flash": "economy",
+  "gemini-3.1-flash-lite-preview": "economy",
   "mistral-small-latest": "economy",
 
   // Standard models (10 req/min)
   "claude-sonnet-4-20250514": "standard",
   "claude-3-5-haiku-20241022": "standard",
   "gpt-5.4-mini": "standard",
-  "gemini-1.5-pro": "standard",
+  "gemini-3-flash-preview": "standard",
   "mistral-large-latest": "standard",
   "mistral-medium-latest": "standard",
   "codestral-latest": "standard",
