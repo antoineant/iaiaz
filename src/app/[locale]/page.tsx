@@ -147,7 +147,7 @@ export default async function HomePage({ params }: Props) {
                 {t("value.new")}
               </div>
               <CardContent className="pt-10 pb-6">
-                <h3 className="text-xl font-bold text-center">GPT-5</h3>
+                <h3 className="text-xl font-bold text-center">GPT-5.4</h3>
                 <p className="text-sm text-[var(--muted-foreground)] text-center mb-6">
                   {t("value.gptDesc")}
                 </p>
@@ -183,7 +183,7 @@ export default async function HomePage({ params }: Props) {
                 {t("value.ultraEconomic")}
               </div>
               <CardContent className="pt-10 pb-6">
-                <h3 className="text-xl font-bold text-center">Gemini Flash</h3>
+                <h3 className="text-xl font-bold text-center">Gemini 3 Flash</h3>
                 <p className="text-sm text-[var(--muted-foreground)] text-center mb-6">
                   {t("value.geminiDesc")}
                 </p>

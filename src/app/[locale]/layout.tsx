@@ -24,14 +24,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     fr: {
       title: "iaiaz - IA Accessible, Zéro engagement | Alternative ChatGPT pas cher",
       description:
-        "Accédez aux meilleurs modèles d'IA (Claude, GPT-5, Gemini, Mistral) sans abonnement. Payez uniquement ce que vous utilisez. 1€ offert à l'inscription.",
+        "Accédez aux meilleurs modèles d'IA (Claude, GPT-5.4, Gemini 3, Mistral) sans abonnement. Payez uniquement ce que vous utilisez. 1€ offert à l'inscription.",
       keywords: [
         "IA",
         "intelligence artificielle",
         "étudiant",
         "Claude",
+        "GPT-5.4",
         "GPT-5",
         "ChatGPT",
+        "Gemini 3",
         "Gemini",
         "Mistral",
         "pas cher",
@@ -43,14 +45,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     en: {
       title: "iaiaz - Affordable AI Access, No Subscription | ChatGPT Alternative",
       description:
-        "Access the best AI models (Claude, GPT-5, Gemini, Mistral) without subscription. Pay only for what you use. $1 free credit on signup.",
+        "Access the best AI models (Claude, GPT-5.4, Gemini 3, Mistral) without subscription. Pay only for what you use. $1 free credit on signup.",
       keywords: [
         "AI",
         "artificial intelligence",
         "student",
         "Claude",
+        "GPT-5.4",
         "GPT-5",
         "ChatGPT",
+        "Gemini 3",
         "Gemini",
         "Mistral",
         "affordable",

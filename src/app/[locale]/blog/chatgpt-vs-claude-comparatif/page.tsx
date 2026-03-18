@@ -112,7 +112,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                       <span className="font-bold text-green-600">G</span>
                     </div>
                     <div>
-                      <strong>ChatGPT (GPT-5)</strong>
+                      <strong>ChatGPT (GPT-5.4)</strong>
                       <p className="text-xs text-[var(--muted-foreground)]">OpenAI</p>
                     </div>
                   </div>
@@ -175,7 +175,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                 <p className="text-[var(--muted-foreground)] mb-4">{t("detailed.writing.intro")}</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                    <strong className="text-green-700 dark:text-green-300">GPT-5</strong>
+                    <strong className="text-green-700 dark:text-green-300">GPT-5.4</strong>
                     <p className="text-sm mt-1">{t("detailed.writing.gpt")}</p>
                   </div>
                   <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4">
@@ -200,7 +200,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                 <p className="text-[var(--muted-foreground)] mb-4">{t("detailed.coding.intro")}</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                    <strong className="text-green-700 dark:text-green-300">GPT-5</strong>
+                    <strong className="text-green-700 dark:text-green-300">GPT-5.4</strong>
                     <p className="text-sm mt-1">{t("detailed.coding.gpt")}</p>
                   </div>
                   <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4">
@@ -225,7 +225,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                 <p className="text-[var(--muted-foreground)] mb-4">{t("detailed.analysis.intro")}</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                    <strong className="text-green-700 dark:text-green-300">GPT-5</strong>
+                    <strong className="text-green-700 dark:text-green-300">GPT-5.4</strong>
                     <p className="text-sm mt-1">{t("detailed.analysis.gpt")}</p>
                   </div>
                   <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4">
@@ -250,7 +250,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                 <p className="text-[var(--muted-foreground)] mb-4">{t("detailed.conversation.intro")}</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                    <strong className="text-green-700 dark:text-green-300">GPT-5</strong>
+                    <strong className="text-green-700 dark:text-green-300">GPT-5.4</strong>
                     <p className="text-sm mt-1">{t("detailed.conversation.gpt")}</p>
                   </div>
                   <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4">
@@ -284,7 +284,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                   <tr className="border-b">
                     <td className="p-4 font-medium">ChatGPT Plus</td>
                     <td className="p-4 text-center">20{currencySymbol}/mois</td>
-                    <td className="p-4 text-center">GPT-5 uniquement</td>
+                    <td className="p-4 text-center">GPT-5.4 uniquement</td>
                   </tr>
                   <tr className="border-b">
                     <td className="p-4 font-medium">Claude Pro</td>
@@ -294,7 +294,7 @@ export default async function ChatgptVsClaudePage({ params }: Props) {
                   <tr className="border-b bg-primary-50/50 dark:bg-primary-950/50">
                     <td className="p-4 font-medium text-primary-600">iaiaz</td>
                     <td className="p-4 text-center font-medium text-primary-600">{t("pricing.payPerUse")}</td>
-                    <td className="p-4 text-center text-primary-600">GPT-5 + Claude + Gemini + Mistral</td>
+                    <td className="p-4 text-center text-primary-600">GPT-5.4 + Claude + Gemini 3 + Mistral</td>
                   </tr>
                 </tbody>
               </table>
